@@ -213,11 +213,6 @@
     gruvbox-gtk-theme
     kanagawa-gtk-theme
     rose-pine-cursor
-
-    # Unity3D
-    unityhub
-    libsecret
-    seahorse
   ];
 
   environment.sessionVariables = {
