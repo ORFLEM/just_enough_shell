@@ -57,38 +57,22 @@ System : `NixOS`
 
 # как выглядят конфиги:
 ### Р.стол
-<div>
-  <img src="./images/1.png" height="350px">
-<div/>
-<div>
- <img src="./images/2.png" height="350px">
-<div/>
+![alt_image](./images/1.png)
+![alt_image](./images/2.png)
 
 ### Панель управления
-<div>
-  <img src="./images/3.png" height="75px">
-<div/>
-<div>
-  <img src="./images/4.png" height="75px">
-<div/>
-<div>
-  <img src="./images/5.png" height="75px">
-<div/>
+![alt_image](./images/3.png)
+![alt_image](./images/4.png)
+![alt_image](./images/5.png)
 
 ### Dashboard
-<div>
-  <img src="./images/6.png" height="350px">
-<div/>
+![alt_image](./images/6.png)
 
 ### Кнопки питания
-<div>
-  <img src="./images/7.png" height="350px">
-<div/>
+![alt_image](./images/7.png)
 
 ### Лаунчер приложений
-<div>
-  <img src="./images/8.png" height="350px">
-<div/>
+![alt_image](./images/8.png)
 
 # Установка
 ```
