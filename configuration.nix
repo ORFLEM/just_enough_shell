@@ -246,6 +246,16 @@
     extraPkgs = pkgs: with pkgs; [ libdrm wayland ];
   };
 
+  console = {
+      # ЛУЧШИЙ ВЫБОР: Spleen с Box Drawing + Block Elements
+      font = "ter-v32n";  # или spleen-16x32 для меньших экранов
+      
+      packages = with pkgs; [
+        spleen           # Box Drawing, Block Elements, Braille Patterns
+        unifont          # Unifont PSF версия - максимум Unicode символов
+        terminus_font    # Запасной вариант
+      ];
+    };
   systemd.services.set-tty-colors = {
     description = "Apply custom TTY color scheme at boot";
     wantedBy = [ "multi-user.target" ];
