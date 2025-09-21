@@ -1,5 +1,9 @@
 System : `NixOS 25.11 (unstable)`
 
+# [rus](#rus) | [eng](#eng)
+
+# Rus
+
 # Важно
 ```
 В данных конфигах есть спорные решения, которые не всем понравятся:
@@ -97,3 +101,105 @@ System : `NixOS 25.11 (unstable)`
 Это гарантирует, что все улучшения и производные работы останутся свободными и открытыми, как и оригинал.
 
 Полный текст лицензии см. в файле [LICENSE](./LICENSE).
+
+# Eng
+
+# Important
+```
+These configs include controversial choices that not everyone may like:
+  using NixOS without Home Manager and Flakes;
+  bash instead of fish;
+  mpvpaper instead of hyprpaper;
+But these are customizable.
+```
+# About the Configs
+```
+These configs are built on Hyprland, eww, and rofi.
+
+I tried to see if I could create the entire UI using only eww and rofi without heavily impacting performance, but I can't say for sure about weaker PCs since my PC is quite powerful.
+
+Please don't judge too harshly.
+```
+
+## -- Core Software -- :
+* Terminal: `Kitty`
+* Launcher: `Rofi`
+* Screen Locker: `Hyprlock`
+* System Monitoring: `Btop | htop (also available in the dashboard)`
+* Interface: `eww`
+* File Manager: `ranger | yazi | thunar`
+* Editors: `micro | helix`
+* Shells: `bash | fish`
+* Wallpaper: `mpvpaper | hyprpaper`
+* Main theme for terminals, TTY, GTK, etc.: `kanagawa`
+
+```
+If you experience lag, replace mpvpaper with hyprpaper:
+uncomment the hyprpaper line and comment the mpvpaper line in hyprland.conf,
+and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg).
+```
+
+## -- Keybindings -- :
+* `Super + e` - File Manager
+* `Super + q` - Terminal
+* `Super + o` - Power Menu
+* `Super + l` - Dashboard
+* `Super + 1-0` or `Super + Scroll Up | Scroll Down` - Switch between workspaces
+* `Super + Shift + 1-0` or `Super + Shift + Scroll Up | Scroll Down` - Move windows between workspaces
+* `Super + Ctrl` + `Arrow Keys or Super + RMB` - Resize windows
+* `Super + Arrow Keys` or `Super + LMB` - Move windows
+* `Super + Shift + Ctrl + w | s | a | d` - Switch between windows
+* `Super + Alt + LMB` - Toggle window type: floating or tiling
+* `Super + w` - Restart eww
+* `Super + s` - Fullscreen screenshot
+* `Super + d` - Selected area screenshot
+* `Super` - Open application launcher
+* `Super + `p - Center window vertically
+* `CapsLock` or Shift + Alt - Switch language
+* `Shift` + CapsLock - Toggle Caps Lock
+* `Super` + Space - Expand window above others
+
+## What the configs look like:
+### Desktop
+![alt_image](./images/1.png)
+![alt_image](./images/2.png)
+
+### Control Panel
+![alt_image](./images/3.png)
+![alt_image](./images/4.png)
+![alt_image](./images/5.png)
+
+### Dashboard
+![alt_image](./images/6.png)
+
+### Power Menu
+![alt_image](./images/7.png)
+
+### Application Launcher
+![alt_image](./images/8.png)
+
+# Installation
+
+```
+1. Install NixOS.
+2. Customize the NixOS config for your needs: make sure to add your user and additional disks (if any).
+3. Replace the NixOS config or add missing parts to make these configs work (almost my entire config is needed).
+4. Move files from the config folder to "~/.config" and from local to "~/.local".
+5. Run sudo nixos-rebuild switch.
+6. Good luck trying to understand the not-quite-comprehensible "genius" :)
+```
+
+#### License
+The notification code (in the eww/notif folder) is written by Vimjoyer and includes their MIT license.
+
+These configurations are distributed under the **GNU GPL v3** license.
+
+In simple terms, this means:
+
+You are free to use, study, and modify this code.
+
+If you share your modifications or code based on this work (e.g., by forking it), you must make your source code equally open and available to everyone under this same license.
+
+This ensures that all improvements and derivative works remain free and open, just like the original.
+
+For the full license text, see the LICENSE file.
