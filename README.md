@@ -1,4 +1,4 @@
-System : `NixOS`
+System : `NixOS 25.11 (unstable)`
 
 # Важно
 ```
