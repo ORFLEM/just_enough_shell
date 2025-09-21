@@ -154,7 +154,7 @@ and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg
 * `Super + s` - Fullscreen screenshot
 * `Super + d` - Selected area screenshot
 * `Super` - Open application launcher
-* `Super + `p - Center window vertically
+* `Super + p` - Center window vertically
 * `CapsLock` or Shift + Alt - Switch language
 * `Shift` + CapsLock - Toggle Caps Lock
 * `Super` + Space - Expand window above others
