@@ -151,7 +151,7 @@
 (defwidget music []
   (eventbox :onscroll "if [ '{}' == 'up' ]; then playerctl next; else playerctl previous; fi"
 		(box :class "msc" :orientation "h" :space-evenly false :halign "end"
-	 	  (button :onclick "playerctl play-pause" :onrightclick "./scripts/popup.sh plr"
+	 	  (button :onclick "playerctl play-pause" :onrightclick "./scripts/popup.sh plr" :tooltip "музыка, лкм: играть/остановить, пкм: открыть плеер, прокрутка вверх: след., прокрутка вниз: пред."
         (box :orientation "h" :space-evenly false
           (label :text "${music.status} " :class "lbl-clr")
           (label :text {music.artist} :limit-width 15)
@@ -180,20 +180,14 @@
 
 (defwidget keyboard_layout []
   (box :class "kbl":orientation "h" :space-evenly true :halign "start"
-    (label :class "lbl-clr" :text "󰌏 ")
+    (label :class "lbl-clr" :tooltip "Язык" :text "󰌏 ")
     (label :text "${hkblayout}")
-  )
-)
-
-(defwidget notifications []
-  (box :class "ntf" :orientation "h" :space-evenly false :halign "end"
-    (button :onclick "sleep 0.1 && swaync-client -t -sw" :tooltip "уведомления" "")
   )
 )
 
 (defwidget power []
   (box :class "pwr" :orientation "h" :space-evenly false :halign "end"
-    (button :onclick "eww open --toggle power_pc" :onrightclick "eww open --toggle dashboard":tooltip "питание" "")
+    (button :onclick "eww open --toggle power_pc" :onrightclick "eww open --toggle dashboard":tooltip "лкм: питание | пкм: dashboard" "")
   )
 )
 
