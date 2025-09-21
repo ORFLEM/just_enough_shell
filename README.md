@@ -166,8 +166,8 @@ and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg
 
 ### Control Panel
 ![alt_image](./eng/images/3.png)
-![alt_image](./images/4.png)
-![alt_image](./images/5.png)
+![alt_image](./eng/images/4.png)
+![alt_image](./eng/images/5.png)
 
 ### Dashboard
 ![alt_image](./eng/images/6.png)
