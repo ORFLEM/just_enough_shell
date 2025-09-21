@@ -6,7 +6,7 @@ System : `NixOS`
   использование NixOS без home manager и flakes;
   bash, вместо fish;
   mpvpaper, вместо hyprpaper;
-  Но это можно выбрать
+Но это можно выбрать
 ```
 
 # Об конфигах
@@ -30,9 +30,9 @@ System : `NixOS`
 * Обои: `mpvpaper | hyprpaper`
 
 ```
-(в случае тормозов, замените mpvpaper на hyprpaper,
+в случае тормозов, замените mpvpaper на hyprpaper,
 раскомментировав в hyprland.conf строку с hyprpaper и закомментировав строку с mpvpaper,
-а в eww по пути "~/.config/eww/bar" в файле hbar.yuck заменить (lbgz) на (bg))
+а в eww по пути "~/.config/eww/bar" в файле hbar.yuck заменить (lbgz) на (bg)
 ```
 
 ## -- Комбинации клавиш -- :
