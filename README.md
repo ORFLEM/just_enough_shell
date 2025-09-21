@@ -154,7 +154,7 @@ and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg
 * `Super + s` - Fullscreen screenshot
 * `Super + d` - Selected area screenshot
 * `Super` - Open application launcher
-* `Super + p` - Center window vertically
+* `Super + `p - Center window vertically
 * `CapsLock` or Shift + Alt - Switch language
 * `Shift` + CapsLock - Toggle Caps Lock
 * `Super` + Space - Expand window above others
@@ -198,8 +198,7 @@ In simple terms, this means:
 
 You are free to use, study, and modify this code.
 
-If you share your modifications or code based on this work (e.g., by forking it), you must make your source code equally open and available to everyone under this same license.
-
-This ensures that all improvements and derivative works remain free and open, just like the original.
+* If you share your modifications or code based on this work (e.g., by forking it), you must make your source code equally open and available to everyone under this same license.
+* This ensures that all improvements and derivative works remain free and open, just like the original.
 
 For the full license text, see the LICENSE file.
