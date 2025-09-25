@@ -29,9 +29,9 @@
   "./scripts/vol.sh")
 
 ;; Time and date
-(defpoll time_data 
-  :interval "1s" 
-  "date '+%H:%M:%S'")
+(deflisten time_data 
+  :initial "" 
+  "./scripts/timed.sh show")
 
 ;;(defpoll dateVar 
 ;;  :interval "30m" 

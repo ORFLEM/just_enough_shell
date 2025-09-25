@@ -123,13 +123,13 @@
 
 (defwidget weather []
   (box :class "tme" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/popup.sh wthr" "${wther.icon} ${wther.temp}°C")
+    (button :tooltip "lbm: popup weather" :onclick "./scripts/popup.sh wthr" "${wther.icon} ${wther.temp}°C")
   )
 )
 
 (defwidget time []
   (box :class "tme" :orientation "h" :space-evenly false :halign "center"
-    (button :onclick "./scripts/popup.sh cal"
+    (button :onclick "./scripts/timed.sh t-d" :onrightclick "./scripts/popup.sh cal" :tooltip "lbm: change timr-date, rbm: popup calendar"
       (box :space-evenly false
         (label :class "lbl-clr" :text "󱑎 ")
         (label :text time_data)
