@@ -148,6 +148,7 @@
     cava
     cliphist
     coreutils-full
+    cmatrix
     dbus
     fastfetch
     fish
@@ -213,12 +214,16 @@
     gruvbox-gtk-theme
     kanagawa-gtk-theme
     rose-pine-cursor
+    libsForQt5.qt5ct
+    qt6Packages.qt6ct
+    
   ];
 
   environment.sessionVariables = {
     GTK_THEME = "Kanagawa-B";
     ICON_THEME = "Papirus-Dark";
-    QT_STYLE_OVERRIDE = "gtk4";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_STYLE_OVERRIDE = "qt6ct";
     QT_QPA_PLATFORM = "wayland";
     GDK_BACKEND = "wayland";
     NIXOS_OZONE_WL = "1";
