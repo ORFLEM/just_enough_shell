@@ -2,19 +2,23 @@
 
 while true; do
     vol=$(pamixer --get-volume)
+    muted=$(pamixer --get-mute)
     
-    case "$vol" in
-        0)
-            sign="" ;;
-        [1-9]|1[0-9]|2[0-9]|3[0-9]|4[0-5])
-            sign="" ;;
-        4[6-9]|5[0-9]|60)
-            sign="" ;;
-        [6-9][1-9]|100)
-            sign="" ;;
-    esac
+    if [ "$muted" = "true" ] || [ "$vol" -eq 0 ]; then
+        sign=""
+        volout="muted"
+    elif [ "$vol" -le 35 ]; then
+        sign=""
+        volout="$vol%"
+    elif [ "$vol" -le 70 ]; then
+        sign=""
+        volout="$vol%"
+    else
+        sign=""
+        volout="$vol%"
+    fi
 
-    echo "$vol%"
+    printf '{"sign":"%s","vol":"%s"}\n' "$sign" "$volout"
     sleep 0.05
 done
 
