@@ -25,7 +25,7 @@ System : `NixOS 25.11 (unstable)`
 ## -- Основной софт -- :
 * Тайлинг:`Hyprland` (идут работы над поддержкой niri)
 * Терминал: `Kitty`
-* Лаунчер: `Rofi` (идёт под замену на eww)
+* Лаунчер: `Rofi` (идёт под замену на eww, доступен для теста, но не работает, помогите если сможете)
 * Блокировщик экрана: `Hyprlock`
 * Мониторинг системы: `Btop | htop` (также есть в dashboard)
 * Интерфейс: `eww`
@@ -127,7 +127,7 @@ Please don't judge too harshly.
 ## -- Core Software -- :
 * Tiling: `Hyprland` (working on niri support)
 * Terminal: `Kitty`
-* Launcher: `Rofi` (being replaced on eww)
+* Launcher: `Rofi` (being replaced with eww, available for testing but currently not working - help wanted if you can!)
 * Screen Locker: `Hyprlock`
 * System Monitoring: `Btop | htop` (also available in dashboard)
 * Interface: `eww`
