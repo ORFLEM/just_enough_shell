@@ -23,15 +23,16 @@ System : `NixOS 25.11 (unstable)`
 ```
 
 ## -- Основной софт -- :
+* Тайлинг:`Hyprland` (идут работы над поддержкой niri)
 * Терминал: `Kitty`
-* Лаунчер: `Rofi`
+* Лаунчер: `Rofi` (идёт под замену на eww)
 * Блокировщик экрана: `Hyprlock`
 * Мониторинг системы: `Btop | htop` (также есть в dashboard)
 * Интерфейс: `eww`
 * Проводник: `ranger | yazi | thunar`
 * Редакторы: `micro | helix`
 * Консольные оболочки: `bash | fish`
-* Обои: `mpvpaper | hyprpaper`
+* Обои: `mpvpaper | hyprpaper` (идут работы над добавлением hyprlax, проблемы добавления: ручная сборка пакета)
 * Основная тема для терминалов, tty, gtk и прочего: `kanagawa`
 
 ```
@@ -124,15 +125,16 @@ Please don't judge too harshly.
 ```
 
 ## -- Core Software -- :
+* Tiling: `Hyprland` (working on niri support)
 * Terminal: `Kitty`
-* Launcher: `Rofi`
+* Launcher: `Rofi` (being replaced on eww)
 * Screen Locker: `Hyprlock`
-* System Monitoring: `Btop | htop (also available in the dashboard)`
+* System Monitoring: `Btop | htop` (also available in dashboard)
 * Interface: `eww`
 * File Manager: `ranger | yazi | thunar`
 * Editors: `micro | helix`
 * Shells: `bash | fish`
-* Wallpaper: `mpvpaper | hyprpaper`
+* Wallpaper: `mpvpaper | hyprpaper` (working on hyprlax addition, current blocker: manual package building)
 * Main theme for terminals, TTY, GTK, etc.: `kanagawa`
 
 ```
