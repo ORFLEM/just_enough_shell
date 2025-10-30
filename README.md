@@ -121,6 +121,9 @@ System : `NixOS 25.11 (unstable)`
 
 # Eng
 
+![](https://img.shields.io/github/last-commit/ORFLEM/My-NixOS-Hyprland-eww-configs?&style=for-the-badge&color=8ad7eb&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![](https://img.shields.io/github/repo-size/ORFLEM/My-NixOS-Hyprland-eww-configs?color=86dbce&label=Project_size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+
 # Important
 ```
 These configs include controversial choices that not everyone may like:
