@@ -9,6 +9,8 @@ System : `NixOS 25.11 (unstable)`
 
 # Важно
 ```
+Это конфиги для СТАЦИОНАРНОГО компьютера!!
+
 В данных конфигах есть спорные решения, которые не всем понравятся:
   использование NixOS без home manager и flakes; (flakes есть теперь, но я его не подготовил под выкладывание)
   bash, вместо fish;
@@ -56,10 +58,10 @@ System : `NixOS 25.11 (unstable)`
 * `super + o` - Кнопки питания
 * `super + l` - dashboard
 * `super + 1-0` или `super + scrll up | scrll dwn` - переключение между р. столами
-* `super + shift + 1-0` или `super + shift + scroll up | scroll down` - перенос программ между р. столами 
-* `super + ctrl + стрелки` или `super + пкм` - ресайз окон
-* `super + стрелки` или `super + лкм` - перемещение окна
-* `super + shift + ctrl + w | s | a | d` - переключение между окнами
+* `super + shift + 1-0` или `super + shift + стрелки` - перенос программ между р. столами 
+* `super + пкм` - ресайз окон
+* `super + shift + стрелки` или `super + лкм` - перемещение окна
+* `super + стрелки` - переключение между окнами
 * `super + alt + лкм` - изменение типа окна: плавующий или в тайлинге
 * `super + w` - перезапуск eww
 * `super + s` - полноэкранный снимок
@@ -132,6 +134,8 @@ System : `NixOS 25.11 (unstable)`
 
 # Important
 ```
+These configs are for a DESKTOP computer!!
+
 These configs include controversial choices that not everyone may like:
   using NixOS without Home Manager and Flakes; (Flakes are now available, but not prepared for public release)
   bash instead of fish;
