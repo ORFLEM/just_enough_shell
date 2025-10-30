@@ -12,7 +12,7 @@ System : `NixOS 25.11 (unstable)`
 В данных конфигах есть спорные решения, которые не всем понравятся:
   использование NixOS без home manager и flakes; (flakes есть теперь, но я его не подготовил под выкладывание)
   bash, вместо fish;
-  mpvpaper, вместо swww;
+  swww и mpvpaper;
   странные идеи в горячих клавишах и интерфейсе;
 Но это можно выбрать
 ```
@@ -40,9 +40,9 @@ System : `NixOS 25.11 (unstable)`
 * Основная тема для терминалов, tty, gtk и прочего: `kanagawa`
 
 ```
-в случае тормозов, замените mpvpaper на swww,
-раскомментировав в hyprland.conf строку с swww и закомментировав строку с mpvpaper,
-а в eww по пути "~/.config/eww/bar" в файле hbar.yuck заменить (lbgz) на (bg)
+Если хочется живых видео обоев, то замените swww на mpvpaper,
+раскомментировав в hyprland.conf строку с mpvpaper и закомментировав строку с swww,
+а в eww по пути "~/.config/eww/bar" в файле hbar.yuck заменить (bg) на (lbg или lgbz для мониторов 21:9)
 ```
 
 ```
@@ -91,8 +91,14 @@ System : `NixOS 25.11 (unstable)`
 ### Кнопки питания
 ![alt_image](./rus/images/7.png)
 
-### Лаунчер приложений
+### fastfetch
 ![alt_image](./rus/images/8.png)
+
+### popup громкости и звука
+![alt_image](./rus/images/9.png)
+
+### Лаунчер приложений
+![alt_image](./rus/images/10.png)
 
 # Установка
 ```
@@ -165,7 +171,7 @@ and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg
 ```
 Testing a new mini player type in the bar that uses album artwork as background.
 Not sure if it's a good idea, but feel free to try it out.
-This have in russian localization, next I create a english localization update, sorry, but my english very bad & creating english localization - is very hard
+This & other updates (change mpvpaper on swww & swap dwindle on hy3) have in russian localization, next I create a english localization update, sorry, but my english very bad & creating english localization - is very hard
 ```
 
 ## -- Keybindings -- :
