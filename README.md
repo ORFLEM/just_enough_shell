@@ -12,7 +12,7 @@ System : `NixOS 25.11 (unstable)`
 Это конфиги для СТАЦИОНАРНОГО компьютера!!
 
 В данных конфигах есть спорные решения, которые не всем понравятся:
-  использование NixOS без home manager и flakes; (flakes есть теперь, но я его не подготовил под выкладывание)
+  использование NixOS без home manager и flakes;
   bash, вместо fish;
   swww и mpvpaper;
   странные идеи в горячих клавишах и интерфейсе;
@@ -137,7 +137,7 @@ System : `NixOS 25.11 (unstable)`
 These configs are for a DESKTOP computer!!
 
 These configs include controversial choices that not everyone may like:
-  using NixOS without Home Manager and Flakes; (Flakes are now available, but not prepared for public release)
+  using NixOS without Home Manager and Flakes;
   bash instead of fish;
   mpvpaper instead of swww;
   strange ideas in binds & my ui;
