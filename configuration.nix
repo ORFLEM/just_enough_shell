@@ -212,100 +212,154 @@
   # ============================================================
   # PACKAGES
   # ============================================================
-  environment.systemPackages = with pkgs; [
-    # === Hyprland Stack ===
-    hyprland
-    hyprlock
-    hyprpaper
-    eww
-    rofi
-    greetd.tuigreet
-    
-    # === GUI Applications ===
-    blueman
-    file-roller
-    gnome-calculator
-    kitty
-    mpv
-    mpvpaper
-    pavucontrol
-    pdfarranger
-    shotwell
-    vscodium
+  nixpkgs.config.allowUnfree = true;
+  
+  environment.systemPackages = 
+      # STABLE пакеты
+      (with pkgs; [
+        # === GUI Applications ===
+        blueman
+        gnome-calculator
+        greetd.tuigreet
+        hyprlock
+        kitty
+        libreoffice-qt6-fresh
+        mpv
+        mpvpaper
+        pavucontrol
+        rofi
+        rose-pine-hyprcursor
+        shotwell
+        steam
+        swww
+        xarchiver
+        vscodium
+  
+        # === CLI Tools ===
+        btop
+        browsh
+        blesh
+        cava
+        cliphist
+        clinfo
+        coreutils-full
+        cmatrix
+        dbus
+        ddcutil
+        fastfetch
+        fish
+        ffmpeg
+        git
+        glib
+        glibc
+        gobject-introspection
+        grim
+        helix
+        jq
+        kew
+        ldacbt
+        libnotify
+        lsd
+        mdr
+        micro
+        neovim
+        nnn
+        pamixer
+        p7zip
+        playerctl
+        (python312.withPackages (ps: with ps; [
+          dbus-python
+          pygobject3
+          jedi-language-server
+        ]))
+        pywal
+        ranger
+        slurp
+        unzip
+        wget
+        wireguard-tools
+        wl-clipboard
+        w3m
+        yazi
+        zip
+  
+        # === AMD Graphics Stack ===
+        amdvlk
+        libdrm
+        libGL
+        libpulseaudio
+        libva
+        libvdpau
+        mesa
+        mesa-demos
+        vulkan-loader
+        vulkan-validation-layers
+        wayland
+  
+        # ROCm
+        rocmPackages.rocminfo
+        rocmPackages.rocm-smi
+        rocmPackages.rocm-runtime
+        rocmPackages.hipcc
+        rocmPackages.hipblas
+        rocmPackages.rocm-device-libs
+  
+        # === File Manager (Thunar) ===
+        ffmpegthumbnailer
+        libgsf
+        poppler
+        xfce.thunar
+        xfce.thunar-archive-plugin
+        xfce.tumbler
+  
+        # === Themes ===
+        gnome-themes-extra
+        gtk3
+        (papirus-icon-theme.override { color = "yaru"; })
+        gruvbox-gtk-theme
+        kanagawa-gtk-theme
+        rose-pine-cursor
+        kdePackages.qtstyleplugin-kvantum
+  
+        # === Unity3D ===
+        unityhub
+        libsecret
+        seahorse
+  
+        # === Disk Utils ===
+        kbd
+        udisks2
+        udiskie
+        ntfs3g
+        exfat
+  
+        # === Wayland Compositor ===
+        eww
+      ]) 
+      
+      # UNSTABLE пакеты
+      ++ (with unstablePkgs; [
+        # linux-wallpaperengine
+        bastet
+        moon-buggy
+        nsnake
+        hyprland
+        hyprlandPlugins.hy3
+        hyprlandPlugins.hyprspace
+        hyprlandPlugins.hypr-dynamic-cursors
+        hyprpicker
+      ])
+  
+  	# NUR пакеты
+      ++ (with pkgs.nur.repos; [
+      ]);
 
-    # === CLI Tools ===
-    btop
-    browsh
-    cava
-    cliphist
-    coreutils-full
-    cmatrix
-    dbus
-    ddcutil
-    fastfetch
-    fish
-    ffmpeg
-    git
-    glib
-    glibc
-    gobject-introspection
-    grim
-    helix
-    jq
-    kew
-    ldacbt
-    libnotify
-    lsd
-    micro
-    pamixer
-    p7zip
-    playerctl
-    (python312.withPackages (ps: with ps; [
-      dbus-python
-      pygobject3
-      jedi-language-server
-    ]))
-    ranger
-    slurp
-    unzip
-    wget
-    wireguard-tools
-    wl-clipboard
-    yazi
-    zip
-
-    # === AMD Graphics Stack ===
-    amdvlk
-    libdrm
-    libGL
-    libpulseaudio
-    libva
-    libvdpau
-    mesa
-    mesa-demos
-    vulkan-loader
-    vulkan-validation-layers
-    wayland
-
-    # === File Manager (Thunar) ===
-    ffmpegthumbnailer
-    libgsf
-    poppler
-    xfce.thunar
-    xfce.thunar-archive-plugin
-    xfce.tumbler
-
-    # === Themes ===
-    gnome-themes-extra
-    gtk3
-    (papirus-icon-theme.override { color = "yaru"; })
-    gruvbox-gtk-theme
-    kanagawa-gtk-theme
-    rose-pine-cursor
-    rose-pine-hyprcursor
-    libsForQt5.qt5ct
-    qt6Packages.qt6ct
-  ];
+   # Hyprland plugins config
+     environment.etc."hypr/plugins.conf".text = ''
+       plugin = ${unstablePkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+       plugin = ${unstablePkgs.hyprlandPlugins.hyprspace}/lib/libhyprspace.so
+       plugin = ${unstablePkgs.hyprlandPlugins.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so
+     '';
 
   # ============================================================
   # ENVIRONMENT
@@ -325,6 +379,25 @@
     glib
     glibc
   ];
+
+  # ============================================================
+  # HARDWARE QUIRKS
+  # ============================================================
+  services.udev.extraRules = ''
+    # Moza Racing devices
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+    KERNEL=="hidraw*", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+    
+    # i2c devices для ddcutil
+    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+    
+    # OpenRGB - hidraw для клавиатур и периферии
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", TAG+="uaccess"
+    
+    # OpenRGB - USB устройства
+    SUBSYSTEM=="usb", MODE="0666", TAG+="uaccess"
+  '';
 
   # ============================================================
   # GAMING
