@@ -241,6 +241,7 @@
     coreutils-full
     cmatrix
     dbus
+    ddcutil
     fastfetch
     fish
     ffmpeg
@@ -267,7 +268,6 @@
     ranger
     slurp
     unzip
-    vlc
     wget
     wireguard-tools
     wl-clipboard
