@@ -5,27 +5,27 @@
 ;; window info
 (deflisten hAW 
   :initial "" 
-  "./scripts/active_window.sh")
+  "./scripts/active_window-hypr.sh")
 
 ;; Keyboard layout info
 (deflisten hkblayout 
   :initital ""
-  "./scripts/kb_layout-hypr")
+  "./scripts/kb_layout-hypr.sh")
 
 ;; Workspaces info
-(deflisten workspaces :initial "" "./scripts/workspace.sh stream-workspaces-json")
+(deflisten hworkspaces :initial "" "./scripts/workspace-hypr.sh stream-ws-json")
 
 ;; ============================================================================
 ;; Main Bar Widget
 ;; ============================================================================
 
-(defwidget bar []
+(defwidget hbar []
   (centerbox :orientation "h" :hexpand false :class "bar"
-    (box :class "bar-section" :valign "center"  :halign "start" :orientation "h" :space-evenly false :spacing 3
+    (box :class "bar-section" :valign "center" :halign "start" :orientation "h" :space-evenly false :spacing 3
       (launcher)
-      (lbgz)
-      (workspaces)
-      (active_window)
+      (bg)
+      (hworkspaces)
+      (hactive_window)
     )      
     ;; Center section
     (box :class "bar-section" :valign "center" :halign "center" :orientation "h" :space-evenly false :spacing 3
@@ -38,7 +38,7 @@
       (music)
       (settings)
       (volume)
-      (keyboard_layout)
+      (hkeyboard_layout)
       ;;(notifications)
       (power)
     )
@@ -49,54 +49,25 @@
 ;; Left Section Widgets
 ;; ============================================================================
 
-(defwidget launcher []
-	(box :class "lnchr" :orientation "h" :space-evenly true :halign "start"
-		(button  :onclick "pgrep rofi && pkill rofi || ~/.config/rofi/launcher.sh" :tooltip "program menu" 
-			(box :space-evenly false
-			   (image :path nix :image-height 18 :preserve-aspect-ratio true)
-			   (label :text " ${USER}")
-      )
-    )
-	)
-)
-
-(defwidget lbgz []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh zoom" :tooltip "update wallpaper" "")
-  )
-)
-      
-(defwidget lbg []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh no-zoom" :tooltip "update wallpaper" "")
-  )
-)
-      
-(defwidget bg []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh stat" :tooltip "update wallpaper" "")
-  )
-)
-
-(defwidget workspaces []
+(defwidget hworkspaces []
   (eventbox :onscroll "if [ '{}' = 'up' ]; then hyprctl dispatch workspace -1; else hyprctl dispatch workspace +1; fi"
     (box :class "ws" :orientation "h" :space-evenly false
       (eventbox :onhover "eww update ws=true" :onhoverlost "eww update ws=false"
         (box :orientation "h" :space-evenly false :vexpand false
           (box :space-evenly false :spacing 2
-            (hws-button :id 1 :state "${workspaces.ws1.class}" :info "${workspaces.ws1.icon}")
-            (hws-button :id 2 :state "${workspaces.ws2.class}" :info "${workspaces.ws2.icon}")
-            (hws-button :id 3 :state "${workspaces.ws3.class}" :info "${workspaces.ws3.icon}")
-            (hws-button :id 4 :state "${workspaces.ws4.class}" :info "${workspaces.ws4.icon}")
-            (hws-button :id 5 :state "${workspaces.ws5.class}" :info "${workspaces.ws5.icon}")
+            (hws-button :id 1 :state "${hworkspaces.ws1.class}" :info "${hworkspaces.ws1.icon}")
+            (hws-button :id 2 :state "${hworkspaces.ws2.class}" :info "${hworkspaces.ws2.icon}")
+            (hws-button :id 3 :state "${hworkspaces.ws3.class}" :info "${hworkspaces.ws3.icon}")
+            (hws-button :id 4 :state "${hworkspaces.ws4.class}" :info "${hworkspaces.ws4.icon}")
+            (hws-button :id 5 :state "${hworkspaces.ws5.class}" :info "${hworkspaces.ws5.icon}")
           )
           (revealer :transition "slideleft" :reveal ws 
             (box :orientation "h" :space-evenly false :vexpand false :spacing 2 :style "padding: 0px 0px 0px 2px;"
-              (hws-button :id 6 :state "${workspaces.ws6.class}" :info "${workspaces.ws6.icon}")
-              (hws-button :id 7 :state "${workspaces.ws7.class}" :info "${workspaces.ws7.icon}")
-              (hws-button :id 8 :state "${workspaces.ws8.class}" :info "${workspaces.ws8.icon}")
-              (hws-button :id 9 :state "${workspaces.ws9.class}" :info "${workspaces.ws9.icon}")
-              (hws-button :id 10 :state "${workspaces.ws10.class}" :info "${workspaces.ws10.icon}")
+              (hws-button :id 6 :state "${hworkspaces.ws6.class}" :info "${hworkspaces.ws6.icon}")
+              (hws-button :id 7 :state "${hworkspaces.ws7.class}" :info "${hworkspaces.ws7.icon}")
+              (hws-button :id 8 :state "${hworkspaces.ws8.class}" :info "${hworkspaces.ws8.icon}")
+              (hws-button :id 9 :state "${hworkspaces.ws9.class}" :info "${hworkspaces.ws9.icon}")
+              (hws-button :id 10 :state "${hworkspaces.ws10.class}" :info "${hworkspaces.ws10.icon}")
             )
           )
         )
@@ -106,13 +77,13 @@
 )
     
 (defwidget hws-button [id state info]
-  (button :class "ws ${state}" :onclick "./scripts/workspace-manager-hypr.sh switch-workspace ${id}"
+  (button :class "ws ${state}" :onclick "./scripts/workspace-hypr.sh change-ws ${id}"
     (label :text "${info}")
   )
 )
 
-(defwidget active_window []
-  (box :class "aw" :orientation "h" :space-evenly true :halign "start" :tooltip "active program"
+(defwidget hactive_window []
+  (box :class "aw" :orientation "h" :space-evenly true :halign "start" :tooltip "active window"
     (label :text "${hAW}")
   )
 )
@@ -121,264 +92,16 @@
 ;; Center Section Widgets
 ;; ============================================================================
 
-(defwidget weather []
-  (box :class "tme" :orientation "h" :space-evenly true :halign "start"
-    (button :tooltip "lbm: popup weather" :onclick "./scripts/popup.sh wthr" "${wther.icon} ${wther.temp}°C")
-  )
-)
-
-(defwidget time []
-  (box :class "tme" :orientation "h" :space-evenly false :halign "center"
-    (button :onclick "./scripts/timed.sh t-d" :onrightclick "./scripts/popup.sh cal" :tooltip "lbm: change timr-date, rbm: popup calendar"
-      (box :space-evenly false
-        (label :class "lbl-clr" :text "󱑎 ")
-        (label :text time_data)
-      )
-    )
-  )
-)
-
 ;; ============================================================================
 ;; Right Section Widgets
 ;; ============================================================================
 
-(defwidget cava []
-  (box :class "cava" :vexpand false :hexpand false :space-evenly false
-    (label :text CAVA)
-  )
-)
-
-(defwidget music []
-  (eventbox :onscroll "if [ '{}' == 'up' ]; then playerctl next; else playerctl previous; fi"
-		(box :class "msc" :orientation "h" :space-evenly false :halign "end"
-	 	  (button :onclick "playerctl play-pause" :onrightclick "./scripts/popup.sh plr" :tooltip "music, lbm: play-pause, rbm: popup player, scrll up: next, scrll dwn: previous"
-        (box :orientation "h" :space-evenly false
-          (label :text "${music.status} " :class "lbl-clr")
-          (label :text {music.artist} :limit-width 15)
-          (label :text "   ")
-          (label :text {music.title} :limit-width 35)
-        )
-      )
-		)
-	)
-)
-
-(defwidget settings []
-  (eventbox :onhover "eww update stngs=true" :onhoverlost "eww update stngs=false"
-    (box :class "stngs" :orientation "h" :space-evenly false :vexpand false
-      (revealer :transition "slideleft" :reveal stngs
-        (box :orientation "h" :space-evenly false :vexpand false 
-          (button :onclick "bash <(pavucontrol)" :tooltip "sound settings" "󰗅")
-          (button :onclick "bash <(kitty nmtui)" :tooltip "network settings" "󰈀") 
-          (button :onclick "bash <(blueman-manager)" :tooltip "bluetooth settings" "󰂯")
-        )
-      )
-      (label :text "  ")
-    )
-  )
-)
-
-(defwidget keyboard_layout []
+(defwidget hkeyboard_layout []
   (box :class "kbl":orientation "h" :space-evenly true :halign "start"
     (label :class "lbl-clr" :tooltip "keyboard layout" :text "󰌏 ")
     (label :text "${hkblayout}")
   )
 )
-
-(defwidget power []
-  (box :class "pwr" :orientation "h" :space-evenly false :halign "end"
-    (button :onclick "eww open --toggle power_pc" :onrightclick "eww open --toggle dashboard":tooltip "lbm - power | rbm: dashboard" "")
-  )
-)
-
-(defwidget volume []
-  (eventbox :onscroll "if [ '{}' == 'up' ]; then pamixer -i 5; else pamixer -d 5; fi" :vexpand true :valign "fill"
-    (box :class "vlm" :orientation "h" :space-evenly false :valign "fill" :vexpand false :tooltip "volume"
-      (label :class "lbl-clr" :text "󰕾 ")
-      (label :text volume)
-    )
-  )
-)
-
-;; ============================================================================
-;; calendar and other moments
-;; ============================================================================
-
-(defwidget cal []
-  (box :orientation "v" :space-evenly false
-    (revealer :transition "slidedown" :reveal cal_inf
-      (eventbox :onhoverlost "eww update cal_inf=false & ./scripts/cal.sh reset"
-        (box :orientation "v" :class "cal" :spacing 3
-          (box :class "cal_wkds"
-            (label :text "mon")
-            (label :text "tue")
-            (label :text "wed")
-            (label :text "thu")
-            (label :text "fri")
-            (label :text "sat" :style "color: #e4413a;")
-            (label :text "sun" :style "color: #e4413a;")
-          )
-          (box
-            (label :text {cal.day0.day} :class "cal ${cal.day0.style}")
-            (label :text {cal.day1.day} :class "cal ${cal.day1.style}")
-            (label :text {cal.day2.day} :class "cal ${cal.day2.style}")
-            (label :text {cal.day3.day} :class "cal ${cal.day3.style}")
-            (label :text {cal.day4.day} :class "cal ${cal.day4.style}")
-            (label :text {cal.day5.day} :class "cal ${cal.day5.style}")
-            (label :text {cal.day6.day} :class "cal ${cal.day6.style}")
-          )
-          (box
-            (label :text {cal.day7.day} :class "cal ${cal.day7.style}")
-            (label :text {cal.day8.day} :class "cal ${cal.day8.style}")
-            (label :text {cal.day9.day} :class "cal ${cal.day9.style}")
-            (label :text {cal.day10.day} :class "cal ${cal.day10.style}")
-            (label :text {cal.day11.day} :class "cal ${cal.day11.style}")
-            (label :text {cal.day12.day} :class "cal ${cal.day12.style}")
-            (label :text {cal.day13.day} :class "cal ${cal.day13.style}")
-          )
-          (box
-            (label :text {cal.day14.day} :class "cal ${cal.day14.style}")
-            (label :text {cal.day15.day} :class "cal ${cal.day15.style}")
-            (label :text {cal.day16.day} :class "cal ${cal.day16.style}")
-            (label :text {cal.day17.day} :class "cal ${cal.day17.style}")
-            (label :text {cal.day18.day} :class "cal ${cal.day18.style}")
-            (label :text {cal.day19.day} :class "cal ${cal.day19.style}")
-            (label :text {cal.day20.day} :class "cal ${cal.day20.style}")
-          )
-          (box
-            (label :text {cal.day21.day} :class "cal ${cal.day21.style}")
-            (label :text {cal.day22.day} :class "cal ${cal.day22.style}")
-            (label :text {cal.day23.day} :class "cal ${cal.day23.style}")
-            (label :text {cal.day24.day} :class "cal ${cal.day24.style}")
-            (label :text {cal.day25.day} :class "cal ${cal.day25.style}")
-            (label :text {cal.day26.day} :class "cal ${cal.day26.style}")
-            (label :text {cal.day27.day} :class "cal ${cal.day27.style}")
-          )
-          (box
-            (label :text {cal.day28.day} :class "cal ${cal.day28.style}")
-            (label :text {cal.day29.day} :class "cal ${cal.day29.style}")
-            (label :text {cal.day30.day} :class "cal ${cal.day30.style}")
-            (label :text {cal.day31.day} :class "cal ${cal.day31.style}")
-            (label :text {cal.day32.day} :class "cal ${cal.day32.style}")
-            (label :text {cal.day33.day} :class "cal ${cal.day33.style}")
-            (label :text {cal.day34.day} :class "cal ${cal.day34.style}")
-          )
-          (box
-            (label :text {cal.day35.day} :class "cal ${cal.day35.style}")
-            (label :text {cal.day36.day} :class "cal ${cal.day36.style}")
-            (label :text {cal.day37.day} :class "cal ${cal.day37.style}")
-            (label :text {cal.day38.day} :class "cal ${cal.day38.style}")
-            (label :text {cal.day39.day} :class "cal ${cal.day39.style}")
-            (label :text {cal.day40.day} :class "cal ${cal.day40.style}")
-            (label :text {cal.day41.day} :class "cal ${cal.day41.style}")
-          )
-          (box :space-evenly false :halign "center" :spacing 30 :class "cal_wkds"
-            (button :onclick "./scripts/cal.sh prev_year" "<<")
-            (button :onclick "./scripts/cal.sh prev" "<")
-            (label :text "${cal.month_name} | ${cal.year}")
-            (button :onclick "./scripts/cal.sh next" ">")
-            (button :onclick "./scripts/cal.sh next_year" ">>")
-          )
-        )
-      )
-    )
-  )
-)
-
-;; ============================================================================
-;; music player
-;; ============================================================================
-
-(defwidget player []
-  (box :orientation "v" :space-evenly false
-    (revealer :transition "slidedown" :reveal plr_inf
-      (box :orientation "h" :space-evenly false :class "plr"
-        (box :class "plr-art" :style "background-image: url('${music.art}');")
-        (box :orientation "v" :space-evenly true :spacing 6 :class "plr-inf"
-          (label :text {music.title} :limit-width 20)
-          (label :text {music.artist} :limit-width 20)
-          (box :orientation "h" :spacing 3 :space-evenly true :class "plr-nav"
-            (button :onclick "playerctl previous" "󰒮")
-            (button :onclick "playerctl play-pause" "${music.status}")
-            (button :onclick "playerctl next" "󰒭")
-          )
-        )
-      )
-    )
-  )
-)
-
-;; ============================================================================
-;; weather
-;; ============================================================================
-
-(defwidget weather_wid []
-  (box :orientation "v" :space-evenly false
-    (revealer :transition "slidedown" :reveal wthr_inf
-      (eventbox :onhoverlost "eww update wthr_inf=false"
-        (box :orientation "v" :space-evenly false :class "wther" :spacing 6
-          (box :space-evenly false :orientation "v" :style "padding: 12px 12px 14px 12px" :spacing 15
-            (box :space-evenly false :spacing 145
-              (label :justify "left" :text "City")
-              (label :class "gray_wthr" :text "Updated ${wther.updated}")
-            )
-            (box :space-evenly false :spacing 75
-              (box :orientation "v"  :space-evenly false :halign "start" :spacing 10
-                (label :text "${wther.temp}°" :class "big_wthr_clr")
-                (label :lines 3 :limit-width 15 :justify "left" :text {wther.desc})
-              )
-              (box :orientation "v" :space-evenly false
-                (label :text {wther.icon} :class "big_wthr")
-              )
-            )
-            (box :space-evenly false :spacing 95 :class "gray_wthr" :halign "start"
-              (box :orientation "v" :halign "start" :spacing 5
-                (label :text "Feels ${wther.feels}°")
-                (label :text "Humidity ${wther.humidity}%")
-              )
-              (box :orientation "v" :halign "start" :spacing 5
-                (label :text "Wind ${wther.wind} м/с")
-                (label :text "Pressure ${wther.pressure}")
-              )
-            )
-          )
-          (box :class "week_wthr"
-            (scroll :hscroll true :vscroll false
-              (box :spacing 65
-                (box :orientation "v"
-                  (label :text {wther.forecast[0].day})
-                  (label :class "mid_wthr" :text {wther.forecast[0].icon})
-                  (label :class "gray_wthr" :text "${wther.forecast[0].max}/${wther.forecast[0].min}")
-                )
-                (box :orientation "v"
-                  (label :text {wther.forecast[1].day})
-                  (label :class "mid_wthr" :text {wther.forecast[1].icon})
-                  (label :class "gray_wthr" :text "${wther.forecast[1].max}/${wther.forecast[1].min}")
-                )
-                (box :orientation "v"
-                  (label :text {wther.forecast[2].day})
-                  (label :class "mid_wthr" :text {wther.forecast[2].icon})
-                  (label :class "gray_wthr" :text "${wther.forecast[2].max}/${wther.forecast[2].min}")
-                )
-                (box :orientation "v"
-                  (label :text {wther.forecast[3].day})
-                  (label :class "mid_wthr" :text {wther.forecast[3].icon})
-                  (label :class "gray_wthr" :text "${wther.forecast[3].max}/${wther.forecast[3].min}")
-                )
-                (box :orientation "v"
-                  (label :text {wther.forecast[4].day})
-                  (label :class "mid_wthr" :text {wther.forecast[4].icon})
-                  (label :class "gray_wthr" :text "${wther.forecast[4].max}/${wther.forecast[4].min}")
-                )
-              )
-            )
-          )
-        )
-      )
-    )
-  )     
-)
-
 
 ;; ============================================================================
 ;; Window Definition
@@ -396,36 +119,6 @@
   :reserve (struts 
     :side "bottom" 
     :distance "4%")
-  (bar)
+  (hbar)
 )
 
-(defwindow mycal
-	:monitor 0
-  :stacking "fg"
-  :windowtype "normal"
-	:geometry (geometry :anchor "top center"
-						          :width "380px" 
-						          :height "0px")
-	(cal)
-)
-
-(defwindow weather
-	:monitor 0
-  :stacking "fg"
-  :windowtype "normal"
-	:geometry (geometry :anchor "top center"
-						          :width "300px" 
-						          :height "0px")
-	(weather_wid)
-)
-
-(defwindow player
-	:monitor 0
-  :stacking "fg"
-  :windowtype "normal"
-	:geometry (geometry :anchor "top right"
-                      :x "6px"
-						          :width "350px" 
-						          :height "0px")
-	(player)
-)

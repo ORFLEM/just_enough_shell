@@ -3,9 +3,9 @@
 
 (defwidget Btime []
   (box :orientation "v" :halign "end" :valign "bottom" :space-evenly false
-    (label :xalign 1 :style "font-size: 35px; opacity: 0.45; font-family: FauxHanamin; font-weight: bold; color: #FFFFFF" :text day)
-    ; (label :xalign 1 :style "font-size: 45px; opacity: 0.35; font-family: 'Mononki Nerd Font Propo'; font-weight: bold; color: #FFFFFF; margin: -25px 0px -15px 0px;" :text "")
-    (label :xalign 1 :style "font-size: 70px; opacity: 0.6; font-family: FauxHanamin; font-weight: bold; color: #FFFFFF" :text weekday)
+    (label :xalign 1 :class "txt-s" :text day)
+    ; (label :xalign 1 :style "font-size: 45px; opacity: 0.35; font-family: 'Mononki Nerd Font Propo'; font-weight: bold; color: #BBBBBB; margin: -25px 0px -15px 0px;" :text "")
+    (label :xalign 1 :class "txt-b" :text weekday)
 	)
 )
     

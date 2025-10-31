@@ -1,354 +1,124 @@
 ;; ============================================================================
-;; EWW Bar Configuration - Niri Version
-;; ============================================================================
-
-;; ============================================================================
 ;; Variables & Polling
 ;; ============================================================================
+ 
+;; window info
+(deflisten nAW 
+  :initial "" 
+  "./scripts/active_window-niri.sh")
 
-(include "./bar/variables&polling.yuck")
+;; Keyboard layout info
+(deflisten nkblayout 
+  :initital ""
+  "./scripts/kb_layout-niri.sh")
 
-;; Workspace and window info (адаптировано для niri)
-(defpoll nAWS 
-  :interval "0.15s" 
-  "niri msg workspaces | jq -r '.[] | select(.is_active == true) | .idx' || echo '1'")
-
-(defpoll nAW 
-  :interval "0.15s" 
-  "niri msg --json focused-window | jq -r '.Ok.title // \"\"' 2>/dev/null | head -c 50")
-
-;; Keyboard layout (адаптировано для niri)
-(defpoll nkblayout 
-  :interval "0.15s" 
-  "./bar/scripts/kb_layout-niri")
-
-;; Воркспейсы для niri (упрощенная версия)
-(defpoll nws-1-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 1`)
-(defpoll nws-2-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 2`)
-(defpoll nws-3-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 3`)
-(defpoll nws-4-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 4`)
-(defpoll nws-5-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 5`)
-(defpoll nws-6-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 6`)
-(defpoll nws-7-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 7`)
-(defpoll nws-8-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 8`)
-(defpoll nws-9-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 9`)
-(defpoll nws-10-info :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-info 10`)
-
-;; Состояния воркспейсов для niri
-(defpoll nws-1-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 1`)
-(defpoll nws-2-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 2`)
-(defpoll nws-3-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 3`)
-(defpoll nws-4-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 4`)
-(defpoll nws-5-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 5`)
-(defpoll nws-6-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 6`)
-(defpoll nws-7-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 7`)
-(defpoll nws-8-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 8`)
-(defpoll nws-9-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 9`)
-(defpoll nws-10-state :interval "0.15s" 
-  `./bar/scripts/workspace-manager-niri.sh get-workspace-state 10`)
+;; Workspaces info
+(deflisten nworkspaces :initial "" "./scripts/workspace-niri.sh stream-workspaces-json")
 
 ;; ============================================================================
 ;; Main Bar Widget
 ;; ============================================================================
 
-(defwidget bar []
-  (centerbox 
-    :orientation "h" 
-    :hexpand false
-    
-    ;; Left section
-    (box 
-      :class "bar-section"
-      :valign "center" 
-      :halign "start" 
-      :hexpand false 
-      :vexpand false 
-      :orientation "h" 
-      :space-evenly false
+(defwidget nbar []
+  (centerbox :orientation "h" :hexpand false :class "bar"
+    (box :class "bar-section" :valign "center" :halign "start" :orientation "h" :space-evenly false :spacing 3
       (launcher)
-      ;;(copylist)
-      (lbgz)
-      (workspaces)
-      (active_window))
-          
+      (bg)
+      (nworkspaces)
+      (nactive_window)
+    )      
     ;; Center section
-    (box 
-      :class "bar-section"
-      :valign "center" 
-      :halign "center" 
-      :hexpand false 
-      :vexpand false 
-      :orientation "h" 
-      :space-evenly false
+    (box :class "bar-section" :valign "center" :halign "center" :orientation "h" :space-evenly false :spacing 3
       (weather)
-      (time))
-        
+      (time)
+    )
     ;; Right section
-    (box 
-      :class "bar-section"
-      :valign "center"
-      :halign "end" 
-      :hexpand false 
-      :vexpand false 
-      :orientation "h" 
-      :space-evenly false
+    (box :class "bar-section" :valign "center" :halign "end" :orientation "h" :space-evenly false :spacing 3
       (cava)
       (music)
       (settings)
-      (keyboard_layout)
+      (volume)
+      (nkeyboard_layout)
       ;;(notifications)
-      (power))))
+      (power)
+    )
+  )
+)
 
 ;; ============================================================================
 ;; Left Section Widgets
 ;; ============================================================================
 
-(defwidget launcher []
-  (box 
-    :class "lnchr"
-    :orientation "h" 
-    :space-evenly true
-    :halign "start"
-    (button 
-      :onclick "pgrep rofi && pkill rofi || ~/.config/rofi/launcher.sh" 
-      :tooltip "меню" 
-      "  ${USER}")))
-
-(defwidget lbgz []
-      	(box 	:class "lbg"
-      			:orientation "h" 
-      			:space-evenly true
-      			:halign "start"
-        		(button :onclick "sh -c './bar/scripts/change-wall.sh zoom'" :tooltip "обновить обои" "")
-      	)
+(defwidget nworkspaces []
+  (eventbox :onscroll "if [ '{}' = 'up' ]; then hyprctl dispatch workspace -1; else hyprctl dispatch workspace +1; fi"
+    (box :class "ws" :orientation "h" :space-evenly false
+      (eventbox :onhover "eww update ws=true" :onhoverlost "eww update ws=false"
+        (box :orientation "h" :space-evenly false :vexpand false
+          (box :space-evenly false :spacing 2
+            (nws-button :id 1 :state "${nworkspaces.ws1.class}" :info "${nworkspaces.ws1.icon}")
+            (nws-button :id 2 :state "${nworkspaces.ws2.class}" :info "${nworkspaces.ws2.icon}")
+            (nws-button :id 3 :state "${nworkspaces.ws3.class}" :info "${nworkspaces.ws3.icon}")
+            (nws-button :id 4 :state "${nworkspaces.ws4.class}" :info "${nworkspaces.ws4.icon}")
+            (nws-button :id 5 :state "${nworkspaces.ws5.class}" :info "${nworkspaces.ws5.icon}")
+          )
+          (revealer :transition "slideleft" :reveal ws 
+            (box :orientation "h" :space-evenly false :vexpand false :spacing 2 :style "padding: 0px 0px 0px 2px;"
+              (nws-button :id 6 :state "${nworkspaces.ws6.class}" :info "${nworkspaces.ws6.icon}")
+              (nws-button :id 7 :state "${nworkspaces.ws7.class}" :info "${nworkspaces.ws7.icon}")
+              (nws-button :id 8 :state "${nworkspaces.ws8.class}" :info "${nworkspaces.ws8.icon}")
+              (nws-button :id 9 :state "${nworkspaces.ws9.class}" :info "${nworkspaces.ws9.icon}")
+              (nws-button :id 10 :state "${nworkspaces.ws10.class}" :info "${nworkspaces.ws10.icon}")
+            )
+          )
+        )
       )
-      
-      (defwidget lbg []
-      	(box 	:class "lbg"
-      			:orientation "h" 
-      			:space-evenly true
-      			:halign "start"
-        		(button :onclick "sh -c './bar/scripts/change-wall.sh no-zoom'" :tooltip "обновить обои" "")
-      	)
-      )
-      
-      (defwidget bg []
-      	(box 	:class "bg"
-      			:orientation "h" 
-      			:space-evenly true
-      			:halign "start"
-        		(button :onclick "sh -c './bar/scripts/change-wall.sh stat'" :tooltip "обновить обои" "")
-      	)
-      )
+    )
+  )
+)
+    
+(defwidget nws-button [id state info]
+  (button :class "ws ${state}" :onclick "./scripts/workspace-manager-hypr.sh switch-workspace ${id}"
+    (label :text "${info}")
+  )
+)
 
-(defwidget workspaces []
-  (eventbox :onscroll "if [ '{}' = 'up' ]; then niri msg action focus-workspace-up; else niri msg action focus-workspace-down; fi"
-    (box :class "workspaces"
-         :orientation "h"
-         :space-evenly false
-         :spacing 1
-      (eventbox  :onhover "eww update ws=true"
-                 :onhoverlost "eww update ws=false"
-               (box  :orientation "h"      
-                  	 :space-evenly false
-                  	 :vexpand false
-      			   (ws-button-with-state :id 1 :state nws-1-state :info nws-1-info)  
-      			   (ws-button-with-state :id 2 :state nws-2-state :info nws-2-info)
-      			   (ws-button-with-state :id 3 :state nws-3-state :info nws-3-info)
-      			   (ws-button-with-state :id 4 :state nws-4-state :info nws-4-info)
-      			   (ws-button-with-state :id 5 :state nws-5-state :info nws-5-info)
-      			   (revealer  :transition "slideleft"
-        			   		  :reveal ws
-        			   		(box  :orientation "h"            
-          			   		      :space-evenly false
-          			   		      :vexpand false
-          			   		(ws-button-with-state :id 6 :state nws-6-state :info nws-6-info)  
-          			   		(ws-button-with-state :id 7 :state nws-7-state :info nws7-info)
-          			   		(ws-button-with-state :id 8 :state nws-8-state :info nws-8-info)
-          			   		(ws-button-with-state :id 9 :state nws-9-state :info nws-9-info)
-          			   		(ws-button-with-state :id 10 :state nws-10-state :info nws-10-info))))))
+(defwidget nactive_window []
+  (box :class "aw" :orientation "h" :space-evenly true :halign "start" :tooltip "активное окно"
+    (label :text "${hAW}")
+  )
+)
 
-(defwidget ws-button-with-state [id state info]
-  (button :class "workspace ${state}"
-          :onclick "./bar/scripts/workspace-manager-niri.sh switch-workspace ${id}"
-    (label :text "${info}")))
-
-(defwidget active_window []
-  (box 
-    :class "tme"
-    :orientation "h" 
-    :space-evenly true
-    :halign "start"
-    :tooltip "активное окно"
-    (label :text nAW)))
 
 ;; ============================================================================
 ;; Center Section Widgets
 ;; ============================================================================
 
-(defwidget weather []
-  (box 
-    :class "tme"
-    :orientation "h" 
-    :space-evenly true
-    :halign "start"
-    (label :text WEATHER)))
-
-(defwidget time []
-  (box 
-    :class "tme" 
-    :orientation "h" 
-    :space-evenly false 
-    :halign "center" 
-    :tooltip "${CAL}"
-    (label 
-      :style "color: ${accent}" 
-      :text "󱑎  ")
-    (label 
-      :text "${time_data}")))
-
 ;; ============================================================================
 ;; Right Section Widgets
 ;; ============================================================================
 
-(defwidget cava []
-  (box
-    :class "cava"
-    :vexpand false
-    :hexpand false
-    :space-evenly false
-    (label :text CAVA)))
-
-(defwidget music []
-  (box
-    :class "msc"
-    :orientation "h"
-    :space-evenly false
-    :halign "end"
-    (button 
-      :onclick "playerctl play-pause" 
-      {music != "" ? "${music}" : ""})))
-
-(defwidget settings []
-  (eventbox
-    :onhover "eww update stngs=true"
-    :onhoverlost "eww update stngs=false"
-    (box
-      :class "stngs"
-      :orientation "h"      
-      :space-evenly false
-      :vexpand false
-      (revealer
-        :transition "slideleft"
-        :reveal stngs
-        (box
-          :orientation "h"            
-          :space-evenly false
-          :vexpand false
-          (button 
-            :onclick "bash <(pwvucontrol)" 
-            :tooltip "настройки звука" 
-            "󰗅") 
-          (button 
-            :onclick "bash <(kitty nmtui)" 
-            :tooltip "настройки сети" 
-            "󰈀") 
-          (button 
-            :onclick "bash <(blueman-manager)" 
-            :tooltip "настройки bluetooth" 
-            "󰂯")))
-      (label :text "."))))
-
-(defwidget keyboard_layout []
-  (box 
-    :class "kbl"
-    :orientation "h"
-    :space-evenly true
-    :halign "start"
-    (label 
-      :style "color: ${accent}" 
-      :text "󰌏  ")
-    (label 
-      :text "${nkblayout}")))
-
-(defwidget notifications []
-  (box
-    :class "ntf" 
-    :orientation "h"
-    :space-evenly false
-    :halign "end"
-    (button 
-      :onclick "sleep 0.1 && swaync-client -t -sw" 
-      :tooltip "уведомления" 
-      "")))
-
-(defwidget power []
-  (box 
-    :class "pwr"
-    :orientation "h" 
-    :space-evenly false
-    :halign "end"
-    (button 
-      :onclick "bash <(wlogout -b 5)" 
-      :tooltip "питание" 
-      "")))
-
-;; ============================================================================
-;; Volume Widget (commented out, but optimized)
-;; ============================================================================
-
-;; (defwidget volume []
-;;   (eventbox 
-;;     :onscroll "if [ '{}' == 'up' ]; then pamixer -i 5; else pamixer -d 5; fi"
-;;     :vexpand true
-;;     :valign "fill"
-;;     (box 
-;;       :class "vlm"
-;;       :orientation "h"
-;;       :space-evenly false
-;;       :valign "fill"
-;;       :vexpand false
-;;       :tooltip "громкость"
-;;       (label 
-;;         :style "color: ${accent}" 
-;;         :text "󰕾 ")
-;;       (label 
-;;         :text "${volume}%"))))
-
+(defwidget nkeyboard_layout []
+  (box :class "kbl":orientation "h" :space-evenly true :halign "start"
+    (label :class "lbl-clr" :tooltip "Язык" :text "󰌏 ")
+    (label :text "${nkblayout}")
+  )
+)
+      
 ;; ============================================================================
 ;; Window Definition
 ;; ============================================================================
 
 (defwindow nbar
   :monitor 0
-  :stacking "bottom"
+  :exclusive true
+  :stacking "fg"
   :windowtype "dock"
-  :geometry (geometry 
-    :x "0px"
-    :y "6px"
-    :width "3428px" ;;change this number if you don't use monitor 21:9 (3440X1440)
-    :height "30px"
-    :anchor "top center")
+  :geometry (geometry :x "0px" :y "6px"
+                      :width "100%"
+                      :height "30px"
+                      :anchor "top center")
   :reserve (struts 
     :side "bottom" 
     :distance "4%")
-  (bar))
+  (nbar)
+)

@@ -1,5 +1,6 @@
 (include "./bar/hbar.yuck")
-;;(include "./bar/nbar.yuck")
+(include "./bar/nbar.yuck")
+(include "./bar/bar.yuck")
 (include "./activate linux/linux.yuck")
 (include "./Btime/btime.yuck")
 (include "./round monitor/roundm.yuck")

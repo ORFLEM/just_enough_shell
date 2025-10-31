@@ -6,15 +6,16 @@
 
 .lnch {
   border-radius: 8px;
-  background-color: #474747;
+  background: $background;
+  font-family: "Mononoki Nerd Font Propo";
+  font-size: 19px;
+  font-weight: bolder;
 }
 
 .lft {
-  background-position: center;
-  background-size: cover;
   border-radius: 8px;
   padding: 3px;
-  background-color: #2b2b2b;
+  background: $background-alt;
 }
 
 .rght {
@@ -24,7 +25,7 @@
 .srch {
   border-radius: 5px;
   padding: 12px;
-  background-color: #2b2b2b;
+  background: $background-alt;
 }
 
 .inpt {
@@ -33,27 +34,28 @@
 
 .btns {
   border-radius: 5px;
-  background-color: #474747;
+  background: $background;
   padding: 3px;
 }
 
 .btn {
-  padding: 8px 32px;
+  padding: 6px 32px;
   border-radius: 2px;
-  background-color: #2b2b2b;
+  background: $background-alt;
   color: #CCCCCC;
 }
 
 .btn.sel {
-  background-color: #F5E7C1;
+  background: #F5E7C1;
   color: #000000;
 }
 
 .elem {
-  padding: 6px;
+  padding: 12px;
   color: #CCCCCC;
 }
 
 .elem:hover {
-  background-color: #3b3b3b;
+  border-radius: 5px;
+  background: $background-alt;
 }

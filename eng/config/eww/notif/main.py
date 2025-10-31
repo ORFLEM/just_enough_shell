@@ -4,6 +4,8 @@ from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 import threading
 import time
+import subprocess
+import os
 
 class Notification:
     def __init__(self, summary, body, icon):
@@ -13,6 +15,19 @@ class Notification:
 
 notifications = []
 
+# Путь к звуковому файлу - измени на свой
+SOUND_FILE = os.path.expanduser("~/.config/eww/notif/mes.mp3")
+
+def play_sound():
+    try:
+        # Запускаем в фоне, чтобы не блокировать
+        subprocess.Popen(['pw-play', SOUND_FILE], 
+                        stdout=subprocess.DEVNULL, 
+                        stderr=subprocess.DEVNULL)
+    except Exception as e:
+        # Если не получилось - просто игнорируем
+        pass
+
 def remove_object(notif):
     time.sleep(10)
     notifications.remove(notif)
@@ -21,6 +36,8 @@ def remove_object(notif):
 def add_object(notif):
     notifications.insert(0, notif)
     print_state()
+    # Воспроизводим звук при новом уведомлении
+    play_sound()
     timer_thread = threading.Thread(target=remove_object, args=(notif,))
     timer_thread.start()
 
@@ -40,12 +57,6 @@ def print_state():
     string = string.replace('\n', ' ')
     print(fr"""(box :orientation 'vertical' {string or ''})""", flush=True)
 
-# def print_state():
-#     string = ""
-#     for item in notifications:
-#         string = string + f"{item}"
-#     print(string, flush=True)
-
 class NotificationServer(dbus.service.Object):
     def __init__(self):
         bus_name = dbus.service.BusName('org.freedesktop.Notifications', bus=dbus.SessionBus())
@@ -53,15 +64,6 @@ class NotificationServer(dbus.service.Object):
 
     @dbus.service.method('org.freedesktop.Notifications', in_signature='susssasa{ss}i', out_signature='u')
     def Notify(self, app_name, replaces_id, app_icon, summary, body, actions, hints, timeout):
-        # print("Received Notification:")
-        # print("  App Name:", app_name)
-        # print("  Replaces ID:", replaces_id)
-        # print("  App Icon:", app_icon)
-        # print("  Summary:", summary)
-        # print("  Body:", body)
-        # print("  Actions:", actions)
-        # print("  Hints:", hints)
-        # print("  Timeout:", timeout)
         add_object(Notification(summary, body, app_icon))
         return 0
 
@@ -75,4 +77,3 @@ if __name__ == '__main__':
     server = NotificationServer()
     mainloop = GLib.MainLoop()
     mainloop.run()
-

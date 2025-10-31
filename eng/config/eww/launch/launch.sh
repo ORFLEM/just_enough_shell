@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 
 # Универсальный скрипт для eww launcher
-# Использование:
-#   launch.sh drun list [search_query] - список приложений
-#   launch.sh drun launch <desktop_file> - запустить приложение
-#   launch.sh clipboard list [search] - список буфера
-#   launch.sh clipboard paste <id> - вставить из буфера
-#   launch.sh files list [search] [dir] - список файлов
-#   launch.sh windows list [search] - список окон
-#   launch.sh windows focus <id> - фокус на окно
 
-MODE="${1:-drun}"
-ACTION="${2:-list}"
-QUERY="${3:-}"
+CURRENT_MODE="drun"
+SEARCH_QUERY=""
+CMD_FILE="/tmp/eww-launcher-cmd"
+CACHE_FILE="/tmp/eww-launcher-cache"
+CACHE_TIMEOUT=300  # 5 минут
 
 # ==================== DRUN ====================
 
@@ -76,16 +70,10 @@ parse_desktop_file() {
     comment=$(echo "$comment" | sed 's/\\/\\\\/g; s/"/\\"/g')
     file=$(echo "$file" | sed 's/\\/\\\\/g; s/"/\\"/g')
     
-    cat <<EOF
-{
-  "name": "$name",
-  "exec": "$exec",
-  "icon": "$icon",
-  "comment": "$comment",
-  "terminal": $([[ "$terminal" == "true" ]] && echo "true" || echo "false"),
-  "file": "$file"
-}
-EOF
+    printf '{"name":"%s","exec":"%s","icon":"%s","comment":"%s","terminal":%s,"file":"%s"}' \
+        "$name" "$exec" "$icon" "$comment" \
+        "$([[ "$terminal" == "true" ]] && echo "true" || echo "false")" \
+        "$file"
 }
 
 get_desktop_files() {
@@ -96,22 +84,29 @@ get_desktop_files() {
     done | sort -u
 }
 
-drun_list() {
-    echo "["
-    local first=true
+list_drun() {
+    local search="$1"
+    
+    local -a items_array
     while IFS= read -r desktop_file; do
-        result=$(parse_desktop_file "$desktop_file" "$QUERY")
-        if [[ -n "$result" ]]; then
-            [[ "$first" == false ]] && echo ","
-            echo "$result"
-            first=false
+        item=$(parse_desktop_file "$desktop_file" "$search")
+        if [[ -n "$item" ]]; then
+            items_array+=("$item")
         fi
     done < <(get_desktop_files)
-    echo "]"
+    
+    printf "["
+    local first=true
+    for item in "${items_array[@]}"; do
+        [[ "$first" == false ]] && printf ","
+        printf "%s" "$item"
+        first=false
+    done
+    printf "]\n"
 }
 
-drun_launch() {
-    local desktop_file="$QUERY"
+launch_drun() {
+    local desktop_file="$1"
     
     [[ ! -f "$desktop_file" ]] && exit 1
     
@@ -121,36 +116,150 @@ drun_launch() {
     exec_line=$(echo "$exec_line" | sed -E 's/%[a-zA-Z]//g' | xargs)
     
     if [[ "$terminal" == "true" ]]; then
-        ${TERMINAL:-alacritty} -e $exec_line &
+        ${TERMINAL:-kitty} -e $exec_line &
     else
         setsid -f $exec_line >/dev/null 2>&1
     fi
 }
 
+# ==================== CLIPHIST ===================
+
+launch_cliphist() {
+    local id="$1"
+    echo -e "${id}\t" | cliphist decode | wl-copy
+}
+
+list_cliphist() {
+    tmp_dir="/tmp/cliphist"
+    
+    if [[ $1 =~ ^[0-9]+$ ]]; then
+        cliphist decode <<<"$1" | wl-copy
+        exit
+    fi
+
+    local search="$1"
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+
+    read -r -d '' prog <<'EOF'
+BEGIN { cnt = 0; search_lower = tolower(search) }
+{
+    if ($0 ~ /^[0-9]+\s<meta http-equiv=/) next;
+    if (match($0, /^([0-9]+)\s/, mid)) {
+        id = mid[1];
+        content = substr($0, RLENGTH + 1);
+        if (match(content, /binary[^\n]*(jpg|jpeg|png|bmp)/, imggrp)) {
+            ext = imggrp[1];
+            icon_path = tmp_dir "/" id "." ext;
+            cmd = sprintf("echo '%s\t' | cliphist decode > '%s'", id, icon_path);
+            system(cmd);
+            name = id " (" ext ")";
+            gsub(/\\/, "\\\\", name);
+            gsub(/"/, "\\\"", name);
+            gsub(/\\/, "\\\\", icon_path);
+            gsub(/"/, "\\\"", icon_path);
+            name_lower = tolower(name);
+            if (length(search) == 0 || index(name_lower, search_lower) > 0) {
+                item = sprintf("{\"name\":\"%s\",\"exec\":\"\",\"icon\":\"%s\",\"comment\":\"\",\"terminal\":false,\"file\":\"%s\"}", name, icon_path, id);
+                items[cnt++] = item;
+            }
+            next;
+        }
+        orig_content = content;
+        gsub(/\\/, "\\\\", content);
+        gsub(/"/, "\\\"", content);
+        content_lower = tolower(orig_content);
+        if (length(search) == 0 || index(content_lower, search_lower) > 0) {
+            item = sprintf("{\"name\":\"%s\",\"exec\":\"\",\"icon\":\"\",\"comment\":\"\",\"terminal\":false,\"file\":\"%s\"}", content, id);
+            items[cnt++] = item;
+        }
+    }
+}
+END {
+    printf "[";
+    for (i = 0; i < cnt; i++) {
+        if (i > 0) printf ",";
+        printf "%s", items[i];
+    }
+    printf "]\n";
+}
+EOF
+    gawk -v search="$search" -v tmp_dir="$tmp_dir" "$prog" < <(cliphist list)
+}
+
+# ==================== OUTPUT ====================
+
+output_list() {
+    case "$CURRENT_MODE" in
+        drun)
+            list_drun "$SEARCH_QUERY"
+            ;;
+        clipboard)
+            list_cliphist "$SEARCH_QUERY"
+            ;;
+        files)
+            printf "[]\n"
+            ;;
+        windows)
+            printf "[]\n"
+            ;;
+    esac
+}
+
+# ==================== LISTEN MODE ====================
+
+listen_mode() {
+    touch "$CMD_FILE"
+    
+    output_list
+    
+    tail -f -n0 "$CMD_FILE" 2>/dev/null | while read -r line; do
+        cmd=$(echo "$line" | cut -d' ' -f1)
+        arg=$(echo "$line" | cut -d' ' -f2-)
+        
+        case "$cmd" in
+            change)
+                CURRENT_MODE="$arg"
+                SEARCH_QUERY=""
+                output_list
+                ;;
+            search)
+                SEARCH_QUERY="$arg"
+                output_list
+                ;;
+            quit)
+                break
+                ;;
+        esac
+    done
+}
+
 # ==================== MAIN ====================
 
+MODE="${1:-listen}"
+
 case "$MODE" in
-    drun)
-        case "$ACTION" in
-            list) drun_list ;;
-            launch) drun_launch ;;
+    listen)
+        listen_mode
+        ;;
+    
+    change)
+        echo "change ${2:-drun}" >> "$CMD_FILE"
+        ;;
+    
+    search)
+        echo "search ${2:-}" >> "$CMD_FILE"
+        ;;
+    
+    launch)
+        case "${2:-drun}" in
+            drun) launch_drun "$3" ;;
+            clipboard) launch_cliphist "$3" ;;
         esac
         ;;
     
-    clipboard)
-        echo "[]"  # TODO: implement
-        ;;
-    
-    files)
-        echo "[]"  # TODO: implement
-        ;;
-    
-    windows)
-        echo "[]"  # TODO: implement
-        ;;
-    
     *)
-        echo "Usage: $0 {drun|clipboard|files|windows} {list|launch|paste|focus} [args]"
+        echo "Usage: $0 {listen|change <mode>|search <query>|launch <mode> <arg>}"
         exit 1
         ;;
 esac

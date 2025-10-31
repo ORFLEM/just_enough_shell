@@ -3,12 +3,15 @@
 ;; Переменные
 (defvar srch "")
 (defvar mode "drun")
-(defvar items "[]")
+
+;; Слушаем вывод скрипта в режиме listen
+(deflisten items :initial "[]"
+  `./launch/launch.sh listen`)
 
 ;; Main widget
 (defwidget launch []
-  (eventbox :onhoverlost "eww close launcher"
-    (box :class "lnch" :space-evenly false
+  (eventbox :onhoverlost "eww close launcher && eww update mode='drun'"
+    (box :class "lnch" :space-evenly true
       (lft)
       (rght)
     )
@@ -17,7 +20,10 @@
 
 ;; Левая панель
 (defwidget lft []
-  (box :class "lft" :orientation "v" :space-evenly false :style "background-image: url('./launch/images/dark_brown.jpg');"
+  (box :class "lft" 
+       :orientation "v" 
+       :space-evenly false
+       :style "background-image: url('./launch/images/dark_brown.jpg'); background-size: cover; background-position: center;"
     (box :class "top-sect" :orientation "v" :space-evenly false :valign "start"
       (srch_box)
     )
@@ -30,64 +36,61 @@
 
 ;; Поиск
 (defwidget srch_box []
-  (box :class "srch" :space-evenly false
+  (box :class "srch" :space-evenly false :orientation "h"
     (label :class "prmt" :text "")
     (input :class "inpt" 
            :value srch
-           :onchange "eww update srch='{}' && eww update items=\"$(./launch/launch.sh ${mode} list '{}')\"")
+           :onchange "eww update srch='{}' && ./launch/launch.sh search '{}'")
   )
 )
 
 ;; Кнопки режимов
 (defwidget btns []
   (box :class "btns" :orientation "h" :space-evenly true :spacing 3
-    (button :class "btn ${mode == "drun" ? "sel" : ""}"
-            :onclick "eww update mode='drun' && eww update srch='' && eww update items=\"$(./launch/launch.sh ${mode} list '')\""
-            "run")
-    (button :class "btn ${mode == "clipboard" ? "sel" : ""}"
-            :onclick "eww update mode='clipboard' && eww update srch='' && eww update items=\"$(./launch/launch.sh ${mode} list '')\""
-            "clipboard")
-    (button :class "btn ${mode == "files" ? "sel" : ""}"
-            :onclick "eww update mode='files' && eww update srch='' && eww update items=\"$(./launch/launch.sh ${mode} list '')\""
-            "files")
-    (button :class "btn ${mode == "windows" ? "sel" : ""}"
-            :onclick "eww update mode='windows' && eww update srch='' && eww update items=\"$(./launch/launch.sh ${mode} list '')\""
-            "active")
+    (button :class {mode == 'drun' ? 'btn sel' : 'btn'}
+            :onclick "eww update mode='drun' && eww update srch='' && ./launch/launch.sh change drun"
+            "Проги")
+    (button :class {mode == 'clipboard' ? 'btn sel' : 'btn'}
+            :onclick "eww update mode='clipboard' && eww update srch='' && ./launch/launch.sh change clipboard"
+            "Буфер")
+    (button :class {mode == 'files' ? 'btn sel' : 'btn'}
+            :onclick "eww update mode='files' && eww update srch='' && ./launch/launch.sh change files"
+            "Файлы")
+    (button :class {mode == 'windows' ? 'btn sel' : 'btn'}
+            :onclick "eww update mode='windows' && eww update srch='' && ./launch/launch.sh change windows"
+            "Окна")
   )
 )
 
 ;; Правая панель
 (defwidget rght []
-  (box :class "rght" :orientation "v" :space-evenly false
-    (scroll :class "scrl" :vscroll true :hscroll false :height 500
+  (box :class "rght" :orientation "v" :space-evenly true
+    (scroll :class "scrl" :vscroll true :hscroll false :height 501
       (box :class "lst" :orientation "v" :space-evenly false
         (for itm in items
-          (itm_elem :itm itm :md mode))
+          (itm_elem 
+            :id "${itm.id}"
+            :name "${itm.name}" 
+            :icon "${itm.icon}" 
+            :file "${itm.file}"))
       )
     )
   )
 )
 
 ;; Элемент списка
-(defwidget itm_elem [itm md]
+(defwidget itm_elem [id name icon file]
   (button :class "elem"
-          :onclick {md == "drun" ? "eww close launcher && ./launch/launch.sh drun launch '${itm.file}'" :
-                    md == "clipboard" ? "eww close launcher && ./launch/launch.sh clipboard paste '${itm.id}'" :
-                    md == "files" ? "eww close launcher && ./launch/launch.sh files list '${itm.path}'" :
-                    "eww close launcher && ./launch/launch.sh windows focus '${itm.id}'"}
-    (box :class "elem-cnt" :space-evenly false :spacing 10
+          :onclick "eww close launcher && ./launch/launch.sh launch ${mode} '${file}'"
+    (box :class "elem-cnt" :space-evenly false :spacing 10 :orientation "h"
       (image :class "icn"
-             :path {itm.icon != "" ? itm.icon : "application-x-executable"}
+             :path "${icon}"
              :image-width 32
              :image-height 32)
       (label :class "txt"
-             :text {md == "drun" ? itm.name :
-                    md == "clipboard" ? itm.preview :
-                    md == "files" ? itm.name :
-                    itm.title}
+             :text "${name}"
              :xalign 0
-             :limit-width 60
-             :truncate true)
+             :limit-width 60)
     )
   )
 )
@@ -97,10 +100,10 @@
   :monitor 0
   :stacking "overlay"
   :focusable "ondemand"
-  :geometry (geometry 
-            :width "1000px"
-            :height "513px"
+  :exclusive true
+  :geometry (geometry
+            :width 1000
+            :height 513
             :anchor "center")
-  :onopen "eww update mode='drun' && eww update items=\"$(./launch/launch.sh drun list '')\""
   (launch)
 )

@@ -2,6 +2,8 @@
 
 # Файл для хранения состояния календаря
 STATE_FILE="$HOME/.config/eww/calendar_state"
+# Файл с праздниками (формат: день|месяц|год-название_праздника)
+HOLIDAYS_FILE="$HOME/.config/eww/holidays.txt"
 
 # Функция для получения названия месяца
 month_name() {
@@ -69,6 +71,34 @@ first_day_of_month() {
     fi
 }
 
+# Функция для проверки, является ли день праздником
+is_holiday() {
+    day=$1
+    month=$2
+    year=$3
+    
+    if [ ! -f "$HOLIDAYS_FILE" ]; then
+        echo ""
+        return
+    fi
+    
+    # Ищем точное совпадение день|месяц|год
+    holiday=$(grep "^${day}|${month}|${year}-" "$HOLIDAYS_FILE" | head -n1)
+    if [ -n "$holiday" ]; then
+        echo "$holiday" | cut -d'-' -f2-
+        return
+    fi
+    
+    # Ищем ежегодный праздник день|месяц|*
+    holiday=$(grep "^${day}|${month}|\*-" "$HOLIDAYS_FILE" | head -n1)
+    if [ -n "$holiday" ]; then
+        echo "$holiday" | cut -d'-' -f2-
+        return
+    fi
+    
+    echo ""
+}
+
 # Функция для сохранения состояния
 save_state() {
     mkdir -p "$(dirname "$STATE_FILE")"
@@ -131,14 +161,24 @@ generate_month_calendar() {
         # Определяем день недели (0=пн, 6=вс)
         day_of_week=$((day_index % 7))
         
+        holiday=$(is_holiday $i $prev_month $prev_year)
+        
         style="omonth"
         if [ $prev_year -eq $current_year ] && [ $prev_month -eq $current_month ] && [ $i -eq $current_day ]; then
             style="today"
+        elif [ -n "$holiday" ]; then
+            style="oholiday"
         elif [ $day_of_week -eq 5 ] || [ $day_of_week -eq 6 ]; then
             style="oweekend"
         fi
         
-        printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        if [ -n "$holiday" ]; then
+            # Экранируем кавычки в названии праздника
+            holiday_escaped=$(echo "$holiday" | sed 's/"/\\"/g')
+            printf ',"day%d":{"day":%d,"style":"%s","holiday":"%s"}' $day_index $i $style "$holiday_escaped"
+        else
+            printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        fi
         
         i=$((i + 1))
         day_count=$((day_count + 1))
@@ -151,14 +191,24 @@ generate_month_calendar() {
         # Определяем день недели (0=пн, 6=вс)
         day_of_week=$((day_index % 7))
         
+        holiday=$(is_holiday $i $target_month $target_year)
+        
         style="tmonth"
         if [ $target_year -eq $current_year ] && [ $target_month -eq $current_month ] && [ $i -eq $current_day ]; then
             style="today"
+        elif [ -n "$holiday" ]; then
+            style="tholiday"
         elif [ $day_of_week -eq 5 ] || [ $day_of_week -eq 6 ]; then
             style="tweekend"
         fi
         
-        printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        if [ -n "$holiday" ]; then
+            # Экранируем кавычки в названии праздника
+            holiday_escaped=$(echo "$holiday" | sed 's/"/\\"/g')
+            printf ',"day%d":{"day":%d,"style":"%s","holiday":"%s"}' $day_index $i $style "$holiday_escaped"
+        else
+            printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        fi
         
         i=$((i + 1))
         day_count=$((day_count + 1))
@@ -171,14 +221,24 @@ generate_month_calendar() {
         # Определяем день недели (0=пн, 6=вс)
         day_of_week=$((day_index % 7))
         
+        holiday=$(is_holiday $i $next_month $next_year)
+        
         style="omonth"
         if [ $next_year -eq $current_year ] && [ $next_month -eq $current_month ] && [ $i -eq $current_day ]; then
             style="today"
+        elif [ -n "$holiday" ]; then
+            style="oholiday"
         elif [ $day_of_week -eq 5 ] || [ $day_of_week -eq 6 ]; then
             style="oweekend"
         fi
         
-        printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        if [ -n "$holiday" ]; then
+            # Экранируем кавычки в названии праздника
+            holiday_escaped=$(echo "$holiday" | sed 's/"/\\"/g')
+            printf ',"day%d":{"day":%d,"style":"%s","holiday":"%s"}' $day_index $i $style "$holiday_escaped"
+        else
+            printf ',"day%d":{"day":%d,"style":"%s"}' $day_index $i $style
+        fi
         
         i=$((i + 1))
         day_count=$((day_count + 1))

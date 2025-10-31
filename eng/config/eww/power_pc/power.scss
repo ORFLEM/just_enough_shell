@@ -3,7 +3,7 @@
 	color: $accent;
 	border-radius: 6px;
 	font-family: "Mononoki Nerd Font Propo";
-	font-size: 250px;
+	font-size: 225px;
 	opacity: 0.85;
 	padding: 3px;
 }
@@ -12,11 +12,13 @@
 	// margin: 0;
 	background: $background-alt;
 	border-radius: 3px;
+	font-size: 225px;
 	//padding: 0px 36px 0px 0px;
 	transition: all 0.2s ease-in-out;
 }
 .pwr_case button:hover {
 	background: $accent;
+  font-size: 250px;
 	color: #000000;
 	transition: all 0.2s ease-in-out;
 }

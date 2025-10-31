@@ -5,25 +5,20 @@
 : "${ICON_OCCUPIED:=}"
 : "${ICON_EMPTY:=}"
 
-# Функция получения данных о воркспейсах
+# Функция получения данных о воркспейсах (используем activeworkspace как в оригинале)
 get_workspace_data() {
-    local workspaces_json=$(niri msg -j workspaces 2>/dev/null)
-    
-    # Получаем активный воркспейс
-    local active_ws=$(echo "$workspaces_json" | jq -r '.[] | select(.is_active == true) | .idx')
-    
-    # Получаем существующие воркспейсы
-    local existing_ws=$(echo "$workspaces_json" | jq -r '[.[] | .idx] | join(",")')
-    
+    local active_ws
+    active_ws=$(hyprctl activeworkspace -j | jq -r '.id')
+    local existing_ws  
+    existing_ws=$(hyprctl workspaces -j | jq -r '[.[] | .id] | join(",")')
     active_ws=${active_ws:-1}
     existing_ws=${existing_ws:-$active_ws}
-    
     echo "$active_ws:$existing_ws"
 }
 
 # Динамическое определение количества воркспейсов
 get_max_workspaces() {
-    local ws_count=$(niri msg -j workspaces 2>/dev/null | jq -r '[.[] | .idx] | length')
+    local ws_count=$(hyprctl workspaces -j | jq -r '[.[] | .id] | length')
     ws_count=$(( ws_count > 0 ? ws_count : 10 ))
     ws_count=$(( ws_count < 10 ? 10 : ws_count ))
     echo "$ws_count"
@@ -38,7 +33,7 @@ get_workspace_state() {
     if [ "$id" -eq "$active" ]; then
         echo "active:$ICON_ACTIVE"
     elif echo "$existing" | grep -q "$id"; then
-        echo "occupied:$ICON_OCCUPIED"
+        echo "occupied:$ICON_OCCUPIED"  
     else
         echo "empty:$ICON_EMPTY"
     fi
@@ -86,7 +81,7 @@ update_all_workspaces() {
         
         LAST_ACTIVE="$active"
         LAST_EXISTING="$existing"
-        return 1  # 1 = данные изменились
+        return 1  # Как в оригинале: 1 = данные изменились
     fi
     return 0  # Данные не изменились
 }
@@ -95,19 +90,34 @@ update_all_workspaces() {
 stream_workspaces_json() {
     while true; do
         if update_all_workspaces; then
+            # JSON уже выведен в update_all_workspaces
             :
         fi
         sleep 0.05
     done
 }
 
+
+
 # Основная логика
 case "$1" in
-    "stream-workspaces-json")
+    "stream-ws-json")
         stream_workspaces_json
         ;;
+    "change-ws")
+    [[ -n "$2" ]] && hyprctl dispatch workspace "$2" >/dev/null 2>&1
+    ;;
+    "--help")
+    echo "Usage: $0 {--help | stream-ws-json | change-ws}"
+    sleep 0.1
+    echo "commands:"
+    sleep 0.1
+    echo "   stream-ws-json   -> show information about your workspaces (active|occupied|empty)"
+    sleep 0.1
+    echo "   change-ws...     -> shanging your active workspace on other workspace (use number other ws)"
+    ;;
     *)
-        echo "Usage: $0 {stream-workspaces-json}"
+        echo "Usage: $0 {stream-ws-json | change-ws}"
         exit 1
         ;;
 esac

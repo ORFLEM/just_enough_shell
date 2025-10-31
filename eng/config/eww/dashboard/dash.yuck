@@ -24,12 +24,12 @@
   (box :orientation "v" :space-evenly false :spacing 25 :class "dash-prfl"
     (box :style "background-image: url('${profile}');" :class "dash-prfl-image")
     (label :text "Hi, ${USER})" :style "font-size: 40px;")
-    (label :text "It's a funny text)" :style "color: #777777;")
+    (label :text "Мы все говно)" :style "color: #777777;")
   )
 )
 
 (defwidget plr []
-  (box :orientation "v" :space-evenly false :spacing 23 :class "dash-plr"
+  (box :orientation "v" :space-evenly false :spacing 21 :class "dash-plr"
     (box :class "dash-plr-art" :style "background-image: url('${music.art}');")
     (label :text {music.title} :limit-width 20)
     (label :text {music.artist} :limit-width 20)
@@ -43,10 +43,10 @@
 
 (defwidget dash_weather []
   (box :orientation "v" :space-evenly false :class "dwther" :spacing 6
-    (box :space-evenly false :orientation "v" :style "padding: 12px 12px 14px 12px" :spacing 15
+    (box :space-evenly false :orientation "v" :style "padding: 12px 12px 15px 12px" :spacing 15
       (box :space-evenly false :spacing 145
-        (label :justify "left" :text "City")
-        (label :class "dgray_wthr" :text "Updated ${wther.updated}")
+        (label :justify "left" :text "Томск")
+        (label :class "dgray_wthr" :text "Обновлено ${wther.updated}")
       )
       (box :space-evenly false :spacing 100
         (box :orientation "v"  :space-evenly false :halign "start" :spacing 10
@@ -59,12 +59,12 @@
       )
       (box :space-evenly false :spacing 25 :class "dgray_wthr" :halign "start"
         (box :orientation "v" :halign "start" :spacing 5
-          (label :text "Feels ${wther.feels}°")
-          (label :text "Hum. ${wther.humidity}%")
+          (label :text "Ощущается ${wther.feels}°")
+          (label :text "Влажность ${wther.humidity}%")
         )
         (box :orientation "v" :halign "start" :spacing 5
-          (label :text "Wind ${wther.wind} м/с")
-          (label :text "Pres. ${wther.pressure} мм рт.ст.")
+          (label :text "Ветер ${wther.wind} м/с")
+          (label :text "Дав. ${wther.pressure} мм рт.ст.")
         )
       )
     )
@@ -153,7 +153,7 @@
 (defwidget text []
   (box :orientation "v" :class "dash-text"
     (label :text '"rm -rf / --no-preserve-root"')
-    (label :text '-community of enthusiasts-' :style "color: #777777; margin: 0 0 55 0;")
+    (label :text '-сообщество интузиастов-' :style "color: #777777; margin: 0 0 55 0;")
   )
 )
 
@@ -161,7 +161,7 @@
 
 (defwindow dashboard 
   :monitor 0
-  :stacking "fg"
+  :stacking "overlay"
   :windowtype "normal"
   :geometry (geometry :anchor "center"
             :height "600px"

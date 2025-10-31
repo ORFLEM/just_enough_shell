@@ -25,7 +25,7 @@
 
 (defwindow power_pc
 	:monitor 0
-	:stacking "fg"
+	:stacking "overlay"
 	:windowtype "normal"
 	:geometry (geometry :width "1500px"
 						:height "300px"

@@ -1,6 +1,6 @@
 .dash {
   background: $background;
-  font-family: "Mononoki";
+  font-family: "Mononoki Nerd Font Propo";
   color: $font;
   border-radius: 8px;
   padding: 3px;
@@ -23,6 +23,8 @@
 }
 
 .dash-plr {
+  font-family: "Mononoki Nerd Font Propo";
+  font-size: 17px;
   background: $background-alt;
   border-radius: 5px;
   padding: 3px;
@@ -42,7 +44,7 @@
   font-size: 25px;
   border-radius: 3px;
   padding: 3px;
-  margin: 0px 0px 0px 0px;
+  margin: 1px 0px 0px 0px;
 }
 
 .dash-plr-nav button {
@@ -160,7 +162,7 @@ scale trough highlight {
 .dash-pwr button {
   background: transparent;
   border-radius: 4px;
-  padding: 0px 50px 0px 50px;
+  padding: 0px 25px;
   transition: all 0.2s ease-in-out;
 }
 
@@ -173,5 +175,5 @@ scale trough highlight {
 .dash-text {
   background: $background-alt;
   border-radius: 5px;
-  padding: 3px 41px;
+  padding: 3px 56px;
 }

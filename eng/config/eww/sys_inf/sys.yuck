@@ -7,7 +7,7 @@
 
 (defwidget sysvol []
   (box :orientation "v" :space-evenly false
-    (revealer :transition "slidedown" :reveal rvol
+    (revealer :transition "slideup" :reveal rvol
       (box :class "sysvol" :orientation "h" :space-evenly false
         (label :text {volume.sign})
         (scale :min 0 :max 100 :value {volume.vol} :active false)
@@ -18,7 +18,7 @@
 
 (defwidget sysbright []
   (box :orientation "v" :space-evenly false
-    (revealer :transition "slidedown" :reveal rbright
+    (revealer :transition "slideup" :reveal rbright
       (box :class "sysbright" :orientation "h" :space-evenly false
         (label :text {brightness.sign})
         (scale :min 0 :max 100 :value {brightness.bright} :active false)
@@ -29,11 +29,13 @@
 
 (defwindow sysinf
   :monitor 0
-  :staking "overlay"
+  :stacking "overlay"
   :windowtype "normal"
-  :geometry (geometry :anchor "top center"
+  :wm-ignore true
+  :geometry (geometry :anchor "bottom center"
+                      ; :y "-36px"
                       :width "100px"
-                      :height "16px")
+                      :height "0px")
   (sysmain)
 )
 (defvar rbright false)

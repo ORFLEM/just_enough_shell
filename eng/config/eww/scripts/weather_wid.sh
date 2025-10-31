@@ -27,7 +27,7 @@ get_weather_data() {
 
     # Текущая погода
     local current
-    current=$(curl -sf --max-time 10 "$API/weather?appid=$KEY&q=$CITY&units=metric&lang=eng") || return 1
+    current=$(curl -sf --max-time 10 "$API/weather?appid=$KEY&q=$CITY&units=metric&lang=ru") || return 1
 
     local temp feels humidity pressure wind icon_code icon desc
     temp=$(echo "$current" | jq -r '.main.temp | round')
@@ -42,7 +42,7 @@ get_weather_data() {
     # Прогноз (берём каждый день в 12:00:00)
         # Прогноз (берём каждый день в 12:00:00)
     local forecast_raw
-    forecast_raw=$(curl -sf --max-time 10 "$API/forecast?appid=$KEY&q=$CITY&units=metric&lang=eng" \
+    forecast_raw=$(curl -sf --max-time 10 "$API/forecast?appid=$KEY&q=$CITY&units=metric&lang=ru" \
       | jq '
         .list
         | map(select(.dt_txt | contains("12:00:00")))

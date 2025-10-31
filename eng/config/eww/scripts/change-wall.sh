@@ -11,19 +11,9 @@ LOG_FILE="$HOME/.config/hypr/wallpaper.log"
 exec >> "$LOG_FILE" 2>&1
 
 # Функция для перезапуска hyprpaper
-restart_hyprpaper() {
-    pkill -x hyprpaper || true
-    hyprpaper &
-    for _ in $(seq 1 $TIMEOUT_IPC); do
-        if hyprctl hyprpaper listloaded >/dev/null 2>&1; then
-            break
-        fi
-        sleep 0.1
-    done
-    sleep 0.5
-    hyprctl hyprpaper preload "$CACHE_IMG" || true
-    hyprctl hyprpaper wallpaper ",$CACHE_IMG" || true
-    hyprctl reload
+restart_swaybg() {
+    pkill -x swaybg || true
+    swaybg -i "$CACHE_IMG" -m fill &
 }
 
 # Функция для чистки обработанных файлов
@@ -32,6 +22,18 @@ cleanup() {
 }
 
 case "$MODE" in
+  hyprlax)
+    IMAGE_FILE=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.png" \) -size +0c | shuf -n1 || true)
+    if [ -n "$IMAGE_FILE" ]; then
+        cp "$IMAGE_FILE" "$CACHE_IMG" || true
+        # Чистим папку после успешной обработки
+        cleanup
+    fi
+    pkill swwww 2>/dev/null || true
+    pkill mpvpaper 2>/dev/null || true
+    pkill -f /usr/local/bin/hyprlax 2>/dev/null || true
+    /usr/local/bin/hyprlax -c "$HOME/.config/hyprlax/pixel-city/parallax.toml"
+  ;;
   stat)
     pkill mpvpaper 2>/dev/null || true
     IMAGE_FILE=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.png" \) -size +0c | shuf -n1 || true)
@@ -40,11 +42,11 @@ case "$MODE" in
         # Чистим папку после успешной обработки
         cleanup
     fi
-    restart_hyprpaper
+    swww img ~/.config/hypr/no-live-bg.png --transition-type wipe --transition-fps 144 --transition-duration 1
     sleep 1
     ;;
   zoom|no-zoom)
-    pkill hyprpaper 2>/dev/null || true
+    pkill swww 2>/dev/null || true
     pkill mpvpaper 2>/dev/null || true
     VIDEO_FILE=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f -iname "*.mp4" -size +0c | shuf -n1 || true)
     if [ -n "$VIDEO_FILE" ]; then

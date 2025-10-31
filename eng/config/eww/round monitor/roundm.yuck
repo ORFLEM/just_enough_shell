@@ -13,7 +13,7 @@
             :width 12
             :height 12
             :anchor "top left")
-  :stacking "fg"
+  :stacking "overlay"
   :windowtype "normal"
   :wm-ignore true
   :focusable false
@@ -27,7 +27,7 @@
             :width 12
             :height 12
             :anchor "top right")
-  :stacking "fg"
+  :stacking "overlay"
   :windowtype "normal"
   :wm-ignore true
   :focusable false
@@ -41,7 +41,7 @@
             :width 12
             :height 12
             :anchor "bottom left")
-  :stacking "fg"
+  :stacking "overlay"
   :windowtype "normal"
   :wm-ignore true
   :focusable false
@@ -55,7 +55,7 @@
             :width 12
             :height 12
             :anchor "bottom right")
-  :stacking "fg"
+  :stacking "overlay"
   :windowtype "normal"
   :wm-ignore true
   :focusable false
