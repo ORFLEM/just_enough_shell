@@ -141,8 +141,8 @@ These configs are for a DESKTOP computer!!
 These configs include controversial choices that not everyone may like:
   using NixOS without Home Manager;
   bash instead of fish;
-  mpvpaper instead of swww;
-  strange ideas in binds & my ui;
+  swww and mpvpaper;
+  strange ideas in keybindings and UI;
 But these are customizable.
 ```
 
@@ -169,15 +169,14 @@ Please don't judge too harshly.
 * Main theme for terminals, TTY, GTK, etc.: `kanagawa`
 
 ```
-If you experience lag, replace mpvpaper with swww:
-uncomment the swww line and comment the mpvpaper line in hyprland.conf,
-and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (lbgz) with (bg).
+If you want animated video wallpapers, replace swww with mpvpaper:
+uncomment the mpvpaper line and comment the swww line in hyprland.conf,
+and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (bg) with (lbg or lgbz for 21:9 monitors).
 ```
 
 ```
 Testing a new mini player type in the bar that uses album artwork as background.
 Not sure if it's a good idea, but feel free to try it out.
-This & other updates (change mpvpaper on swww & swap dwindle on hy3) have in russian localization, next I create a english localization update, sorry, but my english very bad & creating english localization - is very hard
 ```
 
 ## -- Keybindings -- :
@@ -186,16 +185,18 @@ This & other updates (change mpvpaper on swww & swap dwindle on hy3) have in rus
 * `Super + o` - Power Menu
 * `Super + l` - Dashboard
 * `Super + 1-0` or `Super + Scroll Up | Scroll Down` - Switch between workspaces
-* `Super + Shift + 1-0` or `Super + Shift + Scroll Up | Scroll Down` - Move windows between workspaces
-* `Super + Ctrl + Arrow Keys` or `Super + RMB` - Resize windows
-* `Super + Arrow Keys` or `Super + LMB` - Move windows
-* `Super + Shift + Ctrl + w | s | a | d` - Switch between windows
+* `Super + Shift + 1-0` or `Super + Shift + Arrow Keys` - Move windows between workspaces
+* `Super + RMB` - Resize windows
+* `Super + Shift + Arrow Keys` or `Super + LMB` - Move windows
+* `Super + Arrow Keys` - Switch between windows
 * `Super + Alt + LMB` - Toggle window type: floating or tiling
 * `Super + w` - Restart eww
 * `Super + s` - Fullscreen screenshot
 * `Super + d` - Selected area screenshot
 * `Super` - Open application launcher
-* `Super + p` - Center window relative to vertical axis
+* `Super + g` - Create group
+* `Super + Ctrl + g` - Ungroup windows
+* `Super + Tab` - Open workspace overview
 * `CapsLock` or `Shift + Alt` - Switch language
 * `Shift + CapsLock` - Toggle Caps Lock
 * `Super + Space` - Expand window above others
@@ -221,8 +222,14 @@ This & other updates (change mpvpaper on swww & swap dwindle on hy3) have in rus
 ### Power Menu
 ![alt_image](./eng/images/7.png)
 
-### Application Launcher
+### Fastfetch
 ![alt_image](./eng/images/8.png)
+
+### Volume and Brightness Popups
+![alt_image](./eng/images/9.png)
+
+### Application Launcher
+![alt_image](./eng/images/10.png)
 
 # Installation
 
