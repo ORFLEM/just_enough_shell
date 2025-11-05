@@ -11,7 +11,7 @@
 		(box :orientation "h" :hexpand false :space-evenly true :spacing 3 :class "pwr_case"
 			(button :onclick "systemctl poweroff & eww close power_pc" :tooltip "shutdown" "")
 			(button :onclick "systemctl reboot & eww close power_pc" :tooltip "reboot" "")
-			(button :onclick "pkill Hyprland & eww close power_pc" :tooltip "exit" "󰗽")
+			(button :onclick "./scripts/exit.sh & eww close power_pc" :tooltip "exit" "󰗽")
 			(button :onclick "systemctl suspend & eww close power_pc" :tooltip "sleep" "󰤄")
 			(button :onclick "hyprlock & eww close power_pc" :tooltip "lock" "")
 		)

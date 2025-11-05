@@ -1,0 +1,293 @@
+# Конфиг для swayfx
+#--- КЛАВИША МОДИФИКАТОР --------------------------------------------------------------
+set $mod Mod4
+
+#--- ПЕРЕМЕННЫЕ -----------------------------------------------------------------------
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $term kitty
+set $menu pgrep rofi && pkill rofi || ~/.config/rofi/launcher.sh
+set $filemanager thunar
+
+#--- АВТОСТАРТ ------------------------------------------------------------------------
+# Системные утилиты
+exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+
+exec openrgb --profile orflem
+
+# Программы
+exec app.zen_browser.zen
+exec Telegram
+# exec io.github.lawstorant.boxflat
+# exec steam
+exec solaar
+
+# Утилиты рабочего места
+exec eww daemon && eww open-many Btime corner-top-left corner-top-right corner-bottom-left corner-bottom-right notifications player mycal weather sysinf sbar
+exec swww-daemon & swww img ~/.config/hypr/no-live-bg.png --transition-type wipe --transition-fps 144 --transition-duration 1
+# exec mpvpaper -o 'no-audio loop video-zoom=0' '*' ~/.config/hypr/live-bg.mp4
+# exec mpvpaper -o 'no-audio loop video-zoom=0.43' '*' ~/.config/hypr/live-bg.mp4
+
+# Буфер обмена
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store
+
+# Скриншоты
+exec mkdir -p ~/Screenshots
+
+# Автотайлинг
+exec_always autotiling-rs
+
+#--- ДЕКОРАЦИИ ОКОН -------------------------------------------------------------------
+# Скругления
+corner_radius 8
+smart_corner_radius enable
+
+# Блюр
+blur enable
+blur_xray off
+blur_passes 3
+blur_radius 2
+
+# Тени
+shadows off
+shadows_on_csd off
+shadow_blur_radius 10
+shadow_color #2b4f6f
+
+# Затемнение неактивных окон
+default_dim_inactive 0.35
+dim_inactive_colors.unfocused #181818FF
+dim_inactive_colors.urgent #752110FF
+
+# Гапсы
+gaps inner 3
+gaps outer 6
+smart_gaps off
+
+# Толщина рамок для обычных и плавающих окон
+default_border pixel 2
+default_floating_border pixel 2
+
+# Размер рамок окон
+for_window [tiling] border pixel 2
+for_window [floating] border pixel 2
+
+# Отключение рамки если открыто одно окно
+smart_borders off
+
+# Прозрачность окон
+for_window [class=".*"] opacity 0.9
+for_window [app_id=".*"] opacity 0.9
+
+#--- СКРАЧПАД -------------------------------------------------------------------------
+	scratchpad_minimize disable
+
+#--- УКРАШАТЕЛЬСТВА -------------------------------------------------------------------
+	# Шрифт
+	font pango:mononoki 10
+
+	# Курсор
+	seat seat0 xcursor_theme "BreezeX-RoséPine" 32
+	exec_always gsettings set org.gnome.desktop.interface cursor-theme "BreezeX-RoséPine"
+	exec_always gsettings set org.gnome.desktop.interface cursor-size 32
+
+	# Курсоры, темы, иконки
+	set $gnome-schema org.gnome.desktop.interface
+	exec_always {
+    	gsettings set $gnome-schema gtk-theme 'Kanagawa-BG'
+    	gsettings set $gnome-schema icon-theme 'Papirius'
+    	gsettings set $gnome-schema cursor-theme 'BreezeX-RoséPine'
+    	gsettings set $gnome-schema font-name 'Mononoki Nerd Font Propo 10'
+    	# Отключение кнопок управления окном
+    	gsettings set org.gnome.desktop.wm.preferences button-layout ''
+	}
+
+	# Цвета рамок
+	client.focused           #f3f1d7 #f3f1d7 #2b2b2b #f3f1d7
+	client.focused_inactive  #8c8c94 #8c8c94 #2b2b2b #8c8c94
+	client.unfocused         #8c8c94 #8c8c94 #2b2b2b #8c8c94
+	client.urgent            #8c8c94 #8c8c94 #2b2b2b #8c8c94
+	client.placeholder       #8c8c94 #8c8c94 #2b2b2b #8c8c94
+
+#--- НАСТРОЙКИ МОНИТОРОВ --------------------------------------------------------------
+	output * adaptive_sync on
+	# Справка по настройке: swaymsg -t get_outputs
+
+#--- РАСКЛАДКА КЛАВИАТУРЫ -------------------------------------------------------------
+input type:keyboard {
+    xkb_layout "us,ru"
+    xkb_options "grp:caps_toggle,grp:alt_shift_toggle"
+    repeat_rate 25
+    repeat_delay 200
+}
+
+# Numlock
+input * xkb_numlock enabled
+
+
+# Чувствительность мыши
+input type:pointer {
+    accel_profile flat
+    pointer_accel 0
+}
+
+#--- ХОТКЕИ ---------------------------------------------------------------------------
+
+# Приложения
+bindsym --to-code $mod+q exec $term
+bindsym --to-code $mod+d exec $menu
+bindsym --to-code $mod+e exec $filemanager
+
+# Табы
+bindsym --to-code $mod+g layout tabbed
+bindsym --to-code $mod+Ctrl+g splith
+
+# Управление звуком и медиа
+bindsym XF86Explorer exec pamixer -t
+bindsym XF86Mail exec pamixer -d 5
+bindsym XF86Calculator exec pamixer -i 5
+bindsym XF86HomePage exec ~/.config/eww/scripts/popup.sh plr
+bindsym --to-code Mod1+Return exec playerctl play-pause
+bindsym --to-code Mod1+Shift_R exec playerctl next
+bindsym --to-code Mod1+Control_R exec playerctl previous
+
+# Управление яркостью
+bindsym Mod1+Prior exec ddcutil --bus 12 setvcp 10 + 5
+bindsym Mod1+Next exec ddcutil --bus 12 setvcp 10 - 5
+
+# Скриншоты
+bindsym Print exec grim -g "$(slurp -b 3d3d3dCC -c CCCCCCCC)" - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_screenshot.png | wl-copy
+bindsym Shift+Print exec grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy
+
+# Colorpicker
+bindsym --to-code $mod+n exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n1 | cut -d' ' -f4 | wl-copy
+
+# Закрыть окно
+bindsym --to-code $mod+c kill
+
+# Управление окном с зажатой клавишей mod
+floating_modifier $mod normal
+
+# Панель управления
+bindsym --to-code $mod+w exec pgrep eww && pkill eww || eww daemon && eww open-many Btime corner-top-left corner-top-right corner-bottom-left corner-bottom-right notifications mycal weather player sysinf sbar
+
+bindsym --to-code $mod+l exec eww open --toggle dashboard
+
+# Power menu
+bindsym --to-code $mod+p exec eww open --toggle power_pc
+
+# Перезагрузить sway
+bindsym --to-code $mod+Shift+r reload
+
+# Выход из sway
+bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+
+# Переключение фокуса
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Перемещение окна
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Переход по воркспейсам
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+bindsym --whole-window $mod+button4 exec ~/.config/sway/workspace-nav.sh prev
+bindsym --whole-window $mod+button5 exec ~/.config/sway/workspace-nav.sh next
+bindsym $mod+Mod1+Left exec ~/.config/sway/workspace-nav.sh prev
+bindsym $mod+Mod1+Right exec ~/.config/sway/workspace-nav.sh next
+
+# Перемещение окон на другой воркспейс
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+bindsym $mod+Ctrl+Shift+Left exec ~/.config/sway/workspace-nav.sh move-prev
+bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/workspace-nav.sh move-next
+
+# Позиция нового окна
+bindsym --to-code $mod+h splith
+bindsym --to-code $mod+v splitv
+bindsym --to-code $mod+j togglesplit
+
+# Фуллскрин
+bindsym --to-code $mod+space fullscreen
+
+# Сделать окно плавающим
+bindsym --whole-window $mod+Mod1+button1 floating toggle
+
+# Псевдотайлинг (как в dwindle)
+# bindsym --to-code $mod+o floating toggle; sticky toggle
+
+# Всернуть активное окно в скрачпад
+bindsym $mod+Shift+minus move scratchpad
+
+# Показать окна из скрачпада
+bindsym $mod+minus scratchpad show
+
+# Переход в режим ресайза
+bindsym --to-code $mod+r mode "resize"
+
+mode "resize" {
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+#--- ПРАВИЛА ОКОН ---------------------------------------------------------------------
+for_window [app_id="org.pulseaudio.pavucontrol"] {
+    floating enable
+    resize set 1000 500
+    move position 100ppt 44px
+    move left 1006px
+}
+
+for_window [app_id=".blueman-manager-wrapped"] {
+    floating enable
+    resize set 730 400
+    move position 100ppt 44px
+    move left 736px
+}
+
+for_window [app_id="zoom"] {
+    opacity 1.0
+    blur disable
+}
+
+for_window [title="Картинка в картинке"] {
+    opacity 1.0
+    floating enable
+    sticky enable
+}
+
+#--- ПОДКЛЮЧЕНИЕ ДОПОЛНИТЕЛЬНЫХ КОНФИГОВ ----------------------------------------------
+include /etc/sway/config.d/*

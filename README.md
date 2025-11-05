@@ -21,7 +21,9 @@ System : `NixOS 25.11 (unstable)`
 
 # Об конфигах
 ```
-Эти конфиги, сделанные на базе Hyprland, eww и rofi
+Эти конфиги, сделанные на базе eww и rofi
+
+Доступны Sway и Hyrpland, но Sway стабильнее и более оптимизировано работает, я советую его 
 
 Я пытался проверить, смогу ли я создать весь ui только на eww и rofi, не убив сильно производительность, но точно не скажу по поводу слабых ПК, ведь мой ПК достаточно мощный
 
@@ -29,7 +31,7 @@ System : `NixOS 25.11 (unstable)`
 ```
 
 ## -- Основной софт -- :
-* Тайлинг:`Hyprland` (временное прекращение работы над поддержкой niri, причины: плохое понимание конфига и незаконченная замена rofi на eww launcher)
+* Тайлинг:`Hyprland | swayfx` (временное прекращение работы над поддержкой niri, причины: плохое понимание конфига и незаконченная замена rofi на eww launcher)
 * Терминал: `Kitty`
 * Лаунчер: `Rofi` (идёт под замену на eww, доступен для теста, но не работает, помогите если сможете)
 * Блокировщик экрана: `Hyprlock`
@@ -148,7 +150,9 @@ But these are customizable.
 
 # About the Configs
 ```
-These configs are built on Hyprland, eww, and rofi.
+These configs are built on eww, and rofi.
+
+You can use Sway or Hyrpland, but Sway is more stable and optimized. I recommend it.
 
 I tried to see if I could create the entire UI using only eww and rofi without heavily impacting performance, but I can't say for sure about weaker PCs since my PC is quite powerful.
 
@@ -156,7 +160,7 @@ Please don't judge too harshly.
 ```
 
 ## -- Core Software -- :
-* Tiling: `Hyprland` (niri support temporarily discontinued, reasons: poor understanding of config and incomplete replacement of rofi with eww launcher)
+* Tiling: `Hyprland | swayfx` (niri support temporarily discontinued, reasons: poor understanding of config and incomplete replacement of rofi with eww launcher)
 * Terminal: `Kitty`
 * Launcher: `Rofi` (being replaced with eww, available for testing but currently not working - help appreciated!)
 * Screen Locker: `Hyprlock`

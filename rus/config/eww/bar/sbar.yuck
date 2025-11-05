@@ -3,29 +3,29 @@
 ;; ============================================================================
 
 ;; window info
-(deflisten hAW 
-  :initial "" 
-  "./scripts/active_window-hypr.sh")
+(deflisten sAW 
+  :initial "" 
+  "./scripts/active_window-sway.sh")
 
 ;; Keyboard layout info
-(deflisten hkblayout 
-  :initital ""
-  "./scripts/kb_layout-hypr.sh")
+(deflisten skblayout 
+  :initial ""
+  "./scripts/kb_layout-sway.sh")
 
 ;; Workspaces info
-(deflisten hworkspaces :initial "" "./scripts/workspace-hypr.sh stream-ws-json")
+(deflisten sworkspaces :initial "" "./scripts/workspace-sway.sh stream-ws-json")
 
 ;; ============================================================================
 ;; Main Bar Widget
 ;; ============================================================================
 
-(defwidget hbar []
+(defwidget sbar []
   (centerbox :orientation "h" :hexpand false :class "bar"
     (box :class "bar-section" :valign "center" :halign "start" :orientation "h" :space-evenly false :spacing 3
       (launcher)
       (bg)
-      (hworkspaces)
-      (hactive_window)
+      (sworkspaces)
+      (sactive_window)
     )      
     ;; Center section
     (box :class "bar-section" :valign "center" :halign "center" :orientation "h" :space-evenly false :spacing 3
@@ -38,7 +38,7 @@
       (music)
       (settings)
       (volume)
-      (hkeyboard_layout)
+      (skeyboard_layout)
       ;;(notifications)
       (power)
     )
@@ -49,25 +49,25 @@
 ;; Left Section Widgets
 ;; ============================================================================
 
-(defwidget hworkspaces []
-  (eventbox :onscroll "if [ '{}' = 'up' ]; then hyprctl dispatch workspace -1; else hyprctl dispatch workspace +1; fi"
+(defwidget sworkspaces []
+  (eventbox :onscroll "if [ '{}' = 'up' ]; then swaymsg workspace prev; else swaymsg workspace next; fi"
     (box :class "ws" :orientation "h" :space-evenly false
       (eventbox :onhover "eww update ws=true" :onhoverlost "eww update ws=false"
         (box :orientation "h" :space-evenly false :vexpand false
           (box :space-evenly false :spacing 2
-            (hws-button :id 1 :state "${hworkspaces.ws1.class}" :info "${hworkspaces.ws1.icon}")
-            (hws-button :id 2 :state "${hworkspaces.ws2.class}" :info "${hworkspaces.ws2.icon}")
-            (hws-button :id 3 :state "${hworkspaces.ws3.class}" :info "${hworkspaces.ws3.icon}")
-            (hws-button :id 4 :state "${hworkspaces.ws4.class}" :info "${hworkspaces.ws4.icon}")
-            (hws-button :id 5 :state "${hworkspaces.ws5.class}" :info "${hworkspaces.ws5.icon}")
+            (sws-button :id 1 :state "${sworkspaces.ws1.class}" :info "${sworkspaces.ws1.icon}")
+            (sws-button :id 2 :state "${sworkspaces.ws2.class}" :info "${sworkspaces.ws2.icon}")
+            (sws-button :id 3 :state "${sworkspaces.ws3.class}" :info "${sworkspaces.ws3.icon}")
+            (sws-button :id 4 :state "${sworkspaces.ws4.class}" :info "${sworkspaces.ws4.icon}")
+            (sws-button :id 5 :state "${sworkspaces.ws5.class}" :info "${sworkspaces.ws5.icon}")
           )
           (revealer :transition "slideleft" :reveal ws 
             (box :orientation "h" :space-evenly false :vexpand false :spacing 2 :style "padding: 0px 0px 0px 2px;"
-              (hws-button :id 6 :state "${hworkspaces.ws6.class}" :info "${hworkspaces.ws6.icon}")
-              (hws-button :id 7 :state "${hworkspaces.ws7.class}" :info "${hworkspaces.ws7.icon}")
-              (hws-button :id 8 :state "${hworkspaces.ws8.class}" :info "${hworkspaces.ws8.icon}")
-              (hws-button :id 9 :state "${hworkspaces.ws9.class}" :info "${hworkspaces.ws9.icon}")
-              (hws-button :id 10 :state "${hworkspaces.ws10.class}" :info "${hworkspaces.ws10.icon}")
+              (sws-button :id 6 :state "${sworkspaces.ws6.class}" :info "${sworkspaces.ws6.icon}")
+              (sws-button :id 7 :state "${sworkspaces.ws7.class}" :info "${sworkspaces.ws7.icon}")
+              (sws-button :id 8 :state "${sworkspaces.ws8.class}" :info "${sworkspaces.ws8.icon}")
+              (sws-button :id 9 :state "${sworkspaces.ws9.class}" :info "${sworkspaces.ws9.icon}")
+              (sws-button :id 10 :state "${sworkspaces.ws10.class}" :info "${sworkspaces.ws10.icon}")
             )
           )
         )
@@ -76,15 +76,15 @@
   )
 )
     
-(defwidget hws-button [id state info]
-  (button :class "ws ${state}" :onclick "./scripts/workspace-hypr.sh change-ws ${id}"
+(defwidget sws-button [id state info]
+  (button :class "ws ${state}" :onclick "./scripts/workspace-sway.sh change-ws ${id}"
     (label :text "${info}")
   )
 )
 
-(defwidget hactive_window []
+(defwidget sactive_window []
   (box :class "aw" :orientation "h" :space-evenly true :halign "start" :tooltip "активное окно"
-    (label :text "${hAW}")
+    (label :text "${sAW}")
   )
 )
 
@@ -96,10 +96,10 @@
 ;; Right Section Widgets
 ;; ============================================================================
 
-(defwidget hkeyboard_layout []
+(defwidget skeyboard_layout []
   (box :class "kbl":orientation "h" :space-evenly true :halign "start"
     (label :class "lbl-clr" :tooltip "Язык" :text "󰌏 ")
-    (label :text "${hkblayout}")
+    (label :text "${skblayout}")
   )
 )
 
@@ -107,7 +107,7 @@
 ;; Window Definition
 ;; ============================================================================
 
-(defwindow hbar
+(defwindow sbar
   :monitor 0
   :exclusive true
   :stacking "fg"
@@ -119,6 +119,5 @@
   :reserve (struts 
     :side "bottom" 
     :distance "4%")
-  (hbar)
+  (sbar)
 )
-
