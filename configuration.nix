@@ -107,7 +107,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd sway";
         user = "greeter";
       };
     };
@@ -120,6 +120,12 @@
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+  };
+
+  programs.sway = {
+      enable = true;
+      package = unstablePkgs.swayfx;
+      wrapperFeatures.gtk = true;
   };
 
   xdg.portal = {
@@ -407,11 +413,14 @@
         bastet
         moon-buggy
         nsnake
-        hyprland
         hyprlandPlugins.hy3
         hyprlandPlugins.hyprspace
         hyprlandPlugins.hypr-dynamic-cursors
         hyprpicker
+
+        #wm пакеты
+        swayfx
+        hyprland
       ])
   
   	# NUR пакеты
