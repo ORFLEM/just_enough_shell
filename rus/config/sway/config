@@ -58,8 +58,8 @@ dim_inactive_colors.unfocused #181818FF
 dim_inactive_colors.urgent #752110FF
 
 # Гапсы
-gaps inner 3
-gaps outer 6
+gaps inner 6
+gaps outer 0
 smart_gaps off
 
 # Толщина рамок для обычных и плавающих окон
