@@ -1,16 +1,20 @@
 #!/bin/sh
 
-# Первичный вывод при старте
-aw=$(swaymsg -t get_tree | jq -r '.. | select(.focused? == true) | .name // ""')
-echo "${aw:-}"
+get_app_name() {
+    swaymsg -t get_tree | jq -r '
+        .. | select(.focused? == true) | 
+        .app_id // .window_properties.class // .name // ""
+    ' | sed -E 's/^(org\.|app\.)//' | sed 's/\.desktop$//' | sed 's/.*\.//;s/_/ /g'
+}
 
-# Подписка на события изменения фокуса окна
+echo "$(get_app_name)"
+
 swaymsg -t subscribe -m '["window"]' | while read -r event; do
-    # Парсим только события изменения фокуса
     change=$(echo "$event" | jq -r '.change // ""')
     
     if [ "$change" = "focus" ]; then
-        aw=$(echo "$event" | jq -r '.container.name // ""')
-        echo "${aw:-}"
+        app=$(echo "$event" | jq -r '.container.app_id // .container.window_properties.class // .container.name // ""' | \
+              sed -E 's/^(org\.|app\.)//' | sed 's/\.desktop$//' | sed 's/.*\.//;s/_/ /g')
+        echo "${app:-}"
     fi
 done

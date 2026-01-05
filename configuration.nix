@@ -301,6 +301,8 @@
         shotwell
         steam
         swww
+        swaybg
+        matugen
         firefox
         xarchiver
         vscodium

@@ -2,13 +2,12 @@
 # Проверяем, запущен ли уже cava
 if pgrep -x cava >/dev/null; then
     pkill -x cava
-    sleep 0.5
+    sleep 0.3
 fi
 
-# Настройки (возвращаем Unicode блоки)
+# Настройки
 PIPE="/tmp/cava_eww.fifo"
 CONFIG_FILE="/tmp/cava_eww_config"
-BARS="▁▂▃▄▅▆▇█"
 
 # Очищаем pipe
 [ -p "$PIPE" ] && rm -f "$PIPE"
@@ -18,7 +17,7 @@ mkfifo "$PIPE"
 cat > "$CONFIG_FILE" << 'CAVA_EOF'
 [general]
 bars = 20
-framerate = 60
+framerate = 30
 sleep_timer = 1
 [input]
 method = pulse
@@ -41,22 +40,25 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-# Предкомпилированный sed-скрипт для максимальной скорости
-SED_SCRIPT="s/;//g;s/0/▁/g;s/1/▂/g;s/2/▃/g;s/3/▄/g;s/4/▅/g;s/5/▆/g;s/6/▇/g;s/7/█/g"
-
+# Используем awk вместо sed - быстрее для Unicode
 # Кэширование последнего вывода
 LAST_OUTPUT=""
 
-# Создаем предкомпилированный sed-скрипт (быстрее tr для Unicode)
-SED_SCRIPT="s/;//g;s/0/▁/g;s/1/▂/g;s/2/▃/g;s/3/▄/g;s/4/▅/g;s/5/▆/g;s/6/▇/g;s/7/█/g"
-
-# Кэширование последнего вывода
-LAST_OUTPUT=""
-
-# Читаем данные из pipe с кэшированием
+# Читаем данные из pipe с кэшированием и throttling
 while IFS= read -r line; do
-    # Используем sed с предкомпилированным скриптом
-    result=$(echo "$line" | sed "$SED_SCRIPT")
+    # awk обрабатывает быстрее чем sed для таких замен
+    result=$(echo "$line" | awk '{
+        gsub(/;/, "")
+        gsub(/0/, "▁")
+        gsub(/1/, "▂")
+        gsub(/2/, "▃")
+        gsub(/3/, "▄")
+        gsub(/4/, "▅")
+        gsub(/5/, "▆")
+        gsub(/6/, "▇")
+        gsub(/7/, "█")
+        print
+    }')
     
     # Выводим только если результат изменился
     if [ "$result" != "$LAST_OUTPUT" ]; then
@@ -64,5 +66,3 @@ while IFS= read -r line; do
         LAST_OUTPUT="$result"
     fi
 done < "$PIPE"
-
-

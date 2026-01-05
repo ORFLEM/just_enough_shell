@@ -5,7 +5,7 @@ oldout=""
 last_change_time=0
 
 brightinf() {
-    ddcutil --bus 12 getvcp 10 | grep -oP 'current value =\s+\K\d+'
+    ddcutil --bus 9 getvcp 10 | grep -oP 'current value =\s+\K\d+'
 }
 
 get_current_time() {

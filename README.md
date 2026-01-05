@@ -1,4 +1,4 @@
-System : `NixOS 25.11 (unstable)`
+System : `NixOS 25.11 (unstable)` and working for adding support ALT Linux regular
 
 # [rus](#rus) | [eng](#eng)
 
@@ -11,11 +11,14 @@ System : `NixOS 25.11 (unstable)`
 ```
 Это конфиги для СТАЦИОНАРНОГО компьютера!!
 
+Все новые фишки изначально появляются в русской локализации, т.к. я плохо знаю английский и его поддержка затруднена для меня!!!
+
 В данных конфигах есть спорные решения, которые не всем понравятся:
   использование NixOS без home manager;
   bash, вместо fish;
-  swww и mpvpaper;
+  swaybg и mpvpaper;
   странные идеи в горячих клавишах и интерфейсе;
+  для оптимизации используются бинарники go;
 Но это можно выбрать
 ```
 
@@ -23,7 +26,7 @@ System : `NixOS 25.11 (unstable)`
 ```
 Эти конфиги, сделанные на базе eww и rofi
 
-Доступны Sway и Hyrpland, но Sway стабильнее и более оптимизировано работает, я советую его 
+Доступны Sway и Hyrpland, но Sway стабильнее и более оптимизировано работает, а также я сейчас на нём и его конфиг 100% будет работать, с hyprland может придётся посидеть и доработать его, я советую его 
 
 Я пытался проверить, смогу ли я создать весь ui только на eww и rofi, не убив сильно производительность, но точно не скажу по поводу слабых ПК, ведь мой ПК достаточно мощный
 
@@ -40,13 +43,11 @@ System : `NixOS 25.11 (unstable)`
 * Проводник: `ranger | yazi | thunar`
 * Редакторы: `micro | helix`
 * Консольные оболочки: `bash | fish`
-* Обои: `mpvpaper | swww` (hyprpaper мерцает на amd карте, он заменён на swww, идут работы над добавлением hyprlax, проблемы добавления: ручная сборка пакета)
-* Основная тема для терминалов, tty, gtk и прочего: `kanagawa`
+* Обои: `mpvpaper | swaybg` (hyprpaper мерцает на amd карте, он заменён на swaybg, т.к. мерцаний меньше, чем у hyprpaper, идут работы над добавлением hyprlax, проблемы добавления: ручная сборка пакета)
+* Основная тема для терминалов, tty, gtk и прочего: `kanagawa` + поддержка matugen для eww, но в дальнейшем и gtk подтянется (работаю над этим)
 
 ```
-Если хочется живых видео обоев, то замените swww на mpvpaper,
-раскомментировав в hyprland.conf строку с mpvpaper и закомментировав строку с swww,
-а в eww по пути "~/.config/eww/bar" в файле hbar.yuck заменить (bg) на (lbg или lgbz для мониторов 21:9)
+Если хочется живых видео обоев, то используйте режимы zoom или no-zoom в wallpaper picker, а для статики stat
 ```
 
 ```
@@ -139,6 +140,8 @@ System : `NixOS 25.11 (unstable)`
 # Important
 ```
 These configs are for a DESKTOP computer!!
+
+All new features are released in the Russian localization first, as my English proficiency is limited and supporting it is challenging for me!!!
 
 These configs include controversial choices that not everyone may like:
   using NixOS without Home Manager;

@@ -31,7 +31,7 @@ case "$1" in
             date '+%d-%m-%Y'
         fi
         
-        sleep 0.05
+        sleep 1
     done
     ;;
 esac

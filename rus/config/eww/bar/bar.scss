@@ -42,8 +42,7 @@ tooltip.background {
 .aw {
   background: $background-alt;
   padding: 0px 4px;
-  border-radius: 5px;
-}
+  border-radius: 5px;}
 
 .pwr {
   padding: 2px ;
@@ -185,7 +184,7 @@ tooltip.background {
 }
 
 .msc {
-  font-family: "Noto Sans CJK HK";
+  font-family: "Adwaita Sans Black";
   font-size: 13px;
   padding: 2px;
   color: $font;
@@ -237,8 +236,7 @@ tooltip.background {
 .ws button.urgent {
   background: #FF4444;
   color: #FFFFFF;
-  border-radius: 2px;
-  padding: 0px 5px;
+  padding: 0px 10px;
   animation: pulse 1s infinite;
 }
 
@@ -263,7 +261,6 @@ tooltip.background {
 .ws button.urgent:hover {
   color: #FF4444;
   background: #FFFFFF;
-  border-radius: 2px;
   animation: pulse 1s infinite;
 }
 
@@ -443,4 +440,127 @@ button:hover .lbl-clr {
   color: $accent;
   border-radius: 2px;
   transition: all 0.2s ease-in-out;
+}
+
+// wallpaper picker
+
+.wallpicker {
+  background: $background;
+  border-radius: 8px;
+  padding: 3px;
+  opacity: 0.95;
+  margin: 6px;
+  font-family: "Mononoki Nerd Font Propo";
+  font-weight: bolder;
+}
+
+.title {
+  font-size: 17px;
+  margin: 0px 0px 0px 20px;
+  color: $font;
+}
+
+.icon-btn {
+  min-width: 20px;
+  min-height: 20px;
+  background: $background-alt;
+  border-radius: 5px;
+  padding: 0px 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.icon-btn:hover {
+  background: $accent;
+  color: $font-dark;
+  transition: all 0.2s ease-in-out;
+}
+
+.close-btn {
+  min-width: 20px;
+  min-height: 20px;
+  background: $background-alt;
+  border-radius: 5px;
+  padding: 3px;
+  transition: all 0.2s ease-in-out;
+}
+
+.close-btn:hover {
+  background: $accent;
+  color: $font-dark;
+  transition: all 0.2s ease-in-out;
+}
+
+.separator {
+  background: $background-alt;
+  min-height: 1px;
+  margin: 3px 0px;
+}
+
+.mode-selector {
+  margin-bottom: 3px;
+  padding: 3px;
+  background: $background-alt;
+  border-radius: 5px;
+}
+
+.mode-btn {
+  padding: 0px 8px;
+  background: transparent;
+  border-radius: 3px;
+  color: $font;
+  transition: all 0.2s ease-in-out;
+}
+
+.mode-btn.active {
+  background: $accent;
+  color: $font-dark;
+}
+
+.mode-btn:hover {
+  background: $accent;
+  color: $font-dark;
+  transition: all 0.2s ease-in-out;
+}
+
+.wall-grid {
+  padding: 0px;
+}
+
+.wall-card {
+  background: $background-alt;
+  border-radius: 5px;
+  padding: 3px;
+  margin: 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.wall-card:hover {
+  background: $accent;
+  transition: all 0.2s ease-in-out;
+}
+
+.wall-thumb {
+  border-radius: 3px;
+  background-color: #313244;
+  min-width: 300px;
+  min-height: 125px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.wall-name {
+  margin-top: 8px;
+  color: $font;
+  font-size: 13px;
+  font-family: "Noto Sans CJK HK";
+}
+
+.badge {
+  margin-top: 4px;
+  padding: 4px 8px;
+  background: $background;
+  border-radius: 3px;
+  color: $accent;
+  font-size: 11px;
 }

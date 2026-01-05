@@ -6,7 +6,7 @@
 	(box :class "lnchr" :orientation "h" :space-evenly true :halign "start"
 		(button  :onclick "pgrep rofi && pkill rofi || ~/.config/rofi/launcher.sh" :tooltip "меню" 
 			(box :space-evenly false
-			   (image :path nix :image-height 18 :preserve-aspect-ratio true)
+			   (image :path alt :image-height 18 :preserve-aspect-ratio true)
 			   (label :text " ${USER}")
       )
     )
@@ -31,11 +31,30 @@
   )
 )
 
+(defwidget wpbg []
+  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
+    (button :onclick "./scripts/change-wall.sh engine" :tooltip "обновить обои" "")
+  )
+)
+
 (defwidget hbg []
   (box :class "bg" :orientation "h" :space-evenly true :halign "start"
     (button :onclick "./scripts/change-wall.sh hyprlax" :tooltip "обновить обои" "")
   )
 )
+
+(defwidget wallpicker-toggle []
+  (box :class "bg"
+    (button :onclick "eww open --toggle wallpaper-picker" "")
+  )
+)
+
+(defvar wall_mode "stat")
+
+(defpoll wallpapers 
+  :interval "30s"
+  :initial "[]"
+  `./scripts/wallpaper-picker.sh list`)
 
 ;; ============================================================================
 ;; Center Section Widgets
@@ -49,7 +68,7 @@
 
 (defwidget time []
   (box :class "tme" :orientation "h" :space-evenly false :halign "center"
-    (button :onclick "./scripts/timed.sh t-d" :onrightclick "./scripts/popup.sh cal" :tooltip "лкм: переключение время - дата, пкм: открыть календарь"
+    (button :onclick "./scripts/timed t-d" :onrightclick "./scripts/popup.sh cal" :tooltip "лкм: переключение время - дата, пкм: открыть календарь"
       (box :space-evenly false
         (label :class "lbl-clr" :text "󱑎 ")
         (label :text time_data)
@@ -88,7 +107,7 @@
     (box :class "stngs" :orientation "h" :space-evenly false :vexpand false
       (revealer :transition "slideleft" :reveal stngs
         (box :orientation "h" :space-evenly false :vexpand false 
-          (button :onclick "bash <(pavucontrol)" :tooltip "настройки звука" "󰗅")
+          (button :onclick "bash <(pwvucontrol)" :tooltip "настройки звука" "󰗅")
           (button :onclick "bash <(kitty nmtui)" :tooltip "настройки сети" "󰈀") 
           (button :onclick "bash <(blueman-manager)" :tooltip "настройки bluetooth" "󰂯")
         )
@@ -120,7 +139,7 @@
 (defwidget cal []
   (box :orientation "v" :space-evenly false
     (revealer :transition "slidedown" :reveal cal_inf
-      (eventbox :onhoverlost "eww update cal_inf=false & ./scripts/cal.sh reset"
+      (eventbox :onhoverlost "eww update cal_inf=false & ./scripts/cal reset"
         (box :orientation "v" :class "cal" :spacing 3
           (box :class "cal_wkds"
             (label :text "пн")
@@ -132,65 +151,65 @@
             (label :text "вс" :style "color: #e4413a;")
           )
           (box
-            (label :text {cal.day0.day} :class "cal ${cal.day0.style}")
-            (label :text {cal.day1.day} :class "cal ${cal.day1.style}")
-            (label :text {cal.day2.day} :class "cal ${cal.day2.style}")
-            (label :text {cal.day3.day} :class "cal ${cal.day3.style}")
-            (label :text {cal.day4.day} :class "cal ${cal.day4.style}")
-            (label :text {cal.day5.day} :class "cal ${cal.day5.style}")
-            (label :text {cal.day6.day} :class "cal ${cal.day6.style}")
+            (label :tooltip {cal.Days.day0.holiday} :text {cal.Days.day0.day} :class "cal ${cal.Days.day0.style}")
+            (label :tooltip {cal.Days.day1.holiday} :text {cal.Days.day1.day} :class "cal ${cal.Days.day1.style}")
+            (label :tooltip {cal.Days.day2.holiday} :text {cal.Days.day2.day} :class "cal ${cal.Days.day2.style}")
+            (label :tooltip {cal.Days.day3.holiday} :text {cal.Days.day3.day} :class "cal ${cal.Days.day3.style}")
+            (label :tooltip {cal.Days.day4.holiday} :text {cal.Days.day4.day} :class "cal ${cal.Days.day4.style}")
+            (label :tooltip {cal.Days.day5.holiday} :text {cal.Days.day5.day} :class "cal ${cal.Days.day5.style}")
+            (label :tooltip {cal.Days.day6.holiday} :text {cal.Days.day6.day} :class "cal ${cal.Days.day6.style}")
           )
           (box
-            (label :text {cal.day7.day} :class "cal ${cal.day7.style}")
-            (label :text {cal.day8.day} :class "cal ${cal.day8.style}")
-            (label :text {cal.day9.day} :class "cal ${cal.day9.style}")
-            (label :text {cal.day10.day} :class "cal ${cal.day10.style}")
-            (label :text {cal.day11.day} :class "cal ${cal.day11.style}")
-            (label :text {cal.day12.day} :class "cal ${cal.day12.style}")
-            (label :text {cal.day13.day} :class "cal ${cal.day13.style}")
+            (label :tooltip {cal.Days.day7.holiday} :text {cal.Days.day7.day} :class "cal ${cal.Days.day7.style}")
+            (label :tooltip {cal.Days.day8.holiday} :text {cal.Days.day8.day} :class "cal ${cal.Days.day8.style}")
+            (label :tooltip {cal.Days.day9.holiday} :text {cal.Days.day9.day} :class "cal ${cal.Days.day9.style}")
+            (label :tooltip {cal.Days.day10.holiday} :text {cal.Days.day10.day} :class "cal ${cal.Days.day10.style}")
+            (label :tooltip {cal.Days.day11.holiday} :text {cal.Days.day11.day} :class "cal ${cal.Days.day11.style}")
+            (label :tooltip {cal.Days.day12.holiday} :text {cal.Days.day12.day} :class "cal ${cal.Days.day12.style}")
+            (label :tooltip {cal.Days.day13.holiday} :text {cal.Days.day13.day} :class "cal ${cal.Days.day13.style}")
           )
           (box
-            (label :text {cal.day14.day} :class "cal ${cal.day14.style}")
-            (label :text {cal.day15.day} :class "cal ${cal.day15.style}")
-            (label :text {cal.day16.day} :class "cal ${cal.day16.style}")
-            (label :text {cal.day17.day} :class "cal ${cal.day17.style}")
-            (label :text {cal.day18.day} :class "cal ${cal.day18.style}")
-            (label :text {cal.day19.day} :class "cal ${cal.day19.style}")
-            (label :text {cal.day20.day} :class "cal ${cal.day20.style}")
+            (label :tooltip {cal.Days.day14.holiday} :text {cal.Days.day14.day} :class "cal ${cal.Days.day14.style}")
+            (label :tooltip {cal.Days.day15.holiday} :text {cal.Days.day15.day} :class "cal ${cal.Days.day15.style}")
+            (label :tooltip {cal.Days.day16.holiday} :text {cal.Days.day16.day} :class "cal ${cal.Days.day16.style}")
+            (label :tooltip {cal.Days.day17.holiday} :text {cal.Days.day17.day} :class "cal ${cal.Days.day17.style}")
+            (label :tooltip {cal.Days.day18.holiday} :text {cal.Days.day18.day} :class "cal ${cal.Days.day18.style}")
+            (label :tooltip {cal.Days.day19.holiday} :text {cal.Days.day19.day} :class "cal ${cal.Days.day19.style}")
+            (label :tooltip {cal.Days.day20.holiday} :text {cal.Days.day20.day} :class "cal ${cal.Days.day20.style}")
           )
           (box
-            (label :text {cal.day21.day} :class "cal ${cal.day21.style}")
-            (label :text {cal.day22.day} :class "cal ${cal.day22.style}")
-            (label :text {cal.day23.day} :class "cal ${cal.day23.style}")
-            (label :text {cal.day24.day} :class "cal ${cal.day24.style}")
-            (label :text {cal.day25.day} :class "cal ${cal.day25.style}")
-            (label :text {cal.day26.day} :class "cal ${cal.day26.style}")
-            (label :text {cal.day27.day} :class "cal ${cal.day27.style}")
+            (label :tooltip {cal.Days.day21.holiday} :text {cal.Days.day21.day} :class "cal ${cal.Days.day21.style}")
+            (label :tooltip {cal.Days.day22.holiday} :text {cal.Days.day22.day} :class "cal ${cal.Days.day22.style}")
+            (label :tooltip {cal.Days.day23.holiday} :text {cal.Days.day23.day} :class "cal ${cal.Days.day23.style}")
+            (label :tooltip {cal.Days.day24.holiday} :text {cal.Days.day24.day} :class "cal ${cal.Days.day24.style}")
+            (label :tooltip {cal.Days.day25.holiday} :text {cal.Days.day25.day} :class "cal ${cal.Days.day25.style}")
+            (label :tooltip {cal.Days.day26.holiday} :text {cal.Days.day26.day} :class "cal ${cal.Days.day26.style}")
+            (label :tooltip {cal.Days.day27.holiday} :text {cal.Days.day27.day} :class "cal ${cal.Days.day27.style}")
           )
           (box
-            (label :text {cal.day28.day} :class "cal ${cal.day28.style}")
-            (label :text {cal.day29.day} :class "cal ${cal.day29.style}")
-            (label :text {cal.day30.day} :class "cal ${cal.day30.style}")
-            (label :text {cal.day31.day} :class "cal ${cal.day31.style}")
-            (label :text {cal.day32.day} :class "cal ${cal.day32.style}")
-            (label :text {cal.day33.day} :class "cal ${cal.day33.style}")
-            (label :text {cal.day34.day} :class "cal ${cal.day34.style}")
+            (label :tooltip {cal.Days.day28.holiday} :text {cal.Days.day28.day} :class "cal ${cal.Days.day28.style}")
+            (label :tooltip {cal.Days.day29.holiday} :text {cal.Days.day29.day} :class "cal ${cal.Days.day29.style}")
+            (label :tooltip {cal.Days.day30.holiday} :text {cal.Days.day30.day} :class "cal ${cal.Days.day30.style}")
+            (label :tooltip {cal.Days.day31.holiday} :text {cal.Days.day31.day} :class "cal ${cal.Days.day31.style}")
+            (label :tooltip {cal.Days.day32.holiday} :text {cal.Days.day32.day} :class "cal ${cal.Days.day32.style}")
+            (label :tooltip {cal.Days.day33.holiday} :text {cal.Days.day33.day} :class "cal ${cal.Days.day33.style}")
+            (label :tooltip {cal.Days.day34.holiday} :text {cal.Days.day34.day} :class "cal ${cal.Days.day34.style}")
           )
           (box
-            (label :text {cal.day35.day} :class "cal ${cal.day35.style}")
-            (label :text {cal.day36.day} :class "cal ${cal.day36.style}")
-            (label :text {cal.day37.day} :class "cal ${cal.day37.style}")
-            (label :text {cal.day38.day} :class "cal ${cal.day38.style}")
-            (label :text {cal.day39.day} :class "cal ${cal.day39.style}")
-            (label :text {cal.day40.day} :class "cal ${cal.day40.style}")
-            (label :text {cal.day41.day} :class "cal ${cal.day41.style}")
+            (label :tooltip {cal.Days.day35.holiday} :text {cal.Days.day35.day} :class "cal ${cal.Days.day35.style}")
+            (label :tooltip {cal.Days.day36.holiday} :text {cal.Days.day36.day} :class "cal ${cal.Days.day36.style}")
+            (label :tooltip {cal.Days.day37.holiday} :text {cal.Days.day37.day} :class "cal ${cal.Days.day37.style}")
+            (label :tooltip {cal.Days.day38.holiday} :text {cal.Days.day38.day} :class "cal ${cal.Days.day38.style}")
+            (label :tooltip {cal.Days.day39.holiday} :text {cal.Days.day39.day} :class "cal ${cal.Days.day39.style}")
+            (label :tooltip {cal.Days.day40.holiday} :text {cal.Days.day40.day} :class "cal ${cal.Days.day40.style}")
+            (label :tooltip {cal.Days.day41.holiday} :text {cal.Days.day41.day} :class "cal ${cal.Days.day41.style}")
           )
           (box :space-evenly false :halign "center" :spacing 30 :class "cal_wkds"
-            (button :onclick "./scripts/cal.sh prev_year" "<<")
-            (button :onclick "./scripts/cal.sh prev" "<")
+            (button :onclick "./scripts/cal prev_year" "<<")
+            (button :onclick "./scripts/cal prev" "<")
             (label :text "${cal.month_name} | ${cal.year}")
-            (button :onclick "./scripts/cal.sh next" ">")
-            (button :onclick "./scripts/cal.sh next_year" ">>")
+            (button :onclick "./scripts/cal next" ">")
+            (button :onclick "./scripts/cal next_year" ">>")
           )
         )
       )
@@ -256,8 +275,8 @@
             )
           )
           (box :class "week_wthr"
-            (scroll :hscroll true :vscroll false
-              (box :spacing 30
+            (scroll :hscroll true :vscroll false :vexpand true :height "100%"
+              (box :spacing 30 :orientation "h" :space-evenly false :halign "start"
                 (box :orientation "v"
                   (label :text {wther.forecast[0].day})
                   (label :class "mid_wthr" :text {wther.forecast[0].icon})
@@ -290,6 +309,110 @@
       )
     )
   )     
+)
+
+;; ============================================================================
+;; wallpaper picker
+;; ============================================================================
+
+(defwidget wall-picker []
+
+  (box 
+    :class "wallpicker"
+    :orientation "v"
+    :space-evenly false
+    
+    ; Header
+    (box 
+      :class "header"
+      :spacing 3
+      :space-evenly false
+      
+      (label 
+        :class "title" 
+        :text "Wallpaper Library" 
+        :xalign 0 
+        :hexpand true
+      )
+      
+      (button 
+        :class "icon-btn"
+        :tooltip "Refresh cache"
+        :onclick "./scripts/wallpaper-picker.sh clean-cache && ./scripts/wallpaper-picker.sh cache-all &"
+        "Refresh"
+      )
+      
+      (button 
+        :class "close-btn"
+        :onclick "eww close wallpaper-picker"
+        "X"
+      )
+    )
+    
+    (box :class "separator")
+    
+    ; Mode selector
+    (box 
+      :class "mode-selector"
+      :spacing 3
+      :space-evenly false
+      :halign "end"
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'stat' ? 'active' : ''}"
+        :onclick "eww update wall_mode=stat"
+        "Static"
+      )
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'zoom' ? 'active' : ''}"
+        :onclick "eww update wall_mode=zoom"
+        "Zoom"
+      )
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'no-zoom' ? 'active' : ''}"
+        :onclick "eww update wall_mode=no-zoom"
+        "Full"
+      )
+    )
+    
+    ; Wallpaper grid с прокруткой
+    (scroll 
+  :vscroll true
+  :hscroll false
+  :vexpand true
+  :height "100%"
+
+  (box 
+    :class "wall-container"
+    :orientation "v"
+    :spacing 3
+    :space-evenly false
+
+    (for row in wallpapers
+      (box :class "wall-row" :orientation "h" :spacing 3
+        (for wall in {row.row}
+          (button
+            :class "wall-card ${wall.type}"
+            :onclick "bash -c 'eww close wallpaper-picker; ~/.config/eww/scripts/wallpaper-picker.sh set \"${wall.path}\" ${wall_mode} &' &"
+            :tooltip "${wall.name}"
+            :style "min-width: 220px; margin: 0px;"
+
+            (box :orientation "v" :space-evenly false
+              (box :class "wall-thumb" :style "background-image: url('${wall.thumb}');")
+              (label :class "wall-name" :limit-width 20 :text "${wall.name}")
+              (revealer :reveal "${wall.type == 'video'}" :transition "slidedown"
+                (label :class "badge" :text "VIDEO")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+  )
 )
 
 ;; ============================================================================
@@ -326,4 +449,13 @@
 						          :width "350px" 
 						          :height "0px")
 	(player)
+)
+(defwindow wallpaper-picker
+  :monitor 0
+  :geometry (geometry :width "972px"
+                      :height "55%")
+  :anchor "center"
+  :stacking "overlay"
+  :focusable true
+  (wall-picker)
 )

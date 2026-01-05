@@ -23,7 +23,8 @@
   (centerbox :orientation "h" :hexpand false :class "bar"
     (box :class "bar-section" :valign "center" :halign "start" :orientation "h" :space-evenly false :spacing 3
       (launcher)
-      (bg)
+      ;;(bg)
+      (wallpicker-toggle)
       (sworkspaces)
       (sactive_window)
     )      
