@@ -1,20 +1,20 @@
 #!/bin/sh
 
-last_aw=""
+get_active_window() {
+    hyprctl activewindow -j | jq -r '.initialTitle // ""'
+}
 
-while true; do
+# Первичный вывод
+get_active_window
 
-	aw=$(hyprctl activewindow | grep 'initialTitle' | cut -d' ' -f2-)
-
-	if [ "$aw" == "" ]; then
-		aw=""
-	fi
-
-	if [ "$aw" != "$last_aw" ]; then
-		echo "$aw"
-		last_aw="$aw"
-	fi
-
-	sleep 0.05
+# Подписка на события через socat
+socat -U - UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | while read -r line; do
+    event=$(echo "$line" | cut -d'>' -f1)
+    
+    case "$event" in
+        activewindow|openwindow|closewindow|movewindow)
+            get_active_window
+            ;;
+    esac
 done
 

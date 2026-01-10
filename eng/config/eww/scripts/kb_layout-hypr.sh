@@ -1,26 +1,30 @@
 #!/bin/sh
 
-last_layout=""
 
-while true; do
-    # Находим main клавиатуру и берём её раскладку
-    current_layout=$(hyprctl devices | grep -B 5 "main: yes" | grep "active keymap:" | head -n 1 | awk -F': ' '{print $2}')
-    
-    # Форматируем раскладку
-    case "$current_layout" in
+format_layout() {
+    case "$1" in
         "English (US)"|"English"|"en_US"|"us")
-            layout_name="EN";;
+            echo "EN";;
         "Russian"|"ru_RU"|"ru")
-            layout_name="RU";;
+            echo "RU";;
         *)
-            layout_name="$current_layout";;
+            echo "$1";;
     esac
+}
+
+get_current_layout() {
+    hyprctl devices -j | jq -r '.keyboards[] | select(.main == true) | .active_keymap' | head -n1
+}
+
+# Первичный вывод
+format_layout "$(get_current_layout)"
+
+# Подписка на события
+socat -U - UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | while read -r line; do
+    event=$(echo "$line" | cut -d'>' -f1)
     
-    # Выводим только если раскладка изменилась
-    if [ -n "$layout_name" ] && [ "$layout_name" != "$last_layout" ]; then
-        echo "$layout_name"
-        last_layout="$layout_name"
+    if [ "$event" = "activelayout" ]; then
+        layout=$(echo "$line" | cut -d'>' -f2 | cut -d',' -f2)
+        format_layout "$layout"
     fi
-    
-    sleep 0.05
 done

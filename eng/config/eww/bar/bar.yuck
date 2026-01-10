@@ -12,30 +12,13 @@
     )
 	)
 )
-
-(defwidget lbgz []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh zoom" :tooltip "обновить обои" "")
-  )
-)
       
-(defwidget lbg []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh no-zoom" :tooltip "обновить обои" "")
-  )
-)
-      
-(defwidget bg []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh stat" :tooltip "обновить обои" "")
-  )
-)
+(defvar wall_mode "stat")
 
-(defwidget hbg []
-  (box :class "bg" :orientation "h" :space-evenly true :halign "start"
-    (button :onclick "./scripts/change-wall.sh hyprlax" :tooltip "обновить обои" "")
-  )
-)
+(defpoll wallpapers 
+  :interval "30s"
+  :initial "[]"
+  `./scripts/wallpaper-picker.sh list`)
 
 ;; ============================================================================
 ;; Center Section Widgets
@@ -290,6 +273,110 @@
       )
     )
   )     
+)
+
+;; ============================================================================
+;; wallpaper picker
+;; ============================================================================
+
+(defwidget wall-picker []
+
+  (box 
+    :class "wallpicker"
+    :orientation "v"
+    :space-evenly false
+    
+    ; Header
+    (box 
+      :class "header"
+      :spacing 3
+      :space-evenly false
+      
+      (label 
+        :class "title" 
+        :text "Wallpaper Library" 
+        :xalign 0 
+        :hexpand true
+      )
+      
+      (button 
+        :class "icon-btn"
+        :tooltip "Refresh cache"
+        :onclick "./scripts/wallpaper-picker.sh clean-cache && ./scripts/wallpaper-picker.sh cache-all &"
+        "Refresh"
+      )
+      
+      (button 
+        :class "close-btn"
+        :onclick "eww close wallpaper-picker"
+        "X"
+      )
+    )
+    
+    (box :class "separator")
+    
+    ; Mode selector
+    (box 
+      :class "mode-selector"
+      :spacing 3
+      :space-evenly false
+      :halign "end"
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'stat' ? 'active' : ''}"
+        :onclick "eww update wall_mode=stat"
+        "Static"
+      )
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'zoom' ? 'active' : ''}"
+        :onclick "eww update wall_mode=zoom"
+        "Zoom"
+      )
+      
+      (button 
+        :class "mode-btn ${wall_mode == 'no-zoom' ? 'active' : ''}"
+        :onclick "eww update wall_mode=no-zoom"
+        "Full"
+      )
+    )
+    
+    ; Wallpaper grid с прокруткой
+    (scroll 
+  :vscroll true
+  :hscroll false
+  :vexpand true
+  :height "100%"
+
+  (box 
+    :class "wall-container"
+    :orientation "v"
+    :spacing 3
+    :space-evenly false
+
+    (for row in wallpapers
+      (box :class "wall-row" :orientation "h" :spacing 3
+        (for wall in {row.row}
+          (button
+            :class "wall-card ${wall.type}"
+            :onclick "bash -c 'eww close wallpaper-picker; ~/.config/eww/scripts/wallpaper-picker.sh set \"${wall.path}\" ${wall_mode} &' &"
+            :tooltip "${wall.name}"
+            :style "min-width: 220px; margin: 0px;"
+
+            (box :orientation "v" :space-evenly false
+              (box :class "wall-thumb" :style "background-image: url('${wall.thumb}');")
+              (label :class "wall-name" :limit-width 20 :text "${wall.name}")
+              (revealer :reveal "${wall.type == 'video'}" :transition "slidedown"
+                (label :class "badge" :text "VIDEO")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+  )
 )
 
 ;; ============================================================================

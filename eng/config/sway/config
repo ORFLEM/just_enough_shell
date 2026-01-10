@@ -8,9 +8,9 @@ set $down j
 set $up k
 set $right l
 
-set $term kitty
+set $term ghostty
 set $menu pgrep rofi && pkill rofi || ~/.config/rofi/launcher.sh
-set $filemanager thunar
+set $filemanager pcmanfm
 
 #--- АВТОСТАРТ ------------------------------------------------------------------------
 # Системные утилиты
@@ -18,12 +18,20 @@ exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
+exec openrgb --profile xmas
+
+# Программы
+exec zen-browser
+exec Telegram
+# exec io.github.lawstorant.boxflat
+# exec steam
+# exec solaar
 
 # Утилиты рабочего места
 exec eww daemon && eww open-many Btime corner-top-left corner-top-right corner-bottom-left corner-bottom-right notifications player mycal weather sysinf sbar
-exec swww-daemon & swww img ~/.config/hypr/no-live-bg.png --transition-type wipe --transition-fps 144 --transition-duration 1
-# exec mpvpaper -o 'no-audio loop video-zoom=0' '*' ~/.config/hypr/live-bg.mp4
-# exec mpvpaper -o 'no-audio loop video-zoom=0.43' '*' ~/.config/hypr/live-bg.mp4
+# exec mpvpaper -o 'no-audio loop video-zoom=0' '*' ~/.cache/walls/live-bg.mp4
+# exec mpvpaper -o 'no-audio loop video-zoom=0.43' '*' ~/.cache/walls/live-bg.mp4
+# exec QT_QPA_PLATFORM=xcb /home/orflem/.local/bin/wallpaperengine-gui --minimized
 
 # Буфер обмена
 exec wl-paste --type text --watch cliphist store
@@ -33,7 +41,7 @@ exec wl-paste --type image --watch cliphist store
 exec mkdir -p ~/Screenshots
 
 # Автотайлинг
-exec_always autotiling-rs
+exec_always autotiling
 
 #--- ДЕКОРАЦИИ ОКОН -------------------------------------------------------------------
 # Скругления
@@ -42,7 +50,7 @@ smart_corner_radius enable
 
 # Блюр
 blur enable
-blur_xray off
+blur_xray true
 blur_passes 3
 blur_radius 2
 
@@ -54,8 +62,8 @@ shadow_color #2b4f6f
 
 # Затемнение неактивных окон
 default_dim_inactive 0.35
-dim_inactive_colors.unfocused #181818FF
-dim_inactive_colors.urgent #752110FF
+dim_inactive_colors.unfocused #181818ff
+dim_inactive_colors.urgent #752110ff
 
 # Гапсы
 gaps inner 6
@@ -74,49 +82,48 @@ for_window [floating] border pixel 2
 smart_borders off
 
 # Прозрачность окон
-for_window [class=".*"] opacity 0.9
-for_window [app_id=".*"] opacity 0.9
+for_window [class=".*"] opacity 0.85
+for_window [app_id=".*"] opacity 0.85
 
 #--- СКРАЧПАД -------------------------------------------------------------------------
 	scratchpad_minimize disable
 
 #--- УКРАШАТЕЛЬСТВА -------------------------------------------------------------------
+	# Обоины
+	output * bg ~/.cache/walls/no-live-bg.jpg fill
+	
 	# Шрифт
 	font pango:mononoki 10
 
 	# Курсор
-	seat seat0 xcursor_theme "BreezeX-RoséPine" 32
-	exec_always gsettings set org.gnome.desktop.interface cursor-theme "BreezeX-RoséPine"
+	seat seat0 xcursor_theme "rose-pine" 32
+	exec_always gsettings set org.gnome.desktop.interface cursor-theme "rose-pine"
 	exec_always gsettings set org.gnome.desktop.interface cursor-size 32
 
 	# Курсоры, темы, иконки
 	set $gnome-schema org.gnome.desktop.interface
 	exec_always {
-    	gsettings set $gnome-schema gtk-theme 'Kanagawa-BG'
-    	gsettings set $gnome-schema icon-theme 'Papirius'
-    	gsettings set $gnome-schema cursor-theme 'BreezeX-RoséPine'
+    	gsettings set $gnome-schema gtk-theme 'adw-gtk3-dark'
+    	gsettings set $gnome-schema icon-theme 'Papirus-Yaru'
+    	gsettings set $gnome-schema cursor-theme 'rose-pine'
     	gsettings set $gnome-schema font-name 'Mononoki Nerd Font Propo 10'
     	# Отключение кнопок управления окном
     	gsettings set org.gnome.desktop.wm.preferences button-layout ''
 	}
 
 	# Цвета рамок
-	client.focused           #f3f1d7 #f3f1d7 #2b2b2b #f3f1d7
-	client.focused_inactive  #8c8c94 #8c8c94 #2b2b2b #8c8c94
-	client.unfocused         #8c8c94 #8c8c94 #2b2b2b #8c8c94
-	client.urgent            #8c8c94 #8c8c94 #2b2b2b #8c8c94
-	client.placeholder       #8c8c94 #8c8c94 #2b2b2b #8c8c94
+	include colors.conf
 
 #--- НАСТРОЙКИ МОНИТОРОВ --------------------------------------------------------------
-	output * adaptive_sync on
+	output * mode 3440x1440@144Hz
 	# Справка по настройке: swaymsg -t get_outputs
 
 #--- РАСКЛАДКА КЛАВИАТУРЫ -------------------------------------------------------------
 input type:keyboard {
     xkb_layout "us,ru"
     xkb_options "grp:caps_toggle,grp:alt_shift_toggle"
-    repeat_rate 25
-    repeat_delay 200
+    repeat_rate 35
+    repeat_delay 250
 }
 
 # Numlock
@@ -141,24 +148,28 @@ bindsym --to-code $mod+g layout tabbed
 bindsym --to-code $mod+Ctrl+g splith
 
 # Управление звуком и медиа
-bindsym XF86Explorer exec pamixer -t
-bindsym XF86Mail exec pamixer -d 5
-bindsym XF86Calculator exec pamixer -i 5
-bindsym XF86HomePage exec ~/.config/eww/scripts/popup.sh plr
-bindsym --to-code Mod1+Return exec playerctl play-pause
-bindsym --to-code Mod1+Shift_R exec playerctl next
-bindsym --to-code Mod1+Control_R exec playerctl previous
+# bindsym XF86Explorer exec pamixer -t
+# bindsym XF86Mail exec pamixer -d 5
+# bindsym XF86Calculator exec pamixer -i 5
+# bindsym XF86HomePage exec ~/.config/eww/scripts/popup.sh plr
+bindsym Control+F9 exec pamixer -t
+bindsym Control+F10 exec pamixer -d 5
+bindsym Control+F11 exec pamixer -i 5
+bindsym Control+F12 exec ~/.config/eww/scripts/popup.sh plr
+bindsym --to-code --locked Control+slash exec playerctl play-pause
+bindsym --to-code --locked Control+period exec playerctl next
+bindsym --to-code --locked Control+comma exec playerctl previous
 
 # Управление яркостью
-bindsym Mod1+Prior exec ddcutil --bus 12 setvcp 10 + 5
-bindsym Mod1+Next exec ddcutil --bus 12 setvcp 10 - 5
+bindsym --locked Mod1+Prior exec ddcutil --bus 9 setvcp 10 + 5
+bindsym --locked Mod1+Next exec ddcutil --bus 9 setvcp 10 - 5
 
 # Скриншоты
-bindsym Print exec grim -g "$(slurp -b 3d3d3dCC -c CCCCCCCC)" - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_screenshot.png | wl-copy
-bindsym Shift+Print exec grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy
+bindsym Print exec sh -c 'FILE=~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_screenshot.png; grim -g "$(slurp -b 3d3d3dCC -c CCCCCCCC)" - | tee "$FILE" | wl-copy && [ -s "$FILE" ] || rm -f "$FILE"'
+bindsym --locked Shift+Print exec grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy
 
 # Colorpicker
-bindsym --to-code $mod+n exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n1 | cut -d' ' -f4 | wl-copy
+bindsym --to-code $mod+n exec hyprpicker -a 
 
 # Закрыть окно
 bindsym --to-code $mod+c kill
@@ -259,15 +270,18 @@ mode "resize" {
 for_window [app_id="org.pulseaudio.pavucontrol"] {
     floating enable
     resize set 1000 500
-    move position 100ppt 44px
-    move left 1006px
+    move position 2428px 0px
+}
+for_window [app_id="pwvucontrol"] {
+    floating enable
+    resize set 1000 500
+    move position 2428px 0px
 }
 
-for_window [app_id=".blueman-manager-wrapped"] {
+for_window [app_id="blueman"] {
     floating enable
     resize set 730 400
-    move position 100ppt 44px
-    move left 736px
+    move position 2698px 0px
 }
 
 for_window [app_id="zoom"] {
@@ -279,6 +293,9 @@ for_window [title="Картинка в картинке"] {
     opacity 1.0
     floating enable
     sticky enable
+    dim_inactive 0
+    resize set 900 400 
+    move position 2528px 0px
 }
 
 #--- ПОДКЛЮЧЕНИЕ ДОПОЛНИТЕЛЬНЫХ КОНФИГОВ ----------------------------------------------

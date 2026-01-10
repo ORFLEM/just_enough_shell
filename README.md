@@ -76,36 +76,40 @@ System : `NixOS 25.11 (unstable)` and working for adding support ALT Linux regul
 * `capslock` или `shift + alt` - смена языка
 * `shift + capslock` - включить | выключить капс
 * `super + space` - раскрыть окно, поверх других
-* `alt + enter` - воспроизвести | остановить музыку
-* `alt + shift` - следующий трек
-* `alt + ctrl` - предыдущий трек
+* `ctrl + /` - воспроизвести | остановить музыку
+* `ctrl + >` - следующий трек
+* `ctrl + <` - предыдущий трек
 * `alt + pgup` - повысить яркость
 * `alt + pgdn` - понизить яркость
 
 # как выглядят конфиги:
 ### Р.стол
-![alt_image](./rus/images/1.png)
-![alt_image](./rus/images/2.png)
+![alt_image](./images/1.png)
+![alt_image](./images/2.png)
 
 ### Панель управления
-![alt_image](./rus/images/3.png)
-![alt_image](./rus/images/4.png)
-![alt_image](./rus/images/5.png)
+![alt_image](./images/3.png)
+![alt_image](./images/4.png)
+![alt_image](./images/5.png)
 
 ### Dashboard
-![alt_image](./rus/images/6.png)
+![alt_image](./images/6.png)
 
 ### Кнопки питания
-![alt_image](./rus/images/7.png)
+![alt_image](./images/7.png)
 
 ### fastfetch
-![alt_image](./rus/images/8.png)
+![alt_image](./images/8.png)
 
 ### popup громкости и звука
-![alt_image](./rus/images/9.png)
+![alt_image](./images/9.png)
 
 ### Лаунчер приложений
-![alt_image](./rus/images/10.png)
+![alt_image](./images/10.png)
+
+### блокировка экрана
+![alt_image](./images/11.png)
+![alt_image](./images/12.png)
 
 # Установка
 ```
@@ -146,16 +150,17 @@ All new features are released in the Russian localization first, as my English p
 These configs include controversial choices that not everyone may like:
   using NixOS without Home Manager;
   bash instead of fish;
-  swww and mpvpaper;
+  swaybg and mpvpaper;
   strange ideas in keybindings and UI;
+  using Go binaries for optimization;
 But these are customizable.
 ```
 
 # About the Configs
 ```
-These configs are built on eww, and rofi.
+These configs are built on eww and rofi.
 
-You can use Sway or Hyrpland, but Sway is more stable and optimized. I recommend it.
+Sway and Hyprland are available, but Sway is more stable and optimized, and I'm currently using it - its config will 100% work. With Hyprland you might need to tweak things. I recommend Sway.
 
 I tried to see if I could create the entire UI using only eww and rofi without heavily impacting performance, but I can't say for sure about weaker PCs since my PC is quite powerful.
 
@@ -172,13 +177,11 @@ Please don't judge too harshly.
 * File Manager: `ranger | yazi | thunar`
 * Editors: `micro | helix`
 * Shells: `bash | fish`
-* Wallpaper: `mpvpaper | swww` (~~hyprpaper~~ deprecated due to flickering on AMD cards, replaced with swww; working on hyprlax addition, current blocker: manual package building)
-* Main theme for terminals, TTY, GTK, etc.: `kanagawa`
+* Wallpaper: `mpvpaper | swaybg` (hyprpaper replaced with swaybg due to flickering on AMD cards; working on adding hyprlax, current blocker: manual package building)
+* Main theme for terminals, TTY, GTK, etc.: `kanagawa` + matugen support for eww, with GTK support coming later (work in progress)
 
 ```
-If you want animated video wallpapers, replace swww with mpvpaper:
-uncomment the mpvpaper line and comment the swww line in hyprland.conf,
-and in eww at "~/.config/eww/bar" in the hbar.yuck file, replace (bg) with (lbg or lgbz for 21:9 monitors).
+If you want animated video wallpapers, use zoom or no-zoom modes in wallpaper picker, and stat mode for static images.
 ```
 
 ```
@@ -207,36 +210,40 @@ Not sure if it's a good idea, but feel free to try it out.
 * `CapsLock` or `Shift + Alt` - Switch language
 * `Shift + CapsLock` - Toggle Caps Lock
 * `Super + Space` - Expand window above others
-* `Alt + Enter` - Play | Pause music
-* `Alt + Shift` - Next track
-* `Alt + Ctrl` - Previous track
+* `Ctrl + /` - Play | Pause music
+* `Ctrl + >` - Next track
+* `Ctrl + <` - Previous track
 * `Alt + PgUp` - Increase brightness
 * `Alt + PgDn` - Decrease brightness
 
 # What the configs look like:
 ### Desktop
-![alt_image](./eng/images/1.png)
-![alt_image](./eng/images/2.png)
+![alt_image](./images/1.png)
+![alt_image](./images/2.png)
 
 ### Control Panel
-![alt_image](./eng/images/3.png)
-![alt_image](./eng/images/4.png)
-![alt_image](./eng/images/5.png)
+![alt_image](./images/3.png)
+![alt_image](./images/4.png)
+![alt_image](./images/5.png)
 
 ### Dashboard
-![alt_image](./eng/images/6.png)
+![alt_image](./images/6.png)
 
 ### Power Menu
-![alt_image](./eng/images/7.png)
+![alt_image](./images/7.png)
 
 ### Fastfetch
-![alt_image](./eng/images/8.png)
+![alt_image](./images/8.png)
 
 ### Volume and Brightness Popups
-![alt_image](./eng/images/9.png)
+![alt_image](./images/9.png)
 
 ### Application Launcher
-![alt_image](./eng/images/10.png)
+![alt_image](./images/10.png)
+
+### Lock Screen
+![alt_image](./images/11.png)
+![alt_image](./images/12.png)
 
 # Installation
 
