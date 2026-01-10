@@ -1,5 +1,5 @@
 (deflisten notifs :initial ""
-  `nix-shell -p python3 python3Packages.pygobject3 python3Packages.dbus-python gobject-introspection --run "python3 ~/.config/eww/notif/main.py"`)
+  "python3 ~/.config/eww/notif/main.py")
 
 (defwindow notifications
   :monitor 0
