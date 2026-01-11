@@ -86,32 +86,32 @@ Hyprland БЕЗ доработки будет работать ТОЛЬКО на
 
 # как выглядят конфиги:
 ### Р.стол
-![alt_image](./images/1.png)
-![alt_image](./images/2.png)
+![alt_image](./images/1.webp)
+![alt_image](./images/2.webp)
 
 ### Панель управления
-![alt_image](./images/3.png)
-![alt_image](./images/4.png)
-![alt_image](./images/5.png)
+![alt_image](./images/3.webp)
+![alt_image](./images/4.webp)
+![alt_image](./images/5.webp)
 
 ### Dashboard
-![alt_image](./images/6.png)
+![alt_image](./images/6.webp)
 
 ### Кнопки питания
-![alt_image](./images/7.png)
+![alt_image](./images/7.webp)
 
 ### fastfetch
-![alt_image](./images/8.png)
+![alt_image](./images/8.webp)
 
 ### popup громкости и звука
-![alt_image](./images/9.png)
+![alt_image](./images/9.webp)
 
 ### Лаунчер приложений
-![alt_image](./images/10.png)
+![alt_image](./images/10.webp)
 
 ### блокировка экрана
-![alt_image](./images/11.png)
-![alt_image](./images/12.png)
+![alt_image](./images/11.webp)
+![alt_image](./images/12.webp)
 
 # Установка
 ```
@@ -222,32 +222,32 @@ Not sure if it's a good idea, but feel free to try it out.
 
 # What the configs look like:
 ### Desktop
-![alt_image](./images/1.png)
-![alt_image](./images/2.png)
+![alt_image](./images/1.webp)
+![alt_image](./images/2.webp)
 
 ### Control Panel
-![alt_image](./images/3.png)
-![alt_image](./images/4.png)
-![alt_image](./images/5.png)
+![alt_image](./images/3.webp)
+![alt_image](./images/4.webp)
+![alt_image](./images/5.webp)
 
 ### Dashboard
-![alt_image](./images/6.png)
+![alt_image](./images/6.webp)
 
 ### Power Menu
-![alt_image](./images/7.png)
+![alt_image](./images/7.webp)
 
 ### Fastfetch
-![alt_image](./images/8.png)
+![alt_image](./images/8.webp)
 
 ### Volume and Brightness Popups
-![alt_image](./images/9.png)
+![alt_image](./images/9.webp)
 
 ### Application Launcher
-![alt_image](./images/10.png)
+![alt_image](./images/10.webp)
 
 ### Lock Screen
-![alt_image](./images/11.png)
-![alt_image](./images/12.png)
+![alt_image](./images/11.webp)
+![alt_image](./images/12.webp)
 
 # Installation
 
