@@ -40,7 +40,8 @@ Please don't judge too harshly.
 * Editors: `micro | helix`
 * Shells: `bash | fish`
 * Wallpaper: `mpvpaper | swaybg` (hyprpaper replaced with swaybg due to flickering on AMD cards; working on adding hyprlax, current blocker: manual package building)
-* Main theme for terminals, TTY, GTK, etc.: `kanagawa` + matugen support for eww, with GTK support coming later (work in progress)
+* Main theme for terminals, GTK, etc.: `adw-gtk3`; TTY: `kanagawa` + matugen support for eww, with GTK support coming later (work in progress)
+* Icons: `Tela Nord`
 
 ```
 If you want animated video wallpapers, use zoom or no-zoom modes in wallpaper picker, and stat mode for static images.

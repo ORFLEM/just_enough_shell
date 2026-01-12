@@ -386,12 +386,14 @@
         pcmanfm
   
         # === Themes ===
+        adw-gtk3
         gnome-themes-extra
         gtk3
         (papirus-icon-theme.override { color = "yaru"; })
-        gruvbox-gtk-theme
         kanagawa-gtk-theme
+        tela-icon-theme
         rose-pine-cursor
+        rose-pine-hyprcursor
         kdePackages.qtstyleplugin-kvantum
   
         # === Unity3D ===
@@ -442,8 +444,8 @@
   # ENVIRONMENT
   # ============================================================
   environment.sessionVariables = {
-    GTK_THEME = "Kanagawa-B";
-    ICON_THEME = "Papirus-Dark";
+    GTK_THEME = "adw-gtk3";
+    ICON_THEME = "Tela-nord";
     QT_QPA_PLATFORMTHEME = "qt6ct";
     QT_STYLE_OVERRIDE = "qt6ct";
     QT_QPA_PLATFORM = "wayland";
