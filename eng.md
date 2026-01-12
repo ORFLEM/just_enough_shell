@@ -36,7 +36,7 @@ Please don't judge too harshly.
 * Screen Locker: `Hyprlock`
 * System Monitoring: `Btop | htop` (also available in dashboard)
 * Interface: `eww`
-* File Manager: `ranger | yazi | thunar`
+* File Manager: `ranger | yazi | thunar | pcmanfm`
 * Editors: `micro | helix`
 * Shells: `bash | fish`
 * Wallpaper: `mpvpaper | swaybg` (hyprpaper replaced with swaybg due to flickering on AMD cards; working on adding hyprlax, current blocker: manual package building)

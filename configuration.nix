@@ -383,6 +383,7 @@
         xfce.thunar
         xfce.thunar-archive-plugin
         xfce.tumbler
+        pcmanfm
   
         # === Themes ===
         gnome-themes-extra
