@@ -424,7 +424,7 @@
         hyprpicker
 
         #wm пакеты
-        autotiling-rs
+        autotiling
         swayfx
         hyprland
       ])
