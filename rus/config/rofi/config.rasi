@@ -1,7 +1,7 @@
 configuration {
     modi:                       "drun,clipboard:~/.config/rofi/cliphist-master/contrib/cliphist-rofi-img,filebrowser,window";
     show-icons:                 true;
-    icon-theme:                 "Papirus";
+    icon-theme:                 "Tela-nord";
     display-drun:               "Проги";
     display-clipboard:          "Буфер";
     display-filebrowser:        "Файлы";
