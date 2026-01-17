@@ -1,0 +1,29 @@
+[config]
+# Режим: dark, light, или amoled
+mode = "dark"
+
+[templates.ghostty]
+input_path = "~/.config/matugen/templates/ghostty"
+output_path = "~/.config/ghostty/config"
+
+[templates.eww]
+input_path = "~/.config/matugen/templates/eww.scss"
+output_path = "~/.config/eww/eww.scss"
+
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+
+[templates.sway]
+input_path = '~/.config/matugen/templates/sway'
+output_path = '~/.config/sway/colors.conf'
+post_hook = 'swaymsg reload'
+
+[templates.zen]
+input_path = '~/.config/matugen/templates/zen/userChrome.css.tpl'
+output_path = '~/.zen/Zen/*.default-release/chrome'

@@ -391,7 +391,7 @@
     :space-evenly false
 
     (for row in wallpapers
-      (box :class "wall-row" :orientation "h" :spacing 3
+      (box :class "wall-row" :orientation "h" :spacing 3 :space-evenly false
         (for wall in {row.row}
           (button
             :class "wall-card ${wall.type}"
@@ -452,7 +452,7 @@
 )
 (defwindow wallpaper-picker
   :monitor 0
-  :geometry (geometry :width "972px"
+  :geometry (geometry :width "942px"
                       :height "55%")
   :anchor "center"
   :stacking "overlay"

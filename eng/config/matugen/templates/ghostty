@@ -1,0 +1,61 @@
+# Шрифты / Fonts
+font-family = Mononoki Nerd Font Propo
+font-size = 13
+font-thicken = true
+
+# Курсор / Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Прокрутка / Scrollback
+scrollback-limit = 4000
+
+# Мышь / Mouse
+mouse-hide-while-typing = true
+link-url = true
+
+# Shell
+command = bash
+
+# Окно / Window
+window-padding-x = 5
+window-padding-y = 5
+window-decoration = false
+
+# Производительность / Performance
+window-vsync = true
+
+# Прозрачность / Opacity
+background-opacity = 1.0
+
+shell-integration = bash
+
+# Клавиатурные сокращения / Keybinds
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# Генерируется matugen - Цветовая схема
+background = {{ colors.surface.default.hex }}
+foreground = {{ colors.on_surface.default.hex }}
+
+cursor-color = {{ colors.primary.default.hex }}
+
+selection-foreground = {{ colors.surface.default.hex }}
+selection-background = {{ colors.on_surface.default.hex }}
+
+palette = 0={{ colors.surface_dim.default.hex }}
+palette = 8={{ colors.surface_bright.default.hex }}
+palette = 1={{ colors.error.default.hex }}
+palette = 9={{ colors.error_container.default.hex }}
+palette = 2={{ colors.tertiary.default.hex }}
+palette = 10={{ colors.on_tertiary.default.hex }}
+palette = 3={{ colors.secondary.default.hex }}
+palette = 11={{ colors.on_secondary.default.hex }}
+palette = 4={{ colors.primary.default.hex }}
+palette = 12={{ colors.primary_container.default.hex }}
+palette = 5={{ colors.tertiary_container.default.hex }}
+palette = 13={{ colors.on_tertiary_container.default.hex }}
+palette = 6={{ colors.secondary_container.default.hex }}
+palette = 14={{ colors.on_secondary_container.default.hex }}
+palette = 7={{ colors.on_surface_variant.default.hex }}
+palette = 15={{ colors.on_surface.default.hex }}

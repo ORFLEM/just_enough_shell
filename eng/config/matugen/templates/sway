@@ -1,0 +1,11 @@
+# Sway Window colors
+# Generated with Matugen
+
+# Window: border, background, text, indicator, child_border
+
+#Windows                 #border  #background  #text    #indicator  #child_border
+client.focused           {{ colors.primary.default.hex }} {{ colors.primary.default.hex }} #2b2b2b {{ colors.primary.default.hex }}
+client.focused_inactive  #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.unfocused         #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.urgent            #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.placeholder       #8c8c94 #8c8c94 #2b2b2b #8c8c94
