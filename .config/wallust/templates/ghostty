@@ -1,0 +1,61 @@
+# Шрифты / Fonts
+font-family = Mononoki Nerd Font Propo
+font-size = 13
+font-thicken = true
+
+# Курсор / Cursor
+cursor-style = block
+cursor-style-blink = true
+
+# Прокрутка / Scrollback
+scrollback-limit = 4000
+
+# Мышь / Mouse
+mouse-hide-while-typing = true
+link-url = true
+
+# Shell
+command = bash
+
+# Окно / Window
+window-padding-x = 5
+window-padding-y = 5
+window-decoration = false
+
+# Производительность / Performance
+window-vsync = true
+
+# Прозрачность / Opacity
+background-opacity = 1.0
+
+shell-integration = bash
+
+# Клавиатурные сокращения / Keybinds
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+
+# Генерируется wallust - Цветовая схема
+background = {{background}}
+foreground = {{foreground}}
+
+cursor-color = {{cursor}}
+
+selection-foreground = {{background}}
+selection-background = {{foreground}}
+
+palette = 0={{color0}}
+palette = 8={{color8}}
+palette = 1={{color1}}
+palette = 9={{color9}}
+palette = 2={{color2}}
+palette = 10={{color10}}
+palette = 3={{color3}}
+palette = 11={{color11}}
+palette = 4={{color4}}
+palette = 12={{color12}}
+palette = 5={{color5}}
+palette = 13={{color13}}
+palette = 6={{color6}}
+palette = 14={{color14}}
+palette = 7={{color7}}
+palette = 15={{color15}}

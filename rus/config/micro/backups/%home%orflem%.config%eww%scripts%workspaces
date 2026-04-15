@@ -1,3 +1,0 @@
-#! /bin/bash
-
-for num in$(hyprlctl activeworkspace | grep ID | sed 's/()/(1)/g' | awk 'NR>1{print $1}' RS='(' FS=')')

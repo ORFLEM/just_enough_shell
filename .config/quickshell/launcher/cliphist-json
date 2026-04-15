@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+import subprocess, json, os, sys, re
+
+tmp_dir = "/tmp/cliphist"
+os.makedirs(tmp_dir, exist_ok=True)
+
+# Если передан id — вставить в буфер
+if len(sys.argv) > 1:
+    entry_id = sys.argv[1]
+    lines = subprocess.run(["cliphist", "list"], capture_output=True).stdout.decode()
+    for line in lines.splitlines():
+        if line.startswith(entry_id + "\t"):
+            decoded = subprocess.run(
+                ["cliphist", "decode"],
+                input=line.encode(),
+                capture_output=True
+            ).stdout
+            subprocess.run(["wl-copy"], input=decoded)
+            break
+    sys.exit(0)
+
+# Список
+result = subprocess.run(["cliphist", "list"], capture_output=True)
+lines = result.stdout.decode(errors="replace").splitlines()
+
+entries = []
+for line in lines:
+    m = re.match(r'^(\d+)\t(.*)', line, re.DOTALL)
+    if not m:
+        continue
+    entry_id = m.group(1)
+    content  = m.group(2)
+
+    if re.search(r'binary.*(jpg|jpeg|png|bmp|webp)', content, re.IGNORECASE):
+        ext = re.search(r'(jpg|jpeg|png|bmp|webp)', content, re.IGNORECASE).group(1).lower()
+        icon_file = f"{tmp_dir}/{entry_id}.{ext}"
+        if not os.path.exists(icon_file):
+            decoded = subprocess.run(
+                ["cliphist", "decode"],
+                input=line.encode(),
+                capture_output=True
+            ).stdout
+            with open(icon_file, "wb") as f:
+                f.write(decoded)
+        entries.append({"id": entry_id, "text": f"Image {entry_id}", "type": "image", "icon": icon_file})
+    else:
+        text = content[:120].replace("\n", " ").replace("\r", "")
+        entries.append({"id": entry_id, "text": text, "type": "text", "icon": ""})
+
+print(json.dumps(entries, ensure_ascii=False))

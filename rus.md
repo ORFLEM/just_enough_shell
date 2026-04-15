@@ -1,83 +1,151 @@
-![](https://img.shields.io/github/last-commit/ORFLEM/My-NixOS-Hyprland-eww-configs?&style=for-the-badge&color=bbbbbb&label=Последний%20коммент&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![](https://img.shields.io/github/repo-size/ORFLEM/My-NixOS-Hyprland-eww-configs?color=cccccc&label=Размер%20проекта&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Последний%20коммент&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Размер%20проекта&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
-# Важно
+<div align="center">
+	<img src="./images/preview.webp" width="900px">
+	<h1>My NixOS Configs</h1>
+	<p>Конфигурации <b>NixOS</b> для рабочего окружения на базе <b>quickshell</b>, <b>swayfx</b> с кастомным интерфейсом и оптимизацией через <b>Go-бинарники</b>.</p>
+</div>
+
+***
+
+<table align="right">
+	<tr>
+		<td colspan="2" align="center">Системные параметры</td>
+	</tr>
+	<tr>
+		<th>Компонент</th>
+		<th>Значение</th>
+	</tr>
+	<tr>
+		<td>OS</td>
+		<td>NixOS 25.11</td>
+	</tr>
+	<tr>
+		<td>WM</td>
+		<td>swayfx</td>
+	</tr>
+	<tr>
+		<td>Shell</td>
+		<td>bash</td>
+	</tr>
+	<tr>
+		<td>Terminal</td>
+		<td>Foot</td>
+	</tr>
+	<tr>
+		<td>Interface</td>
+		<td>quickshell</td>
+	</tr>
+	<tr>
+		<td>Screen Locker</td>
+		<td>Hyprlock</td>
+	</tr>
+	<tr>
+		<td>Monitoring</td>
+		<td>Btop</td>
+	</tr>
+	<tr>
+		<td>Audio</td>
+		<td>PipeWire</td>
+	</tr>
+	<tr>
+		<td>Browser</td>
+		<td>Zen browser</td>
+	</tr>
+	<tr>
+		<td>File Manager</td>
+		<td>ranger / yazi / dolphin</td>
+	</tr>
+	<tr>
+		<td>Editor</td>
+		<td>micro / helix</td>
+	</tr>
+	<tr>
+		<td>Theme</td>
+		<td>zenburn</td>
+	</tr>
+	<tr>
+		<td>Icons</td>
+		<td>Tela Gray</td>
+	</tr>
+	<tr>
+		<td>Bootloader</td>
+		<td>Grub</td>
+	</tr>
+	<tr>
+		<td>Optimization</td>
+		<td>Go binaries</td>
+	</tr>
+</table>
+
+<div align="left">
+	<h3>-- О проекте -- :</h3>
+	<p>
+  Эти конфиги, сделанные на базе quickshell.<br>
+  <br>
+  <!-- Доступны <b>SwayFX и Hyrpland</b>, но <b>SwayFX</b> стабильнее и лучше работает, а также я сейчас на нём, из-за чего его конфиг 100% будет работать в отличии от <b>Hyprland</b>...<br> -->
+  <!-- Может придётся посидеть и доработать <b>Hyprland</b> своими рукам, но я советую <b>SwayFX</b>.<br> -->
+	Доступен <b>SwayFX</b>, но идут работы над добавлением поддержки <b>Hyprland и Niri</b>
+  Также можно, отредактировав 3 скрипта-болванки, запустить данный интерфейс на любом wayland тайлинге С поддержкой subscribe протоколов для данных о воркспейсах, активном окне и раскладке.<br>
+  <br>
+  Я пытался проверить, смогу ли я создать весь ui только на <b>Quickshell</b>, не убив сильно производительность.<br>
+  Но точно не скажу по поводу слабых ПК, ведь мой ПК достаточно мощный.<br>
+  <br>
+  Прошу строго не судить...<br>
+	</p>
+	<h3>-- Дальнейший вектор -- :</h3>
+	<p>
+	<b>[i]</b> Добавление поддержки <b>Hyprland</b><br>
+  <b>[n]</b> Добавление поддержки <b>Niri</b><br>
+  <b>[n]</b> Создание установщика настроек<br>
+	<b>[n]</b> Создание виджета погоды<br>
+	<b>[n]</b> Создание виджета календаря<br>
+	c = completed; n = not complited; i = in progress.<br> 
+	</p>
+</div>
+
+>[!WARNING]
+> **Конфигурации предназначены для СТАЦИОНАРНОГО компьютера!**
+> - Hyprland без доработок работает только на NixOS
+> - Плагин hy3 отсутствует в репозиториях ALT Linux
+> - Конфиги включают спорные решения (bash вместо fish/zsh, Go-бинарники)
+
 ```
-Это конфиги для СТАЦИОНАРНОГО компьютера!!
-
-Hyprland БЕЗ доработки будет работать ТОЛЬКО на NixOS, hy3 плагина НЕТ в ALT Linux репозитории!
-
-Все новые фишки изначально появляются в русской локализации, т.к. я плохо знаю английский и его поддержка затруднена для меня!!!
-
-В данных конфигах есть спорные решения, которые не всем понравятся:
-  использование NixOS без home manager;
-  bash, вместо fish;
-  swaybg и mpvpaper;
-  странные идеи в горячих клавишах и интерфейсе;
-  для оптимизации используются бинарники go;
-Но это можно выбрать
-```
-
-# Об конфигах
-```
-Эти конфиги, сделанные на базе eww и rofi
-
-Доступны Sway и Hyrpland, но Sway стабильнее и более оптимизировано работает, а также я сейчас на нём и его конфиг 100% будет работать, с hyprland может придётся посидеть и доработать его, я советую его 
-
-Я пытался проверить, смогу ли я создать весь ui только на eww и rofi, не убив сильно производительность, но точно не скажу по поводу слабых ПК, ведь мой ПК достаточно мощный
-
-Прошу строго не судить
-```
-
-## -- Основной софт -- :
-* Тайлинг:`Hyprland | swayfx` (временное прекращение работы над поддержкой niri, причины: плохое понимание конфига и незаконченная замена rofi на eww launcher)
-* Терминал: `Kitty`
-* Лаунчер: `Rofi` (идёт под замену на eww, доступен для теста, но не работает, помогите если сможете)
-* Блокировщик экрана: `Hyprlock`
-* Мониторинг системы: `Btop | htop` (также есть в dashboard)
-* Интерфейс: `eww`
-* Проводник: `ranger | yazi | thunar | pcmanfm`
-* Редакторы: `micro | helix`
-* Консольные оболочки: `bash | fish`
-* Обои: `mpvpaper | swaybg` (hyprpaper мерцает на amd карте, он заменён на swaybg, т.к. мерцаний меньше, чем у hyprpaper, идут работы над добавлением hyprlax, проблемы добавления: ручная сборка пакета)
-* Основная тема для терминалов, gtk и прочего: `adw-gtk3`; tty: `kanagawa` + поддержка matugen для eww, но в дальнейшем и gtk подтянется (работаю над этим)
-* иконки: `Tela Nord`
-
-```
-Если хочется живых видео обоев, то используйте режимы zoom или no-zoom в wallpaper picker, а для статики stat
-```
-
-```
-Тестируется новый тип mini player в панели с использованием обложки альбома в качестве фона.
-Не уверен, что это хорошая идея, но можно попробовать.
+Если хочется живых видео обоев, то на выбор есть видеообои и шейдеры (последнее может плохо работать)
 ```
 
 ## -- Комбинации клавиш -- :
-* `super + e` - файловый менеджер
-* `super + q` - терминал
-* `super + o` - Кнопки питания
-* `super + l` - dashboard
-* `super + 1-0` или `super + scrll up | scrll dwn` - переключение между р. столами
-* `super + shift + 1-0` или `super + shift + стрелки` - перенос программ между р. столами 
-* `super + пкм` - ресайз окон
-* `super + shift + стрелки` или `super + лкм` - перемещение окна
-* `super + стрелки` - переключение между окнами
-* `super + alt + лкм` - изменение типа окна: плавующий или в тайлинге
-* `super + w` - перезапуск eww
-* `super + s` - полноэкранный снимок
-* `super + d` - снимок выделенной области
-* `super` - открыть лаунчер приложений
-* `super + g` - создать группу
-* `super + ctrl + g` - разгруппировать программы
-* `super + tab` - откырть просмотр р. столов
-* `capslock` или `shift + alt` - смена языка
-* `shift + capslock` - включить | выключить капс
-* `super + space` - раскрыть окно, поверх других
-* `ctrl + /` - воспроизвести | остановить музыку
-* `ctrl + >` - следующий трек
-* `ctrl + <` - предыдущий трек
-* `alt + pgup` - повысить яркость
-* `alt + pgdn` - понизить яркость
+| комбинация | что делает |
+| :--- | :---: |
+| `super + e` | файловый менеджер |
+| `super + q` | терминал |
+| `super + o` | Кнопки питания |
+| `super + 1` или `super + scrll up \| scrll dwn` | переключение между р. столами |
+| `super + shift + 1` или `super + shift + стрелки` | перенос программ между р. столами  |
+| `super + пкм` | ресайз окон |
+| `super + shift + стрелки` или `super + лкм` | перемещение окна |
+| `super + стрелки` | переключение между окнами |
+| `super + alt + лкм` | изменение типа окна: плавующий или в тайлинге |
+| `super + w` | перезапуск eww |
+| `super + s` | полноэкранный снимок |
+| `super + d` | снимок выделенной области |
+| `super` | открыть лаунчер приложений |
+| `super + g` | создать группу |
+| `super + ctrl + g` | разгруппировать программы |
+| `super + tab` | прошлый р. стол |
+| `capslock` или `shift + alt` | смена языка |
+| `shift + capslock` | включить \| выключить капс |
+| `super + space` | раскрыть окно, поверх других |
+| `ctrl + /` | воспроизвести \| остановить музыку |
+| `ctrl + .` | следующий трек |
+| `ctrl + ,` | предыдущий трек |
+| `alt + pgup` | повысить яркость |
+| `alt + pgdn` | понизить яркость |
+| `alt + F9` | выключить звук |
+| `alt + F10` | тише |
+| `alt + F11` | громче |
+| `alt + F12` | открыть приогрыватель |
 
 # как выглядят конфиги:
 ### Р.стол
@@ -86,10 +154,12 @@ Hyprland БЕЗ доработки будет работать ТОЛЬКО на
 
 ### Панель управления
 ![alt_image](./images/3.webp)
-![alt_image](./images/4.webp)
-![alt_image](./images/5.webp)
 
-### Dashboard
+### Выбор обоев
+![alt_image](./images/4.webp)
+
+### Проигрыватель
+![alt_image](./images/5.webp)
 ![alt_image](./images/6.webp)
 
 ### Кнопки питания
@@ -119,7 +189,7 @@ Hyprland БЕЗ доработки будет работать ТОЛЬКО на
 ```
 
 #### Лицензия
-Для уведомлений используется код (в папке eww/notif), написанный Vimjoyer, там же и его MIT лицензия
+Уведомления были взяты из проекта [blxshell](https://codeberg.org/blx/dots/src/branch/main) и модернизированны как визуально, так и частично технически, лицензия неизвестна
 
 Эти конфигурации распространяются под лицензией **GNU GPL v3**.
 
@@ -131,4 +201,4 @@ Hyprland БЕЗ доработки будет работать ТОЛЬКО на
 
 Полный текст лицензии см. в файле [LICENSE](./LICENSE).
 
-[![boosty](https://img.shields.io/badge/Поддержи_на_boosty-F16061?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
+[![boosty](https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B8_%D0%BD%D0%B0_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
