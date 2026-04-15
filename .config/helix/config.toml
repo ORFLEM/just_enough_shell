@@ -1,0 +1,24 @@
+theme = "base16_default_dark"
+
+[editor]
+line-number = "relative"
+mouse = true
+auto-save = true
+auto-info = true
+
+[editor.lsp]
+display-messages = false
+display-inlay-hints = false
+
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.file-picker]
+hidden = false
+
+[keys.normal]
+A-v = ":vsplit"
+A-h = ":hsplit"
+A-s = ":w"
+A-q = ":q"
+

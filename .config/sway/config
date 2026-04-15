@@ -1,0 +1,326 @@
+# Конфиг для SwayFX
+#--- МОДИФИКАТОР ----------------------------------------------------------------------
+set $mod Mod4
+
+#--- ПЕРЕМЕННЫЕ -----------------------------------------------------------------------
+set $term foot
+set $filemanager dolphin
+set $menu qs ipc call root toggleLaunch
+
+#--- АВТОСТАРТ ------------------------------------------------------------------------
+exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+
+exec openrgb --profile orflem
+exec fcitx5 -d --replace
+exec mpd-mpris
+
+exec zen-beta
+exec Telegram
+# exec boxflat
+# exec steam
+exec qbittorrent-nox
+exec foot rmpc
+
+exec qs -d
+exec ~/.config/sway/opacity-changer.sh
+
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store
+exec mkdir -p ~/Screenshots
+
+exec_always persway daemon -w --default-layout spiral
+
+#--- ДЕКОРАЦИИ ------------------------------------------------------------------------
+corner_radius 10
+smart_corner_radius enable
+
+blur enable
+blur_xray true
+blur_passes 3
+blur_radius 2
+
+shadows off
+shadows_on_csd off
+shadow_blur_radius 10
+shadow_color #2b4f6f
+
+default_dim_inactive 0.35
+dim_inactive_colors.unfocused #181818ff
+dim_inactive_colors.urgent #752110ff
+
+gaps inner 6
+gaps outer 0
+smart_gaps off
+
+default_border pixel 2
+default_floating_border pixel 2
+for_window [tiling]   border pixel 2
+for_window [floating] border pixel 2
+smart_borders off
+
+for_window [class=".*"]   opacity 0.85
+for_window [app_id=".*"]  opacity 0.85
+
+#--- СКРАЧПАД -------------------------------------------------------------------------
+scratchpad_minimize disable
+
+# Именованный скрачпад — терминал всегда под рукой
+exec foot --app-id=scratch_term
+for_window [app_id="scratch_term"] {
+    floating enable
+    resize set 1400 700
+    move scratchpad
+}
+bindsym --to-code $mod+grave exec swaymsg '[app_id="scratch_term"] scratchpad show' || foot --app-id=scratch_term
+
+#--- ВНЕШНИЙ ВИД ----------------------------------------------------------------------
+font pango:mononoki 10
+
+seat seat0 xcursor_theme "BreezeX-RosePine-Linux" 32
+exec_always gsettings set org.gnome.desktop.interface cursor-theme "BreezeX-RosePine-Linux"
+exec_always gsettings set org.gnome.desktop.interface cursor-size 32
+
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+    gsettings set $gnome-schema icon-theme 'Tela-nord'
+    gsettings set $gnome-schema font-name 'Mononoki Nerd Font Propo 10'
+    gsettings set org.gnome.desktop.wm.preferences button-layout ''
+}
+
+include colors.conf
+
+layer_effects "gtk-layer-shell" {
+    blur enable;
+    blur_xray disable;
+    blur_ignore_transparent enable;
+}
+layer_effects "quickshell" {
+    blur enable;
+    blur_xray disable;
+    blur_ignore_transparent enable;
+}
+layer_effects "power" {
+    blur enable;
+    blur_xray disable;
+    blur_ignore_transparent enable;
+}
+
+#--- МОНИТОРЫ -------------------------------------------------------------------------
+output * mode 3440x1440@144Hz
+
+#--- ВВОД -----------------------------------------------------------------------------
+input type:keyboard {
+    xkb_layout "us,ru"
+    xkb_options "grp:caps_toggle,grp:alt_shift_toggle"
+    repeat_rate 35
+    repeat_delay 250
+}
+
+input * xkb_numlock enabled
+
+input type:pointer {
+    accel_profile flat
+    pointer_accel 0
+}
+
+#--- ХОТКЕИ ---------------------------------------------------------------------------
+
+# Приложения
+bindsym --to-code $mod+q      exec $term
+bindsym --to-code $mod+Return exec $term
+bindsym --to-code $mod+d      exec $menu
+bindsym --to-code $mod+e      exec $filemanager
+
+# Закрыть окно
+bindsym --to-code $mod+c kill
+
+# Лейауты
+bindsym --to-code $mod+g      layout tabbed
+bindsym --to-code $mod+Ctrl+g layout toggle split
+
+# Сплит
+bindsym --to-code $mod+h splith
+bindsym --to-code $mod+v splitv
+bindsym --to-code $mod+j togglesplit
+
+# Фуллскрин
+bindsym --to-code $mod+space fullscreen
+
+# Плавающее / sticky
+bindsym --to-code $mod+f        floating toggle
+bindsym --to-code $mod+Shift+f  sticky toggle
+floating_modifier $mod normal
+bindsym --whole-window $mod+Mod1+button1 floating toggle
+
+# Навигация между воркспейсами (back and forth)
+bindsym $mod+Tab       workspace back_and_forth
+bindsym $mod+Shift+Tab move container to workspace back_and_forth; workspace back_and_forth
+
+# Скрачпад
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus       scratchpad show
+
+# Перезагрузить sway
+bindsym --to-code $mod+Shift+r reload
+
+# Выход
+bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
+
+# Power menu / дашборд
+bindsym --to-code $mod+p exec qs ipc call root togglePower
+# bindsym --to-code $mod+l exec eww open --toggle dashboard
+bindsym --to-code $mod+w exec qs kill && qs -d
+
+# Медиа
+bindsym Alt+F9  exec pamixer -t
+bindsym Alt+F10 exec pamixer -d 5
+bindsym Alt+F11 exec pamixer -i 5
+bindsym Alt+F12 exec qs ipc call root togglePlayer
+bindsym --to-code --locked Control+slash  exec playerctl play-pause
+bindsym --to-code --locked Control+period exec playerctl next
+bindsym --to-code --locked Control+comma  exec playerctl previous
+
+# Яркость
+bindsym --locked Mod1+Prior exec ddcutil --bus 11 setvcp 10 + 5
+bindsym --locked Mod1+Next  exec ddcutil --bus 11 setvcp 10 - 5
+
+# Скриншоты (оригинальный рабочий вариант)
+bindsym Home exec sh -c 'FILE=~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_screenshot.png; pkill -f ~/.config/sway/opacity-changer.sh && grim -g "$(slurp -b 3d3d3dCC -c CCCCCCCC)" - | tee "$FILE" | wl-copy && [ -s "$FILE" ] || rm -f "$FILE" && ~/.config/sway/opacity-changer.sh'
+bindsym --locked Shift+Home exec grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy
+
+# Colorpicker
+bindsym --to-code $mod+n exec hyprpicker -a
+
+# Фокус
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# Перемещение окна
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# Ресайз без режима
+bindsym $mod+Ctrl+Alt+Left  resize shrink width  20px
+bindsym $mod+Ctrl+Alt+Right resize grow   width  20px
+bindsym $mod+Ctrl+Alt+Up    resize shrink height 20px
+bindsym $mod+Ctrl+Alt+Down  resize grow   height 20px
+
+# Воркспейсы
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+bindsym --whole-window $mod+button4 exec ~/.config/sway/workspace-nav.sh prev
+bindsym --whole-window $mod+button5 exec ~/.config/sway/workspace-nav.sh next
+bindsym $mod+Mod1+Left  exec ~/.config/sway/workspace-nav.sh prev
+bindsym $mod+Mod1+Right exec ~/.config/sway/workspace-nav.sh next
+
+# Переместить окно на воркспейс
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+bindsym $mod+Ctrl+Shift+Left  exec ~/.config/sway/workspace-nav.sh move-prev
+bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/workspace-nav.sh move-next
+
+# Режим ресайза (оставил для точного контроля)
+# bindsym --to-code $mod+r mode "resize"
+# mode "resize" {
+#     bindsym Left  resize shrink width  10px
+#     bindsym Down  resize grow   height 10px
+#     bindsym Up    resize shrink height 10px
+#     bindsym Right resize grow   width  10px
+#     bindsym Return mode "default"
+#     bindsym Escape mode "default"
+# }
+
+# Режим мыши
+bindsym $mod+Shift+backslash mode "mouse"
+mode "mouse" {
+    bindsym h seat - cursor move -15 0
+    bindsym j seat - cursor move 0   15
+    bindsym k seat - cursor move 0  -15
+    bindsym l seat - cursor move 15   0
+    bindsym Left  seat - cursor move -15 0
+    bindsym Down  seat - cursor move 0   15
+    bindsym Up    seat - cursor move 0  -15
+    bindsym Right seat - cursor move 15   0
+    bindsym KP_7 seat - cursor move -15 -15
+    bindsym KP_9 seat - cursor move  15 -15
+    bindsym KP_1 seat - cursor move -15  15
+    bindsym KP_3 seat - cursor move  15  15
+    bindsym KP_8 seat - cursor move 0  -15
+    bindsym KP_2 seat - cursor move 0   15
+    bindsym KP_4 seat - cursor move -15  0
+    bindsym KP_6 seat - cursor move  15  0
+    bindsym Shift+h seat - cursor move -50 0
+    bindsym Shift+j seat - cursor move 0   50
+    bindsym Shift+k seat - cursor move 0  -50
+    bindsym Shift+l seat - cursor move 50   0
+    bindsym Shift+Left  seat - cursor move -50 0
+    bindsym Shift+Down  seat - cursor move 0   50
+    bindsym Shift+Up    seat - cursor move 0  -50
+    bindsym Shift+Right seat - cursor move 50   0
+    bindsym Shift+KP_7 seat - cursor move -50 -50
+    bindsym Shift+KP_9 seat - cursor move  50 -50
+    bindsym Shift+KP_1 seat - cursor move -50  50
+    bindsym Shift+KP_3 seat - cursor move  50  50
+    bindsym space            seat - cursor press   button1
+    bindsym --release space  seat - cursor release button1
+    bindsym Return           seat - cursor press   button3
+    bindsym --release Return seat - cursor release button3
+    bindsym Escape mode "default"
+    bindsym q      mode "default"
+}
+
+#--- ПРАВИЛА ОКОН ---------------------------------------------------------------------
+for_window [app_id="org.pulseaudio.pavucontrol"] {
+    floating enable
+    resize set 1000 500
+    move position 2428px 0px
+}
+for_window [app_id="pwvucontrol"] {
+    floating enable
+    resize set 1000 500
+    move position 2428px 0px
+}
+for_window [app_id="blueman"] {
+    floating enable
+    resize set 730 400
+    move position 2698px 0px
+}
+for_window [app_id="zoom"] {
+    opacity 1.0
+    blur disable
+}
+for_window [title="Картинка в картинке"] {
+    opacity 1.0
+    floating enable
+    sticky enable
+    dim_inactive 0
+    resize set 900 400
+    move position 2528px 0px
+}
+
+#--- ДОПОЛНИТЕЛЬНЫЕ КОНФИГИ -----------------------------------------------------------
+include /etc/sway/config.d/*
+
+#I'm tired, please if someone seen this letter help search an interesting ideas for my project

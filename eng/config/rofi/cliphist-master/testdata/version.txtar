@@ -1,2 +1,0 @@
-exec cliphist version
-stderr '^version\t\d+\.\d+\.\d+$'

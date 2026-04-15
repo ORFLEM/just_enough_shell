@@ -1,0 +1,10 @@
+{
+	"background1": "#474747",
+	"background2": "#5a5550",
+	"background3": "#6a625c",
+	"backgroundAlt1": "#2b2b2b",
+	"backgroundAlt2": "#302c29",
+	"font": "#dddddd",
+	"fontDark": "#2e2e2e",
+	"accent": "{{color15}}"
+}

@@ -1,0 +1,39 @@
+# ~/.config/quickshell/wallpaper/wallpaper.toml
+# Читается go-скриптом при старте и при каждом set/set-shader
+# Пути поддерживают ~ и абсолютные пути
+
+# ── Директории с обоями ────────────────────────────────────────────────────
+# image_dirs  — папки с картинками (jpg/jpeg/png/webp)
+# video_dirs  — папки с видео (mp4/webm/mkv)
+# shader_dir  — папка с шейдерами (.frag / .qsb)
+
+[dirs]
+image_dirs = [
+    "~/.config/quickshell/wallpaper/wallpapers/static",
+    "/mnt/media/файлы/обои",
+    "/mnt/media/файлы/обои/zde",
+    "/mnt/media/файлы/обои/.anime",
+    "/mnt/media/файлы/обои/Minimalist",
+    "/mnt/media/файлы/обои/WideScreen",
+    "/mnt/media/файлы/обои/Abstract",
+]
+
+video_dirs = [
+    "~/.config/quickshell/wallpaper/wallpapers/video",
+    "/mnt/media/файлы/обои/видео обои",
+    "/mnt/media/файлы/обои/видео обои/whinter",
+    "/mnt/media/файлы/обои/видео обои/summer",
+    "/mnt/media/файлы/обои/видео обои/autumn",
+    "/mnt/media/файлы/обои/видео обои/spring",
+]
+
+shader_dir = "~/.config/quickshell/wallpaper/wallpapers/shaders"
+
+# ── Текущее состояние ──────────────────────────────────────────────────────
+# mode: "image" | "video" | "shader"
+# Этот блок перезаписывается go-скриптом при каждом set/set-shader
+# shell.qml читает его при старте через JsonPoll и применяет wallType
+[state]
+mode      = "video"
+wallpaper = "/mnt/media/файлы/обои/видео обои/touch-grass-moewalls-com.mp4"
+shader    = "bg"

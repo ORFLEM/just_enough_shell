@@ -1,0 +1,15 @@
+backend = "wal"
+color_space = "lch"
+palette = "soft-dark"
+# skip_sequences = true
+
+[templates]
+eww = { template = 'eww.scss', target = '~/.config/eww/eww.scss' }
+quickshell = { template = 'quickshell.json', target = '~/.config/quickshell/colors.json' }
+# ghostty = { template = 'ghostty', target = '~/.config/ghostty/config' }
+# helix = { template = 'helix.toml', target = '~/.config/helix/themes/wallust.toml' }
+sway = { template = 'sway', target = '~/.config/sway/colors.conf' }
+
+[hooks]
+sway = "swaymsg reload"
+# notif = 'notify-send "New Scheme Generated!"'
