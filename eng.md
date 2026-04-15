@@ -108,6 +108,7 @@
 > - Hyprland without modifications works only on NixOS
 > - The hy3 plugin is not available in ALT Linux repositories
 > - These configs include controversial choices (bash instead of fish/zsh, Go binaries)
+> - Configs include **static wallpapers only** — visuals may differ from what you see in screenshots due to different wallpapers!
 
 ```
 If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly)
