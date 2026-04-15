@@ -188,7 +188,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 ```
 
 #### License
-The notifications were taken from the [blxshell](https://codeberg.org/blx/dots/src/branch/main) project and modernised both visually and partly technically; the license is unknown.
+The notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and modernised both visually and partly technically; the license is unknown.
 
 These configurations are distributed under the **GNU GPL v3** license.
 
