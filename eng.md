@@ -1,17 +1,17 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Last%20commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Project%20size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Repo%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>My NixOS Configs</h1>
-	<p><b>NixOS</b> configurations for a desktop environment based on <b>quickshell</b>, <b>swayfx</b> with a custom interface for ultrawide monitors (21:9) and optimisation via <b>Go binaries</b>.</p>
+	<p><b>NixOS</b> configuration for a desktop environment built on <b>quickshell</b> and <b>swayfx</b>, with a custom interface for ultrawide monitors (21:9) and CPU optimization via <b>Go binaries</b>.</p>
 </div>
 
 ***
 
 <table align="right">
 	<tr>
-		<td colspan="2" align="center">System parameters</td>
+		<td colspan="2" align="center">System Info</td>
 	</tr>
 	<tr>
 		<th>Component</th>
@@ -74,7 +74,7 @@
 		<td>Grub</td>
 	</tr>
 	<tr>
-		<td>Optimisation</td>
+		<td>Optimization</td>
 		<td>Go binaries</td>
 	</tr>
 	<tr>
@@ -84,101 +84,101 @@
 </table>
 
 <div align="left">
-	<h3>-- About the project -- :</h3>
+	<h3>-- About --:</h3>
 	<p>
-  These configs are built on Quickshell.<br>
-  <br>
-  <b>SwayFX</b> is available, and work is underway to add support for <b>Hyprland and Niri</b>.<br>
-  By editing 3 stub scripts, you can also run this interface on any Wayland tiling WM that supports the subscribe protocols for workspace data, active window and keyboard layout.<br>
-  <br>
-  I tried to see if I could create the entire UI only with <b>Quickshell</b> without heavily impacting performance.<br>
-  But I can't say for sure about weaker PCs, since my PC is quite powerful.<br>
-  Go binaries are used for scripts where fast reading of a large data stream matters — CPU load in idle is now around 5–7%, previously it was 35–45%.<br>
-  <br>
-  The project is not trend-oriented, but focused on everyday practicality and convenience.<br>
+	Quickshell-based NixOS dotfiles.<br>
+	<br>
+	<b>SwayFX</b> is currently supported. Work is in progress on <b>Hyprland and Niri</b>.<br>
+	By editing 3 stub scripts, this interface can run on any Wayland tiling compositor that supports subscribe protocols for workspace, active window, and keyboard layout data.<br>
+	<br>
+	The project includes optimization but has not been tested on low-end hardware.<br>
+	Go binaries handle data-heavy logic by subscribing to system events rather than polling — this drops idle CPU usage from 35–45% down to 5–7%.<br>
+	<br>
+	Built for everyday practicality, not trends.<br>
 	</p>
-	<h3>-- Future plans -- :</h3>
+	<h3>-- Roadmap --:</h3>
 	<p>
-	<b>[i]</b> Add support for <b>Hyprland</b><br>
-  <b>[p]</b> Add support for <b>Niri</b><br>
-  <b>[p]</b> Create a config installer<br>
-	<b>[p]</b> Create a weather widget<br>
-	<b>[p]</b> Create a calendar widget<br>
-	c = completed; n = not complited; i = in progress; p = planned.<br> 
+	<b>[i]</b> Hyprland support<br>
+	<b>[p]</b> Niri support<br>
+	<b>[p]</b> Setup installer<br>
+	<b>[p]</b> Weather widget<br>
+	<b>[p]</b> Calendar widget<br>
+	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
 
->[!WARNING]
-> **These configurations are intended for a DESKTOP computer!**
-> - These configs include controversial or conservative choices (bash instead of fish/zsh, priority on SwayFX)
-> - The freshest updates will arrive on SwayFX first, as it is my primary WM and the project is tightly tied to my daily use.
-> - Configs include **static wallpapers only** — visuals may differ from what you see in screenshots due to different wallpapers!
-> - All settings are confirmed to work on ultrawide (21:9) monitors or monitors with a resolution wider than 3440px; other resolutions may work worse.
-> - The main theme is fixed; only the accent colour is pulled from the wallpaper.
-> - **Wallpapers from screenshots**: [click here](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
-> - [structure](./structure_eng.md)
+> [!WARNING]
+> **These configs are intended for DESKTOP use only.**
+> - Includes opinionated or conservative choices (bash over fish/zsh, SwayFX as primary WM).
+> - SwayFX gets updates first — it's my daily driver and the project is tied to my personal workflow.
+> - Only **static** wallpapers are included. Screenshots may look different due to different wallpapers.
+> - Fully tested on ultrawide (21:9) monitors or displays wider than 3440px. May behave differently at other resolutions.
+> - The base theme is fixed. Only the accent color is pulled from the wallpaper.
 
 ```
-If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly)
+Live wallpapers are supported — video wallpapers and shaders are both available (shaders may be unstable).
 ```
+#### **Wallpapers from screenshots**: [here](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## -- Keybindings -- :
-| Keybinding | Action |
+## [Structure](./structure_eng.md)
+
+## -- Keybindings --:
+| Keybind | Action |
 | :--- | :---: |
 | `super + e` | file manager |
 | `super + q` | terminal |
 | `super + o` | power menu |
-| `super + 1` or `super + scroll up \| scroll down` | switch between workspaces |
-| `super + shift + 1` or `super + shift + arrow keys` | move windows between workspaces |
-| `super + RMB` | resize windows |
-| `super + shift + arrow keys` or `super + LMB` | move windows |
-| `super + arrow keys` | switch between windows |
-| `super + alt + LMB` | toggle window type: floating or tiling |
+| `super + 1` or `super + scroll up/down` | switch workspaces |
+| `super + shift + 1` or `super + shift + arrows` | move window to workspace |
+| `super + RMB` | resize window |
+| `super + shift + arrows` or `super + LMB` | move window |
+| `super + arrows` | focus window |
+| `super + alt + LMB` | toggle floating / tiling |
 | `super + w` | restart interface |
-| `super + s` | full‑screen screenshot |
-| `super + d` | selected area screenshot |
-| `super` | open application launcher |
-| `super + g` | create a group |
+| `super + s` | fullscreen screenshot |
+| `super + d` | area screenshot |
+| `super` | app launcher |
+| `super + g` | create group |
 | `super + ctrl + g` | ungroup windows |
 | `super + tab` | previous workspace |
-| `capslock` or `shift + alt` | switch language |
-| `shift + capslock` | toggle Caps Lock |
-| `super + space` | expand window above others |
+| `capslock` or `shift + alt` | switch keyboard layout |
+| `shift + capslock` | toggle caps lock |
+| `super + space` | float window on top |
 | `ctrl + /` | play / pause music |
 | `ctrl + .` | next track |
 | `ctrl + ,` | previous track |
 | `alt + pgup` | increase brightness |
 | `alt + pgdn` | decrease brightness |
-| `alt + F9` | mute audio |
+| `alt + F9` | mute |
 | `alt + F10` | volume down |
 | `alt + F11` | volume up |
-| `alt + F12` | open / close media player |
+| `alt + F12` | open / close player |
 
-# What the configs look like:
+# Screenshots:
 ### Desktop
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
-### Control Panel
+### Control panel
 ![alt_image](./images/3.webp)
 
 ### Wallpaper picker
 ![alt_image](./images/4.webp)
 
-### Media player
+### Player
 ![alt_image](./images/5.webp)
 ![alt_image](./images/6.webp)
 
-### Power Menu
+### Power menu
 ![alt_image](./images/7.webp)
 
-### fastfetch
+### Fastfetch
 ![alt_image](./images/8.webp)
 
-### Volume and brightness popups
+### Volume / brightness popup
 ![alt_image](./images/9.webp)
 
-### Application Launcher
+### App launcher
 ![alt_image](./images/10.webp)
 
 ### Lock screen
@@ -187,25 +187,24 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 
 # Installation
 ```
-1. Install NixOS.
-2. Customise the NixOS config to your needs: remember to add your user and any additional disks.
-3. Replace the NixOS config or add the missing parts to make these configs work (almost my entire config is needed).
-4. Move the files from the config folder to "~/.config" and from local to "~/.local".
-5. Run sudo nixos-rebuild switch.
-6. Good luck trying to understand the author's logic :)
+1. Install NixOS
+2. Adjust the NixOS config for your setup — set your username and additional drives if needed
+3. Replace your NixOS config or merge the missing parts from mine (basically the whole thing)
+4. Copy files from config/ to ~/.config and from local/ to ~/.local
+5. sudo nixos-rebuild switch
 ```
 
 #### License
-The notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and modernised both visually and partly technically; the license is unknown.
+Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and reworked both visually and partially technically. Original license unknown.
 
-These configurations are distributed under the **GNU GPL v3** license.
+These configs are distributed under **GNU GPL v3**.
 
-In simple terms, this means:
+In plain terms:
 - You are free to use, study, and modify this code.
-- If you share your modifications or code based on this work with others (e.g., by publishing a fork), you **must** make your source code equally open and available to everyone under this same license.
+- If you share your changes or anything built on top of this (e.g. a fork), you **must** make your source code open and available under the same license.
 
-This ensures that all improvements and derivative works remain free and open, just like the original.
+This ensures all improvements and derivative works remain free and open, just like the original.
 
-For the full license text, see the [LICENSE](./LICENSE) file.
+Full license text: [LICENSE](./LICENSE).
 
-[![boosty](https://img.shields.io/badge/Support_on_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
+[![boosty](https://img.shields.io/badge/Support_on_Boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
