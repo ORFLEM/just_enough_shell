@@ -4,7 +4,7 @@
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>My NixOS Configs</h1>
-	<p><b>NixOS</b> configurations for a desktop environment based on <b>quickshell</b>, <b>swayfx</b> with a custom interface and optimisation via <b>Go binaries</b>.</p>
+	<p><b>NixOS</b> configurations for a desktop environment based on <b>quickshell</b>, <b>swayfx</b> with a custom interface for ultrawide monitors (21:9) and optimisation via <b>Go binaries</b>.</p>
 </div>
 
 ***
@@ -77,20 +77,25 @@
 		<td>Optimisation</td>
 		<td>Go binaries</td>
 	</tr>
+	<tr>
+		<td>Accent changer</td>
+		<td>wallust</td>
+	</tr>
 </table>
 
 <div align="left">
 	<h3>-- About the project -- :</h3>
 	<p>
-  These configs are built on quickshell.<br>
+  These configs are built on Quickshell.<br>
   <br>
   <b>SwayFX</b> is available, and work is underway to add support for <b>Hyprland and Niri</b>.<br>
   By editing 3 stub scripts, you can also run this interface on any Wayland tiling WM that supports the subscribe protocols for workspace data, active window and keyboard layout.<br>
   <br>
   I tried to see if I could create the entire UI only with <b>Quickshell</b> without heavily impacting performance.<br>
   But I can't say for sure about weaker PCs, since my PC is quite powerful.<br>
+  Go binaries are used for scripts where fast reading of a large data stream matters — CPU load in idle is now around 5–7%, previously it was 35–45%.<br>
   <br>
-  Please don't judge too harshly...<br>
+  The project is not trend-oriented, but focused on everyday practicality and convenience.<br>
 	</p>
 	<h3>-- Future plans -- :</h3>
 	<p>
@@ -105,10 +110,11 @@
 
 >[!WARNING]
 > **These configurations are intended for a DESKTOP computer!**
-> - Hyprland without modifications works only on NixOS
-> - The hy3 plugin is not available in ALT Linux repositories
-> - These configs include controversial choices (bash instead of fish/zsh, Go binaries)
+> - These configs include controversial or conservative choices (bash instead of fish/zsh, priority on SwayFX)
+> - The freshest updates will arrive on SwayFX first, as it is my primary WM and the project is tightly tied to my daily use.
 > - Configs include **static wallpapers only** — visuals may differ from what you see in screenshots due to different wallpapers!
+> - All settings are confirmed to work on ultrawide (21:9) monitors or monitors with a resolution wider than 3440px; other resolutions may work worse.
+> - The main theme is fixed; only the accent colour is pulled from the wallpaper.
 
 ```
 If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly)
@@ -126,7 +132,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 | `super + shift + arrow keys` or `super + LMB` | move windows |
 | `super + arrow keys` | switch between windows |
 | `super + alt + LMB` | toggle window type: floating or tiling |
-| `super + w` | restart eww |
+| `super + w` | restart interface |
 | `super + s` | full‑screen screenshot |
 | `super + d` | selected area screenshot |
 | `super` | open application launcher |
@@ -144,7 +150,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 | `alt + F9` | mute audio |
 | `alt + F10` | volume down |
 | `alt + F11` | volume up |
-| `alt + F12` | open media player |
+| `alt + F12` | open / close media player |
 
 # What the configs look like:
 ### Desktop
@@ -184,7 +190,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 3. Replace the NixOS config or add the missing parts to make these configs work (almost my entire config is needed).
 4. Move the files from the config folder to "~/.config" and from local to "~/.local".
 5. Run sudo nixos-rebuild switch.
-6. Good luck trying to understand the not‑quite‑comprehensible "genius" :)
+6. Good luck trying to understand the author's logic :)
 ```
 
 #### License
