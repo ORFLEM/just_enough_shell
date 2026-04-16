@@ -116,6 +116,7 @@
 > - All settings are confirmed to work on ultrawide (21:9) monitors or monitors with a resolution wider than 3440px; other resolutions may work worse.
 > - The main theme is fixed; only the accent colour is pulled from the wallpaper.
 > - **Wallpapers from screenshots**: [click here](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
+> - [structure](./structure_eng.md)
 
 ```
 If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly)
