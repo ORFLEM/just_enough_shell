@@ -100,11 +100,11 @@
 	<h3>-- Future plans -- :</h3>
 	<p>
 	<b>[i]</b> Add support for <b>Hyprland</b><br>
-  <b>[n]</b> Add support for <b>Niri</b><br>
-  <b>[n]</b> Create a config installer<br>
-	<b>[n]</b> Create a weather widget<br>
-	<b>[n]</b> Create a calendar widget<br>
-	c = completed; n = not completed; i = in progress.<br>
+  <b>[p]</b> Add support for <b>Niri</b><br>
+  <b>[p]</b> Create a config installer<br>
+	<b>[p]</b> Create a weather widget<br>
+	<b>[p]</b> Create a calendar widget<br>
+	c = completed; n = not complited; i = in progress; p = planned.<br> 
 	</p>
 </div>
 
