@@ -10,9 +10,7 @@ PanelWindow {
 	property int ywidth: 600
 	property int defaultTimeout: 5000
 	property var knownNotifications: ({})
-	property int lastNotificationCount: 0
 	property var notificationOrder: []
-	property int currentExpiringIndex: -1
 	exclusiveZone: 0
 
 	visible: notificationServer.trackedNotifications.values.length > 0
@@ -31,39 +29,19 @@ PanelWindow {
 	color: "transparent"
 
 	Component.onCompleted: {
-		console.log("Notifications.qml loaded successfully")
-		lastNotificationCount = notificationServer.trackedNotifications.values.length
 		markAllAsKnown()
 	}
 
-	onVisibleChanged: {
-		if (visible) {
-			markAllAsKnown()
-		}
-	}
-
 	function markAllAsKnown() {
-		let currentTime = Date.now()
 		notificationOrder = []
 		for (let i = 0; i < notificationServer.trackedNotifications.values.length; i++) {
 			let notification = notificationServer.trackedNotifications.values[i]
 			if (notification && notification.id) {
 				let id = notification.id.toString()
-				knownNotifications[id] = currentTime
+				knownNotifications[id] = Date.now()
 				notificationOrder.push(id)
 			}
 		}
-		lastNotificationCount = notificationServer.trackedNotifications.values.length
-	}
-
-	function isNotificationNew(notificationId) {
-		if (!notificationId) return false
-		let id = notificationId.toString()
-		let isNew = !(id in knownNotifications)
-		if (isNew) {
-			knownNotifications[id] = Date.now()
-		}
-		return isNew
 	}
 
 	function cleanupNotificationTracking(notificationId) {
@@ -71,30 +49,7 @@ PanelWindow {
 			let id = notificationId.toString()
 			delete knownNotifications[id]
 			let index = notificationOrder.indexOf(id)
-			if (index > -1) {
-				notificationOrder.splice(index, 1)
-			}
-		}
-	}
-
-	function canNotificationExpire(notificationId) {
-		if (!notificationId) return false
-		let id = notificationId.toString()
-		let newestId = notificationOrder.length > 0 ? notificationOrder[0] : null
-
-		if (currentExpiringIndex === -1) {
-			if (id === newestId) {
-				currentExpiringIndex = notificationOrder.indexOf(id)
-				return true
-			}
-			return false
-		}
-		return false
-	}
-
-	function notificationExpirationComplete(notificationId) {
-		if (notificationId) {
-			currentExpiringIndex = -1
+			if (index > -1) notificationOrder.splice(index, 1)
 		}
 	}
 
@@ -113,6 +68,7 @@ PanelWindow {
 				notification.tracked = true
 				if (notification.id) {
 					let id = notification.id.toString()
+					// Префикс NEW_ — сигнал делегату что надо анимировать
 					knownNotifications[id] = "NEW_" + Date.now()
 					notificationOrder.unshift(id)
 				}
@@ -140,24 +96,9 @@ PanelWindow {
 				model: notificationServer.trackedNotifications.values
 				spacing: 5
 
-				add: Transition {
-					NumberAnimation {
-						properties: "x"
-						from: notifsBG.width
-						to: 0
-						duration: 400
-						easing.type: Easing.OutCubic
-					}
-				}
-
-				remove: Transition {
-					NumberAnimation {
-						properties: "x"
-						to: notifsBG.width
-						duration: 300
-						easing.type: Easing.InCubic
-					}
-				}
+				// Убраны add/remove/displaced Transition — они конфликтовали
+				// с анимациями внутри делегата (оба двигали x одновременно).
+				// Вся логика анимации теперь только в делегате.
 
 				displaced: Transition {
 					NumberAnimation {
@@ -172,63 +113,60 @@ PanelWindow {
 					width: notifsBG.width
 					height: 80
 					radius: mainRad
-            		opacity: 0.85
-            		color: "transparent"
-            		gradient: Gradient {
-            		    orientation: Gradient.Horizontal
-            		    GradientStop { position: 0.0; color: col.background3 }
-            		    GradientStop { position: 0.05; color: col.background2 }
-            		    GradientStop { position: 0.3; color: col.background1 }
-            		    GradientStop { position: 0.7; color: col.background1 }
-            		    GradientStop { position: 0.95; color: col.background2 }
-            		    GradientStop { position: 1.0; color: col.background3 }
-            		}
-					
+					opacity: 0.85
+					color: "transparent"
+					gradient: Gradient {
+						orientation: Gradient.Horizontal
+						GradientStop { position: 0.0; color: col.background3 }
+						GradientStop { position: 0.05; color: col.background2 }
+						GradientStop { position: 0.3; color: col.background1 }
+						GradientStop { position: 0.7; color: col.background1 }
+						GradientStop { position: 0.95; color: col.background2 }
+						GradientStop { position: 1.0; color: col.background3 }
+					}
+
 					property var parentWindow: notificationsWindow
-					property bool shouldAnimate: false
 					property string notificationId: (modelData && modelData.id) ? modelData.id.toString() : ""
 					property bool isExpiring: false
 					property real timeProgress: 0.0
-					property int totalDuration: modelData && modelData.expireTimeout > 0 ? 
+					property int totalDuration: modelData && modelData.expireTimeout > 0 ?
 						(modelData.expireTimeout * 1000) : notificationsWindow.defaultTimeout
 					property int elapsedTime: 0
 
-					states: [
-						State {
-							name: "hovered"
-							when: mouseArea.containsMouse && !isExpiring
-							PropertyChanges {
-								target: notificationRect
-								x: 0
-							}
-						},
-						State {
-							name: "expiring"
-							when: isExpiring
-						}
-					]
+					// Стартуем за правым краем — позиция до анимации въезда
+					x: notifsBG.width
 
-					transitions: Transition {
-						NumberAnimation {
-							properties: "x"
-							duration: 200
-							easing.type: Easing.OutQuart
+					Component.onCompleted: {
+						if (notificationId) {
+							let trackingValue = parentWindow.knownNotifications[notificationId]
+							let isNew = trackingValue && trackingValue.toString().startsWith("NEW_")
+
+							if (isNew) {
+								parentWindow.knownNotifications[notificationId] = Date.now()
+								slideInAnimation.start()
+								Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.mp3"])
+							} else {
+								// Уже известное — сразу показываем на месте и запускаем таймеры
+								x = 0
+								progressTimer.start()
+								autoExpireTimer.start()
+							}
+						} else {
+							x = 0
+							progressTimer.start()
+							autoExpireTimer.start()
 						}
 					}
 
+					// Въезд справа → запуск таймеров по окончании
 					SequentialAnimation {
 						id: slideInAnimation
 						running: false
 
-						PropertyAction {
-							target: notificationRect
-							property: "x"
-							value: notifsBG.width
-						}
-
 						NumberAnimation {
 							target: notificationRect
 							property: "x"
+							from: notifsBG.width
 							to: 0
 							duration: 400
 							easing.type: Easing.OutCubic
@@ -236,20 +174,19 @@ PanelWindow {
 
 						ScriptAction {
 							script: {
-								if (!progressTimer.running) progressTimer.start()
-								if (!autoExpireTimer.running) autoExpireTimer.start()
+								progressTimer.start()
+								autoExpireTimer.start()
 							}
 						}
 					}
 
+					// Истечение — уезжает вправо, потом expire()
 					SequentialAnimation {
 						id: expireAnimation
 						running: false
 
 						ScriptAction {
-							script: {
-								notificationRect.isExpiring = true
-							}
+							script: { notificationRect.isExpiring = true }
 						}
 
 						NumberAnimation {
@@ -265,42 +202,41 @@ PanelWindow {
 								try {
 									if (modelData) {
 										notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
-										notificationRect.parentWindow.notificationExpirationComplete(notificationRect.notificationId)
 										modelData.expire()
 									}
 								} catch (error) {
 									console.error("Error expiring notification:", error)
-									notificationRect.parentWindow.notificationExpirationComplete(notificationRect.notificationId)
 								}
 							}
 						}
 					}
 
-					Component.onCompleted: {
-						if (notificationId) {
-							let trackingValue = parentWindow.knownNotifications[notificationId]
-							let isNew = trackingValue && trackingValue.toString().startsWith("NEW_")
-							shouldAnimate = isNew
+					// Dismiss (левый клик) — уезжает влево, потом dismiss()
+					SequentialAnimation {
+						id: dismissAnimation
+						running: false
 
-							if (shouldAnimate) {
-								parentWindow.knownNotifications[notificationId] = Date.now()
-								slideInAnimation.start()
-								Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.mp3"])
-							} else {
-								startTimersDelayed.start()
-							}
-						} else {
-							startTimersDelayed.start()
+						ScriptAction {
+							script: { notificationRect.isExpiring = true }
 						}
-					}
 
-					Timer {
-						id: startTimersDelayed
-						interval: 50
-						repeat: false
-						onTriggered: {
-							if (!progressTimer.running) progressTimer.start()
-							if (!autoExpireTimer.running) autoExpireTimer.start()
+						NumberAnimation {
+							target: notificationRect
+							property: "x"
+							to: -notifsBG.width
+							duration: 300
+							easing.type: Easing.InCubic
+						}
+
+						ScriptAction {
+							script: {
+								try {
+									notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
+									modelData.dismiss()
+								} catch (error) {
+									console.error("Error dismissing notification: " + error)
+								}
+							}
 						}
 					}
 
@@ -311,10 +247,7 @@ PanelWindow {
 						repeat: true
 						triggeredOnStart: false
 						onTriggered: {
-							if (notificationRect.isExpiring) {
-								stop()
-								return
-							}
+							if (notificationRect.isExpiring) { stop(); return }
 							notificationRect.elapsedTime += interval
 							notificationRect.timeProgress = notificationRect.elapsedTime / notificationRect.totalDuration
 						}
@@ -328,14 +261,8 @@ PanelWindow {
 						triggeredOnStart: false
 						onTriggered: {
 							if (notificationRect.isExpiring) return
-
-							if (parentWindow.canNotificationExpire(notificationRect.notificationId)) {
-								progressTimer.stop()
-								expireAnimation.start()
-							} else {
-								autoExpireTimer.interval = 500
-								autoExpireTimer.start()
-							}
+							progressTimer.stop()
+							expireAnimation.start()
 						}
 					}
 
@@ -407,13 +334,13 @@ PanelWindow {
 									opacity: 0.65
 									color: "transparent"
 									gradient: Gradient {
-                        			    orientation: Gradient.Horizontal
-                        			    GradientStop { position: 0.0; color: col.backgroundAlt2 }
-                        			    GradientStop { position: 0.275; color: col.backgroundAlt1 }
-                        			    GradientStop { position: 0.725; color: col.backgroundAlt1 }
-                        			    GradientStop { position: 1.0; color: col.backgroundAlt2 }
-                        			}
-                        		}
+										orientation: Gradient.Horizontal
+										GradientStop { position: 0.0; color: col.backgroundAlt2 }
+										GradientStop { position: 0.275; color: col.backgroundAlt1 }
+										GradientStop { position: 0.725; color: col.backgroundAlt1 }
+										GradientStop { position: 1.0; color: col.backgroundAlt2 }
+									}
+								}
 
 								Text {
 									id: appNameText
@@ -439,13 +366,13 @@ PanelWindow {
 									opacity: 0.65
 									color: "transparent"
 									gradient: Gradient {
-                        			    orientation: Gradient.Horizontal
-                        			    GradientStop { position: 0.0; color: col.backgroundAlt2 }
-                        			    GradientStop { position: 0.275; color: col.backgroundAlt1 }
-                        			    GradientStop { position: 0.725; color: col.backgroundAlt1 }
-                        			    GradientStop { position: 1.0; color: col.backgroundAlt2 }
-                        			}
-                        		}
+										orientation: Gradient.Horizontal
+										GradientStop { position: 0.0; color: col.backgroundAlt2 }
+										GradientStop { position: 0.275; color: col.backgroundAlt1 }
+										GradientStop { position: 0.725; color: col.backgroundAlt1 }
+										GradientStop { position: 1.0; color: col.backgroundAlt2 }
+									}
+								}
 
 								Text {
 									text: Qt.formatTime(new Date(), "hh:mm")
@@ -494,7 +421,10 @@ PanelWindow {
 						drag.axis: Drag.XAxis
 						drag.minimumX: 0
 						drag.maximumX: notificationRect.width * 1.5
+						// Порог в пикселях — меньше этого не считается drag'ом
+						drag.threshold: 10
 
+						property real pressX: 0
 						property bool wasDragged: false
 
 						onEntered: {
@@ -506,17 +436,22 @@ PanelWindow {
 
 						onExited: {
 							if (!notificationRect.isExpiring && !drag.active) {
-								autoExpireTimer.interval = notificationRect.totalDuration - notificationRect.elapsedTime
-								if (autoExpireTimer.interval > 0) {
+								let remaining = notificationRect.totalDuration - notificationRect.elapsedTime
+								if (remaining > 0) {
+									autoExpireTimer.interval = remaining
 									autoExpireTimer.start()
 									progressTimer.start()
 								}
 							}
 						}
 
-						onPressed: wasDragged = false
+						onPressed: function(mouse) {
+							wasDragged = false
+							pressX = mouse.x
+						}
 
 						onPositionChanged: {
+							// Считаем drag только после реального смещения > 10px
 							if (drag.active) wasDragged = true
 						}
 
@@ -533,25 +468,21 @@ PanelWindow {
 						}
 
 						onClicked: function(mouse) {
+							// wasDragged защищает от случайного клика после свайпа
 							if (wasDragged || notificationRect.isExpiring) return
 
 							if (mouse.button === Qt.LeftButton) {
-								try {
-									autoExpireTimer.stop()
-									progressTimer.stop()
-									parentWindow.currentExpiringIndex = -1
-									dismissAnimation.start()
-								} catch (error) {
-									console.error("Error dismissing notification: " + error)
-								}
+								autoExpireTimer.stop()
+								progressTimer.stop()
+								dismissAnimation.start()
 							} else if (mouse.button === Qt.RightButton) {
+								// ПКМ — закрыть все
 								try {
+									let notifs = notificationServer.trackedNotifications.values
 									parentWindow.knownNotifications = {}
 									parentWindow.notificationOrder = []
-									parentWindow.currentExpiringIndex = -1
-									for (let i = 0; i < notificationServer.trackedNotifications.values.length; ++i) {
-										let n = notificationServer.trackedNotifications.values[i]
-										if (n) n.dismiss()
+									for (let i = 0; i < notifs.length; ++i) {
+										if (notifs[i]) notifs[i].dismiss()
 									}
 								} catch (error) {
 									console.error("Error dismissing all notifications: " + error)
@@ -569,38 +500,11 @@ PanelWindow {
 						}
 					}
 
-					SequentialAnimation {
-						id: dismissAnimation
-
-						NumberAnimation {
-							target: notificationRect
-							property: "x"
-							to: -notifsBG.width
-							duration: 300
-							easing.type: Easing.InCubic
-						}
-
-						ScriptAction {
-							script: {
-								try {
-									notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
-									modelData.dismiss()
-								} catch (error) {
-									console.error("Error dismissing notification: " + error)
-								}
-							}
-						}
-					}
-
 					Connections {
 						target: modelData
 						function onClosed(reason) {
-							try {
-								autoExpireTimer.stop()
-								progressTimer.stop()
-							} catch (error) {
-								console.error("Error in onClosed handler: " + error)
-							}
+							autoExpireTimer.stop()
+							progressTimer.stop()
 						}
 					}
 				}
