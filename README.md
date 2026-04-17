@@ -1,6 +1,6 @@
 ![alt_image](./images/preview.webp)
 
-### System : `NixOS 25.11 (stable)` and working for adding support ALT Linux regular
+### System : `NixOS 25.11 (stable)`
 
 # [rus](./rus.md) | [eng](./eng.md)
 

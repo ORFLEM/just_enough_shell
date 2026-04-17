@@ -1,10 +1,10 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Последний%20коммент&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Последний%20коммит&logo=git&logoColor=D9E0EE&labelColor=1E202B)
 ![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Размер%20проекта&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
-	<h1>My NixOS Configs</h1>
-	<p>Конфигурации <b>NixOS</b> для рабочего окружения на базе <b>quickshell</b>, <b>swayfx</b> с кастомным интерфейсом для ultrawide мониторов (21:9) и оптимизацией через <b>Go-бинарники</b>.</p>
+	<h1>Just Enough Shell</h1>
+	<p>Создан для повседневности, не для картинок.</p>
 </div>
 
 ***
@@ -35,7 +35,7 @@
 	</tr>
 	<tr>
 		<td>Interface</td>
-		<td>quickshell</td>
+		<td>QuickShell</td>
 	</tr>
 	<tr>
 		<td>Screen Locker</td>
@@ -86,7 +86,7 @@
 <div align="left">
 	<h3>-- О проекте -- :</h3>
 	<p>
-  Эти конфиги, сделанные на базе Quickshell.<br>
+  <i>JES</i> использует для отображения интерфейса <b>QuickShell</b>.<br>
   <br>
 	Доступен <b>SwayFX</b>, но идут работы над добавлением поддержки <b>Hyprland и Niri</b>.<br>
   Также, отредактировав 3 скрипта-болванки, можно запустить данный интерфейс на любом wayland тайлинге С поддержкой subscribe протоколов для данных о воркспейсах, активном окне и раскладке.<br>
@@ -94,7 +94,10 @@
 	В проекте есть оптимизация, но он не тестировался на слабых пк.<br>
 	Go бинарники используются для скриптов, где важна быстрая скорость считывания большого потока данных, за счёт этого нагрузка на ЦП в простое 5-7%, вместо 35-45%.<br>
   <br>
-  Проект ориентирован не на тренды, а на практичность в повседневности и удобство.<br>
+	<i>JES</i> проектировался под мониторы с разрешением UWQHD (3440x1440), проверенные разрешения: QHD (2560x1440) и выше.<br>
+	На них панель не имеет проблем с расположением модулей.<br>
+	<br>
+  <i>JES ориентирован не на тренды, а на практичность в повседневности и удобство.</i><br>
 	</p>
 	<h3>-- Дальнейший вектор -- :</h3>
 	<p>
@@ -103,7 +106,7 @@
   <b>[p]</b> Создание установщика настроек<br>
 	<b>[p]</b> Создание виджета погоды<br>
 	<b>[p]</b> Создание виджета календаря<br>
-	c = completed; n = not complited; i = in progress; p = planned.<br> 
+	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
 
@@ -112,7 +115,7 @@
 > - Конфиги включают спорные или консервативные решения (bash вместо fish/zsh, приоритет на SwayFX)
 > - Апдейты будут приходить раньше на SwayFX, т.к. это мой основной WM, и проект неразрывно связан с моим повседневным использованием.
 > - Конфиги включают **только статические** обои, изображение в репозитории визуально может отличаться от получаемых конфигов из-за других обоев!
-> - Все настройки точно работают на ultrawide (21:9) мониторах или мониторах с разрешением выше 3440px в ширину, на других могут работать хуже.
+> - Все настройки точно работают на UWQHD (3440x1440) мониторах или мониторах с разрешением от QHD, на других могут работать хуже.
 > - Основная тема зафиксирована, с обоев берётся только акцент для интерфейса.
 <!-- > - Hyprland без доработок работает только на NixOS -->
 <!-- > - Плагин hy3 отсутствует в репозиториях ALT Linux -->
@@ -122,7 +125,7 @@
 ```
 #### **Обои с скриншотов**: [тык](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [структура](./structure_rus.md)
+## [структура *JES*](./structure_rus.md)
 
 ## -- Комбинации клавиш -- :
 | комбинация | что делает |
@@ -156,8 +159,8 @@
 | `alt + F11` | громче |
 | `alt + F12` | открыть \| закрыть проигрыватель |
 
-# как выглядят конфиги:
-### Р.стол
+## -- Как выглядит *JES* --:
+### Рабочий стол
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
@@ -187,17 +190,19 @@
 ![alt_image](./images/11.webp)
 ![alt_image](./images/12.webp)
 
-# Установка
+## -- Установка --:
 ```
 1. Установите NixOS
-2. Доработайте конфиг NixOS под себя, учтите, что нужно вписать своего юзера и доп. диски (если есть)
-3. замените конфиг NixOS или впишите то, чего не хватает в конфиге для работы конфигов (почти весь мой конфиг)
-4. из config перекинуть файлы в "~/.config", а из local в "~/.local"
-5. sudo nixos-rebuild switch
+2. сделайте бекап файлов системы (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
+3. переместите конфиг в "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
+4. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/)
+5. Доработайте конфиг NixOS под себя, учтите, что нужно вписать своего юзера в разделе "USER ACCOUNT", локализацию с регионом в "LOCALISATION" и доп. диски в "FILESYSTEMS" (если есть)
+6. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+7. sudo nixos-rebuild switch
 ```
 
-#### Лицензия
-Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированны как визуально, так и частично технически, лицензия неизвестна
+## -- Лицензия --:
+Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия неизвестна
 
 Эти конфигурации распространяются под лицензией **GNU GPL v3**.
 
@@ -210,3 +215,5 @@
 Полный текст лицензии см. в файле [LICENSE](./LICENSE).
 
 [![boosty](https://img.shields.io/badge/%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B8_%D0%BD%D0%B0_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
+
+##### Created by \_ORFLEM\_

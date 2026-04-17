@@ -3,8 +3,8 @@
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
-	<h1>My NixOS Configs</h1>
-	<p><b>NixOS</b> configuration for a desktop environment built on <b>quickshell</b> and <b>swayfx</b>, with a custom interface for ultrawide monitors (21:9) and CPU optimization via <b>Go binaries</b>.</p>
+	<h1>Just Enough Shell</h1>
+	<p>Created for everyday, not show.</p>
 </div>
 
 ***
@@ -35,7 +35,7 @@
 	</tr>
 	<tr>
 		<td>Interface</td>
-		<td>quickshell</td>
+		<td>QuickShell</td>
 	</tr>
 	<tr>
 		<td>Screen Locker</td>
@@ -86,7 +86,7 @@
 <div align="left">
 	<h3>-- About --:</h3>
 	<p>
-	Quickshell-based NixOS dotfiles.<br>
+	<i>JES</i> uses <b>QuickShell</b> for rendering the interface.<br>
 	<br>
 	<b>SwayFX</b> is currently supported. Work is in progress on <b>Hyprland and Niri</b>.<br>
 	By editing 3 stub scripts, this interface can run on any Wayland tiling compositor that supports subscribe protocols for workspace, active window, and keyboard layout data.<br>
@@ -94,7 +94,10 @@
 	The project includes optimization but has not been tested on low-end hardware.<br>
 	Go binaries handle data-heavy logic by subscribing to system events rather than polling — this drops idle CPU usage from 35–45% down to 5–7%.<br>
 	<br>
-	Built for everyday practicality, not trends.<br>
+	<i>JES</i> is designed for UWQHD (3440x1440) monitors. Tested resolutions: QHD (2560x1440) and above.<br>
+	At these resolutions the bar has no layout issues.<br>
+	<br>
+	<i>JES is built for everyday practicality, not trends.</i><br>
 	</p>
 	<h3>-- Roadmap --:</h3>
 	<p>
@@ -112,7 +115,7 @@
 > - Includes opinionated or conservative choices (bash over fish/zsh, SwayFX as primary WM).
 > - SwayFX gets updates first — it's my daily driver and the project is tied to my personal workflow.
 > - Only **static** wallpapers are included. Screenshots may look different due to different wallpapers.
-> - Fully tested on ultrawide (21:9) monitors or displays wider than 3440px. May behave differently at other resolutions.
+> - Fully tested on UWQHD (3440x1440) monitors and displays from QHD and above. May behave differently at other resolutions.
 > - The base theme is fixed. Only the accent color is pulled from the wallpaper.
 
 ```
@@ -120,7 +123,7 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 ```
 #### **Wallpapers from screenshots**: [here](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [Structure](./structure_eng.md)
+## [Structure *JES*](./structure_eng.md)
 
 ## -- Keybindings --:
 | Keybind | Action |
@@ -154,7 +157,7 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 | `alt + F11` | volume up |
 | `alt + F12` | open / close player |
 
-# Screenshots:
+## -- How *JES* looks --:
 ### Desktop
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
@@ -185,16 +188,18 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 ![alt_image](./images/11.webp)
 ![alt_image](./images/12.webp)
 
-# Installation
+## -- Installation --:
 ```
 1. Install NixOS
-2. Adjust the NixOS config for your setup — set your username and additional drives if needed
-3. Replace your NixOS config or merge the missing parts from mine (basically the whole thing)
-4. Copy files from config/ to ~/.config and from local/ to ~/.local
-5. sudo nixos-rebuild switch
+2. Back up system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
+3. Move the config to "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
+4. Back up your user configs (cp -r ~/.config/ ~/backups/)
+5. Adjust the NixOS config for your setup — set your username in "USER ACCOUNT", locale and region in "LOCALISATION", and additional drives in "FILESYSTEMS" (if any)
+6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+7. sudo nixos-rebuild switch
 ```
 
-#### License
+## -- License --:
 Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and reworked both visually and partially technically. Original license unknown.
 
 These configs are distributed under **GNU GPL v3**.
@@ -208,3 +213,5 @@ This ensures all improvements and derivative works remain free and open, just li
 Full license text: [LICENSE](./LICENSE).
 
 [![boosty](https://img.shields.io/badge/Support_on_Boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
+
+##### Created by \_ORFLEM\_

@@ -1,7 +1,7 @@
 { config, pkgs, unstablePkgs, inputs, host, username, lib, ... }:
 {
   imports = [
-    # ./hardware-configuration.nix   # Uncomment and adapt to your hardware
+    ./hardware-configuration.nix
   ];
 
   # ============================================================
@@ -101,7 +101,6 @@
     ++ (with unstablePkgs; [
       wallust
 
-      niri
       swayfx
 
       go
@@ -139,11 +138,6 @@
     package = pkgs.swayfx;
     wrapperFeatures.gtk = true;
   };
-
-  # programs.hyprland = {
-  #   enable = true;
-  #   xwayland.enable = true;
-  # };
 
   xdg.portal = {
     enable = true;
