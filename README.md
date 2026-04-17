@@ -1,5 +1,3 @@
-![alt_image](./images/preview.webp)i
-
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
