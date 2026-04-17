@@ -1,4 +1,10 @@
-![alt_image](./images/preview.webp)
+![alt_image](./images/preview.webp)i
+
+<div align="center">
+	<img src="./images/preview.webp" width="900px">
+	<h1>Just Enough Shell</h1>
+	<p>Created for everyday, not show.</p>
+</div>
 
 ### System : `NixOS 25.11 (stable)`
 
