@@ -1,0 +1,17 @@
+cliphist
+rose-pine-cursor
+rose-pine-hyprcursor
+tela-icon-theme
+quickshell-git
+hyprlock-git
+ldacbt
+wallust
+swayfx
+hyprpicker-git
+persway-git
+linux-wallpaperengine-git
+mpv-mpris-plugin
+greetd
+greetd-tuigreet
+pipes.sh
+ttf-mononoki-nerd

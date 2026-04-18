@@ -207,7 +207,7 @@
 1. Установите Arch Linux (для простоты советую EndeavourOS)
 2. Установите yay или paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
 3. Установите официальный софт (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
-4. Установите юзер софт (yay -S $(cat ./arch_aur.txt)
+4. Установите юзер софт (yay -S $(cat ./arch_aur.txt))
 5. Установите тему zenburn для qt и gtk
 6. С помощью ИИ попытайтесь всю систему перекрасить в zenburn и поставить ter-v32n (пропустите, если вас не интересует результат 1 в 1, как на NixOS)
 7. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/)
