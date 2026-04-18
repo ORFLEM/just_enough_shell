@@ -2,9 +2,6 @@
   description = "NixOS flake для ORFLEMPC";
 
   inputs = {
-    # --- Nixpkgs ---
-    # В офлайн режиме: url переключается на path:/mnt/nixpkgs
-    # Сейчас онлайн — тянем с github, flake.lock фиксирует ревизию
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -68,8 +65,6 @@
             portalPackage = unstablePkgs.xdg-desktop-portal-hyprland;
           };
         }
-
-        # Substituters живут в nix-cache-hdd.nix — здесь не дублируем
       ];
     };
   };
