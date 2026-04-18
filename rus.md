@@ -191,6 +191,7 @@
 ![alt_image](./images/12.webp)
 
 ## -- Установка --:
+### NixOS
 ```
 1. Установите NixOS
 2. сделайте бекап файлов системы (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
@@ -199,10 +200,24 @@
 5. Доработайте конфиг NixOS под себя, учтите, что нужно вписать своего юзера в разделе "USER ACCOUNT", локализацию с регионом в "LOCALISATION" и доп. диски в "FILESYSTEMS" (если есть)
 6. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
 7. sudo nixos-rebuild switch
+8. введите reboot
+```
+### Arch Linux или Arch based
+```
+1. Установите Arch Linux (для простоты советую EndeavourOS)
+2. Установите yay или paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+3. Установите официальный софт (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
+4. Установите юзер софт (yay -S $(cat ./arch_aur.txt)
+5. Установите тему zenburn для qt и gtk
+6. С помощью ИИ попытайтесь всю систему перекрасить в zenburn и поставить ter-v32n (пропустите, если вас не интересует результат 1 в 1, как на NixOS)
+7. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/)
+8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+9. введите reboot
 ```
 
 ## -- Лицензия --:
-Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия неизвестна
+Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия **GNU GPL v3**
+Советую его посмотреть
 
 Эти конфигурации распространяются под лицензией **GNU GPL v3**.
 
