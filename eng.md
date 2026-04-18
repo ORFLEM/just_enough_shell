@@ -189,6 +189,7 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 ![alt_image](./images/12.webp)
 
 ## -- Installation --:
+### NixOS
 ```
 1. Install NixOS
 2. Back up system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
@@ -197,10 +198,24 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 5. Adjust the NixOS config for your setup — set your username in "USER ACCOUNT", locale and region in "LOCALISATION", and additional drives in "FILESYSTEMS" (if any)
 6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
 7. sudo nixos-rebuild switch
+8. reboot
+```
+### Arch Linux or Arch based
+```
+1. Install Arch Linux (EndeavourOS recommended for simplicity)
+2. Install yay or paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+3. Install official packages (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
+4. Install AUR packages (yay -S $(cat ./arch_aur.txt))
+5. Install zenburn theme for qt and gtk
+6. Use AI to recolor the system to zenburn and install ter-v32n (skip if 1:1 NixOS look doesn't matter)
+7. Back up your user configs (cp -r ~/.config/ ~/backups/)
+8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+9. reboot
 ```
 
 ## -- License --:
-Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and reworked both visually and partially technically. Original license unknown.
+Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and reworked both visually and partially technically, license **GNU GPL v3**
+Check it out
 
 These configs are distributed under **GNU GPL v3**.
 
