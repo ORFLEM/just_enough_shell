@@ -5,6 +5,7 @@
 </div>
 
 ### System : `NixOS 25.11 (stable)`
+###### and arch (experemental)
 
 # [rus](./rus.md) | [eng](./eng.md)
 
