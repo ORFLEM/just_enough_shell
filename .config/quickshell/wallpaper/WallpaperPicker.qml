@@ -170,7 +170,7 @@ WlrLayershell {
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     Text {
-                        text: "обои"
+                        text: "Wallpaper picker"
                         color: col.font
                         font.family: "Mononoki Nerd Font Propo"
                         font.pixelSize: 17
@@ -285,9 +285,9 @@ WlrLayershell {
 
                     Repeater {
                         model: [
-                            { tab: "image",  label: "  Static" },
-                            { tab: "video",  label: "  Видео"  },
-                            { tab: "shader", label: "  Shader" },
+                            { tab: "image",  label: "Static" },
+                            { tab: "video",  label: "Video"  },
+                            { tab: "shader", label: "Shader" },
                         ]
                         delegate: Item {
                             id: tabItem
@@ -430,7 +430,7 @@ WlrLayershell {
 
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
-                                text: "поиск..."
+                                text: "search..."
                                 color: col.backgroundAlt2
                                 font.family: "Mononoki Nerd Font Propo"
                                 font.pixelSize: 15
@@ -483,7 +483,7 @@ WlrLayershell {
                 Text {
                     anchors.centerIn: parent
                     visible: root.loading || root.items.length === 0
-                    text: root.loading ? "󰑐  загрузка..." : "ничего не найдено"
+                    text: root.loading ? "󰑐  update..." : "noting("
                     color: col.backgroundAlt2
                     font.family: "Mononoki Nerd Font Propo"
                     font.pixelSize: 15
