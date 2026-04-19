@@ -46,7 +46,7 @@
             "type": "kernel"
         },
 		{
-			"key": "│ {#32}  pckgs  {#keys}│",
+			"key": "│ {#32}  pkgs  {#keys}│",
 			"type": "packages"	
 		},
         {

@@ -13,6 +13,7 @@ import "notifications"
 import "launcher"
 import "wallpaper"
 // import "scrinpicker"
+// connecting derictories with plugins under this comment
 
 ShellRoot {
     FileView {
@@ -114,6 +115,8 @@ ShellRoot {
     //     id: scrinPicker
     // }
 
+    // connecting plugins under this comment
+
     IpcHandler {
         target: "root"
 
@@ -138,6 +141,7 @@ ShellRoot {
         function scrinpicker(): void {
             scrinPicker.activate()
         }
+        // connecting plugin's ipc under this comment
     }
 
     property int size: mainRad > 0 ? mainRad + 6 : 0

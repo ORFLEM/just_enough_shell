@@ -1,5 +1,5 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Последний%20коммит&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Размер%20проекта&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Последний%20коммит&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=cccccc&label=Размер%20проекта&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
@@ -111,10 +111,11 @@
 </div>
 
 >[!WARNING]
-> **Конфигурации предназначены для СТАЦИОНАРНОГО компьютера!**
-> - Конфиги включают спорные или консервативные решения (bash вместо fish/zsh, приоритет на SwayFX)
+> ***JES* предназначен для СТАЦИОНАРНОГО компьютера!**
+> - Проект включает спорные или консервативные решения (bash вместо fish/zsh, приоритет на SwayFX)
 > - Апдейты будут приходить раньше на SwayFX, т.к. это мой основной WM, и проект неразрывно связан с моим повседневным использованием.
-> - Конфиги включают **только статические** обои, изображение в репозитории визуально может отличаться от получаемых конфигов из-за других обоев!
+> - Это фан проект, не стоит от него ждать готового продукта
+> - В проекте находятся **только статические** обои, видеообои качать придётся самому, изображение в репозитории визуально может отличаться от получаемых конфигов из-за других обоев!
 > - Все настройки точно работают на UWQHD (3440x1440) мониторах или мониторах с разрешением от QHD, на других могут работать хуже.
 > - Основная тема зафиксирована, с обоев берётся только акцент для интерфейса.
 <!-- > - Hyprland без доработок работает только на NixOS -->
@@ -196,9 +197,9 @@
 1. Установите NixOS
 2. сделайте бекап файлов системы (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
 3. переместите конфиг в "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/)
+4. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
 5. Доработайте конфиг NixOS под себя, учтите, что нужно вписать своего юзера в разделе "USER ACCOUNT", локализацию с регионом в "LOCALISATION" и доп. диски в "FILESYSTEMS" (если есть)
-6. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+6. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 7. sudo nixos-rebuild switch
 8. введите reboot
 ```
@@ -210,8 +211,8 @@
 4. Установите юзер софт (yay -S $(cat ./arch_aur.txt))
 5. Установите тему zenburn для qt и gtk
 6. С помощью ИИ попытайтесь всю систему перекрасить в zenburn и поставить ter-v32n (пропустите, если вас не интересует результат 1 в 1, как на NixOS)
-7. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/)
-8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+7. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
+8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. введите reboot
 ```
 

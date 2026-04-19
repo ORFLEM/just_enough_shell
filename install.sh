@@ -4,15 +4,13 @@
 
 # variables
 programs_flatpak="app.zen_browser.zen"
-SYSTEM_CONF="$HOME/orflem_nixos_configs/configuration.nix"
+SYSTEM_CONF="$HOME/just_enough_shell/configuration.nix"
 BACKUP_DIR="$HOME/Your_old_configs"
 SYS_CONF_FILES="$BACKUP_DIR/configuration.nix"
-FLAKE="$HOME/orflem_nixos_configs/flake.nix"
-LOCK="$HOME/orflem_nixos_configs/flake.lock"
-RU_CONF="$HOME/orflem_nixos_configs/rus/config"
-EN_CONF="$HOME/orflem_nixos_configs/eng/config"
+FLAKE="$HOME/just_enough_shell/flake.nix"
+LOCK="$HOME/just_enough_shell/flake.lock"
+CONF="$HOME/just_enough_shell/.config"
 CONFIG_DIR="$HOME/.config/"
-USED_CONF="$EN_CONF"
 
 # installation script
 
@@ -97,7 +95,7 @@ en_back() {
 
 
 # start
-echo "Hello, this script for installation my dotfiles!"
+echo "Hello, this script for installation JES (Just Enough Shell)!"
 echo ""
 sleep 0.2
 # set language
@@ -109,7 +107,6 @@ case $lang in
   eng|en|e|english)
     echo "Using English localization"
     echo ""
-    USED_CONF="$EN_CONF"
     LOCALE="en_US.UTF-8"
     en_warning
     en_back
@@ -117,7 +114,6 @@ case $lang in
   rus|ru|r|russian|русский|ру)
     echo "Использование русской локализации"
     echo ""
-    USED_CONF="$RU_CONF"
     LOCALE="ru_RU.UTF-8"
     ru_warning
     ru_back
@@ -125,7 +121,6 @@ case $lang in
   *)
     echo "ERROR: Unknown language, using English localization!!!"
     echo ""
-    USED_CONF="$EN_CONF"
     LOCALE="en_US.UTF-8"
     en_warning
     en_back

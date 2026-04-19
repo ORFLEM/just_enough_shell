@@ -63,3 +63,15 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 - **Scripts & Binaries:** GPL-3.0
 - Continuous output from scripts/binaries is preferred for performance optimization.
 - **Assets** (shaders, Go sources, empty stub scripts for other WMs): see `for-quickshell/`
+
+## -- Plugins --:
+### Installation
+```
+1. Open ~/.config/quickshell/
+2. Copy the plugin folder into it
+3. Open shell.qml
+4. In the import section, add the plugin's module folder
+5. Below, where other modules are included, copy-paste the module name and add {} after it (space-separated)
+```
+
+### [Detailed plugin creation guide](./plugins_eng.md)

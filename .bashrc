@@ -62,7 +62,7 @@ PROMPT_COMMAND="fancy_prompt"
     export PATH=$HOME/.local/bin:$PATH
 
     # wallpaper engine
-    alias linwp='linux-wallpaperengine -r DP-3 --bg'
+    # alias linwp='linux-wallpaperengine -r DP-3 --bg'
 
     # Показать картинки
     alias shw-img='chafa --format=sixel --scale max'
@@ -108,8 +108,7 @@ PROMPT_COMMAND="fancy_prompt"
     # helix
     alias hx-hypr='hx ~/.config/hypr/hyprland.conf'
     alias hx-sway='hx ~/.config/sway/config'
-    alias hx-zwm='hx ~/.config/zwm/init'
-    alias hx-niri='hx ~/.config/niri/config.kdl'
+   alias hx-niri='hx ~/.config/niri/config.kdl'
     alias hx-nix='sudo hx /etc/nixos/configuration.nix'
 
     # быстрый доступ
