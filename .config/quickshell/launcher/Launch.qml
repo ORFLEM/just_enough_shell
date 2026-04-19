@@ -175,7 +175,7 @@ WlrLayershell {
                                 color: col.font
                                 font.family: "Mononoki Nerd Font Propo"
                                 font.pixelSize: 15
-                                placeholderText: currentTab === 1 ? "Буфер обмена..." : "Поиск..."
+                                placeholderText: currentTab === 1 ? "Clipboard..." : "Search..."
                                 placeholderTextColor: col.font
                                 background: Item {}
 
@@ -229,7 +229,7 @@ WlrLayershell {
                             spacing: 3
 
                             Repeater {
-                                model: ["Программы","Буфер обмена"]
+                                model: ["Applications","Clipboard"]
                                 delegate: Rectangle {
                                     Layout.fillWidth: true
                                     height: 30
