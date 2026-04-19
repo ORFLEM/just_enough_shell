@@ -74,4 +74,6 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 5. Below, where other modules are included, copy-paste the module name and add {} after it (space-separated)
 ```
 
+### For turning on/off plugins you can commenting line with "Plugin {}"
+
 ### [Detailed plugin creation guide](./plugins_eng.md)
