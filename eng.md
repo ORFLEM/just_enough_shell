@@ -1,5 +1,7 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/orflem_nixos_configs?&style=for-the-badge&color=bbbbbb&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/orflem_nixos_configs?color=cccccc&label=Repo%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+markdown
+
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=cccccc&label=Repo%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
@@ -86,13 +88,13 @@
 <div align="left">
 	<h3>-- About --:</h3>
 	<p>
-	<i>JES</i> uses <b>QuickShell</b> for rendering the interface.<br>
+	<i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
 	<br>
 	<b>SwayFX</b> is currently supported. Work is in progress on <b>Hyprland and Niri</b>.<br>
 	By editing 3 stub scripts, this interface can run on any Wayland tiling compositor that supports subscribe protocols for workspace, active window, and keyboard layout data.<br>
 	<br>
 	The project includes optimization but has not been tested on low-end hardware.<br>
-	Go binaries handle data-heavy logic by subscribing to system events rather than polling — this drops idle CPU usage from 35–45% down to 5–7%.<br>
+	Go binaries are used for scripts where fast processing of large data streams is critical. This drops idle CPU usage from 35–45% down to 5–7%.<br>
 	<br>
 	<i>JES</i> is designed for UWQHD (3440x1440) monitors. Tested resolutions: QHD (2560x1440) and above.<br>
 	At these resolutions the bar has no layout issues.<br>
@@ -114,13 +116,15 @@
 > **These configs are intended for DESKTOP use only.**
 > - Includes opinionated or conservative choices (bash over fish/zsh, SwayFX as primary WM).
 > - SwayFX gets updates first — it's my daily driver and the project is tied to my personal workflow.
-> - Only **static** wallpapers are included. Screenshots may look different due to different wallpapers.
+> - This is a fan project, do not expect a polished product.
+> - Only **static** wallpapers are included. Live wallpapers must be downloaded separately. Screenshots may look different due to different wallpapers.
 > - Fully tested on UWQHD (3440x1440) monitors and displays from QHD and above. May behave differently at other resolutions.
 > - The base theme is fixed. Only the accent color is pulled from the wallpaper.
 
 ```
 Live wallpapers are supported — video wallpapers and shaders are both available (shaders may be unstable).
 ```
+
 #### **Wallpapers from screenshots**: [here](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
 ## [Structure *JES*](./structure_eng.md)
@@ -194,12 +198,13 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 1. Install NixOS
 2. Back up system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
 3. Move the config to "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. Back up your user configs (cp -r ~/.config/ ~/backups/)
+4. Back up your user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
 5. Adjust the NixOS config for your setup — set your username in "USER ACCOUNT", locale and region in "LOCALISATION", and additional drives in "FILESYSTEMS" (if any)
-6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 7. sudo nixos-rebuild switch
 8. reboot
 ```
+
 ### Arch Linux or Arch based
 ```
 1. Install Arch Linux (EndeavourOS recommended for simplicity)
@@ -208,8 +213,8 @@ Live wallpapers are supported — video wallpapers and shaders are both availabl
 4. Install AUR packages (yay -S $(cat ./arch_aur.txt))
 5. Install zenburn theme for qt and gtk
 6. Use AI to recolor the system to zenburn and install ter-v32n (skip if 1:1 NixOS look doesn't matter)
-7. Back up your user configs (cp -r ~/.config/ ~/backups/)
-8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/)
+7. Back up your user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
+8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. reboot
 ```
 
@@ -230,3 +235,4 @@ Full license text: [LICENSE](./LICENSE).
 [![boosty](https://img.shields.io/badge/Support_on_Boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
 
 ##### Created by \_ORFLEM\_
+
