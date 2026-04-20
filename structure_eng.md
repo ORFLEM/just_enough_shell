@@ -38,7 +38,7 @@
 | UI       | Quickshell (Qt Quick / QML)           | Rendering, animations, input      |
 | Backend  | Go 1.21+                              | High-volume data processing logic |
 | Shell    | Bash 5.x / POSIX sh                   | Core system logic                 |
-| Theme    | Zenburn + wallust                     | Static palette + dynamic accent   |
+| Theme    | base16 + wallust                     | Static palette + dynamic accent   |
 | Lock     | Hyprlock                              | Lock screen                       |
 | Audio    | PipeWire + wpctl/pavucontrol          | Mixing, MPRIS, Cava               |
 
