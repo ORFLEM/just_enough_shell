@@ -25,7 +25,7 @@ markdown
 	</tr>
 	<tr>
 		<td>WM</td>
-		<td>swayfx</td>
+		<td>SwayFX / Hyprland</td>
 	</tr>
 	<tr>
 		<td>Shell</td>
@@ -90,7 +90,7 @@ markdown
 	<p>
 	<i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
 	<br>
-	<b>SwayFX</b> is currently supported. Work is in progress on <b>Hyprland and Niri</b>.<br>
+	<b>SwayFX / Hyprland</b> is currently supported. Work is in progress on <b>Niri</b>.<br>
 	By editing 3 stub scripts, this interface can run on any Wayland tiling compositor that supports subscribe protocols for workspace, active window, and keyboard layout data.<br>
 	<br>
 	The project includes optimization but has not been tested on low-end hardware.<br>
@@ -104,7 +104,7 @@ markdown
 	<h3>-- Roadmap --:</h3>
 	<p>
 	<b>[c]</b> Hyprland support<br>
-	<b>[p]</b> Niri support<br>
+	<b>[i]</b> Niri support<br>
 	<b>[p]</b> Setup installer<br>
 	<b>[p]</b> Weather widget<br>
 	<b>[p]</b> Calendar widget<br>
