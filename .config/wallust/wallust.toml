@@ -6,7 +6,9 @@ palette = "soft-dark"
 [templates]
 quickshell = { template = 'quickshell.json', target = '~/.config/quickshell/colors.json' }
 sway = { template = 'sway', target = '~/.config/sway/colors.conf' }
+hyprland = { template = 'hyprland', target = '~/.config/hypr/color.conf' } 
 
 [hooks]
 sway = "swaymsg reload"
+hyprland = "sed -i '/colFocused/ s/#//g' ~/.config/hypr/color.conf"
 # notif = 'notify-send "New Scheme Generated!"'
