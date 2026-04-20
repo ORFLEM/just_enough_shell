@@ -99,6 +99,8 @@ markdown
 	<i>JES</i> is designed for UWQHD (3440x1440) monitors. Tested resolutions: QHD (2560x1440) and above.<br>
 	At these resolutions the bar has no layout issues.<br>
 	<br>
+	The `zenburn` theme applies <b>only</b> to external applications, TTY (NixOS only), and system components. <i>JES</i> itself uses a built‑in theme and supports base16 color schemes via a `base16.json` configuration.<br>
+	<br>
 	<i>JES is built for everyday practicality, not trends.</i><br>
 	</p>
 	<h3>-- Roadmap --:</h3>
@@ -106,6 +108,7 @@ markdown
 	<b>[c]</b> Hyprland support<br>
 	<b>[i]</b> Niri support<br>
 	<b>[p]</b> Setup installer<br>
+	<b>[c]</b> Base16 theme support in JES<br>
 	<b>[p]</b> Weather widget<br>
 	<b>[p]</b> Calendar widget<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
