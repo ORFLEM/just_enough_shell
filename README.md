@@ -1,11 +1,10 @@
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
-	<p>Created for everyday, not show.</p>
+	<p>Created for every day, not show.</p>
 </div>
 
-### System : `NixOS 25.11 (stable)`
-###### and arch (experemental)
+### System : `NixOS 25.11 (stable)` & `Arch Linux`
 
 # [rus](./rus.md) | [eng](./eng.md)
 

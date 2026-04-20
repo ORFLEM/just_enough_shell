@@ -431,7 +431,7 @@ WlrLayershell {
                             Text {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "search..."
-                                color: col.backgroundAlt2
+                                color: col.font
                                 font.family: "Mononoki Nerd Font Propo"
                                 font.pixelSize: 15
                                 visible: searchInput.text === ""

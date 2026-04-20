@@ -6,7 +6,7 @@ markdown
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
-	<p>Created for everyday, not show.</p>
+	<p>Created for every day, not show.</p>
 </div>
 
 ***
@@ -103,7 +103,7 @@ markdown
 	</p>
 	<h3>-- Roadmap --:</h3>
 	<p>
-	<b>[i]</b> Hyprland support<br>
+	<b>[c]</b> Hyprland support<br>
 	<b>[p]</b> Niri support<br>
 	<b>[p]</b> Setup installer<br>
 	<b>[p]</b> Weather widget<br>
