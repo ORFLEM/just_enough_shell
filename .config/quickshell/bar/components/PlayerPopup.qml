@@ -69,7 +69,7 @@ WlrLayershell {
                 anchors.fill: parent
                 radius: mainRad
                 opacity: 0.85
-                color: "#2b2b2b"
+                color: base.base02
                 
                 Image {
                     asynchronous: true
@@ -107,7 +107,7 @@ WlrLayershell {
                 anchors.margins: 3
                 width: height  // квадрат
                 radius: mainRad - 3
-                color: "#2b2b2b"
+                color: base.base02
 
                 Image {
                     asynchronous: true
