@@ -45,8 +45,8 @@ Item {
             switch(wsState) {
                 case "active": return col.accent
                 case "occupied": return col.font
-                case "urgent": return "#FF4444"
-                case "empty": return "#666666"
+                case "urgent": return base.base09
+                case "empty": return base.base05
                 default: return "transparent"
             }
         }
@@ -60,7 +60,7 @@ Item {
                 switch(wsState) {
                     case "active": return col.fontDark
                     case "occupied": return col.backgroundAlt1
-                    case "urgent": return "#FFFFFF"
+                    case "urgent": return base.base08
                     case "empty": return col.backgroundAlt1
                     default: return col.font
                 }

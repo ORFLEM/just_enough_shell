@@ -13,7 +13,6 @@ import "notifications"
 import "launcher"
 import "wallpaper"
 // import "scrinpicker"
-// connecting derictories with plugins under this comment
 
 ShellRoot {
     FileView {
@@ -33,7 +32,33 @@ ShellRoot {
             property string accent
         }
     }
-
+    
+    FileView {
+        id: baseColors
+        path: Qt.resolvedUrl("./base16.json")
+        watchChanges: true
+        onFileChanged: reload()
+        JsonAdapter {
+            id: base
+            property string base01
+            property string base02
+            property string base03
+            property string base04
+            property string base05
+            property string base06
+            property string base07
+            property string base08
+            property string base09
+            property string base10
+            property string base11
+            property string base12
+            property string base13
+            property string base14
+            property string base15
+            property string base16
+        }
+    }
+    
     property bool playerOpen:     false
     property bool powerOpen:      false
     property bool launchOpen:     false
@@ -115,8 +140,6 @@ ShellRoot {
     //     id: scrinPicker
     // }
 
-    // connecting plugins under this comment
-
     IpcHandler {
         target: "root"
 
@@ -141,7 +164,6 @@ ShellRoot {
         function scrinpicker(): void {
             scrinPicker.activate()
         }
-        // connecting plugin's ipc under this comment
     }
 
     property int size: mainRad > 0 ? mainRad + 6 : 0

@@ -61,13 +61,13 @@ MouseArea {
 }
 ```
 
-- For radii, use radius: mainRad. If you use margins, write radius: mainRad - <margin_value> in the following block.
-- All colours must be taken from the global col object (defined in colors.json and accessible via shell.qml).
-- Hardcoded colours are allowed only if strictly necessary, and they must be taken from the zenburn theme.
-- Main font: Mononoki Nerd Font Propo size 17px.
+- For radii, use radius: mainRad. If you use margins, write `radius: mainRad - <margin_value> in the following block`.
+- All colours must be taken from the global col object (defined in `colors.json` and accessible via `shell.qml`).
+- Also JES supported base16 themes (`base.base<01-16>`)
+- Main font: `Mononoki Nerd Font Propo` size **17px**.
 
 ## Passing data to the interface
-- For continuous streams (recommended for performance) use JsonListen. For periodic one‑time requests use JsonPoll.
+- For continuous streams (recommended for performance) use `JsonListen`. For periodic one‑time requests use `JsonPoll`.
 - Data is passed in JSON format. For visual programs without functions – just a plain string (e.g., cava in the bar).
 
 ## If something is unclear, refer to BaseBar.qml in the bar/ folder – it is the visual reference for the entire UI.
