@@ -34,7 +34,7 @@
 ## -- Stack & Optimization --:
 | Layer    | Technology                            | Role                              |
 |----------|---------------------------------------|-----------------------------------|
-| WM       | swayfx (primary), Hyprland/Niri (WIP) | Tiling, effects, IPC              |
+| WM       | swayfx (primary), Hyprland, Niri (WIP) | Tiling, effects, IPC              |
 | UI       | Quickshell (Qt Quick / QML)           | Rendering, animations, input      |
 | Backend  | Go 1.21+                              | High-volume data processing logic |
 | Shell    | Bash 5.x / POSIX sh                   | Core system logic                 |

@@ -34,7 +34,7 @@
 ## -- Стек и оптимизация --:
 | Слой | Технология | Роль |
 |------|------------|------|
-| WM | swayfx (primary), Hyprland/Niri (WIP) | Тайлинг, эффекты, IPC |
+| WM | swayfx (primary), Hyprland, Niri (WIP) | Тайлинг, эффекты, IPC |
 | UI | Quickshell (Qt Quick / QML) | Рендеринг, анимации, ввод |
 | Backend | Go 1.21+ | Логика, обрабатывающая большие объёмы данных |
 | Shell | Bash 5.x / POSIX sh | Основная логика |
