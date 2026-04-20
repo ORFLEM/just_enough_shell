@@ -5,13 +5,14 @@
 - **Feature-based Modularity:** Each UI component (bar, launcher, notifications, etc.) is isolated in its own directory. Minimal cross-dependencies.
 - **Event-driven Model (Subscribe):** Long-lived connections via Go binaries subscribe to WM/MPD/system events, replacing inefficient bash polling loops.
 - **Stable Shell Layer:** Scripts are written in POSIX sh/bash. No dependencies on fish/zsh runtimes, plugins, or interactive features.
-- **Static Theme + Dynamic Accent:** Zenburn base is fixed. `wallust` extracts only the accent color from wallpapers to highlight UI elements.
+- **Static theme + dynamic accent**: `base16.json` uses the zenburn palette. `colors.json` handles gradient backgrounds, text, and the accent extracted by `wallust` from wallpapers to highlight elements.
 
 ## -- Project Directory Tree & Module Roles --:
 ```
 .
 ├── shell.qml                 # Quickshell entry point. Registers and positions modules.
-├── colors.json               # UI color definitions.
+├── colors.json               # Main interface theme.
+├── base16.json               # Additional interface theme.
 ├── bar/                      # Status bar.
 ├── launcher/                 # App launcher: search, categories, background shader, Go backend.
 ├── wallpaper/                # Wallpaper picker & renderer: previews, application, TOML config, shader rendering.
@@ -21,7 +22,7 @@
 ├── helpers/                  # QML helpers/utilities.
 ├── scripts/                  # Logic core: compiled Go binaries + bash scripts.
 └── images/                   # Static icons, assets. (Currently nested in `bar/`, will be fixed later)
-```
+   ```
 
 ## -- Data Flow & IPC --:
 1. **Initialization:** `shell.qml` launches modules. Each module invokes its corresponding script from `scripts/` on startup.
@@ -54,7 +55,7 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 
 ## -- How to Extend --:
 1. **New Widget:** Create `widget_name/` directory → QML component + backend (Go/sh) → register in `shell.qml`.
-2. **Theme Change:** Edit `wallust` config → regenerate palette → restart Quickshell.
+2. **Change theme**: Edit `wallust` config (you can also rewrite `base16.json`, but it barely affects the visual part of *JES*) → regenerate palette.
 3. **Add WM Support:** Implement IPC parser matching existing script output spec → add to routing.
 4. **Optimization:** Replace polling script with Go binary using `subscribe` → update QML invocation.
 
