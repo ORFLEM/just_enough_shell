@@ -101,8 +101,6 @@
     ++ (with unstablePkgs; [
       wallust
 
-      swayfx
-
       go
 
       bastet
@@ -135,9 +133,20 @@
   # ============================================================
   programs.sway = {
     enable = true;
-    package = pkgs.swayfx;
+    package = unstablePkgs.swayfx;
     wrapperFeatures.gtk = true;
   };
+
+  environment.etc."hypr/plugins.conf".text = ''
+    plugin = ${unstablePkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+    plugin = ${unstablePkgs.hyprlandPlugins.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so
+  '';
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    package = lib.mkForce unstablePkgs.hyprland;
+  };
+
 
   xdg.portal = {
     enable = true;
