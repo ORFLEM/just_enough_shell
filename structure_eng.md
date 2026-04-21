@@ -43,7 +43,7 @@
 | Lock     | Hyprlock                              | Lock screen                       |
 | Audio    | PipeWire + wpctl/pavucontrol          | Mixing, MPRIS, Cava               |
 
-**Metrics:** CPU idle ~5–7% (Go subscribe) vs 35–45% (bash polling). Binaries are statically linked; logic core weighs ~10 MB.
+**Metrics:** CPU idle ~7–11% (Go subscribe) vs 35–45% (bash polling). Binaries are statically linked; logic core weighs ~10 MB.
 
 ## -- WM compatibility layer -- :
 Abstraction from tiling is implemented through three pairs of scripts and one file for inclusion in `shell.qml`:
