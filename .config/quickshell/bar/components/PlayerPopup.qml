@@ -12,7 +12,8 @@ WlrLayershell {
     namespace: "player"
 
     anchors {
-        top: true
+        top: barOnTop
+        bottom: !barOnTop
         right: true
     }
 
@@ -32,7 +33,8 @@ WlrLayershell {
 
     Item {
         anchors.fill: parent
-        anchors.topMargin: isOpen ? 6 : -6
+        anchors.topMargin: barOnTop ? (isOpen ? 6 : -6) : 0
+        anchors.bottomMargin: !barOnTop ? (isOpen ? 6 : -6) : 0
         anchors.rightMargin: isOpen ? 0 : 8
         Behavior on anchors.rightMargin {
             NumberAnimation {
@@ -47,9 +49,6 @@ WlrLayershell {
             }
         }
 
-        
-        // opacity: isOpen ? 1 : 0
-
         Behavior on opacity {
             NumberAnimation { duration: 200 }
         }
@@ -59,7 +58,8 @@ WlrLayershell {
             anchors.fill: parent
             anchors.leftMargin: 6
             anchors.rightMargin: 6
-            anchors.bottomMargin: 6
+            anchors.bottomMargin: barOnTop ? 6 : 0
+            anchors.topMargin: barOnTop ? 0 : 6
             color: "transparent"
             radius: mainRad
             clip: true

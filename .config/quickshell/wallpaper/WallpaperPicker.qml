@@ -103,10 +103,12 @@ WlrLayershell {
         id: panel
         width: 900
         height: 620
-        anchors.top: parent.top
+        anchors.top: barOnTop ? parent.top : false
+        anchors.bottom: !barOnTop ? parent.bottom : false
         anchors.left: parent.left
         anchors.topMargin: 6
         anchors.leftMargin: 6
+        anchors.bottomMargin: 6
         radius: mainRad
         color: "transparent"
 
