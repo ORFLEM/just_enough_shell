@@ -26,13 +26,15 @@ gradient: Gradient {
 ```
 - А для фона кнопки и прочего:
 ```qml
-opacity: 0.65
-gradient: Gradient {
-        orientation: Gradient.Horizontal
-        GradientStop { position: 0.0; color: col.backgroundAlt2 }
-        GradientStop { position: 0.275; color: col.backgroundAlt1 }
-        GradientStop { position: 0.725; color: col.backgroundAlt1 }
-        GradientStop { position: 1.0; color: col.backgroundAlt2 }
+Rectangle {
+    opacity: 0.65
+    gradient: Gradient {
+            orientation: Gradient.Horizontal
+            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+        }
     }
 }
 ```
