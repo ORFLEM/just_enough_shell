@@ -13,6 +13,7 @@ import "notifications"
 import "launcher"
 import "wallpaper"
 // import "scrinpicker"
+// add under this comment import with plugins
 
 ShellRoot {
     FileView {
@@ -64,8 +65,11 @@ ShellRoot {
     property bool launchOpen:     false
     property bool wallPickerOpen: false
     property int  wallpaperType:  1
-    property int  mainRad:        10
     property string wallShaderName: "bg"
+
+    // this you can change
+    property int  mainRad:        10
+    property bool barOnTop:       true
 
     property string wm: Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway"
 
@@ -140,6 +144,8 @@ ShellRoot {
     //     id: scrinPicker
     // }
 
+    // add under this comment your plugins
+
     IpcHandler {
         target: "root"
 
@@ -164,6 +170,7 @@ ShellRoot {
         function scrinpicker(): void {
             scrinPicker.activate()
         }
+        // add under this comment your ipc for plugins
     }
 
     property int size: mainRad > 0 ? mainRad + 6 : 0

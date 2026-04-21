@@ -22,7 +22,8 @@ WlrLayershell {
     property string timed: ""
  
     anchors {
-        top: true
+        top: barOnTop
+        bottom: !barOnTop
         left: true
         right: true
     }
@@ -32,7 +33,8 @@ WlrLayershell {
     
     Rectangle {
         anchors.fill: parent
-        anchors.topMargin: 6
+        anchors.topMargin: barOnTop ? 6 : 0
+        anchors.bottomMargin: !barOnTop ? 6 : 0
         anchors.leftMargin: 6
         anchors.rightMargin: 6
         radius: mainRad

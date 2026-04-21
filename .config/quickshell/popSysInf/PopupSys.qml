@@ -6,7 +6,7 @@ import "../helpers"
 WlrLayershell {
     layer: WlrLayer.Overlay
     namespace: "sys-popups"
-    exclusiveZone: -1
+    exclusiveZone: 0
 
     implicitWidth: 220
     implicitHeight: contentCol.implicitHeight + 6

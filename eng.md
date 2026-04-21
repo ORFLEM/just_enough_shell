@@ -133,7 +133,11 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 
 #### **Wallpapers from screenshots**: [click](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [*JES* structure](./structure_en.md)
+## [*JES* structure](./structure_eng.md)
+
+## -- What can be changed in *JES* -- :
+- `mainRad` - corner rounding, default is 10, works perfectly with values 0-15
+- `barOnTop` - places the control panel at the top, along with its adjacent widgets, enabled by default
 
 ## -- Keybindings -- :
 | keybind | action |
