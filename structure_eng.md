@@ -45,11 +45,12 @@
 
 **Metrics:** CPU idle ~5–7% (Go subscribe) vs 35–45% (bash polling). Binaries are statically linked; logic core weighs ~10 MB.
 
-## -- WM Compatibility Layer --:
-WM abstraction is implemented via three pairs of scripts:
+## -- WM compatibility layer -- :
+Abstraction from tiling is implemented through three pairs of scripts and one file for inclusion in `shell.qml`:
 - `active_window-{sway,hypr,niri}.sh`
 - `kb_layout-{sway,hypr,niri}.sh`
 - `workspace-{sway,hypr,niri}.sh`
+- `{Sway,Hypr,Niri}Bar.qml` in the `quickshell` subdirectory `bar/`
 
 Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to the appropriate script. To port to a new tiling WM, simply implement output in the same JSON format and add the mapping.
 
@@ -60,10 +61,10 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 4. **Optimization:** Replace polling script with Go binary using `subscribe` → update QML invocation.
 
 ## -- Misc --:
-- **UI Layer (QML):** GPL-3.0
-- **Scripts & Binaries:** GPL-3.0
+- UI Layer (QML): GPL-3.0
+- Scripts & Binaries: GPL-3.0
 - Continuous output from scripts/binaries is preferred for performance optimization.
-- **Assets** (shaders, Go sources, empty stub scripts for other WMs): see `for-quickshell/`
+- Assets (shaders, Go sources, empty stub scripts, and a stub QML file for connecting another tiling WM): see `for-quickshell/`
 
 ## -- Plugins --:
 ### Installation
