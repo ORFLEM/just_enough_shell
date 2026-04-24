@@ -29,7 +29,7 @@ WlrLayershell {
     }
     
     implicitHeight: 36
-    implicitWidth: Screen.width <= 3480 ? (minibar ? 1920 - 12 : Screen.width ) : 3480
+    implicitWidth: Screen.width <= 3840 ? (minibar ? 1920 : Screen.width) : (minibar ? 1920 : 3840)
     color: "transparent"
     
     Rectangle {
