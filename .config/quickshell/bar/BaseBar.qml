@@ -24,11 +24,12 @@ WlrLayershell {
     anchors {
         top: barOnTop
         bottom: !barOnTop
-        left: true
-        right: true
+        // left: true
+        // right: true
     }
     
     implicitHeight: 36
+    implicitWidth: Screen.width <= 3480 ? (minibar ? 1920 - 12 : Screen.width ) : 3480
     color: "transparent"
     
     Rectangle {
@@ -476,7 +477,7 @@ WlrLayershell {
                 Item {
                     width: cavaText.width + 4
                     height: 24
-                    visible: Screen.width >= 2560
+                    visible: Screen.width >= 2560 && !minibar
 
                     JsonListen {
                         id: cavaStream

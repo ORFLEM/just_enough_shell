@@ -138,6 +138,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 ## -- What can be changed in *JES* -- :
 - `mainRad` - corner rounding, default is 10, works perfectly with values 0-15
 - `barOnTop` - places the control panel at the top, along with its adjacent widgets, enabled by default
+- `minibar` - hides cava, sets the panel width to 1920px, disabled by default
 
 ## -- Keybindings -- :
 | keybind | action |
