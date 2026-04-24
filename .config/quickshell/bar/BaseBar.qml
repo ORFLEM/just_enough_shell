@@ -584,7 +584,7 @@ WlrLayershell {
                         
                         Loader {
                                 id: titleLoader
-                                width: vars.plr.title.length > 35 ? 380 : item ? item.implicitWidth : 0
+                                width: vars.plr.title.length > (Screen.width >= 2560 && !minibar ? 35 : 25) ? (Screen.width >= 2560 && !minibar ? 380 : 220) : item ? item.implicitWidth : 0
                                 height: 20
                                 
                                 sourceComponent: vars.plr.title.length > 35 ? marqueeComp : textComp
