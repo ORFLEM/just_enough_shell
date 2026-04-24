@@ -103,11 +103,11 @@ stream_workspaces_json() {
 
 # Основная логика
 case "$1" in
-    "stream-workspaces-json")
+    "stream-ws-json")
         stream_workspaces_json
         ;;
     *)
-        echo "Usage: $0 {stream-workspaces-json}"
+        echo "Usage: $0 {stream-ws-json}"
         exit 1
         ;;
 esac
