@@ -23,7 +23,7 @@
 	</tr>
 	<tr>
 		<td>WM</td>
-		<td>SwayFX / Hyprland</td>
+		<td>SwayFX / Hyprland / niri</td>
 	</tr>
 	<tr>
 		<td>Shell</td>
@@ -88,7 +88,7 @@
 	<p>
   <i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
   <br>
-	<b>SwayFX / Hyprland</b> are available, but work is underway to add support for <b>Niri</b>.<br>
+	<b>SwayFX / Hyprland / niri</b> are available, but <b>Niri</b> lacks blur and also has a workspace bug; the script works incorrectly with it.<br>
   Also, by editing 3 stub scripts, you can run this interface on any wayland tiling WM that supports subscribe protocols for workspace data, active window, and keyboard layout.<br>
   <br>
 	The project includes optimizations, but it hasn't been tested on low-end PCs.<br>

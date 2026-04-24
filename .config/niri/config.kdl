@@ -1,0 +1,221 @@
+// --- ПЕРЕМЕННЫЕ -----------------------------------------------------------------------
+// В niri переменные задаются через замену или прямо в командах. 
+// Используем стандартные бинды для твоих приложений.
+
+// --- АВТОСТАРТ ------------------------------------------------------------------------
+spawn-at-startup "/run/wrappers/bin/gnome-keyring-daemon" "--start" "--components=secrets,ssh"
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+// systemctl import-environment обычно происходит автоматически в NixOS, но можно оставить
+spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+
+spawn-at-startup "openrgb" "--profile" "orflem"
+spawn-at-startup "fcitx5" "-d" "--replace"
+spawn-at-startup "mpd-mpris"
+
+spawn-at-startup "zen-beta"
+spawn-at-startup "telegram-desktop"
+spawn-at-startup "qbittorrent-nox"
+spawn-at-startup "foot" "rmpc"
+
+spawn-at-startup "qs" "-d"
+spawn-at-startup "sh" "-c" "~/.config/sway/opacity-changer.sh" // проверь совместимость скрипта с niri
+
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+
+// --- ДЕКОРАЦИИ ------------------------------------------------------------------------
+layout {
+    gaps 6
+    center-focused-column "never"
+    
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.35; }
+
+    focus-ring {
+        off
+        width 2
+        active-color "#ebdbb2" // Пример Gruvbox, так как в Sway были просто границы
+        inactive-color "#282828"
+    }
+
+    border {
+        width 2
+    }
+}
+prefer-no-csd
+workspace "1"
+workspace "2"
+workspace "3"
+workspace "4"
+workspace "5"
+workspace "6"
+workspace "7"
+workspace "8"
+workspace "9"
+workspace "10"
+
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
+
+// Эффекты SwayFX (размытие в niri пока настраивается через внешние слои или шейдеры, 
+// но базовое размытие фона доступно для слоев)
+animations {
+    // niri имеет отличные дефолтные анимации, можно не перегружать
+}
+
+// --- СКРАЧПАД -------------------------------------------------------------------------
+// В niri нет прямого аналога scratchpad, обычно используют "Named Workspaces" 
+// или просто отдельный воркспейс. Но можно эмулировать через правила.
+// window-rule {
+//     match app-id="scratch_term"
+//     open-floating true
+//     default-floating-width 1400
+//     default-floating-height 700
+//     // В niri окна можно "скрывать", но проще использовать воркспейс или флаг
+// }
+
+// --- ВНЕШНИЙ ВИД ----------------------------------------------------------------------
+cursor {
+    xcursor-theme "BreezeX-RosePine-Linux"
+    xcursor-size 32
+}
+
+// --- МОНИТОРЫ -------------------------------------------------------------------------
+output "DP-2" { // Проверь имя через niri --msg outputs
+    mode "3440x1440@144.000"
+}
+
+// --- ВВОД -----------------------------------------------------------------------------
+input {
+    keyboard {
+        xkb {
+            layout "us,ru"
+            options "grp:caps_toggle,grp:alt_shift_toggle"
+        }
+        repeat-rate 35
+        repeat-delay 250
+    }
+
+    touchpad {
+        off
+    }
+    
+    focus-follows-mouse
+
+    mouse {
+        accel-speed 0.0
+        accel-profile "flat"
+    }
+}
+
+// --- ХОТКЕИ ---------------------------------------------------------------------------
+binds {
+    // Приложения
+    Mod+Q { spawn "foot"; }
+    Mod+Return { spawn "foot"; }
+    Mod+D { spawn "qs" "ipc" "call" "root" "toggleLaunch"; }
+    Mod+E { spawn "dolphin"; }
+
+    // Управление окнами
+    Mod+C { close-window; }
+    Mod+Space { maximize-column; }
+    Mod+F { toggle-window-floating; }
+    // Mod+Shift+F { toggle-window-pinned; } // Аналог sticky в niri
+
+    // Навигация (Focus)
+    Mod+Left  { focus-column-left; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
+    Mod+Right { focus-column-right; }
+
+    // Перемещение окон
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Down  { move-window-down; }
+    Mod+Shift+Up    { move-window-up; }
+    Mod+Shift+Right { move-column-right; }
+// Воркспейсы
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    Mod+Shift+0 { move-column-to-workspace 10; }
+    // ... и так далее для остальных чисел
+
+    // Ресайз (в niri это изменение ширины колонки)
+    Mod+Ctrl+Alt+Left  { consume-or-expel-window-left; }
+    Mod+Ctrl+Alt+Right { consume-or-expel-window-right; }
+    Mod+R { set-column-width "+10%"; }
+    Mod+Shift+R { set-column-width "-10%"; }
+
+    // Скриншоты (адаптировано под niri-screenshot или grim)
+    Home { spawn "sh" "-c" "FILE=~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png; grim -g \"$(slurp)\" - | wl-copy"; }
+    Shift+Home { spawn-sh "grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy"; }
+    // Медиа ( pamixer / playerctl )
+    Alt+F10 { spawn "pamixer" "-d" "5"; }
+    Alt+F12 { spawn "qs" "ipc" "call" "root" "togglePlayer"; }
+    Alt+F11 { spawn "pamixer" "-i" "5"; }
+    Alt+F9 { spawn "pamixer" "-t"; }
+    Control+Slash { spawn "playerctl" "play-pause"; }
+    Control+period { spawn "playerctl" "next"; }
+    Control+comma { spawn "playerctl" "previous"; }
+    Alt+Prior { spawn-sh "ddcutil --bus 11 setvcp 10 + 5"; }
+    Alt+Next { spawn-sh "ddcutil --bus 11 setvcp 10 - 5"; }
+
+    // Выход и управление
+    Mod+Shift+E { quit; }
+    Mod+P { spawn "qs" "ipc" "call" "root" "togglePower"; }
+}
+
+// --- ПРАВИЛА ОКОН ---------------------------------------------------------------------
+// window-rule {
+//     match app-id="scratch_term"
+//     open-floating true
+//     default-floating-dimensions width=1400 height=700
+// }
+
+window-rule {
+    match app-id="org.pulseaudio.pavucontrol"
+    open-floating true
+    default-column-width { fixed 1000; }
+    default-window-height { fixed 500; }
+}
+
+window-rule {
+    match app-id="zoom"
+    opacity 1.0
+}
+
+// Глобальная прозрачность (как в твоем SwayFX)
+window-rule {
+    match is-active=false
+    opacity 0.45
+    draw-border-with-background false
+}
+window-rule {
+    match is-active=true
+    opacity 0.85
+    draw-border-with-background false
+}
