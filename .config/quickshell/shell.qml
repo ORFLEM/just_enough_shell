@@ -70,6 +70,7 @@ ShellRoot {
     // this you can change
     property int  mainRad:        10
     property bool barOnTop:       true
+    property bool minibar:        false
 
     property string wm: Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway"
 
