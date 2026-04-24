@@ -476,6 +476,7 @@ WlrLayershell {
                 Item {
                     width: cavaText.width + 4
                     height: 24
+                    visible: Screen.width >= 2560
 
                     JsonListen {
                         id: cavaStream

@@ -95,7 +95,7 @@
 	Go binaries are used for scripts where fast reading of large data streams is important, which reduces CPU idle load to 5-7% instead of 35-45%.<br>
   <br>
 	<i>JES</i> was designed for desktop PCs, allowing better refinement for such wonderful machines.<br>
-	The author's monitor is UWQHD (3440x1440); tested resolutions: QHD (2560x1440) and above.<br>
+	The author's monitor is UWQHD (3440x1440); tested resolutions: QHD (2560x1440) and above. (FHD (1920x1080) supports experementaly)<br>
 	On these, the panel has no issues with module placement.<br>
 	<br>
 	The project uses bash with custom output, updates faster for SwayFX because it's geared toward the author and his daily usage.<br>
