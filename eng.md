@@ -92,7 +92,7 @@
   Also, by editing 3 stub scripts, you can run this interface on any wayland tiling WM that supports subscribe protocols for workspace data, active window, and keyboard layout.<br>
   <br>
 	The project includes optimizations, but it hasn't been tested on low-end PCs.<br>
-	Go binaries are used for scripts where fast reading of large data streams is important, which reduces CPU idle load to 5-7% instead of 35-45%.<br>
+	Go binaries are used for scripts where fast reading of large data streams is important, which reduces CPU idle load to 7-11% instead of 35-45%.<br>
   <br>
 	<i>JES</i> was designed for desktop PCs, allowing better refinement for such wonderful machines.<br>
 	The author's monitor is UWQHD (3440x1440); tested resolutions: QHD (2560x1440) and above. (FHD (1920x1080) supports experementaly)<br>
