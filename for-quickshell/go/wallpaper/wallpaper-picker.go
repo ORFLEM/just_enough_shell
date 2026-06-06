@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"bytes"
 
 	"github.com/BurntSushi/toml"
 )
@@ -202,6 +203,105 @@ func collectShaders(dir string) []WallEntry {
 	return entries
 }
 
+func detectImageType(path string) (realType string, isJPEG bool) {
+    f, err := os.Open(path)
+    if err != nil {
+        return "unknown", false
+    }
+    defer f.Close()
+
+    buf := make([]byte, 12)
+    n, _ := f.Read(buf)
+    if n < 4 {
+        return "too_small", false
+    }
+    data := buf[:n]
+
+    // JPEG: FF D8
+    if bytes.HasPrefix(data, []byte{0xFF, 0xD8}) {
+        return "jpeg", true
+    }
+    // PNG: 89 50 4E 47
+    if bytes.HasPrefix(data, []byte{0x89, 0x50, 0x4E, 0x47}) {
+        return "png", false
+    }
+    // WEBP: RIFF .... WEBP
+    if n >= 12 && bytes.HasPrefix(data, []byte("RIFF")) && bytes.HasPrefix(data[8:], []byte("WEBP")) {
+        return "webp", false
+    }
+    return "unknown", false
+}
+
+func ensureJPEG(path string, overwriteOriginal bool) (string, error) {
+    _, isJPEG := detectImageType(path)
+    if isJPEG && overwriteOriginal {
+        // Уже JPEG, но если расширение не .jpg/.jpeg, можно переименовать? По желанию.
+        // Оставим как есть.
+        return path, nil
+    }
+    if isJPEG && !overwriteOriginal {
+        return path, nil
+    }
+
+    dir := filepath.Dir(path)
+    base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
+    var outputPath string
+
+    if overwriteOriginal {
+        // Новый путь с расширением .jpg
+        outputPath = filepath.Join(dir, base+".jpg")
+    } else {
+        outputPath = filepath.Join(dir, base+".fixed.jpg")
+    }
+
+    // Временный файл
+    tmpFile, err := os.CreateTemp(dir, "tmp_fix_*.jpg")
+    if err != nil {
+        return "", fmt.Errorf("failed to create temp file: %w", err)
+    }
+    tmpPath := tmpFile.Name()
+    tmpFile.Close()
+    defer os.Remove(tmpPath)
+
+    // Конвертация через ffmpeg
+    cmd := exec.Command("ffmpeg", "-i", path, "-q:v", "2", "-y", tmpPath)
+    if err := cmd.Run(); err != nil {
+        return "", fmt.Errorf("ffmpeg conversion failed: %w", err)
+    }
+
+    if overwriteOriginal {
+        // Удаляем исходный файл (если это не тот же путь, что outputPath)
+        if path != outputPath {
+            if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+                return "", fmt.Errorf("failed to remove original: %w", err)
+            }
+        }
+        // Перемещаем временный в outputPath
+        if err := os.Rename(tmpPath, outputPath); err != nil {
+            // Если rename не работает (разные устройства), копируем
+            data, err := os.ReadFile(tmpPath)
+            if err != nil {
+                return "", err
+            }
+            if err := os.WriteFile(outputPath, data, 0644); err != nil {
+                return "", err
+            }
+        }
+        return outputPath, nil
+    } else {
+        // Создаём .fixed.jpg
+        if err := os.Rename(tmpPath, outputPath); err != nil {
+            data, err := os.ReadFile(tmpPath)
+            if err != nil {
+                return "", err
+            }
+            if err := os.WriteFile(outputPath, data, 0644); err != nil {
+                return "", err
+            }
+        }
+        return outputPath, nil
+    }
+}
 // ─── Команды ─────────────────────────────────────────────────────────────────
 
 // list-tab <tab> [search]
@@ -243,6 +343,51 @@ func cmdListTab(tab, search string) {
 
 	out, _ := json.Marshal(entries)
 	fmt.Println(string(out))
+}
+
+func cmdFixWalls() {
+    cfg := loadConfig()
+    // Собираем файлы с любыми графическими расширениями
+    allExts := map[string]bool{
+        ".jpg": true, ".jpeg": true, ".png": true, ".webp": true,
+    }
+    entries := collectByDirs(cfg.Dirs.ImageDirs, allExts, "image")
+
+    var wg sync.WaitGroup
+    sem := make(chan struct{}, 4)
+
+    for _, e := range entries {
+        wg.Add(1)
+        go func(path string) {
+            defer wg.Done()
+            sem <- struct{}{}
+            defer func() { <-sem }()
+
+            realType, isJPEG := detectImageType(path)
+            ext := strings.ToLower(filepath.Ext(path))
+
+            // Нужно конвертировать, если:
+            // - не JPEG, или
+            // - расширение не .jpg/.jpeg (например, .png, .webp), даже если внутри JPEG (редко, но бывает)
+            needFix := !isJPEG || (ext != ".jpg" && ext != ".jpeg")
+
+            if needFix && (realType == "png" || realType == "webp" || realType == "jpeg") {
+                fmt.Printf("Fixing %s (real: %s, ext: %s) -> converting to .jpg\n", path, realType, ext)
+                newPath, err := ensureJPEG(path, true) // перезаписываем с удалением оригинала
+                if err != nil {
+                    fmt.Fprintf(os.Stderr, "Failed to fix %s: %v\n", path, err)
+                } else {
+                    fmt.Printf("Fixed: %s -> %s\n", path, newPath)
+                }
+            } else if isJPEG && (ext == ".jpg" || ext == ".jpeg") {
+                // Уже нормальный JPEG – пропускаем
+            } else {
+                fmt.Fprintf(os.Stderr, "Skipping %s: unsupported real type %s\n", path, realType)
+            }
+        }(e.Path)
+    }
+    wg.Wait()
+    fmt.Println("fix-walls completed")
 }
 
 // get-state — восстановление при старте quickshell
@@ -331,28 +476,32 @@ func cmdSet(path string) {
 		exec.Command("qs", "ipc", "call", "root", "wallType", "4").Run()
 		exec.Command("qs", "ipc", "call", "root", "wallType", "3").Run()
 		if _, err := os.Stat(videoFrame); err == nil {
-			exec.Command("wallust", "-s", "run", videoFrame).Run()
+			exec.Command("matugen", "image", videoFrame, "-m", "dark", "-t", "scheme-tonal-spot", "--source-color-index", "0").Run()
 		}
 		saveState("video", path, cfg.State.Shader)
 	} else {
+		fixedPath, err := ensureJPEG(path, false) // false = не портить оригинал, создать .fixed.jpg
+		if err != nil {
+		    fmt.Fprintln(os.Stderr, "fixing image failed:", err)
+		    os.Exit(1)
+		}
+		
+		// Теперь работаем с fixedPath (это JPEG)
 		out, _ := exec.Command("ffprobe",
-			"-v", "error", "-select_streams", "v:0",
-			"-show_entries", "stream=width", "-of", "csv=p=0", path).Output()
+		    "-v", "error", "-select_streams", "v:0",
+		    "-show_entries", "stream=width", "-of", "csv=p=0", fixedPath).Output()
 		width := 0
 		fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &width)
+		
 		if width > 3840 {
-			exec.Command("ffmpeg",
-				"-i", path, "-vf", "scale=3440:-1", "-q:v", "2",
-				staticCache, "-y").Run()
+		    exec.Command("ffmpeg",
+		        "-i", fixedPath, "-vf", "scale=3440:-1", "-q:v", "2",
+		        staticCache, "-y").Run()
 		} else {
-			if err := copyFile(path, staticCache); err != nil {
-				fmt.Fprintln(os.Stderr, "copy failed:", err)
-				os.Exit(1)
-			}
+		    copyFile(fixedPath, staticCache) // копируем уже исправленный JPEG
 		}
-		exec.Command("pkill", "-x", "swaybg").Run()
 		exec.Command("qs", "ipc", "call", "root", "wallType", "1").Run()
-		exec.Command("wallust", "-s", "run", staticCache).Run()
+		exec.Command("matugen", "image", staticCache, "-m", "dark", "-t", "scheme-tonal-spot", "--source-color-index", "0").Run()
 		saveState("image", path, cfg.State.Shader)
 	}
 }
@@ -405,6 +554,9 @@ func main() {
 
 	case "clean-cache":
 		cmdCleanCache()
+
+	case "fix-walls":
+    	cmdFixWalls()
 
 	case "set":
 		if len(os.Args) < 3 {

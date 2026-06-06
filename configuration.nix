@@ -16,90 +16,201 @@
     GTK_BACKEND = "wayland";
     TERMINAL = "foot";
   };
+  
+  # boxflat fix
+    services.udev.packages = [
+    (pkgs.writeTextFile {
+      name = "moza-boxflat-udev-rules";
+      text = ''
+        # Moza Racing
+        SUBSYSTEM=="usb", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+        SUBSYSTEM=="hidraw", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+        KERNEL=="hidraw*", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+        KERNEL=="ttyACM*", ATTRS{idVendor}=="346e", MODE="0666", GROUP="plugdev"
+      '';
+      destination = "/lib/udev/rules.d/99-boxflat.rules";
+    })
+  ];
+
+  environment.etc."xdg/menus/applications.menu".source = 
+    "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   # ============================================================
   # SYSTEM PACKAGES (minimal set)
   # ============================================================
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    rocmSupport = true;
+  };
 
   nix.settings = {
     auto-optimise-store = true;
-    experimental-features = [ "nix-command" "flakes" ];
+    max-jobs = "auto";
   };
 
   environment.systemPackages =
     # STABLE
     (with pkgs; [
-      # Core
-      blueman
-      foot
-      micro
-      helix
-      git
-      wget
-      curl
-      fastfetch
-      ddcutil
-      btop
-      yazi
+      # ----------------------------------------------------------------
+      # GUI
+      # ----------------------------------------------------------------
+
+      # Media player, recoder & image editor
+      krita
+      obs-studio
       (mpv.override { scripts = with pkgs.mpvScripts; [ mpris ]; })
-      ffmpeg
-      kbd
-      udisks2
-      udiskie
-      ntfs3g
-      exfat
-      grim
-      slurp
-      wl-clipboard
-      cliphist
-      pavucontrol
-      file-roller
-      qalculate-qt
-      quickshell
-      hyprlock
-      wayland
-      mesa
-      gsettings-desktop-schemas
-      gnome-themes-extra
-      rose-pine-cursor
-      rose-pine-hyprcursor
-      tela-icon-theme
-      dbus
-      glib
-      gobject-introspection
-      libnotify
-      playerctl
-      cava
-      ffmpeg
-      ldacbt
-      pamixer
-      playerctl
-      tuigreet
-      pamixer
-      wireguard-tools
-      unzip
-      zip
-      bat
-      lsd
-      jq
-      chafa
-      cmatrix
-      pipes
-      zellij
+
+      # KDE utils
       kdePackages.kdenlive
       kdePackages.gwenview
       kdePackages.okular
       kdePackages.dolphin
       kdePackages.ffmpegthumbs
-      tela-icon-theme
+      kdePackages.kdeconnect-kde
+
+      # office
+      libreoffice-qt6-fresh
+
+      # Games & Moza racing
+      prismlauncher
+      protonplus
+      steam
+      boxflat
+
+      # System utils
+      authenticator
+      adwsteamgtk
+      blueman
+      bottles
+      corectrl
+      file-roller
+      qalculate-qt
+      quickshell
+      tuigreet
+      nmgui
+      hyprlock
+      pavucontrol
+      pcmanfm-qt
+      nh
+      krusader
+
+      # Unity3D
+      unityhub
+      seahorse
+
+      # ----------------------------------------------------------------
+      # CLI
+      # ----------------------------------------------------------------
+
+      # Editors
+      helix
+      micro
+
+      # Multimedia
+      cava
+      ffmpeg
+      ldacbt
+      mpd-mpris
+      pamixer
+      playerctl
+      rmpc
+
+      # System libs
+      dbus
+      glib
+      glibc
+      gobject-introspection
+      libnotify
+      wtype
+
+      # Qt6 libs
+      qt6.qtbase
+      qt6.qtdeclarative
+      qt6.qtmultimedia
+      qt6.qtshadertools
+      qt6.qtwayland
+
+      # Python
+      (python313.withPackages (ps: with ps; [ tkinter-gl ]))
+
+      # files & archives
+      coreutils-full
+      dust
+      p7zip
+      poppler
+      unzip
+      wget
+      zip
+
+      # Wayland — screenshots / clipboard
+      cliphist
+      grim
+      slurp
+      wl-clipboard
+
+      # Daliy utils
+      appimage-run
+      bat
+      btop-rocm
+      browsh
+      chafa
+      clinfo
+      cmatrix
+      ddcutil
+      fastfetch
+      jq
+      lsd
+      mdcat
+      mdr
+      pipes
+      w3m
+      yazi
+      zellij
+
+      taplo
+
+      # ----------------------------------------------------------------
+      # AMD GPU — ROCm
+      # ----------------------------------------------------------------
+      libdrm
+      libGL
+      libpulseaudio
+      libva
+      libvdpau
+      mesa
+      mesa-demos
+      vulkan-loader
+      vulkan-validation-layers
+      wayland
+      rocmPackages.rocminfo
+      rocmPackages.rocm-smi
+      rocmPackages.rocm-runtime
+      rocmPackages.hipcc
+      rocmPackages.hipblas
+      rocmPackages.rocm-device-libs
+
+      # ----------------------------------------------------------------
+      # Disks & file systems
+      # ----------------------------------------------------------------
+      kbd
+      udisks2
+      udiskie
+      ntfs3g
+      exfat
+
+      # ----------------------------------------------------------------
+      # Themes & icons
+      # ----------------------------------------------------------------
+      gsettings-desktop-schemas
+      gnome-themes-extra
       rose-pine-cursor
-      stylix
+      rose-pine-hyprcursor
+      tela-icon-theme
     ])
   
     # UNSTABLE
     ++ (with unstablePkgs; [
-      wallust
+      matugen
 
       go
 
@@ -137,10 +248,11 @@
     wrapperFeatures.gtk = true;
   };
 
-  environment.etc."hypr/plugins.conf".text = ''
-    plugin = ${unstablePkgs.hyprlandPlugins.hy3}/lib/libhy3.so
-    plugin = ${unstablePkgs.hyprlandPlugins.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so
-  '';
+  # environment.etc."hypr/plugins.conf".text = ''
+  #   plugin = ${unstablePkgs.hyprlandPlugins.hy3}/lib/libhy3.so
+  #   plugin = ${unstablePkgs.hyprlandPlugins.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so
+  # '';
+
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -307,5 +419,5 @@
     options = "--delete-older-than 10d";
   };
 
-  system.stateVersion = "25.11";
+  system.stateVersion = "23.05";
 }

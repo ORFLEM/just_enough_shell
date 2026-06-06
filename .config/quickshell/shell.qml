@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Shapes
 import "roundCorners"
 import "bar"
+import "navbar"
 import "helpers"
 import "btime"
 import "bar/components"
@@ -12,13 +13,13 @@ import "power"
 import "notifications"
 import "launcher"
 import "wallpaper"
-// import "scrinpicker"
-// add under this comment import with plugins
+import "screenpicker"
 
 ShellRoot {
+    id: root
     FileView {
         id: colors
-        path: Qt.resolvedUrl("./colors.json")
+        path: darkTheme ? Qt.resolvedUrl("./colors.json") : Qt.resolvedUrl("./colors_light.json")
         watchChanges: true
         onFileChanged: reload()
         JsonAdapter {
@@ -31,6 +32,7 @@ ShellRoot {
             property string font
             property string fontDark
             property string accent
+            property string accent2
         }
     }
     
@@ -61,42 +63,17 @@ ShellRoot {
     }
     
     property bool playerOpen:     false
+    property bool calOpen:        false
+    property bool scrpicOpen:     false
     property bool powerOpen:      false
     property bool launchOpen:     false
     property bool wallPickerOpen: false
     property int  wallpaperType:  1
-    property string wallShaderName: "bg"
-
-    // this you can change
-    property int  mainRad:        10
-    property bool barOnTop:       true
-    property bool minibar:        false
+    property string wallShaderName: ""
 
     property string wm: Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway"
 
-    Process {
-        id: wallStateProc
-        running: false
-        command: [
-            Quickshell.env("HOME") + "/.config/quickshell/wallpaper/wallpaper-picker",
-            "get-state"
-        ]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                var raw = text.trim()
-                if (!raw) return
-                try {
-                    var s = JSON.parse(raw)
-                    wallpaperType  = s.wallType
-                    if (s.shader && s.shader !== "") wallShaderName = s.shader
-                } catch(e) { console.warn("[shell] wallState:", e) }
-            }
-        }
-    }
-    Component.onCompleted: {
-        wallStateProc.running = false
-        wallStateProc.running = true
-    }
+    
 
     Loader {
         id: barLoader
@@ -130,6 +107,10 @@ ShellRoot {
     PlayerPopup {
         isOpen: playerOpen
     }
+    
+    CalPopup {
+        isOpen: calOpen
+    }
 
     PopupSys {}
 
@@ -141,11 +122,7 @@ ShellRoot {
 
     Variables { id: vars }
 
-    // Screenshot {
-    //     id: scrinPicker
-    // }
-
-    // add under this comment your plugins
+    Screenshot { id: screenpicker }
 
     IpcHandler {
         target: "root"
@@ -162,16 +139,19 @@ ShellRoot {
         function togglePlayer() {
             playerOpen = !playerOpen
         }
+        function toggleCal() {
+            calOpen = !calOpen
+            Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/cal reset"])
+        }
         function togglePower() {
             powerOpen = !powerOpen
         }
         function toggleLaunch() {
             launchOpen = !launchOpen
         }
-        function scrinpicker(): void {
-            scrinPicker.activate()
+        function screenpicker(): void {
+            screenpicker.activate()
         }
-        // add under this comment your ipc for plugins
     }
 
     property int size: mainRad > 0 ? mainRad + 6 : 0
@@ -194,5 +174,75 @@ ShellRoot {
         cornerDirection: ScreenCorner.BottomRight
         cornerWidth: size; cornerHeight: size
         cornerColor: "#000000"
+    }
+
+    property var pluginModel: []
+
+    // Убираем весь блок Process и configWatcher, вставляем:
+
+    FileView {
+        id: tomlWatcher
+        path: Qt.resolvedUrl("./config.toml")
+        watchChanges: true
+        onFileChanged: generateJsonConfig()
+        Component.onCompleted: generateJsonConfig()
+    }
+    
+    Process {
+        id: taploProcess
+        command: ["sh", "-c", "taplo get -f ~/.config/quickshell/config.toml -o json > ~/.cache/qs_config.json"]
+        running: true
+        function reload() {
+            if (running) terminate();
+            running = true;
+        }
+    }
+
+    // Функция, запускающая генерацию JSON
+    function generateJsonConfig() {
+        taploProcess.reload();
+    }
+    
+    FileView {
+        id: configView
+        path: Quickshell.env("HOME") + "/.cache/qs_config.json"
+        watchChanges: true
+        onFileChanged: reload()
+        JsonAdapter {
+            id: configJson
+            // Вместо плоских свойств создаём вложенный объект "settings",
+            // структура которого будет зеркально отражать json-файл.
+            property JsonObject settings: JsonObject {
+                property int mainRad: 10
+                property bool barOnTop: true
+                property bool minibar: false
+                property int barHeight: 30
+                property int fontSize: 17
+                property string fontFamily: "Mononoki Nerd Font Propo"
+                property bool darkTheme: true
+            }
+            property list<JsonObject> plugin: []
+        }
+    }
+    property int mainRad: configJson.settings.mainRad
+    property bool barOnTop: configJson.settings.barOnTop
+    property bool minibar: configJson.settings.minibar
+    property int fontSize: configJson.settings.fontSize
+    property int barHeight: configJson.settings.barHeight + 6
+    property string fontFamily: configJson.settings.fontFamily
+    property bool darkTheme: configJson.settings.darkTheme
+    Behavior on mainRad { NumberAnimation { duration: 200 } }
+    
+    Repeater {
+        model: configJson.plugin
+        delegate: LazyLoader {
+            id: pluginLoader
+            active: false
+            source: Qt.resolvedUrl(modelData.source)
+    
+            Component.onCompleted: {
+                pluginLoader.active = true;
+            }
+        }
     }
 }

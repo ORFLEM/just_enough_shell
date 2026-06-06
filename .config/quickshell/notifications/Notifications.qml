@@ -144,7 +144,7 @@ PanelWindow {
 							if (isNew) {
 								parentWindow.knownNotifications[notificationId] = Date.now()
 								slideInAnimation.start()
-								Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.mp3"])
+								Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.ogg"])
 							} else {
 								// Уже известное — сразу показываем на месте и запускаем таймеры
 								x = 0
@@ -316,7 +316,7 @@ PanelWindow {
 											}
 											font.pixelSize: 12
 											font.weight: Font.Bold
-											font.family: "Mononoki Nerd Font Propo"
+											font.family: fontFamily
 											color: col.onPrimary
 										}
 									}
@@ -347,7 +347,7 @@ PanelWindow {
 									text: (modelData && modelData.appName) || "Unknown"
 									font.pixelSize: 15
 									font.weight: Font.Bold
-									font.family: "Mononoki Nerd Font Propo"
+									font.family: fontFamily
 									anchors.centerIn: parent
 									color: col.accent
 								}
@@ -378,7 +378,7 @@ PanelWindow {
 									text: Qt.formatTime(new Date(), "hh:mm")
 									font.pixelSize: 15
 									font.weight: 700
-									font.family: "Mononoki Nerd Font Propo"
+									font.family: fontFamily
 									anchors.centerIn: parent
 									color: col.font
 								}
@@ -391,7 +391,7 @@ PanelWindow {
 							text: (modelData && modelData.summary) || "No Summary"
 							font.pixelSize: 16
 							font.weight: Font.Bold
-							font.family: "Mononoki Nerd Font Propo"
+							font.family: fontFamily
 							color: col.accent
 							elide: Text.ElideRight
 							maximumLineCount: 1
@@ -403,7 +403,7 @@ PanelWindow {
 							Layout.fillHeight: true
 							text: (modelData && modelData.body) || "No content"
 							font.pixelSize: 14
-							font.family: "Mononoki Nerd Font Propo"
+							font.family: fontFamily
 							color: col.font
 							wrapMode: Text.Wrap
 							maximumLineCount: 3

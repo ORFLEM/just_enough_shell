@@ -1,6 +1,7 @@
 # Конфиг для SwayFX
 #--- МОДИФИКАТОР ----------------------------------------------------------------------
 set $mod Mod4
+set $screenPicker Home
 
 #--- ПЕРЕМЕННЫЕ -----------------------------------------------------------------------
 set $term foot
@@ -12,16 +13,7 @@ exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
-exec openrgb --profile orflem
-exec fcitx5 -d --replace
 exec mpd-mpris
-
-exec zen-beta
-exec Telegram
-# exec boxflat
-# exec steam
-exec qbittorrent-nox
-exec foot rmpc
 
 exec qs -d
 exec ~/.config/sway/opacity-changer.sh
@@ -39,7 +31,8 @@ smart_corner_radius enable
 blur enable
 blur_xray true
 blur_passes 3
-blur_radius 2
+blur_radius 3
+blur_saturation 0.85
 
 shadows off
 shadows_on_csd off
@@ -171,7 +164,7 @@ bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaym
 # Power menu / дашборд
 bindsym --to-code $mod+p exec qs ipc call root togglePower
 # bindsym --to-code $mod+l exec eww open --toggle dashboard
-bindsym --to-code $mod+w exec qs kill && qs -d
+bindsym --to-code $mod+w exec sh -c "pkill -f quickshell; sleep 1.5; qs -d > ~/qs_path.log 2>&1"
 
 # Медиа
 bindsym Alt+F9  exec pamixer -t
@@ -187,8 +180,8 @@ bindsym --locked Mod1+Prior exec ddcutil --bus 11 setvcp 10 + 5
 bindsym --locked Mod1+Next  exec ddcutil --bus 11 setvcp 10 - 5
 
 # Скриншоты (оригинальный рабочий вариант)
-bindsym Home exec sh -c 'FILE=~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_screenshot.png; pkill -f ~/.config/sway/opacity-changer.sh && grim -g "$(slurp -b 3d3d3dCC -c CCCCCCCC)" - | tee "$FILE" | wl-copy && [ -s "$FILE" ] || rm -f "$FILE" && ~/.config/sway/opacity-changer.sh'
-bindsym --locked Shift+Home exec grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy
+bindsym $screenPicker exec sh -c 'pkill -f ~/.config/sway/opacity-changer.sh && qs ipc call root screenpicker && ~/.config/sway/opacity-changer.sh'
+bindsym --locked Shift+$screenPicker exec sh -c "grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy"
 
 # Colorpicker
 bindsym --to-code $mod+n exec hyprpicker -a

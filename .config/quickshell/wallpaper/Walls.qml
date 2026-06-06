@@ -17,15 +17,36 @@ WlrLayershell {
     }
     color: "#1b1b1b"
 
+    property string shaderName: ""
+
+    Process {
+        id: wallStateProc
+        running: false
+        command: [
+            Quickshell.env("HOME") + "/.config/quickshell/wallpaper/wallpaper-picker",
+            "get-state"
+        ]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var raw = text.trim()
+                if (!raw) return
+                try {
+                    var s = JSON.parse(raw)
+                    wallpaperType = s.wallType
+                    if (s.shader && s.shader !== "") wallpaper.shaderName = s.shader
+                    console.log(wallpaper.shaderName)
+                } catch(e) { console.warn("[shell] wallState:", e) }
+            }
+        }
+    }
+    Component.onCompleted: {
+        wallStateProc.running = false
+        wallStateProc.running = true
+    }
     property int type: wallpaperType
     property string staticBust: ""
     property string videoBust: ""
     property string videoPath: "file://" + Quickshell.env("HOME") + "/.cache/walls/live-bg.mp4"
-
-    // Активный шейдер — имя файла без расширения, напр. "bg"
-    // Меняется через: qs ipc call root wallShader "имя"
-    // QML подхватывает через Binding на wallShaderName из ShellRoot
-    property string shaderName: wallShaderName
 
     onTypeChanged: {
         if (type === 3) {
@@ -74,32 +95,48 @@ WlrLayershell {
     }
 
     // --- Шейдер ---
+    ShaderEffectSource {
+        id: shaderSource
+        anchors.fill: parent
+        live: true
+        sourceItem: Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+        }
+    }
+    
     ShaderEffect {
         id: shaderEffect
         visible: type === 2
         anchors.fill: parent
-
-        property color accent:  col.accent
-        property color dark:    "#3b3b3b"
-        property color mid:     col.background1
-        property vector2d resolution: Qt.vector2d(width, height)
+    
         property real time: 0.0
-        property real patternScale: 3.2
-        property real evolutionSpeed: 0.004
-
-        // Путь к .qsb — берём из папки шейдеров рядом с Walls.qml
-        // Если shaderName пустой — фолбэк на дефолтный bg
-        fragmentShader: Qt.resolvedUrl(
-            "shaders/" + (wallpaper.shaderName !== "" ? wallpaper.shaderName : "bg") + ".frag.qsb"
-        )
-
-        function updateShader() {
-            // Принудительно обновляем fragmentShader при смене имени
-            var s = fragmentShader
-            fragmentShader = ""
-            fragmentShader = s
+        property var source: shaderSource
+    
+        // Счётчик для гарантированного обновления URL
+        property int reloadCounter: 0
+    
+        // Вычисляем URL с учётом имени и счётчика
+        property url shaderUrl: {
+            var name = wallpaper.shaderName
+            if (name === "") name = "aurora_drift"
+            var base = Qt.resolvedUrl("wallpapers/shaders/" + name + ".qsb")
+            // Добавляем фиктивный параметр, чтобы URL менялся и кэш сбрасывался
+            return base + "?r=" + reloadCounter
         }
-
+    
+        fragmentShader: shaderUrl
+    
+        // При изменении имени шейдера инкрементируем счётчик
+        Connections {
+            target: wallpaper
+            function onShaderNameChanged() {
+                if (wallpaper.type === 2) {
+                    shaderEffect.reloadCounter++
+                }
+            }
+        }
+    
         NumberAnimation on time {
             from: 0; to: 1000
             duration: 1000000
@@ -107,7 +144,7 @@ WlrLayershell {
             running: type === 2
         }
     }
-
+    
     // --- Видео ---
     MediaPlayer {
         id: player

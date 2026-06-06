@@ -42,31 +42,50 @@ Rectangle {
 
 - For hover effects, use:
 ```qml
-Rectangle {
-    id: <some_meaningful_name>
-    anchors.fill: parent
-    anchors.margins: 2
-    radius: mainRad - <margins_plus_margin_in_this_module>
-    color: "transparent"
-    Behavior on color { ColorAnimation { duration: 200 } }
-}
-// code
-MouseArea {
-    anchors.fill: parent
-    hoverEnabled: true
-    onEntered: {
-        <some_meaningful_name>.color = col.accent
+Item {
+    id: <item_name>
+    property bool hovered: false
+    Rectangle {
+        anchors.fill: parent
+        radius: mainRad - 3
+        opacity: 0.65
+        gradient: Gradient {
+            orientation: Gradient.Horizontal
+            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+        }
     }
-    onExited: {
-        <some_meaningful_name>.color = "transparent"
+    Rectangle {
+        id: <some_meaningful_name>
+        anchors.fill: parent
+        anchors.margins: 2
+        radius: mainRad - <margins_plus_margin_in_this_module>
+        color: <item_name>.hovered ? col.accent : "transparent" 
+        Behavior on color { ColorAnimation { duration: 200 } }
+    }
+    // code
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
+            <item_name>.hovered = true
+        }
+        onExited: {
+            <item_name>.hovered = false
+        }
     }
 }
 ```
 
+#### background you can use other, in this it's example with button bcakgrounds
+
 - For radii, use radius: mainRad. If you use margins, write `radius: mainRad - <margin_value> in the following block`.
 - All colours must be taken from the global col object (defined in `colors.json` and accessible via `shell.qml`).
 - Also JES supported base16 themes (`base.base<01-16>`)
-- Main font: `Mononoki Nerd Font Propo` size **17px**.
+- Font is set using **fontFamily** and **fontSize**
+- JES has 2 accent colors – dark and light
 
 ## Passing data to the interface
 - For continuous streams (recommended for performance) use `JsonListen`. For periodic one‑time requests use `JsonPoll`.

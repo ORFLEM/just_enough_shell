@@ -8,6 +8,8 @@ Item {
     property alias text: animatedText.text
     property alias color: animatedText.color
     property alias font: animatedText.font
+    anchors.verticalCenter: parent.verticalCenter
+
 
     function originX() {
         var ret = container.width - animatedText.implicitWidth
@@ -36,6 +38,7 @@ Item {
         id: animatedText
         width: implicitWidth
         elide: Text.ElideNone
+        anchors.verticalCenter: parent.verticalCenter
         onImplicitWidthChanged: restartAnimation()
     }
 

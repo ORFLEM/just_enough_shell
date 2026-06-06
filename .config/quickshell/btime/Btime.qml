@@ -11,6 +11,7 @@ WlrLayershell {
     implicitWidth: 12 + textWeekday.width
     implicitHeight: 120
     color: "transparent"
+    exclusiveZone: minibar ? -1 : 0
     anchors {
         bottom: true
         right: true

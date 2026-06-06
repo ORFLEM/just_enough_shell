@@ -71,11 +71,12 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 ```
 1. Open ~/.config/quickshell/
 2. Copy the plugin folder into it
-3. Open shell.qml
-4. In the import section, add the plugin's module folder
-5. Below, where other modules are included, copy-paste the module name and add {} after it (space-separated)
+3. open config.toml
+4. add the following lines:
+   [[plugin]]
+   name = "plugin name"
+   source = "plugin_folder/plugin_main_file.qml"
+   active = true
 ```
-
-### For turning on/off plugins you can commenting line with "Plugin {}"
 
 ### [Detailed plugin creation guide](./plugins_eng.md)

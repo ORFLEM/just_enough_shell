@@ -96,6 +96,7 @@ WlrLayershell {
         height: 513
         anchors.centerIn: parent
         radius: mainRad
+        opacity: 0.85
         gradient: Gradient {
             orientation: Gradient.Horizontal
             GradientStop { position: 0.0; color: col.background3 }
@@ -121,7 +122,7 @@ WlrLayershell {
                 ShaderEffect {
                     anchors.fill: parent
                     property color accent: col.accent
-                    property color dark: "#2b2b2b"
+                    property color dark: col.backgroundAlt1
                     property color mid: col.background1
                     property vector2d resolution: Qt.vector2d(width, height)
                     property real time: 0.0
@@ -147,6 +148,7 @@ WlrLayershell {
                         Layout.fillWidth: true
                         height: 52
                         radius: mainRad - 3
+                        opacity: 0.85
                         gradient: Gradient {
                                     orientation: Gradient.Horizontal
                                     GradientStop { position: 0.0; color: col.background3 }
@@ -165,16 +167,16 @@ WlrLayershell {
                             Text {
                                 text: currentTab === 1 ? "󰅍" : ""
                                 color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 14
+                                font.family: fontFamily
+                                font.pixelSize: fontSize - 3
                             }
 
                             TextField {
                                 id: searchInput
                                 Layout.fillWidth: true
                                 color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 15
+                                font.family: fontFamily
+                                font.pixelSize: fontSize - 2
                                 placeholderText: currentTab === 1 ? "Clipboard..." : "Search..."
                                 placeholderTextColor: col.font
                                 background: Item {}
@@ -213,6 +215,7 @@ WlrLayershell {
                         Layout.fillWidth: true
                         height: 36
                         radius: mainRad - 3
+                        opacity: 0.85
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
                             GradientStop { position: 0.0; color: col.background3 }
@@ -241,8 +244,8 @@ WlrLayershell {
                                         anchors.centerIn: parent
                                         text: modelData
                                         color: currentTab === index ? col.fontDark : col.font
-                                        font.family: "Mononoki Nerd Font Propo"
-                                        font.pixelSize: 13
+                                        font.family: fontFamily
+                                        font.pixelSize: fontSize - 4
                                         font.bold: true
                                     }
 
@@ -279,6 +282,7 @@ WlrLayershell {
                         width: appList.width
                         height: 48
                         radius: mainRad - 3
+                        opacity: 0.95
                         property bool isCurrent: ListView.isCurrentItem
                         color: isCurrent ? col.accent : col.backgroundAlt1
                         Behavior on color { ColorAnimation { duration: 150 } }
@@ -299,8 +303,8 @@ WlrLayershell {
                                 Layout.fillWidth: true
                                 text: modelData.name ?? ""
                                 color: parent.parent.isCurrent ? col.fontDark : col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 14
+                                font.family: fontFamily
+                                font.pixelSize: fontSize - 2
                                 elide: Text.ElideRight
                             }
                         }
@@ -362,7 +366,7 @@ WlrLayershell {
                                 visible: modelData.type === "text"
                                 text: "󰅍"
                                 color: isCurrent ? col.fontDark : col.accent
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 24
                             }
 
@@ -370,8 +374,8 @@ WlrLayershell {
                                 Layout.fillWidth: true
                                 text: modelData.text ?? ""
                                 color: parent.parent.isCurrent ? col.fontDark : col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 13
+                                font.family: fontFamily
+                                font.pixelSize: fontSize - 3
                                 elide: Text.ElideRight
                                 maximumLineCount: modelData.type === "image" ? 1 : 2
                                 wrapMode: Text.WordWrap

@@ -11,7 +11,7 @@ Item {
     signal clicked()
     
     width: bg.width
-    height: 24
+    height: panel.height - 12
     
     Rectangle {
         id: bg
@@ -28,12 +28,12 @@ Item {
                 
         function getWidth() {
             switch(wsState) {
-                case "active": return 40
-                case "occupied": return 20
-                case "urgent": return 20
-                case "empty": return 20
+                case "active": return height * 2
+                case "occupied": return height
+                case "urgent": return height
+                case "empty": return height
                 case "invisible": return 0
-                default: return 20
+                default: return height
             }
         }
         
@@ -46,7 +46,7 @@ Item {
                 case "active": return col.accent
                 case "occupied": return col.font
                 case "urgent": return base.base09
-                case "empty": return base.base05
+                case "empty": return col.accent2
                 default: return "transparent"
             }
         }
@@ -65,8 +65,8 @@ Item {
                     default: return col.font
                 }
             }
-            font.family: "Mononoki Nerd Font Propo"
-            font.pixelSize: 17
+            font.family: fontFamily
+            font.pixelSize: fontSize
             font.weight: Font.Bold
             
             Behavior on color { ColorAnimation { duration: 200 } }

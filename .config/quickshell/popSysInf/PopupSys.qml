@@ -198,5 +198,49 @@ WlrLayershell {
             }
         }
 
+        // connected devices
+        Rectangle {
+            width: parent.width
+            height: vars.showConnect ? 16 : 0
+            clip: true
+            radius: 8
+            color: "transparent"
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+
+            Rectangle {
+                anchors.fill: parent
+                radius: parent.radius
+                opacity: 0.85
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop { position: 0.0; color: col.background3 }
+                    GradientStop { position: 0.05; color: col.background2 }
+                    GradientStop { position: 0.3; color: col.background1 }
+                    GradientStop { position: 0.7; color: col.background1 }
+                    GradientStop { position: 0.95; color: col.background2 }
+                    GradientStop { position: 1.0; color: col.background3 }
+                }
+            }
+
+            Item {
+                anchors.fill: parent
+                anchors.margins: 3
+
+                Text {
+                    anchors.centerIn: parent
+                    text: vars.bat.name == "null" ? "device was disconneted" :  "+ " + vars.bat.name
+                    color: col.accent
+                    font.family: "Mononoki Nerd Font Propo"
+                    font.pixelSize: 14
+                }
+            }
+        }
     }
 }

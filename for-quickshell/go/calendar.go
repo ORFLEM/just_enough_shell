@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	stateFile    = ".config/eww/calendar_state"
-	holidaysFile = ".config/eww/holidays.txt"
+	stateFile    = ".cache/qs_calendar_state"
+	holidaysFile = ".config/quickshell/holidays.txt"
 )
 
 var monthNames = []string{
-	"", "январь", "февраль", "март", "апрель", "май", "июнь",
-	"июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь",
+	"", "january", "february", "march", "april", "may", "june",
+	"july", "august", "septemder", "october", "november", "december",
 }
 
 type State struct {

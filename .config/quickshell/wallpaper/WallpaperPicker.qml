@@ -3,6 +3,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Io
 import QtQuick
+import QtQuick.Controls
 import "../helpers"
 
 WlrLayershell {
@@ -166,16 +167,16 @@ WlrLayershell {
                     Text {
                         text: "󰸉"
                         color: col.accent
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         font.weight: Font.Bold
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     Text {
                         text: "Wallpaper picker"
                         color: col.font
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         font.weight: Font.Bold
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -206,8 +207,9 @@ WlrLayershell {
                             anchors.centerIn: parent
                             text: cacheProc.running ? "󰑓" : "󰑐"
                             color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
+
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         MouseArea {
@@ -249,8 +251,9 @@ WlrLayershell {
                             anchors.centerIn: parent
                             text: "󰅗"
                             color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
+
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         MouseArea {
@@ -349,7 +352,7 @@ WlrLayershell {
                                 anchors.centerIn: parent
                                 text: modelData.label
                                 color: tabItem.isActive ? col.fontDark : col.font
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 15
                                 font.weight: Font.Bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
@@ -418,8 +421,9 @@ WlrLayershell {
                             id: searchIcon
                             text: "󰍉"
                             color: col.accent
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
+
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -434,7 +438,7 @@ WlrLayershell {
                                 anchors.verticalCenter: parent.verticalCenter
                                 text: "search..."
                                 color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 15
                                 visible: searchInput.text === ""
                             }
@@ -443,7 +447,7 @@ WlrLayershell {
                                 width: parent.width
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 15
                                 clip: true
                                 // Обновляем searchTerm — дебаунс сам вызовет reload()
@@ -487,7 +491,7 @@ WlrLayershell {
                     visible: root.loading || root.items.length === 0
                     text: root.loading ? "󰑐  update..." : "noting("
                     color: col.backgroundAlt2
-                    font.family: "Mononoki Nerd Font Propo"
+                    font.family: fontFamily
                     font.pixelSize: 15
                     font.weight: Font.Bold
                     z: 1
@@ -499,6 +503,66 @@ WlrLayershell {
                     // Меняем компонент при смене таба —
                     // предыдущий полностью уничтожается из дерева
                     sourceComponent: root.activeTab === "shader" ? shaderComp : gridComp
+                }
+                ClippingRectangle {
+                    // Общий скроллбар поверх всего
+                    ScrollBar {
+                        id: commonScrollBar
+                        policy: ScrollBar.AlwaysOn   // или AsNeeded, как нравится
+                        orientation: Qt.Vertical
+                        interactive: true
+                        z: 10
+                    parent: contentArea
+    
+                        // Размер и положение берём напрямую из Flickable (GridView/ListView)
+                        size: contentLoader.item ? contentLoader.item.height / contentLoader.item.contentHeight : 0
+                        position: contentLoader.item ? contentLoader.item.visibleArea.yPosition : 0
+                    active: contentLoader.item ? contentLoader.item.movingVertically : false
+    
+                        // Привязываем скроллбар к Flickable для прокрутки при перетаскивании
+                        Connections {
+                            target: contentLoader.item
+                            enabled: contentLoader.item !== null
+                            function onContentYChanged() {
+                                commonScrollBar.position = contentLoader.item.visibleArea.yPosition
+                            }
+                            function onContentHeightChanged() {
+                                commonScrollBar.size = contentLoader.item.height / contentLoader.item.contentHeight
+                            }
+                    }
+    
+                        // Обработка перетаскивания скроллбара
+                        onPositionChanged: {
+                            if (contentLoader.item && (pressed || moving)) {
+                                contentLoader.item.contentY = position * contentLoader.item.contentHeight
+                            }
+                    }
+    
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                    anchors.margins: 2
+    
+                        contentItem: Rectangle {
+                            implicitWidth: 6
+                            radius: 3
+                            color: commonScrollBar.pressed ? col.accent : Qt.darker(col.accent, 1.3)
+                            Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+    
+                        background: Rectangle {
+                            anchors.fill: parent
+                            radius: mainRad - 3
+                            opacity: 0.45
+                            gradient: Gradient {
+                                orientation: Gradient.Horizontal
+                                GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                                GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                                GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                                GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -580,7 +644,7 @@ WlrLayershell {
                                         anchors.centerIn: parent
                                         text: modelData.type === "video" ? "󰨜" : "󰸉"
                                         color: col.backgroundAlt2
-                                        font.family: "Mononoki Nerd Font Propo"
+                                        font.family: fontFamily
                                         font.pixelSize: 20
                                     }
                                 }
@@ -614,7 +678,7 @@ WlrLayershell {
                                 id: vidBadgeText
                                 anchors.centerIn: parent
                                 text: "󰨜 VIDEO"
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 9
                                 font.weight: Font.Bold
                                 color: "#fff"
@@ -635,7 +699,7 @@ WlrLayershell {
                                 id: cardIcon
                                 text: modelData.type === "video" ? "󰨜" : "󰸉"
                                 color: cardMa.containsMouse ? col.fontDark : col.accent
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 13
                                 anchors.verticalCenter: parent.verticalCenter
                                 Behavior on color { ColorAnimation { duration: 200 } }
@@ -645,7 +709,7 @@ WlrLayershell {
                                 width: parent.width - cardIcon.width - parent.spacing
                                 text: modelData.name
                                 color: cardMa.containsMouse ? col.fontDark : col.font
-                                font.family: "Mononoki Nerd Font Propo"
+                                font.family: fontFamily
                                 font.pixelSize: 11
                                 font.weight: Font.Bold
                                 elide: Text.ElideRight
@@ -715,8 +779,8 @@ WlrLayershell {
                         id: shIcon
                         text: "󰔯"
                         color: col.accent
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         font.weight: Font.Bold
                         anchors.verticalCenter: parent.verticalCenter
                         Behavior on color { ColorAnimation { duration: 200 } }
@@ -726,7 +790,7 @@ WlrLayershell {
                         width: parent.width - shIcon.width - shDot.width - 20
                         text: modelData.name
                         color: col.font
-                        font.family: "Mononoki Nerd Font Propo"
+                        font.family: fontFamily
                         font.pixelSize: 15
                         font.weight: Font.Bold
                         elide: Text.ElideRight

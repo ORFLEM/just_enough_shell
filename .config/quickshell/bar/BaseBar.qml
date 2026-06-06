@@ -3,6 +3,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Io
 import QtQuick
+import QtQuick.Layouts
 import "components"
 import "../helpers"
 import "../"
@@ -20,16 +21,16 @@ WlrLayershell {
     property string wm: ""
     property string cava: ""
     property string timed: ""
- 
+    property real coeff: mainRad > 16 ? 1.06363636 + 0.005 * mainRad : 1.1
+
     anchors {
         top: barOnTop
         bottom: !barOnTop
-        // left: true
-        // right: true
     }
     
-    implicitHeight: 36
-    implicitWidth: Screen.width <= 3840 ? (minibar ? 1920 : Screen.width) : (minibar ? 1920 : 3840)
+    implicitHeight: barHeight
+    implicitWidth: Screen.width <= 3840 ? (minibar ? 1920 : (mainRad > (height-6)/2 ? Screen.width + (height - 6)/2 - mainRad * coeff : Screen.width)) : (minibar ? 1920 : 3440)
+    Behavior on implicitWidth { NumberAnimation { duration: 100 } }
     color: "transparent"
     
     Rectangle {
@@ -69,8 +70,10 @@ WlrLayershell {
                 
                 // Launcher
                 Item {
+                    id: launcherItem
+                    property bool hovered: false
                     width: launcherContent.width + 4
-                    height: 24
+                    height: panel.height - 12
                     
                     Rectangle {
                         anchors.fill: parent
@@ -90,7 +93,7 @@ WlrLayershell {
                         anchors.fill: parent
                         anchors.margins: 2
                         radius: mainRad - 5
-                        color: "transparent"
+                        color: launcherItem.hovered ? col.accent : "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
@@ -99,31 +102,37 @@ WlrLayershell {
                         anchors.centerIn: parent
 
                         ClippingRectangle {
-                            radius: mainRad - 5
-                            height: parent.height
+                            radius: mainRad - 6
+                            height: panel.height - 16
                             width: height
                             color: "transparent"
                             Image {
-                                sourceSize.width: 40
-                                sourceSize.height: 40
+                                sourceSize.width: parent.height * 2
+                                sourceSize.height: parent.height * 2
+                                source: "file://" + Quickshell.env("HOME") + "/.config/quickshell/bar/images/hui.jpg" 
+                                height: parent.height
+                                width: height
+                            }
+                            Image {
+                                sourceSize.width: parent.height * 2
+                                sourceSize.height: parent.height * 2
                                 id: launcherIcon
                                 source: "file:///var/lib/AccountsService/icons/" + Quickshell.env("USER")
                                 height: parent.height
                                 width: height
-
                             }
                         }
                         Rectangle {
                             width: launchertext.width + 8
-                            height: 20
+                            height: panel.height - 16
                             color: "transparent"
                             Text {
                                 id: launchertext
                                 anchors.centerIn: parent
                                 text: Quickshell.env("USER")
-                                color: col.accent
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 17
+                                color: launcherItem.hovered ? col.fontDark : col.accent
+                                font.family: fontFamily
+                                font.pixelSize: fontSize
                                 font.weight: Font.Bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
@@ -133,24 +142,18 @@ WlrLayershell {
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: {
-                            launcherBg.color = col.accent
-                            launchertext.color = col.fontDark
-                        }
-                        onExited: {
-                            launcherBg.color = "transparent"
-                            launchertext.color = col.accent
-                        }
-                        onClicked: {
-                            launchOpen = !launchOpen
-                        }
+                        onEntered: launcherItem.hovered = true
+                        onExited: launcherItem.hovered = false
+                        onClicked: launchOpen = !launchOpen
                     }
                 }
 
                 // wallpaper picker
                 Item {
+                    id: wallItem
+                    property bool hovered: false
                     width: wallRow.width + 12
-                    height: 24
+                    height: panel.height - 12
                     
                     Rectangle {
                         anchors.fill: parent
@@ -170,7 +173,7 @@ WlrLayershell {
                         anchors.fill: parent
                         anchors.margins: 2
                         radius: mainRad - 5
-                        color: "transparent"
+                        color: wallItem.hovered ? col.accent : "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
@@ -182,9 +185,9 @@ WlrLayershell {
                         Text {
                             id: wallText
                             text: ""
-                            color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            color: wallItem.hovered ? col.fontDark : col.font
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -194,25 +197,17 @@ WlrLayershell {
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: {
-                            wallBg.color = col.accent
-                            wallText.color = col.fontDark
-                        }
-                        onExited: {
-                            wallBg.color = "transparent"
-                            wallText.color = col.font
-                        }
-                        onClicked: {
-                            wallPickerOpen = !wallPickerOpen
-                        }
+                        onEntered: wallItem.hovered = true
+                        onExited: wallItem.hovered = false
+                        onClicked: wallPickerOpen = !wallPickerOpen
                     }
                 }
                 
                 // Workspaces - переопределяется в наследниках
                 Item {
-                    id: workspacesContainer
+                    id: workspacesItem
                     width: workspacesRow.width + 4
-                    height: 24
+                    height: panel.height - 12
                     
                     Rectangle {
                         anchors.fill: parent
@@ -232,51 +227,50 @@ WlrLayershell {
                         radius: mainRad - 5
                         anchors.margins: 2
                         color: "transparent"
-                    Row {
-                        id: workspacesRow
-                        anchors.centerIn: parent
-                        spacing: 2
-                        clip: true
-                     
-                        Repeater {
-                            model: 5
+                        Row {
+                            id: workspacesRow
+                            anchors.centerIn: parent
+                            spacing: 2
+                            clip: true
                          
-                            WsButton {
-                                wsId: index + 1
-                                wsState: workspacesData["ws" + (index + 1)]?.class || "empty"
-                                icon: workspacesData["ws" + (index + 1)]?.icon || ""
+                            Repeater {
+                                model: 5
                              
-                                onClicked: {
-                                    changeWorkspace(wsId)
+                                WsButton {
+                                    wsId: index + 1
+                                    wsState: workspacesData["ws" + (index + 1)]?.class || "empty"
+                                    icon: workspacesData["ws" + (index + 1)]?.icon || ""
+                                 
+                                    onClicked: {
+                                        changeWorkspace(wsId)
+                                    }
+                                }
+                            }
+
+                            Repeater {
+                                model: 5
+
+                                WsButton {
+                                    wsId: index + 6
+                                    wsState: wsHover ? workspacesData["ws" + (index + 6)]?.class || "empty" : "invisible"
+                                    icon: workspacesData["ws" + (index + 6)]?.icon || ""
+
+                                    onClicked: {
+                                        changeWorkspace(wsId)
+                                    }
                                 }
                             }
                         }
-
-                        Repeater {
-                            model: 5
-
-                            WsButton {
-                                wsId: index + 6
-                                wsState: wsHover ? workspacesData["ws" + (index + 6)]?.class || "empty" : "invisible"
-                                icon: workspacesData["ws" + (index + 6)]?.icon || ""
-
-                                onClicked: {
-                                    changeWorkspace(wsId)
-                                }
-                            }
+                        HoverHandler {
+                            onHoveredChanged: wsHover = hovered
                         }
                     }
-                    HoverHandler {
-                        onHoveredChanged: wsHover = hovered
-                    }
                 }
-                }
-                
                 
                 // Active Window
                 Item {
                     width: awText.width + 12
-                    height: 24
+                    height: panel.height - 12
                     visible: activeWindow !== ""
                     
                     Rectangle {
@@ -291,8 +285,8 @@ WlrLayershell {
                         anchors.centerIn: parent
                         text: activeWindow
                         color: col.font
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         elide: Text.ElideRight
                         maximumLineCount: 1
                     }
@@ -306,9 +300,10 @@ WlrLayershell {
 
                 //weather
                 Item {
-                    id: weather
+                    id: weatherItem
+                    property bool hovered: false
                     width: weatherRow.width + 12
-                    height: 24
+                    height: panel.height - 12
 
                     Rectangle {
                         anchors.fill: parent
@@ -328,7 +323,7 @@ WlrLayershell {
                         anchors.fill: parent
                         anchors.margins: 2
                         radius: mainRad - 5
-                        color: "transparent"
+                        color: weatherItem.hovered ? col.accent : "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     Row {
@@ -339,20 +334,20 @@ WlrLayershell {
                         Text {
                             id: weatherIcon
                             text: vars.wthr.icon
-                            color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
+                            color: weatherItem.hovered ? col.fontDark : col.font
+                            font.family: fontFamily
                             font.weight: Font.bold
-                            font.pixelSize: 17
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                            font.pixelSize: fontSize
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         Text {
                             id: weatherText
                             text: vars.wthr.temp + "°C"
-                            color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
+                            color: weatherItem.hovered ? col.fontDark : col.font
+                            font.family: fontFamily
                             font.weight: Font.bold
-                            font.pixelSize: 17
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                            font.pixelSize: fontSize
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
                     }
                     MouseArea {
@@ -363,25 +358,17 @@ WlrLayershell {
                             Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/popup.sh wthr"])
                         }
 
-                        onEntered: {
-                            weatherBg.color = col.accent
-                            weatherIcon.color = col.fontDark
-                            weatherText.color = col.fontDark
-                        }
-
-                        onExited: {
-                            weatherBg.color = "transparent"
-                            weatherIcon.color = col.font
-                            weatherText.color = col.font
-                        }
+                        onEntered: weatherItem.hovered = true
+                        onExited: weatherItem.hovered = false
                     }
                 }
                 
                 // Time
                 Item {
-                    id: time
+                    id: timeItem
+                    property bool hovered: false
                     width: timeRow.width + 12
-                    height: 24
+                    height: panel.height - 12
 
                     JsonListen {
                         command: "~/.config/quickshell/scripts/timed show"
@@ -408,7 +395,7 @@ WlrLayershell {
                         anchors.fill: parent
                         anchors.margins: 2
                         radius: mainRad - 5
-                        color: "transparent"
+                        color: timeItem.hovered ? col.accent : "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
@@ -420,21 +407,23 @@ WlrLayershell {
                         Text {
                             id: timeIcon
                             text: "󱑎"
-                            color: col.accent
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            color: timeItem.hovered ? col.fontDark : col.accent
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
                         
                         Text {
                             id: timeText
-                            color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            color: timeItem.hovered ? col.fontDark : col.font
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             text: timed
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
                     }
                    
@@ -443,24 +432,16 @@ WlrLayershell {
                         hoverEnabled: true
                         acceptedButtons: Qt.AllButtons
 
-                        onEntered: {
-                            timeBg.color = col.accent
-                            timeIcon.color = col.fontDark
-                            timeText.color = col.fontDark
-                        }
-                            
-                        onExited: {
-                            timeBg.color = "transparent"
-                            timeIcon.color = col.accent
-                            timeText.color = col.font                            
-                        }
+                        onEntered: timeItem.hovered = true
+                        onExited: timeItem.hovered = false
                         
                         onClicked: function(mouse) {
                             if (mouse.button === Qt.LeftButton) {
                                 Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/timed t-d"])
                             }
                             if (mouse.button === Qt.RightButton) {
-                                Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/popup.sh cal"])
+                                calOpen = !calOpen
+                                Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/cal reset"])
                             }
                         }
                     }
@@ -476,8 +457,8 @@ WlrLayershell {
                 // cava
                 Item {
                     width: cavaText.width + 4
-                    height: 24
-                    visible: Screen.width >= 2560 && !minibar
+                    height: panel.height - 12
+                    visible: panel.width >= 2560
 
                     JsonListen {
                         id: cavaStream
@@ -509,17 +490,18 @@ WlrLayershell {
                             text: cava
                             color: col.font
                             anchors.centerIn: parent
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 19
-                            font.weight: Font.Bold
+                            font.family: fontFamily
+                            font.pixelSize: fontSize + ((fontSize % 2 === 0) ? 3 : 4)
                         }
                     }
                 }
 
                 // player
                 Item {
+                    id: playerItem
+                    property bool hovered: false
                     width: plrRow.width + 12
-                    height: 24
+                    height: panel.height - 12
                  
                     ClippingRectangle {
                         anchors.fill: parent
@@ -533,105 +515,114 @@ WlrLayershell {
                         }
                     }
                     
-                    Rectangle{
+                    Rectangle {
                         id: plrBg
                         anchors.fill: parent
                         radius: mainRad - 5
                         anchors.margins: 2
                         opacity: 0.65
-                        // gradient: Gradient {
-                        //     orientation: Gradient.Horizontal
-                        //     GradientStop { position: 0.0; color: col.backgroundAlt2 }
-                        //     GradientStop { position: 0.275; color: col.backgroundAlt1 }
-                        //     GradientStop { position: 0.725; color: col.backgroundAlt1 }
-                        //     GradientStop { position: 1.0; color: col.backgroundAlt2 }
-                        // }
-                        color: col.backgroundAlt1
+                        color: playerItem.hovered ? col.accent : col.backgroundAlt1
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
-                    Row {
+                    Item {
                         id: plrRow
                         anchors.centerIn: parent
                         opacity: 0.55
-                        
+                        height: fontSize
+                        width: plrText1.implicitWidth + sep1.implicitWidth + plrText2.implicitWidth + sep2.implicitWidth + titleLoader.width
+
                         Text {
                             id: plrText1
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
                             text: vars.plr.status
-                            color: col.accent
+                            color: playerItem.hovered ? col.fontDark : col.accent
                             font.family: "Eurostile Extended"
-                            font.pixelSize: 15
+                            font.pixelSize: fontSize - 2
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
-                        
+
                         Text {
+                            id: sep1
+                            anchors.left: plrText1.right
+                            anchors.verticalCenter: parent.verticalCenter
                             text: ' '
+                            font.family: "Eurostile Extended"
+                            font.pixelSize: fontSize
+                            color: playerItem.hovered ? col.fontDark : col.font
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
-                        
+
                         Text {
                             id: plrText2
+                            anchors.left: sep1.right
+                            anchors.verticalCenter: parent.verticalCenter
                             text: vars.plr.artist.length > 15 ? vars.plr.artist.substring(0, 15) + "…" : vars.plr.artist
-                            color: col.font
+                            color: playerItem.hovered ? col.fontDark : col.font
                             font.family: "Eurostile Extended"
-                            font.pixelSize: 15
+                            font.pixelSize: fontSize
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
-                        
+
                         Text {
+                            id: sep2
+                            anchors.left: plrText2.right
+                            anchors.verticalCenter: parent.verticalCenter
                             text: '      '
                             font.family: "Eurostile Extended"
+                            font.pixelSize: fontSize
+                            color: playerItem.hovered ? col.fontDark : col.font
+                            Behavior on color { ColorAnimation { duration: 200 } }
                         }
-                        
+
                         Loader {
-                                id: titleLoader
-                                width: vars.plr.title.length > (Screen.width >= 2560 && !minibar ? 35 : 25) ? (Screen.width >= 2560 && !minibar ? 380 : 220) : item ? item.implicitWidth : 0
-                                height: 20
-                                
-                                sourceComponent: vars.plr.title.length > 35 ? marqueeComp : textComp
-                                
-                                Component {
-                                    id: textComp
-                                    Text {
-                                        id: plrText3
-                                        text: vars.plr.title
-                                        color: col.font
-                                        font.family: "Eurostile Extended"
-                                        font.pixelSize: 15
-                                        Behavior on color { ColorAnimation { duration: 200 } }
-                                    }
+                            id: titleLoader
+                            anchors.left: sep2.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: parent.height
+                            width: vars.plr.title.length > (panel.width >= 2560 ? 35 : 25)
+                                   ? (panel.width >= 2560 ? 380 : 220)
+                                   : (item ? item.implicitWidth : 0)
+
+                            sourceComponent: vars.plr.title.length > 35 ? marqueeComp : textComp
+
+                            Component {
+                                id: textComp
+                                Text {
+                                    id: plrText3
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: vars.plr.title
+                                    color: playerItem.hovered ? col.fontDark : col.font
+                                    font.family: "Eurostile Extended"
+                                    font.pixelSize: fontSize
+                                    Behavior on color { ColorAnimation { duration: 200 } }
                                 }
-                                
-                                Component {
-                                    id: marqueeComp
-                                    MarqueeText {
-                                        id: plrMar3
-                                        width: 380
-                                        text: vars.plr.title
-                                        color: col.font
-                                        font.family: "Eurostile Extended"
-                                        font.pixelSize: 15
-                                    }
+                            }
+
+                            Component {
+                                id: marqueeComp
+                                MarqueeText {
+                                    id: plrMar3
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: 380
+                                    height: parent.height
+                                    text: vars.plr.title
+                                    color: playerItem.hovered ? col.fontDark : col.font
+                                    font.family: "Eurostile Extended"
+                                    font.pixelSize: fontSize
                                 }
                             }
                         }
+                    }
                     
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
                         acceptedButtons: Qt.AllButtons
 
-                        onEntered: {
-                            plrBg.color = col.accent
-                            plrText1.color = col.fontDark
-                            plrText2.color = col.fontDark
-                            if (titleLoader.item) titleLoader.item.color = col.fontDark
-                        }
-                        onExited: {
-                            plrBg.color = col.backgroundAlt1
-                            plrText1.color = col.accent
-                            plrText2.color = col.font
-                            if (titleLoader.item) titleLoader.item.color = col.font
-                        }
+                        onEntered: playerItem.hovered = true
+                        onExited: playerItem.hovered = false
                         onClicked: function(mouse) {
                             if (mouse.button === Qt.LeftButton) {
                                 Quickshell.execDetached(["sh", "-c", "playerctl play-pause"])
@@ -650,10 +641,12 @@ WlrLayershell {
                     }
                 }
 
-                // settings
+                // settings (audio, network, bluetooth)
                 Item {
+                    id: settingsItem
+                    property bool hovered: false
                     width: audioButton.width + networkButton.width + bluetoothButton.width + settingsIcon.width
-                    height: 24
+                    height: panel.height - 12
 
                     Rectangle {
                         anchors.fill: parent
@@ -674,7 +667,7 @@ WlrLayershell {
                         Rectangle {
                             id: audioButton
                             color: "transparent"
-                            implicitWidth: sttngsHover ? audioText.width + 12 : 0
+                            implicitWidth: settingsItem.hovered ? audioText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
                             clip: true
@@ -686,9 +679,9 @@ WlrLayershell {
                                 text: "󰗅"
                                 anchors.centerIn: parent
                                 id: audioText
-                                color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 17
+                                color: settingsItem.hovered ? col.fontDark : col.font
+                                font.family: fontFamily
+                                font.pixelSize: fontSize
                                 font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
@@ -696,16 +689,10 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: {
-                                    audioButton.color = col.accent
-                                    audioText.color = col.fontDark
-                                }
-                                    
-                                onExited: {
-                                    audioButton.color = "transparent"
-                                    audioText.color = col.font                            
-                                }
-
+                                onEntered: audioButton.color = col.accent
+                                onExited: audioButton.color = "transparent"
+                                // Но здесь тоже нужно убрать присвоение цвета тексту,
+                                // текст уже привязан к settingsItem.hovered
                                 onClicked: {
                                     Quickshell.execDetached(["sh", "-c", "pavucontrol"])
                                 }
@@ -715,7 +702,7 @@ WlrLayershell {
                         Rectangle {
                             id: networkButton
                             color: "transparent"
-                            implicitWidth: sttngsHover ? networkText.width + 12 : 0
+                            implicitWidth: settingsItem.hovered ? networkText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -725,9 +712,9 @@ WlrLayershell {
                                 text: "󰈀"
                                 anchors.centerIn: parent
                                 id: networkText
-                                color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 17
+                                color: settingsItem.hovered ? col.fontDark : col.font
+                                font.family: fontFamily
+                                font.pixelSize: fontSize
                                 font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
@@ -735,18 +722,11 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: {
-                                    networkButton.color = col.accent
-                                    networkText.color = col.fontDark
-                                }
-                                    
-                                onExited: {
-                                    networkButton.color = "transparent"
-                                    networkText.color = col.font                            
-                                }
+                                onEntered: networkButton.color = col.accent
+                                onExited: networkButton.color = "transparent"
 
                                 onClicked: {
-                                    Quickshell.execDetached(["sh", "-c", "foot nmtui"])
+                                    Quickshell.execDetached(["sh", "-c", "foot ~/.config/quickshell/scripts/recolor.sh"])
                                 }
                             }
                         }
@@ -754,7 +734,7 @@ WlrLayershell {
                         Rectangle {
                             id: bluetoothButton
                             color: "transparent"
-                            implicitWidth: sttngsHover ? bluetoothText.width + 12 : 0
+                            implicitWidth: settingsItem.hovered ? bluetoothText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -764,9 +744,9 @@ WlrLayershell {
                                 text: "󰂯"
                                 anchors.centerIn: parent
                                 id: bluetoothText
-                                color: col.font
-                                font.family: "Mononoki Nerd Font Propo"
-                                font.pixelSize: 17
+                                color: settingsItem.hovered ? col.fontDark : col.font
+                                font.family: fontFamily
+                                font.pixelSize: fontSize
                                 font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
@@ -774,15 +754,8 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: {
-                                    bluetoothButton.color = col.accent
-                                    bluetoothText.color = col.fontDark
-                                }
-                                    
-                                onExited: {
-                                    bluetoothButton.color = "transparent"
-                                    bluetoothText.color = col.font                            
-                                }
+                                onEntered: bluetoothButton.color = col.accent
+                                onExited: bluetoothButton.color = "transparent"
 
                                 onClicked: {
                                     Quickshell.execDetached(["sh", "-c", "blueman-manager"])
@@ -795,21 +768,20 @@ WlrLayershell {
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
                         text: "  "
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         font.weight: Font.bold
                         color: col.font
                     }
                     HoverHandler {
-                        onHoveredChanged: sttngsHover = hovered
+                        onHoveredChanged: settingsItem.hovered = hovered
                     } 
-                    
                 }
 
                 // volume
                 Item {
                     width: volText.width + 12
-                    height: 24
+                    height: panel.height - 12
 
                     Rectangle {
                         anchors.fill: parent
@@ -833,14 +805,14 @@ WlrLayershell {
                             text: vars.vol.sign
                             color: col.accent
                             font.family: "Mononoki Nerd font Propo"
-                            font.pixelSize: 17
+                            font.pixelSize: fontSize
                         }
 
                         Text {
                             text: vars.vol.vol + "%"
                             color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             font.weight: Font.bold
                         }
                     }
@@ -863,7 +835,7 @@ WlrLayershell {
                 // Keyboard Layout
                 Item {
                     width: kbRow.width + 12
-                    height: 24
+                    height: panel.height - 12
                    
                     Rectangle {
                         anchors.fill: parent
@@ -886,16 +858,16 @@ WlrLayershell {
                         Text {
                             text: "󰌏"
                             color: col.accent
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         
                         Text {
                             text: kbLayout
                             color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -904,8 +876,10 @@ WlrLayershell {
                 
                 // Power
                 Item {
+                    id: powerItem
+                    property bool hovered: false
                     width: powerText.width + 12
-                    height: 24
+                    height: panel.height - 12
                     
                     Rectangle {
                         anchors.fill: parent
@@ -925,34 +899,26 @@ WlrLayershell {
                         anchors.fill: parent
                         anchors.margins: 2
                         radius: mainRad - 5
-                        color: "transparent"
+                        color: powerItem.hovered ? col.accent : "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
                     Text {
                         id: powerText
                         anchors.centerIn: parent
-                        text: ""
-                        color: col.font
-                        font.family: "Mononoki Nerd Font Propo"
-                        font.pixelSize: 17
+                        text: vars.bat.name == "null" ? "" : ( panel.width >= 2560 ? vars.bat.name + "  " + vars.bat.charge + "% " + vars.bat.icon : vars.bat.charge + "% " + vars.bat.icon )
+                        color: powerItem.hovered ? col.fontDark : col.font
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
                     
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: {
-                            powerBg.color = col.accent
-                            powerText.color = col.fontDark
-                        }
-                        onExited: {
-                            powerBg.color = "transparent"
-                            powerText.color = col.font
-                        }
-                        onClicked: {
-                            powerOpen = !powerOpen
-                        }
+                        onEntered: powerItem.hovered = true
+                        onExited: powerItem.hovered = false
+                        onClicked: powerOpen = !powerOpen
                     }
                 }
             }

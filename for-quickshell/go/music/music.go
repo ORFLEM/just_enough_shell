@@ -18,8 +18,8 @@ var (
 	currentArt = filepath.Join(cacheDir, "current_art.jpg")
 
 	lastOutput  string
+	lastTrackKey string
 	lastURL     string
-	lastTrackID string
 	lastArtPath string
 	lastArtVer  int64
 	cooldown    time.Time
@@ -132,61 +132,47 @@ func urlDecode(s string) string {
 	return b.String()
 }
 
-func getAndOutput(force bool, statusOnly bool) {
-	if !statusOnly && !force && time.Now().Before(cooldown) {
-		return
-	}
+func getAndOutput(force bool, statusOnly bool, artist, title, artURL string) {
+    if !statusOnly && !force && time.Now().Before(cooldown) {
+        return
+    }
+    status, _ := playerctl("status") // оставь, если хочешь быть уверен
+    if status == "" {
+        emit(Output{Art: defaultArt, Status: "󰐊", Ver: lastArtVer})
+        return
+    }
 
-	status, err := playerctl("status")
-	if err != nil || status == "" {
-		out := Output{Art: defaultArt, Status: "󰐊", Ver: lastArtVer}
-		emit(out)
-		return
-	}
+    // Ключ трека
+    currentKey := artist + "\x00" + title
+    trackChanged := currentKey != lastTrackKey
+    if trackChanged {
+        lastTrackKey = currentKey
+        lastURL = ""
+        os.Remove(currentArt)
+    }
 
-	meta, err := playerctl("metadata", "--format",
-		"{{artist}}\x1f{{title}}\x1f{{mpris:trackid}}")
-	if err != nil {
-		return
-	}
-	parts := strings.SplitN(meta, "\x1f", 3)
-	if len(parts) != 3 {
-		return
-	}
-	artist, title, trackID := parts[0], parts[1], parts[2]
+    icon := "󰐊"
+    if status == "Playing" {
+        icon = "󰏤"
+    }
 
-	trackChanged := trackID != lastTrackID
-	if trackChanged {
-		lastTrackID = trackID
-		lastURL = ""
-		os.Remove(currentArt)
-	}
+    var artPath string
+    var artChanged bool
 
-	icon := "󰐊"
-	if status == "Playing" {
-		icon = "󰏤"
-	}
-
-	var artPath string
-	var artChanged bool
-
-	if statusOnly && !trackChanged {
-		// только play/pause — обложку не трогаем, ver не обновляем
-		// используем lastArtPath, а не currentArt — он валиден для file:// тоже
-		if lastArtPath != "" {
-			artPath = lastArtPath
-		} else {
-			artPath = defaultArt
-		}
-		artChanged = false
-	} else {
-		artURL, _ := playerctl("metadata", "--format", "{{mpris:artUrl}}")
-		artPath, artChanged = processArt(artURL)
-		if artChanged {
-			lastArtPath = artPath
-			lastArtVer = time.Now().UnixMilli()
-		}
-		cooldown = time.Now().Add(time.Second)
+    if statusOnly && !trackChanged && artURL == lastURL {
+        // реально ничего не изменилось
+        artPath = lastArtPath
+        if artPath == "" {
+            artPath = defaultArt
+        }
+        artChanged = false
+    } else {
+        artPath, artChanged = processArt(artURL)
+        if artChanged {
+            lastArtPath = artPath
+            lastArtVer = time.Now().UnixMilli()
+        }
+        cooldown = time.Now().Add(time.Second)
 
 		// Если обложка пустая (mpris ещё не отдал artUrl) — эмитим что есть,
 		// ждём 150мс и делаем вторую попытку
@@ -233,10 +219,11 @@ func emit(out Output) {
 func main() {
 	os.MkdirAll(cacheDir, 0755)
 
-	getAndOutput(true, false)
+	getAndOutput(true, false, "", "", "")
 
 	cmd := exec.Command("playerctl", "--follow", "metadata", "--format",
-		"{{status}}\x1f{{mpris:trackid}}")
+    "{{status}}\x1f{{artist}}\x1f{{title}}\x1f{{mpris:artUrl}}")
+
 	cmd.Stderr = os.Stderr
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -258,21 +245,30 @@ func main() {
 				line := carry[:nl]
 				carry = carry[nl+1:]
 
-				parts := strings.SplitN(line, "\x1f", 2)
+				parts := strings.SplitN(line, "\x1f", 4)
+				newArtist := ""
 				newStatus := ""
-				newTrackID := ""
+				newTitle := ""
+				newArtURL := ""
 				if len(parts) >= 1 {
 					newStatus = parts[0]
 				}
-				if len(parts) == 2 {
-					newTrackID = parts[1]
+				if len(parts) >= 2 {
+					newArtist = parts[1]
 				}
-
-				trackChanged := newTrackID != lastTrackID
-				statusOnly := !trackChanged && (newStatus == "Playing" || newStatus == "Paused")
-				force := trackChanged
-
-				getAndOutput(force, statusOnly)
+				if len(parts) >= 3 {
+					newTitle = parts[2]
+				}
+				if len(parts) >= 4 {
+				    newArtURL = parts[3]
+				}
+				
+				trackChanged := (newArtist + "\x00" + newTitle) != lastTrackKey
+				artChanged  := newArtURL != lastURL
+				force       := trackChanged || artChanged
+				statusOnly  := !force && (newStatus == "Playing" || newStatus == "Paused")
+				
+				getAndOutput(force, statusOnly, newArtist, newTitle, newArtURL)
 			}
 		}
 		if err != nil {

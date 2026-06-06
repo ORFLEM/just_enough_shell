@@ -1,0 +1,12 @@
+[settings]
+mainRad = 10
+barOnTop = true
+minibar = false
+barHeight = 30
+fontSize = 17
+fontFamily = "Mononoki Nerd Font Propo"
+
+# [[plugin]]
+# name = "имя плагина"
+# source = "папка плагина/меин файл плагина.qml"
+# active = true

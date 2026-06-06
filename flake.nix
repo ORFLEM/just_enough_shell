@@ -2,32 +2,38 @@
   description = "NixOS flake для ORFLEMPC";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    # --- Nixpkgs ---
+    # В офлайн режиме: url переключается на path:/mnt/nixpkgs
+    # Сейчас онлайн — тянем с github, flake.lock фиксирует ревизию
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nur.url = "github:nix-community/NUR";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:nix-community/stylix/release-25.11";
+    stylix.url = "github:nix-community/stylix/master";
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    zwm = {
+      url = "git+https://codeberg.org/blx/zwm.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     persway.url = "github:saylesss88/persway";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nur, chaotic, home-manager, stylix, zen-browser, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, zen-browser, zwm, ... }@inputs:
   let
     system = "x86_64-linux";
-    host = "nixos";
-    username = "user";
+    host = "ORFLEMPC";
+    username = "orflem";
 
     specialArgs = { inherit inputs system host username; };
 
@@ -54,8 +60,8 @@
         { nixpkgs.overlays = [ nur.overlays.default ]; }
 
         # Сторонние модули
-        chaotic.nixosModules.default
         stylix.nixosModules.stylix
+        zwm.nixosModules.default
         home-manager.nixosModules.home-manager
 
         # Hyprland из unstable
@@ -65,6 +71,8 @@
             portalPackage = unstablePkgs.xdg-desktop-portal-hyprland;
           };
         }
+
+        # Substituters живут в nix-cache-hdd.nix — здесь не дублируем
       ];
     };
   };

@@ -1,10 +1,10 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=cccccc&label=Project%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Last%20commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=cccccc&label=Repository%20size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
-	<p>Built for daily use, not for screenshots.</p>
+	<p>Created for every day, not for show.</p>
 </div>
 
 ***
@@ -19,7 +19,7 @@
 	</tr>
 	<tr>
 		<td>OS</td>
-		<td>NixOS 25.11</td>
+		<td>NixOS 26.05</td>
 	</tr>
 	<tr>
 		<td>WM</td>
@@ -78,8 +78,8 @@
 		<td>Go binaries</td>
 	</tr>
 	<tr>
-		<td>Accent changer</td>
-		<td>wallust</td>
+		<td>theme changer</td>
+		<td>matugen</td>
 	</tr>
 </table>
 
@@ -88,80 +88,93 @@
 	<p>
   <i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
   <br>
-	<b>SwayFX / Hyprland / niri</b> are available, but <b>Niri</b> lacks blur and also has a workspace bug; the script works incorrectly with it.<br>
-  Also, by editing 3 stub scripts, you can run this interface on any wayland tiling WM that supports subscribe protocols for workspace data, active window, and keyboard layout.<br>
+	<b>SwayFX / Hyprland / niri</b> are supported, but <b>Niri</b> lacks blur and also has a bug with workspaces; the script works incorrectly with it.<br>
+  Also, by editing 3 stub scripts, you can run this interface on any Wayland tiling WM that supports subscribe protocols for workspace, active window, and layout data.<br>
   <br>
 	The project includes optimizations, but it hasn't been tested on low-end PCs.<br>
-	Go binaries are used for scripts where fast reading of large data streams is important, which reduces CPU idle load to 7-11% instead of 35-45%.<br>
+	Go binaries are used for scripts that require fast reading of large data streams, reducing CPU idle load to 7-11% instead of 35-45%.<br>
   <br>
-	<i>JES</i> was designed for desktop PCs, allowing better refinement for such wonderful machines.<br>
-	The author's monitor is UWQHD (3440x1440); tested resolutions: QHD (2560x1440) and above. (FHD (1920x1080) supports experementaly)<br>
-	On these, the panel has no issues with module placement.<br>
+	<i>JES</i> is designed for desktop PCs, allowing deeper refinement for such machines.<br>
+	The author's monitor is UWQHD (3440x1440); tested resolutions: FHD (1920x1080) and above. (FHD is natively supported, <b>but</b> when minibar is enabled, there may be bugs because the size does not adapt while the display model does.)<br>
+	On these resolutions, the panel has no module positioning issues.<br>
 	<br>
-	The project uses bash with custom output, updates faster for SwayFX because it's geared toward the author and his daily usage.<br>
-	This fact also gives the project continuity: as long as the author is busy with his own tasks, the project will continue to evolve and improve.<br>
+	The project uses bash with custom output and updates faster for SwayFX, as it is oriented toward the author's daily use.<br>
+	This fact also gives the project consistency: as long as the author works on their own tasks, the project will evolve and improve.<br>
 	<br>
-	For faster downloading, the author decided not to include video wallpapers, leaving a link to them instead.<br>
+	For faster distribution, the author decided not to include video wallpapers but instead provides a link to them.<br>
 	<br>
-	The `zenburn` theme <b>does not</b> apply to <i>JES</i> itself, only to programs, tty (NixOS only), and other things. <i>JES</i> has a built-in theme + support for base16 themes via base16.json.<br>
+	The <i>zenburn</i> theme <b>does not</b> apply to <i>JES</i> itself, only to programs, tty (NixOS only), and so on. JES has a built-in generated theme + base16 theme support via base16.json.<br>
 	<br>
-  <i>JES is not oriented toward trends, but toward practicality in daily use and convenience.</i><br>
+  <i>JES is focused not on trends, but on practicality in daily use and convenience.</i><br>
 	</p>
 	<h3>-- Future direction -- :</h3>
 	<p>
-	<b>[c]</b> Add support for <b>Hyprland</b><br>
-  <b>[i]</b> Add support for <b>Niri</b><br>
+	<b>[c]</b> Add <b>Hyprland</b> support<br>
+  <b>[c]</b> Add <b>Niri</b> support<br>
   <b>[p]</b> Create a settings installer<br>
 	<b>[c]</b> Support base16 themes in JES<br>
+  <b>[c]</b> Soft material you<br>
+	<b>[i]</b> Choose style: neutral / vibrant<br>
+	<b>[p]</b> Choose theme: dark / light<br>
+	<b>[c]</b> Display device info connected via kdeconnect<br>
+	<b>[i]</b> Migrate <b>Hyprland</b> to lua configs<br>
+	<b>[p]</b> Fix <b>Niri</b><br>
+	<b>[c]</b> Beautiful screen picker<br>
+	<b>[c]</b> Animated cover in player when no cover exists<br>
+	<b>[c]</b> Protection against static wallpapers with incorrect format in wallpaper picker<br>
 	<b>[p]</b> Create a weather widget<br>
-	<b>[p]</b> Create a calendar widget<br>
+	<b>[c]</b> Create a calendar widget<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
 
 > **Who is *JES* for?** 
-> - Desktop PCs with QHD+ resolution (the author uses UWQHD)
-> - SwayFX / Hyprland users (Niri in progress) or skilled enthusiasts (the shell itself works on any wm, but tiling binds and settings will be missing then)
+> - Desktop PCs with FHD+ resolution (author uses UWQHD)
+> - SwayFX / Hyprland / Niri users or enthusiasts with time for initial setup (the shell itself works on any WM, but tiling binds and settings will be absent)
 > - Those who value performance and architecture over trends
+> - Need a pleasant and CPU/GPU-light interface
 > 
-> If you fit into this audience — welcome. 
+> If you fit this audience — welcome. 
 > If not — maybe the project isn't for you, and that's fine.
 
 ```
-If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly)
+If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly with JES's theme auto‑generation).
 ```
 
 #### **Wallpapers from screenshots**: [click](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [*JES* structure](./structure_eng.md)
+## [*JES* structure](./structure.md)
 
-## -- What can be changed in *JES* -- :
-- `mainRad` - corner rounding, default is 10, works perfectly with values 0-15
-- `barOnTop` - places the control panel at the top, along with its adjacent widgets, enabled by default
-- `minibar` - hides cava, sets the panel width to 1920px, disabled by default
+## -- What can be changed in *JES* --:
+- `mainRad` - corner rounding, default is 10, works ideally with values 0-25
+- `barOnTop` - control panel at the top, as well as adjacent widgets, enabled by default
+- `minibar` - makes the panel 1920px wide, disabled by default
+- `BarHeight` - panel height, default is 30
+- `fontSize` - font size, default is 17
+- `fontFamily` - font, default is Mononoki Nerd Font Propo
 
 ## -- Keybindings -- :
-| keybind | action |
+| binding | action |
 | :--- | :---: |
 | `super + e` | file manager |
-| `super + q` | terminal |
+| `super + q` \| `super + enter` | terminal |
 | `super + o` | power buttons |
-| `super + 1` or `super + scrll up \| scrll dwn` | switch workspaces |
+| `super + 1` or `super + scroll up \| scroll down` | switch between workspaces |
 | `super + shift + 1` or `super + shift + arrows` | move programs between workspaces |
-| `super + rmb` | resize windows |
-| `super + shift + arrows` or `super + lmb` | move window |
+| `super + right mouse button` | resize windows |
+| `super + shift + arrows` or `super + left mouse button` | move window |
 | `super + arrows` | switch between windows |
-| `super + alt + lmb` | change window type: floating or tiling |
-| `super + w` | restart interface |
-| `super + s` | full-screen screenshot |
-| `super + d` | screenshot of selected area |
+| `super + alt + left mouse button` | change window type: floating or tiling |
+| `super + w` | restart the interface |
+| `home` | full-screen screenshot |
+| `shift + home` | screenshot of selected area |
 | `super` | open app launcher |
-| `super + g` | create group |
+| `super + g` | create a group |
 | `super + ctrl + g` | ungroup programs |
 | `super + tab` | previous workspace |
 | `capslock` or `shift + alt` | change language |
-| `shift + capslock` | toggle caps lock |
-| `super + space` | make window floating on top |
+| `shift + capslock` | enable \| disable caps lock |
+| `super + space` | toggle window always on top |
 | `ctrl + /` | play \| pause music |
 | `ctrl + .` | next track |
 | `ctrl + ,` | previous track |
@@ -171,6 +184,8 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 | `alt + F10` | volume down |
 | `alt + F11` | volume up |
 | `alt + F12` | open \| close player |
+
+### The screenshot key choice is at the top because not everyone has a convenient home key or may lack it (like the author's keyboard – print screen)
 
 ## -- What *JES* looks like -- :
 ### Desktop

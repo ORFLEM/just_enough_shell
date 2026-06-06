@@ -3,6 +3,8 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Io
 import QtQuick
+import QtQuick.Layouts
+import QtMultimedia
 import "../../"
 import "../../helpers"
 
@@ -10,17 +12,17 @@ WlrLayershell {
     id: playerPopup
     layer: WlrLayer.Top
     namespace: "player"
+    exclusiveZone: -1
 
     anchors {
-        top: barOnTop
-        bottom: !barOnTop
+        top: true
         right: true
     }
 
     property bool isOpen: false
     property bool showimage: false
     
-    implicitHeight: isOpen ? (showimage ? 530 : 230) : 0
+    implicitHeight: isOpen ? (barOnTop && !minibar && screen.width >= 3440 ? (showimage ? 530 + barHeight : 230 + barHeight) : (showimage ? 530 : 230)) : 0
     implicitWidth: showimage ? 689 : 389
     color: "transparent"
 
@@ -33,36 +35,31 @@ WlrLayershell {
 
     Item {
         anchors.fill: parent
-        anchors.topMargin: barOnTop ? (isOpen ? 6 : -6) : 0
-        anchors.bottomMargin: !barOnTop ? (isOpen ? 6 : -6) : 0
-        anchors.rightMargin: isOpen ? 0 : 8
-        Behavior on anchors.rightMargin {
-            NumberAnimation {
-                duration: 500
-                easing.type: Easing.OutCubic
-            }
-        }
-        Behavior on anchors.topMargin {
-            NumberAnimation {
-                duration: 350
-                easing.type: Easing.OutCubic
-            }
-        }
-
-        Behavior on opacity {
-            NumberAnimation { duration: 200 }
-        }
+        anchors.topMargin: barOnTop && !minibar && screen.width >= 3440 ? barHeight : 0
+        anchors.bottomMargin: isOpen ? 6 : 0
 
         Rectangle {
             id: popupRect
             anchors.fill: parent
             anchors.leftMargin: 6
-            anchors.rightMargin: 6
-            anchors.bottomMargin: barOnTop ? 6 : 0
-            anchors.topMargin: barOnTop ? 0 : 6
+            anchors.rightMargin: isOpen ? 6 : 16
+            anchors.topMargin: isOpen ? 6 : -6
             color: "transparent"
             radius: mainRad
             clip: true
+            
+            Behavior on anchors.rightMargin {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.OutCubic
+                }
+            }
+            Behavior on anchors.topMargin {
+                NumberAnimation {
+                    duration: 350
+                    easing.type: Easing.OutCubic
+                }
+            }
 
             // Обложка как фон + тёмный оверлей
             ClippingRectangle {
@@ -109,15 +106,47 @@ WlrLayershell {
                 radius: mainRad - 3
                 color: base.base02
 
+                MediaPlayer {
+                    id: animatedPlayer
+                    source: "file://" + Quickshell.env("HOME") + "/.config/quickshell/bar/images/sticker.webm"   // Укажи свой путь
+                    videoOutput: videoOutputpl
+                    loops: MediaPlayer.Infinite
+                    autoPlay: true
+                }
+
+                VideoOutput {
+                    id: videoOutputpl
+                    anchors.fill: parent
+                    fillMode: VideoOutput.PreserveAspectFit
+                    
+                    visible: playerPopup.isOpen && vars.plr.art === Quickshell.env("HOME") + "/.config/quickshell/bar/images/music.png"
+                    onVisibleChanged: {
+                        if (!visible) {
+                            animatedPlayer.stop()
+                        } else {
+                            animatedPlayer.play()
+                        }
+                    }
+                }
+                
                 Image {
                     asynchronous: true
                     smooth: true
                     mipmap: true
+                    visible: vars.plr.art !== Quickshell.env("HOME") + "/.config/quickshell/bar/images/music.png"
                     anchors.centerIn: parent
                     sourceSize.width: showimage ? 512 : 212
                     sourceSize.height: showimage ? 512 : 212
                     fillMode: Image.PreserveAspectCrop
                     source: vars.plr.art !== "" ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
+                    onSourceChanged: {
+                        if (vars.plr.art === Quickshell.env("HOME") + "/.config/quickshell/bar/images/music.png") {
+                            animatedPlayer.stop()
+                        } else {
+                            animatedPlayer.play()
+                        }
+                    }
+
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -159,21 +188,25 @@ WlrLayershell {
                         anchors.rightMargin: 3
                         spacing: 35
 
-                        MarqueeText {
+                        Item {
                             width: parent.width
-                            text: vars.plr.title
-                            color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
-                            font.weight: Font.Bold
+                            height: fontSize
+                            MarqueeText {
+                                width: parent.width
+                                text: vars.plr.title
+                                color: col.font
+                                font.family: fontFamily
+                                font.pixelSize: fontSize
+                                font.weight: Font.Bold
+                            }
                         }
 
                         Text {
                             width: parent.width
                             text: vars.plr.artist
                             color: col.font
-                            font.family: "Mononoki Nerd Font Propo"
-                            font.pixelSize: 17
+                            font.family: fontFamily
+                            font.pixelSize: fontSize
                             elide: Text.ElideRight
                             horizontalAlignment: Text.AlignHCenter
                         }
@@ -186,7 +219,7 @@ WlrLayershell {
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 36
+                    height: 40
                     radius: mainRad - 3
                     color: col.accent
                     opacity: 0.85
@@ -204,7 +237,7 @@ WlrLayershell {
 
                             delegate: Item {
                                 width: 48
-                                height: 30
+                                height: 34
 
                                 Rectangle {
                                     id: btnBg
@@ -220,7 +253,7 @@ WlrLayershell {
                                     anchors.centerIn: parent
                                     text: modelData.icon
                                     color: col.fontDark
-                                    font.family: "Mononoki Nerd Font Propo"
+                                    font.family: fontFamily
                                     font.pixelSize: 25
                                     Behavior on color { ColorAnimation { duration: 150 } }
                                 }
