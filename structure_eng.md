@@ -5,7 +5,7 @@
 - **Feature-based Modularity:** Each UI component (bar, launcher, notifications, etc.) is isolated in its own directory. Minimal cross-dependencies.
 - **Event-driven Model (Subscribe):** Long-lived connections via Go binaries subscribe to WM/MPD/system events, replacing inefficient bash polling loops.
 - **Stable Shell Layer:** Scripts are written in POSIX sh/bash. No dependencies on fish/zsh runtimes, plugins, or interactive features.
-- **Static theme + dynamic accent**: `base16.json` uses the zenburn palette. `colors.json` handles gradient backgrounds, text, and the accent extracted by `wallust` from wallpapers to highlight elements.
+- **Static theme + dynamic accent**: `base16.json` uses the zenburn palette. `colors.json` handles gradient backgrounds, text, accents, all colors extracted by `matugen` from wallpapers.
 
 ## -- Project Directory Tree & Module Roles --:
 ```
