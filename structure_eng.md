@@ -39,7 +39,7 @@
 | UI       | Quickshell (Qt Quick / QML)           | Rendering, animations, input      |
 | Backend  | Go 1.21+                              | High-volume data processing logic |
 | Shell    | Bash 5.x / POSIX sh                   | Core system logic                 |
-| Theme    | base16 + wallust                     | Static palette + dynamic accent   |
+| Theme    | base16 + matugen                     | Static palette + dynamic theme   |
 | Lock     | Hyprlock                              | Lock screen                       |
 | Audio    | PipeWire + wpctl/pavucontrol          | Mixing, MPRIS, Cava               |
 
@@ -56,7 +56,7 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 
 ## -- How to Extend --:
 1. **New Widget:** Create `widget_name/` directory → QML component + backend (Go/sh) → register in `shell.qml`.
-2. **Change theme**: Edit `wallust` config (you can also rewrite `base16.json`, but it barely affects the visual part of *JES*) → regenerate palette.
+2. **Change theme**: Edit `matugen` config (you can also rewrite `base16.json`, but it barely affects the visual part of *JES*) → regenerate palette.
 3. **Add WM Support:** Implement IPC parser matching existing script output spec → add to routing.
 4. **Optimization:** Replace polling script with Go binary using `subscribe` → update QML invocation.
 
