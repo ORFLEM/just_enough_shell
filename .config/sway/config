@@ -13,7 +13,16 @@ exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
+exec openrgb --profile orflem
+# exec_always fcitx5 -d --replace
 exec mpd-mpris
+
+exec zen-beta
+exec Telegram
+# exec boxflat
+# exec steam
+exec qbittorrent-nox
+exec foot rmpc
 
 exec qs -d
 exec ~/.config/sway/opacity-changer.sh
@@ -22,7 +31,7 @@ exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
 exec mkdir -p ~/Screenshots
 
-exec_always persway daemon -w --default-layout spiral
+exec_always ~/.config/sway/persway_start.sh
 
 #--- ДЕКОРАЦИИ ------------------------------------------------------------------------
 corner_radius 10
@@ -164,7 +173,7 @@ bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaym
 # Power menu / дашборд
 bindsym --to-code $mod+p exec qs ipc call root togglePower
 # bindsym --to-code $mod+l exec eww open --toggle dashboard
-bindsym --to-code $mod+w exec sh -c "pkill -f quickshell; sleep 1.5; qs -d > ~/qs_path.log 2>&1"
+bindsym --to-code $mod+w exec ~/.config/sway/qs_restart.sh
 
 # Медиа
 bindsym Alt+F9  exec pamixer -t
