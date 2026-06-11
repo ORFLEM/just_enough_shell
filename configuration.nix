@@ -206,6 +206,9 @@
       rose-pine-cursor
       rose-pine-hyprcursor
       tela-icon-theme
+
+      
+      inputs.driftwm.packages.${pkgs.stdenv.hostPlatform.system}.default
     ])
   
     # UNSTABLE
@@ -267,6 +270,10 @@
       xdg-desktop-portal-wlr
     ];
   };
+
+  services.displayManager.sessionPackages = [
+    inputs.driftwm.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ];
 
   # ============================================================
   # THEMING (stylix)

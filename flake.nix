@@ -15,12 +15,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    stylix.url = "github:nix-community/stylix/master";
+    stylix.url = "github:nix-community/stylix/release-26.05";
 
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    driftwm.url = "github:malbiruk/driftwm";
 
     zwm = {
       url = "git+https://codeberg.org/blx/zwm.git";
@@ -29,7 +31,7 @@
     persway.url = "github:saylesss88/persway";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, zen-browser, zwm, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, driftwm, zen-browser, zwm, ... }@inputs:
   let
     system = "x86_64-linux";
     host = "ORFLEMPC";
