@@ -157,7 +157,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 - `fontSize` - font size, default is 17
 - `fontFamily` - font, default is Mononoki Nerd Font Propo
 
-## (JES for DriftWM)[./DriftWM_eng.md]
+## [JES for DriftWM](./DriftWM_eng.md)
 
 ## -- Keybindings -- :
 | binding | action |

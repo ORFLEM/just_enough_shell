@@ -155,7 +155,7 @@
 - `fontSize` - размер шрифта, изначально 17
 - `fontFamily` - шрифт, изначально Mononoki Nerd Font Propo
 
-## (JES для DriftWM)[./DriftWM_rus.md]
+## [JES для DriftWM](./DriftWM_rus.md)
 
 ## -- Комбинации клавиш -- :
 | комбинация | что делает |
