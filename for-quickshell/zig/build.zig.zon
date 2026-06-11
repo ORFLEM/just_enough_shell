@@ -1,0 +1,15 @@
+.{
+    .name = "wayland-ipc",
+    .version = "0.1.0",
+    .dependencies = .{
+        .wayland = .{
+            .url = "https://github.com/ifreund/zig-wayland/archive/refs/tags/v0.13.0.tar.gz",
+            .hash = "1220b80ba9b441b5cf4fc473837e95ac143183075b14df8500638dbe8ed05ea46b49",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}

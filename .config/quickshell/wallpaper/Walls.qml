@@ -15,6 +15,7 @@ WlrLayershell {
         left: true
         right: true
     }
+    mask: Region { }
     color: "#1b1b1b"
 
     property string shaderName: ""

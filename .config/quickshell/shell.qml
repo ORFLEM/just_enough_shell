@@ -71,7 +71,6 @@ ShellRoot {
     property int  wallpaperType:  1
     property string wallShaderName: ""
 
-    property string wm: Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway"
 
     
 
@@ -83,11 +82,18 @@ ShellRoot {
             else if (wm === "sway")     source = Qt.resolvedUrl("bar/SwayBar.qml")
             else if (wm === "zwm")      source = Qt.resolvedUrl("bar/ZwmBar.qml")
             else if (wm === "mango")    source = Qt.resolvedUrl("bar/MangoBar.qml")
+            else if (wm === "driftwm")  source = Qt.resolvedUrl("bar/DriftBar.qml")
+            else                        source = Qt.resolvedUrl("bar/" + wm + "Bar.qml")
         }
     }
 
-    Walls {}
+    LazyLoader {
+        active: wm != "driftwm"
+        Walls {}
+    }
 
+    // Walls {}
+    
     Notifications {}
 
     LazyLoader {
@@ -213,6 +219,8 @@ ShellRoot {
             // Вместо плоских свойств создаём вложенный объект "settings",
             // структура которого будет зеркально отражать json-файл.
             property JsonObject settings: JsonObject {
+                property string wm: "auto"
+                property string wm_type: "auto"
                 property int mainRad: 10
                 property bool barOnTop: true
                 property bool minibar: false
@@ -231,6 +239,8 @@ ShellRoot {
     property int barHeight: configJson.settings.barHeight + 6
     property string fontFamily: configJson.settings.fontFamily
     property bool darkTheme: configJson.settings.darkTheme
+    property string wm: configJson.settings.wm == "auto" ? Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway" : configJson.settings.wm
+    property string wm_type: configJson.settings.wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces" ) : configJson.settings.wm_type
     Behavior on mainRad { NumberAnimation { duration: 200 } }
     
     Repeater {

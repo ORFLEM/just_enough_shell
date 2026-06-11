@@ -1,0 +1,240 @@
+# driftwm configuration
+window_placement = "cursor"
+
+autostart = [
+  "qs -d",
+  "Telegram",
+  "zen-beta",
+  "wl-paste --type text --watch cliphist store",
+  "wl-paste --type image --watch cliphist store",
+  "mkdir -p ~/Screenshots",
+  "openrgb --profile orflem",
+  "mpd-mpris",
+  "kwalletd6",
+  "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+  "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+  "systemctl --user restart espanso"
+]
+
+[input.keyboard]
+layout = "us,ru"              # XKB layout (e.g., "us,ru" for multi-layout)
+options = "grp:caps_toggle,grp:alt_shift_toggle"               # XKB options (e.g., "grp:win_space_toggle" for Super+Space layout switch)
+repeat_rate = 35           # keys/sec
+repeat_delay = 250         # ms before repeat starts
+num_lock = true            # num lock state on startup
+
+[input.mouse]
+# accel_speed = 0.0           # pointer acceleration (-1.0 to 1.0)
+# accel_profile = "flat"      # "flat" or "adaptive"
+# natural_scroll = false      # reverse scroll direction
+
+[cursor]
+theme = "BreezeX-RosePine-Linux"           # sets XCURSOR_THEME
+size = 32                   # sets XCURSOR_SIZE
+inactive_opacity = 0.45     # cursor opacity on non-active outputs (0.0–1.0)
+
+[navigation]
+# trackpad_speed = 1.5        # trackpad (scroll/gestures) pan multiplier
+# mouse_speed = 1.0           # mouse (drag) pan multiplier (1.0 = direct)
+# friction = 0.94             # momentum decay (0.90=snappy, 0.98=floaty)
+# animation_speed = 0.3       # camera lerp factor (higher = faster)
+# auto_navigate_on_close = true  # on close, pan to the newly focused window if off-screen
+#                             # false = camera stays put; focus only moves to a visible window
+# nudge_step = 6             # px per nudge-window action (mod-shift-arrow by default)
+# pan_step = 100.0            # px per pan-viewport action (mod-ctrl-arrow by default)
+# Anchors: canvas points discoverable by center-nearest (4-finger swipe / Mod+Arrow)
+# even when no window is there. Uses Y-up coordinate system.
+# anchors = [[0, 0]]
+# Example with 4 corners:
+# # anchors = [[0, 0], [-1750, 1750], [1750, 1750], [1750, -1750], [-1750, -1750]]
+
+[navigation.edge_pan]
+# zone = 100.0                # activation zone width (px from viewport edge)
+# speed_min = 4.0             # px/frame at zone boundary
+speed_max = 7.0            # px/frame at viewport edge
+# cursor_pan = false          # pan when the bare cursor touches a screen edge
+#                             # (not just while dragging). Toggle: "toggle-cursor-pan".
+cursor_zone = 0.0          # cursor edge-pan activation zone (px) — kept small
+#                             # so it doesn't trigger by accident.
+#                             # Pans at a constant speed_max within the zone (steady,
+#                             # push-speed independent); speed_min is unused here.
+
+[zoom]
+# step = 1.1                  # multiplier per keypress (1.1 = 10% per press)
+# fit_padding = 80.0          # viewport px padding for zoom-to-fit (screen space)
+# reset_on_new_window = true  # animate zoom to 1.0 when a new window is mapped
+#                             # (false = keep current zoom, pan only)
+# reset_on_activation = true  # animate zoom to 1.0 when an off-screen window
+#                             # requests focus
+#                             # (false = keep current zoom, pan only)
+
+[snap]
+# enabled = true               # magnetic edge snapping during window drag
+# gap = 12.0                   # gap between snapped windows (canvas px)
+# distance = 24.0              # activation threshold (screen px from edge)
+# break_force = 32.0           # screen px past snap to break free
+# same_edge = false            # also snap same edges (left-to-left, top-to-top)
+# edge_center = false          # also snap edge midpoints (centers align along the moved axis)
+
+[decorations]
+bg_color = "#2b2b2b"           # title bar background (default: dark gray)
+fg_color = "#FFFFFF"           # title text + close button × color (default: white)
+corner_radius = 10             # clip window corners to this radius
+shadow = false                 # drop shadow under window chrome
+
+default_mode = "minimal"
+
+border_width = 2
+border_color = "#303030"
+border_color_focused = "#cfcfcf"
+
+[effects]
+blur_radius = 2                # number of Kawase down+up passes (default: 2)
+blur_strength = 1.1            # per-pass texel spread (default: 1.1)
+# animate_blur = false           # re-blur every frame when the wallpaper is animated
+
+[output]
+# Global output settings. Per-output scale/transform/mode/position
+# are configured in [[outputs]] sections below.
+
+[output.outline]
+# color = "#ffffff"           # outline color for other monitors' viewports
+# thickness = 1               # pixels (0 to disable)
+# opacity = 0.5               # 0.0–1.0
+
+[background]
+# Three background types: "shader", "tile", "wallpaper". `path` is the source.
+# type = "shader"
+# path = "/usr/local/share/driftwm/wallpapers/dot_grid.glsl"
+type = "tile"
+path = "~/.cache/walls/no-live-bg.jpg"
+# type = "tile"
+# path = "~/.cache/walls/tile.png"
+
+[keybindings]
+# --- Приложения (ваши старые, оставляю) ---
+"mod+q" = "exec foot"
+"mod+Return" = "exec foot"
+"mod+d" = "exec qs ipc call root toggleLaunch"
+"mod+e" = "exec dolphin"
+
+# --- Закрыть окно ---
+"mod+c" = "close-window"
+
+# --- Fullscreen ---
+"mod+space" = "toggle-fullscreen"
+
+# --- Прикрепить окно к экрану (аналог floating / sticky) ---
+"mod+f" = "toggle-pin-to-screen"
+
+# --- Перезагрузка конфига и выход ---
+"mod+Shift+r" = "reload-config"
+# Выход с подтверждением (spawn не ждёт завершения, поэтому команда с nag просто запустится)
+"mod+m" = "spawn swaynag -t warning -m 'Exit driftwm?' -B 'Yes' 'pkill driftwm'"
+
+# --- Power menu / дашборд ---
+"mod+p" = "spawn qs ipc call root togglePower"
+"mod+w" = "spawn ~/.config/sway/qs_restart.sh"
+
+# --- Медиа (используем spawn, т.к. не нужно снимать fullscreen) ---
+"Alt+F9"  = "spawn pamixer -t"
+"Alt+F10" = "spawn pamixer -d 5"
+"Alt+F11" = "spawn pamixer -i 5"
+"Alt+F12" = "spawn qs ipc call root togglePlayer"
+"Alt+F4"  = "spawn playerctl play-pause"
+"Alt+F3" = "spawn playerctl next"
+"Alt+F2"  = "spawn playerctl previous"
+
+# --- Яркость (монитор через ddcutil) ---
+"Alt+Prior" = "spawn ddcutil --bus 11 setvcp 10 + 5"
+"Alt+Next"  = "spawn ddcutil --bus 11 setvcp 10 - 5"
+
+# --- Скриншоты ---
+"Home" = "spawn sh -c 'qs ipc call root screenpicker'"
+"Shift+Home" = "spawn sh -c 'grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy'"
+# "Ctrl+Home" = "spawn driftwm msg screenshot window -o | wl-copy"  # альтернатива – скриншот окна
+
+# --- Colorpicker ---
+"mod+n" = "spawn hyprpicker -a"
+
+# --- Фокус (камера переходит к ближайшему окну в направлении) ---
+"mod+Left"  = "center-nearest left"
+"mod+Down"  = "center-nearest down"
+"mod+Up"    = "center-nearest up"
+"mod+Right" = "center-nearest right"
+
+# --- Перемещение окна (nudge) ---
+# По умолчанию шаг 20px. Можно изменить `nudge_step` в секции [navigation].
+"mod+Shift+Left"  = "nudge-window left"
+"mod+Shift+Down"  = "nudge-window down"
+"mod+Shift+Up"    = "nudge-window up"
+"mod+Shift+Right" = "nudge-window right"
+
+# --- Эмуляция рабочих столов (workspaces) через go-to ---
+# "mod+1" = "go-to -1750 1750"
+# "mod+2" = "go-to 0 1750"
+# "mod+3" = "go-to 1750 1750"
+# "mod+4" = "go-to -1750 0"
+# "mod+5" = "go-to 0 0"
+# "mod+6" = "go-to 1750 0"
+# "mod+7" = "go-to -1750 -1750"
+# "mod+8" = "go-to 0 -1750"
+# "mod+9" = "go-to 1750 -1750"
+"mod+0" = "go-to 0 0"   # сброс в центр
+
+# Переключение между текущей позицией и домом (home-toggle)
+# Привязываем на Tab, как у вас был workspace back_and_forth
+"mod+Tab" = "home-toggle"
+
+# Перемещение окна между выходами (мониторами) — есть встроенная команда
+"mod+Alt+Left"  = "send-to-output left"
+"mod+Alt+Right" = "send-to-output right"
+"mod+Alt+Up"    = "send-to-output up"
+"mod+Alt+Down"  = "send-to-output down"
+
+[mouse]
+# When true, resizing a window by dragging its edge (SSD or CSD border)
+# propagates to every window connected to it via snap adjacency.
+# Keybinding/gesture resize is unaffected — bind `resize-window-snapped`
+# explicitly if you want cluster-aware resize there too.
+# decoration_resize_snapped = false
+
+[mouse.on-window]
+"alt+left" = "move-window"
+"mod+shift+left" = "move-snapped-windows"
+"mod+right" = "resize-window"
+"mod+shift+right" = "resize-window-snapped"
+"mod+middle" = "fit-window"
+"mod+shift+middle" = "fit-window-snapped"
+# "mod+middle" = "toggle-fullscreen"
+
+[mouse.on-canvas]
+# "left" = "pan-viewport"            # unmodified left-click on empty canvas → pan
+# "trackpad-scroll" = "pan-viewport" # trackpad scroll on empty canvas → pan
+# "wheel-scroll" = "zoom"            # mouse wheel on empty canvas → zoom
+
+[mouse.anywhere]
+# "mod+left" = "pan-viewport"
+# "mod+ctrl+left" = "center-nearest" # direction from drag delta
+# "mod+trackpad-scroll" = "pan-viewport"
+# "mod+wheel-scroll" = "zoom"
+
+[xwayland]
+enabled = true                  # default: true
+path    = "xwayland-satellite"  # path to xwayland-satellite binary ($PATH lookup works)
+
+[[outputs]]
+name = "DP-2"           # connector name (required)
+scale = 1                # fractional scale (default: 1.0)
+transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
+mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
+
+[[window_rules]]
+title            = "Картинка в картинке"
+pinned_to_screen = true
+position         = [1264, 424]   # output-relative: 300px below center
+# # Game: pass ALL keys to the app (mod+q, ctrl+q etc. reach the game)
+# [[window_rules]]
+# app_id    = "steam_app_*"
+# pass_keys = true

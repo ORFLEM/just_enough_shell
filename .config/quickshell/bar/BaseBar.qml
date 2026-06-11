@@ -14,11 +14,11 @@ WlrLayershell {
     namespace: "bar"
     
     property var workspacesData: ({})
+    property var cameraData: ({})
     property bool wsHover: false
     property bool sttngsHover: false
     property string activeWindow: ""
     property string kbLayout: ""
-    property string wm: ""
     property string cava: ""
     property string timed: ""
     property real coeff: mainRad > 16 ? 1.06363636 + 0.005 * mainRad : 1.1
@@ -208,6 +208,7 @@ WlrLayershell {
                     id: workspacesItem
                     width: workspacesRow.width + 4
                     height: panel.height - 12
+                    visible: wm_type == "workspaces"
                     
                     Rectangle {
                         anchors.fill: parent
@@ -265,6 +266,64 @@ WlrLayershell {
                             onHoveredChanged: wsHover = hovered
                         }
                     }
+                }
+
+                // Camera
+                Item {
+                    id: cameraItem
+                    width: cameraRow.width + 8
+                    height: panel.height - 12
+                    visible: wm_type == "coordinates"
+                    
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: mainRad - 3
+                        opacity: 0.65
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                        }
+                    }
+
+                    Text {
+                        id: cameraRow
+                        anchors.centerIn: parent
+                        text: "x: " + cameraData.x + " y: " + cameraData.y + " zoom: " + cameraData.zoom
+                        color: col.font
+                        font.family: fontFamily
+                        font.pixelSize: fontSize
+                    }
+                    // Row {
+                    //     id: cameraRow
+                    //     anchors.centerIn: parent
+                    //     spacing: 3
+                    //     Text {
+                    //         anchors.centerIn: parent
+                    //         text: cameraData.x
+                    //         color: col.font
+                    //         font.family: fontFamily
+                    //         font.pixelSize: fontSize
+                    //     }
+                        
+                    //     Text {
+                    //         anchors.centerIn: parent
+                    //         text: cameraData.y
+                    //         color: col.font
+                    //         font.family: fontFamily
+                    //         font.pixelSize: fontSize
+                    //     }
+                        
+                    //     Text {
+                    //         anchors.centerIn: parent
+                    //         text: cameraData.zoom
+                    //         color: col.font
+                    //         font.family: fontFamily
+                    //         font.pixelSize: fontSize
+                    //     }
+                    // }
                 }
                 
                 // Active Window

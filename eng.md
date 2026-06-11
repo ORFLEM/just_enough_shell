@@ -23,7 +23,7 @@
 	</tr>
 	<tr>
 		<td>WM</td>
-		<td>SwayFX / Hyprland / niri</td>
+		<td>SwayFX / Hyprland / niri / DriftWM</td>
 	</tr>
 	<tr>
 		<td>Shell</td>
@@ -88,7 +88,7 @@
 	<p>
   <i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
   <br>
-	<b>SwayFX / Hyprland / niri</b> are supported, but <b>Niri</b> lacks blur and also has a bug with workspaces; the script works incorrectly with it.<br>
+	Available: <b>SwayFX / Hyprland / niri / DriftWM</b>, but <b>Niri</b> lacks blur and also has a bug with workspaces; the script works incorrectly with it.<br>
   Also, by editing 3 stub scripts, you can run this interface on any Wayland tiling WM that supports subscribe protocols for workspace, active window, and layout data.<br>
   <br>
 	The project includes optimizations, but it hasn't been tested on low-end PCs.<br>
@@ -98,7 +98,7 @@
 	The author's monitor is UWQHD (3440x1440); tested resolutions: FHD (1920x1080) and above. (FHD is natively supported, <b>but</b> when minibar is enabled, there may be bugs because the size does not adapt while the display model does.)<br>
 	On these resolutions, the panel has no module positioning issues.<br>
 	<br>
-	The project uses bash with custom output and updates faster for SwayFX, as it is oriented toward the author's daily use.<br>
+	The project uses bash with custom output and updates faster for SwayFX and DriftWM, as it is oriented toward the author's daily use.<br>
 	This fact also gives the project consistency: as long as the author works on their own tasks, the project will evolve and improve.<br>
 	<br>
 	For faster distribution, the author decided not to include video wallpapers but instead provides a link to them.<br>
@@ -111,6 +111,7 @@
 	<p>
 	<b>[c]</b> Add <b>Hyprland</b> support<br>
   <b>[c]</b> Add <b>Niri</b> support<br>
+  <b>[c]</b> Add <b>DriftWM</b> support<br>
   <b>[p]</b> Create a settings installer<br>
 	<b>[c]</b> Support base16 themes in JES<br>
   <b>[c]</b> Soft material you<br>
@@ -130,7 +131,7 @@
 
 > **Who is *JES* for?** 
 > - Desktop PCs with FHD+ resolution (author uses UWQHD)
-> - SwayFX / Hyprland / Niri users or enthusiasts with time for initial setup (the shell itself works on any WM, but tiling binds and settings will be absent)
+> - SwayFX / Hyprland / Niri / DriftWM users or enthusiasts with time for initial setup (the shell itself works on any WM, but tiling binds and settings will be absent)
 > - Those who value performance and architecture over trends
 > - Need a pleasant and CPU/GPU-light interface
 > 
@@ -141,11 +142,14 @@
 If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly with JES's theme auto‑generation).
 ```
 
+
 #### **Wallpapers from screenshots**: [click](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
 ## [*JES* structure](./structure.md)
 
 ## -- What can be changed in *JES* --:
+- `wm` - auto, but for WM not in the available list, you must write the name with a capital letter
+- `wm_type` - auto, but for WM not in the available list, choose workspaces or coordinates
 - `mainRad` - corner rounding, default is 10, works ideally with values 0-25
 - `barOnTop` - control panel at the top, as well as adjacent widgets, enabled by default
 - `minibar` - makes the panel 1920px wide, disabled by default
@@ -153,14 +157,16 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 - `fontSize` - font size, default is 17
 - `fontFamily` - font, default is Mononoki Nerd Font Propo
 
+## (JES for DriftWM)[./DriftWM_eng.md]
+
 ## -- Keybindings -- :
 | binding | action |
 | :--- | :---: |
 | `super + e` | file manager |
 | `super + q` \| `super + enter` | terminal |
-| `super + o` | power buttons |
-| `super + 1` or `super + scroll up \| scroll down` | switch between workspaces |
-| `super + shift + 1` or `super + shift + arrows` | move programs between workspaces |
+| `super + p` | power buttons |
+| `super + 1-0` or `super + scroll up \| scroll down` | switch between workspaces |
+| `super + shift + 1-0` or `super + shift + arrows` | move programs between workspaces |
 | `super + right mouse button` | resize windows |
 | `super + shift + arrows` or `super + left mouse button` | move window |
 | `super + arrows` | switch between windows |
@@ -168,7 +174,7 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 | `super + w` | restart the interface |
 | `home` | full-screen screenshot |
 | `shift + home` | screenshot of selected area |
-| `super` | open app launcher |
+| `super + d` | open app launcher |
 | `super + g` | create a group |
 | `super + ctrl + g` | ungroup programs |
 | `super + tab` | previous workspace |
@@ -220,8 +226,8 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 
 ### Bash prompt
 ```
-1 [02:00 - orflem:~]$ cd gits/just_enough_shell/
-2 [02:00 - orflem:~/gits/just_enough_shell main]$
+1 [02:00 - orflem:~]$  cd gits/just_enough_shell/
+2 [02:00 − orflem:~/gits/just_enough_shell main]$
 ```
 
 command number, date, user, directories, git status (when inside a git repo)
