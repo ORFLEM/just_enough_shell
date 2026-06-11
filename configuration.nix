@@ -122,6 +122,8 @@
       gobject-introspection
       libnotify
       wtype
+      inotify-tools
+      xwayland-satellite
 
       # Qt6 libs
       qt6.qtbase
