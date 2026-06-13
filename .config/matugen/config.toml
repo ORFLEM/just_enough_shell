@@ -1,0 +1,54 @@
+[config]
+# If set to enabled, it will check for updates when you run the matugen command, notifying you that an update is avaiable.
+# WARNING: Matugen needs to be compiled with the `update-informer` feature for this to work.
+version_check = false
+
+# The color which should be used as the source_color if no good color was found from an image.
+# Can be defined in any css format.
+# The cli flag will override this if used.
+fallback_color = "#ffbf9b"
+
+# Which color to choose if multiple good colors were found from an image.
+# choices: [darkness, lightness, saturation, less-saturation, value, closest-to-fallback]
+# The cli flag will override this if used.
+prefer = "closest-to-fallback"
+
+# Enables caching which will cache the colorscheme, custom colors, etc. into a cache folder located in
+# Windows: C:\Users\user\AppData\Roaming\InioX\matugen\cache\images\<file>
+# Linux: $XDG_CACHE_HOME/matugen/<file> or $HOME/.cache/matugen/images/<file>
+# MacOS: $HOME/Library/Caches/matugen/images/<file>
+# The file follows this naming: <image_name>.<image_extension>.<image_hash>.json
+# For example: testimage.png.0cfd2d624b3d09bf6246b7be9ca79e207e7aa1189d961d44949628b99811bb9d.json
+# You can modify the cache and it will then be loaded when using the same image.
+# The colors are defined using the #RRGGBBAA format.
+caching = false
+
+# Changing the syntax
+# Expr is for keywords like {{ <keyword> }}
+expr_prefix = "{{"
+expr_postfix = "}}"
+
+# Block is for stuff like for loops etc.
+block_prefix = "<*"
+block_postfix = "*>"
+
+[templates.colors]
+input_path = "~/.config/matugen/templates/colors.json.template"
+output_path = "~/.config/quickshell/colors.json"
+
+[templates.sway]
+input_path = "~/.config/matugen/templates/sway.template"
+output_path = "~/.config/sway/colors.conf"
+post_hook= "swaymsg reload"
+
+[templates.hyprland]
+input_path = "~/.config/matugen/templates/hyprland.template"
+output_path = "~/.config/hypr/colors.conf"
+
+[templates.base16]
+input_path = "~/.config/matugen/templates/base16.mustache"
+output_path = "~/.config/stylix/scheme.yaml"
+
+[templates.zen]
+input_path = "~/.config/matugen/templates/zen-chrome.css"
+output_path = "~/.zen/2dex7qss.Default Profile/chrome/userChrome.css"
