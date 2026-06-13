@@ -20,7 +20,7 @@ WlrLayershell {
     property bool showBright: false
     
     JsonListen {
-        command: "~/.config/quickshell/popSysInf/vol.sh"
+        command: "~/.config/quickshell/scripts/vol.sh"
         onDataChanged: {
             vl = data
             showVol = true
@@ -29,7 +29,7 @@ WlrLayershell {
     }
     
     JsonListen {
-        command: "~/.config/quickshell/popSysInf/birghtness.sh"
+        command: "~/.config/quickshell/scripts/birghtness.sh"
         onDataChanged: {
             lght = data
             showBright = true

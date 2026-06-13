@@ -7,6 +7,8 @@ minibar = false
 barHeight = 30
 fontSize = 17
 fontFamily = "Mononoki Nerd Font Propo"
+custom_wallpaper_engine = false
+doNotDistrub = false
 
 # [[plugin]]
 # name = "plugin name"

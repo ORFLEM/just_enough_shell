@@ -88,13 +88,14 @@ ShellRoot {
     }
 
     LazyLoader {
-        active: wm != "driftwm"
+        active: show_wallpaper
         Walls {}
     }
 
-    // Walls {}
-    
-    Notifications {}
+    LazyLoader {
+        active: !doNotDisturb
+        Notifications {}
+    }
 
     LazyLoader {
         id: wallPickerLoader
@@ -228,6 +229,8 @@ ShellRoot {
                 property int fontSize: 17
                 property string fontFamily: "Mononoki Nerd Font Propo"
                 property bool darkTheme: true
+                property bool doNotDistrub: false
+                property bool custom_wallpaper_engine: false
             }
             property list<JsonObject> plugin: []
         }
@@ -239,6 +242,8 @@ ShellRoot {
     property int barHeight: configJson.settings.barHeight + 6
     property string fontFamily: configJson.settings.fontFamily
     property bool darkTheme: configJson.settings.darkTheme
+    property bool show_wallpaper: !configJson.settings.custom_wallpaper_engine
+    property bool doNotDisturb: configJson.settings.doNotDistrub
     property string wm: configJson.settings.wm == "auto" ? Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway" : configJson.settings.wm
     property string wm_type: configJson.settings.wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces" ) : configJson.settings.wm_type
     Behavior on mainRad { NumberAnimation { duration: 200 } }

@@ -12,6 +12,7 @@ WlrLayershell {
     implicitHeight: 120
     color: "transparent"
     exclusiveZone: minibar ? -1 : 0
+    mask: Region { }
     anchors {
         bottom: true
         right: true

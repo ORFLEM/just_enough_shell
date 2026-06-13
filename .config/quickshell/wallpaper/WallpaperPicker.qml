@@ -289,10 +289,7 @@ WlrLayershell {
                     spacing: 3
 
                     Repeater {
-                        model: {
-                            if (wm != "driftwm") return [ { tab: "image",  label: "Static" }, { tab: "video",  label: "Video"  }, { tab: "shader", label: "Shader" }, ]
-                            else return [ { tab: "image",  label: "Static" } ]
-                        }
+                        model: [ { tab: "image",  label: "Static" }, { tab: "video",  label: "Video"  }, { tab: "shader", label: "Shader" }, ]
                         delegate: Item {
                             id: tabItem
                             width: tabLabel.width + 24

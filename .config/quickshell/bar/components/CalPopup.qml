@@ -34,6 +34,7 @@ WlrLayershell {
     Item {
         anchors.fill: parent
         anchors.topMargin: barOnTop ? barHeight : 0
+        clip: true
         
         Rectangle {
             anchors.fill: parent
@@ -110,6 +111,7 @@ WlrLayershell {
                     rows: 6
                     columnSpacing: 3
                     rowSpacing: 3
+                    clip: true
                 
                     Repeater {
                         model: 42

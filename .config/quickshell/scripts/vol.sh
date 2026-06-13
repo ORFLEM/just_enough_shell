@@ -35,6 +35,6 @@ while true; do
         printf '{"sign":"%s","vol":"%s"}\n' "$sign" "$volout"
         oldout="$volout"
     fi
-     
+   
     sleep 0.05
 done

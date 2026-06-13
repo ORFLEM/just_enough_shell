@@ -34,6 +34,7 @@ WlrLayershell {
     color: "transparent"
     focusable: false
     namespace: "screen-corner"
+    mask: Region { }
 
     // Helper properties for cleaner code
     property bool isTopLeft: cornerDirection === ScreenCorner.CornerDirection.TopLeft

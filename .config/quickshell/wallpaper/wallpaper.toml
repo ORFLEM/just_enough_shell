@@ -35,5 +35,5 @@ shader_dir = "~/.config/quickshell/wallpaper/wallpapers/shaders"
 # shell.qml читает его при старте через JsonPoll и применяет wallType
 [state]
 mode      = "image"
-wallpaper = "/mnt/media/файлы/обои/wallhaven-o5ky29.jpg"
+wallpaper = "/mnt/media/файлы/обои/12.jpg"
 shader    = "raindrops"

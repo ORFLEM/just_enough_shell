@@ -296,34 +296,6 @@ WlrLayershell {
                         font.family: fontFamily
                         font.pixelSize: fontSize
                     }
-                    // Row {
-                    //     id: cameraRow
-                    //     anchors.centerIn: parent
-                    //     spacing: 3
-                    //     Text {
-                    //         anchors.centerIn: parent
-                    //         text: cameraData.x
-                    //         color: col.font
-                    //         font.family: fontFamily
-                    //         font.pixelSize: fontSize
-                    //     }
-                        
-                    //     Text {
-                    //         anchors.centerIn: parent
-                    //         text: cameraData.y
-                    //         color: col.font
-                    //         font.family: fontFamily
-                    //         font.pixelSize: fontSize
-                    //     }
-                        
-                    //     Text {
-                    //         anchors.centerIn: parent
-                    //         text: cameraData.zoom
-                    //         color: col.font
-                    //         font.family: fontFamily
-                    //         font.pixelSize: fontSize
-                    //     }
-                    // }
                 }
                 
                 // Active Window
@@ -725,20 +697,24 @@ WlrLayershell {
                         anchors.margins: 2
                         Rectangle {
                             id: audioButton
-                            color: "transparent"
+                            color: audioButton.hovered ? col.accent : "transparent" 
                             implicitWidth: settingsItem.hovered ? audioText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
+                            opacity: settingsItem.hovered ? 1 : 0
                             clip: true
+                            
+                            property bool hovered: false
                             
                             Behavior on color { ColorAnimation { duration: 200 } }
                             Behavior on implicitWidth { NumberAnimation { duration: 200 } }
+                            Behavior on opacity { NumberAnimation { duration: 200 } }
 
                             Text {
                                 text: "󰗅"
                                 anchors.centerIn: parent
                                 id: audioText
-                                color: settingsItem.hovered ? col.fontDark : col.font
+                                color: audioButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
                                 font.weight: Font.bold
@@ -748,8 +724,8 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: audioButton.color = col.accent
-                                onExited: audioButton.color = "transparent"
+                                onEntered: audioButton.hovered = true
+                                onExited: audioButton.hovered = false
                                 // Но здесь тоже нужно убрать присвоение цвета тексту,
                                 // текст уже привязан к settingsItem.hovered
                                 onClicked: {
@@ -760,18 +736,23 @@ WlrLayershell {
                         
                         Rectangle {
                             id: networkButton
-                            color: "transparent"
+                            color: networkButton.hovered ? col.accent : "transparent"
                             implicitWidth: settingsItem.hovered ? networkText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
+                            opacity: settingsItem.hovered ? 1 : 0
+                            
                             Behavior on color { ColorAnimation { duration: 200 } }
                             Behavior on implicitWidth { NumberAnimation { duration: 200 } }
+                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            
+                            property bool hovered: false
 
                             Text {
                                 text: "󰈀"
                                 anchors.centerIn: parent
                                 id: networkText
-                                color: settingsItem.hovered ? col.fontDark : col.font
+                                color: networkButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
                                 font.weight: Font.bold
@@ -781,8 +762,8 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: networkButton.color = col.accent
-                                onExited: networkButton.color = "transparent"
+                                onEntered: networkButton.hovered = true
+                                onExited: networkButton.hovered = false
 
                                 onClicked: {
                                     Quickshell.execDetached(["sh", "-c", "foot ~/.config/quickshell/scripts/recolor.sh"])
@@ -792,18 +773,23 @@ WlrLayershell {
 
                         Rectangle {
                             id: bluetoothButton
-                            color: "transparent"
+                            color: bluetoothButton.hovered ? col.accent : "transparent"
                             implicitWidth: settingsItem.hovered ? bluetoothText.width + 12 : 0
                             radius: mainRad - 5
                             implicitHeight: parent.height
+                            opacity: settingsItem.hovered ? 1 : 0
+                            
                             Behavior on color { ColorAnimation { duration: 200 } }
                             Behavior on implicitWidth { NumberAnimation { duration: 200 } }
+                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            
+                            property bool hovered: false
 
                             Text {
                                 text: "󰂯"
                                 anchors.centerIn: parent
                                 id: bluetoothText
-                                color: settingsItem.hovered ? col.fontDark : col.font
+                                color: bluetoothButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
                                 font.weight: Font.bold
@@ -813,8 +799,8 @@ WlrLayershell {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 
-                                onEntered: bluetoothButton.color = col.accent
-                                onExited: bluetoothButton.color = "transparent"
+                                onEntered: bluetoothButton.hovered = true
+                                onExited: bluetoothButton.hovered = false
 
                                 onClicked: {
                                     Quickshell.execDetached(["sh", "-c", "blueman-manager"])

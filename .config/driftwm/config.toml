@@ -100,10 +100,13 @@ blur_strength = 1.1            # per-pass texel spread (default: 1.1)
 
 [background]
 # Three background types: "shader", "tile", "wallpaper". `path` is the source.
-# type = "shader"
-# path = "/usr/local/share/driftwm/wallpapers/dot_grid.glsl"
-type = "tile"
-path = "~/.cache/walls/tile.png"
+type = "shader"
+path = "~/.config/driftwm/bg.glsl"
+transparent_shader = true
+# type = "tile"
+# path = "~/.cache/walls/no-live-bg.jpg"
+# type = "tile"
+# path = "~/.cache/walls/tile.png"
 
 [keybindings]
 # --- Приложения (ваши старые, оставляю) ---
