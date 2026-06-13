@@ -3,13 +3,9 @@ window_placement = "cursor"
 
 autostart = [
   "qs -d",
-  "Telegram",
-  "zen-beta",
   "wl-paste --type text --watch cliphist store",
   "wl-paste --type image --watch cliphist store",
   "mkdir -p ~/Screenshots",
-  "openrgb --profile orflem",
-  "mpd-mpris",
   "kwalletd6",
   "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
   "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
@@ -107,9 +103,7 @@ blur_strength = 1.1            # per-pass texel spread (default: 1.1)
 # type = "shader"
 # path = "/usr/local/share/driftwm/wallpapers/dot_grid.glsl"
 type = "tile"
-path = "~/.cache/walls/no-live-bg.jpg"
-# type = "tile"
-# path = "~/.cache/walls/tile.png"
+path = "~/.cache/walls/tile.png"
 
 [keybindings]
 # --- Приложения (ваши старые, оставляю) ---

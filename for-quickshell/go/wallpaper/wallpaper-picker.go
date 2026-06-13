@@ -500,11 +500,7 @@ func cmdSet(path string) {
 		} else {
 		    copyFile(fixedPath, staticCache) // копируем уже исправленный JPEG
 		}
-		if os.Getenv("XDG_CURRENT_DESKTOP") == "driftwm" {
-			exec.Command("diftwm", "--check-config").Run()
-		} else {
-			exec.Command("qs", "ipc", "call", "root", "wallType", "1").Run()
-		}
+		exec.Command("qs", "ipc", "call", "root", "wallType", "1").Run()
 		exec.Command("matugen", "image", staticCache, "-m", "dark", "-t", "scheme-tonal-spot", "--source-color-index", "0").Run()
 		saveState("image", path, cfg.State.Shader)
 	}

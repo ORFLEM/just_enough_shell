@@ -154,6 +154,8 @@
 - `BarHeight` - высота панели, изначально 30
 - `fontSize` - размер шрифта, изначально 17
 - `fontFamily` - шрифт, изначально Mononoki Nerd Font Propo
+- `custom_wallpaper_engine` - выключить встроенные обои, изначально false
+- `doNotDistrub` - тихий режим, изначально false
 
 ## [JES для DriftWM](./DriftWM_rus.md)
 

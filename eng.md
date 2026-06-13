@@ -156,6 +156,8 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 - `BarHeight` - panel height, default is 30
 - `fontSize` - font size, default is 17
 - `fontFamily` - font, default is Mononoki Nerd Font Propo
+- `custom_wallpaper_engine` - disable JES wallpaper, default is false
+- `doNotDistrub` - disable notifications, default is false
 
 ## [JES for DriftWM](./DriftWM_eng.md)
 
