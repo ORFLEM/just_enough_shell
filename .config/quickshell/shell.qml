@@ -17,6 +17,8 @@ import "screenpicker"
 
 ShellRoot {
     id: root
+
+    // ── Цвета ──────────────────────────────────────────────────────────────
     FileView {
         id: colors
         path: darkTheme ? Qt.resolvedUrl("./colors.json") : Qt.resolvedUrl("./colors_light.json")
@@ -35,7 +37,7 @@ ShellRoot {
             property string accent2
         }
     }
-    
+
     FileView {
         id: baseColors
         path: Qt.resolvedUrl("./base16.json")
@@ -61,7 +63,8 @@ ShellRoot {
             property string base16
         }
     }
-    
+
+    // ── Состояния UI ───────────────────────────────────────────────────────
     property bool playerOpen:     false
     property bool calOpen:        false
     property bool scrpicOpen:     false
@@ -71,9 +74,146 @@ ShellRoot {
     property int  wallpaperType:  1
     property string wallShaderName: ""
 
+    // ── Конфиг: TOML → JSON через taplo ───────────────────────────────────
+    FileView {
+        id: tomlWatcher
+        path: Qt.resolvedUrl("./config.toml")
+        watchChanges: true
+        onFileChanged: generateJsonConfig()
+        Component.onCompleted: generateJsonConfig()
+    }
 
-    
+    Process {
+        id: taploProcess
+        command: ["sh", "-c", "taplo get -f ~/.config/quickshell/config.toml -o json > ~/.cache/qs_config.json"]
+        running: true
+        function reload() {
+            if (running) kill()
+            running = true
+        }
+        // Читаем файл только после того, как taplo его дописал
+        onExited: (code, status) => {
+            console.log("[shell] taplo exited, code:", code)
+            if (code === 0) {
+                configView.reload()
+            } else {
+                console.error("[shell] taplo failed with code:", code)
+            }
+        }
+    }
 
+    function generateJsonConfig() {
+        taploProcess.reload()
+    }
+
+    // ── Конфиг: читаем JSON и парсим вручную ──────────────────────────────
+    FileView {
+        id: configView
+        path: Quickshell.env("HOME") + "/.cache/qs_config.json"
+        watchChanges: false  // управляем вручную через taploProcess.onExited
+        onLoaded: {
+            let content = text()
+            console.log("[shell] configView loaded, text length:", content.length)
+            root._parseConfig(content)
+        }
+    }
+
+    function _parseConfig(raw) {
+        let trimmed = (raw ?? "").trim()
+        console.log("[shell] _parseConfig called, length:", trimmed.length)
+        if (!trimmed) {
+            console.error("[shell] config is empty!")
+            return
+        }
+        try {
+            let parsed = JSON.parse(trimmed)
+            console.log("[shell] JSON parsed OK, keys:", Object.keys(parsed).join(", "))
+
+            // settings
+            let s = parsed.settings ?? {}
+            root._cfg_wm              = s.wm                      ?? "auto"
+            root._cfg_wm_type         = s.wm_type                 ?? "auto"
+            root._cfg_mainRad         = s.mainRad                 ?? 10
+            root._cfg_barOnTop        = s.barOnTop                ?? true
+            root._cfg_minibar         = s.minibar                 ?? false
+            root._cfg_barHeight       = s.barHeight               ?? 30
+            root._cfg_fontSize        = s.fontSize                ?? 17
+            root._cfg_fontFamily      = s.fontFamily              ?? "Mononoki Nerd Font Propo"
+            root._cfg_darkTheme       = s.darkTheme               ?? true
+            root._cfg_doNotDisturb    = s.doNotDistrub            ?? false  // опечатка в конфиге сохранена
+            root._cfg_customWallpaper = s.custom_wallpaper_engine ?? false
+
+            // plugin: объект { key: { source, acitve } } → массив для Repeater
+            let p = parsed.plugin ?? {}
+            console.log("[shell] plugin keys:", Object.keys(p).join(", "))
+            pluginListModel.clear()
+            for (let key in p) {
+                pluginListModel.append({
+                    name: key,
+                    source: p[key].source ?? "",
+                    active: p[key].active ?? false
+                })
+            }
+            console.log("[shell] pluginListModel заполнен, count:", pluginListModel.count)
+            console.log("[shell] pluginListModel содержимое:")
+            for (var i = 0; i < pluginListModel.count; i++) {
+                var item = pluginListModel.get(i)
+                console.log("  [" + i + "] name:", item.name, "source:", item.source, "active:", item.active)
+            }
+        } catch(e) {
+            console.error("[shell] Config parse error:", e, "| raw:", raw.substring(0, 200))
+        }
+    }
+
+    // ── Backing properties ─────────────────────────────────────────────────
+    property string _cfg_wm:              "auto"
+    property string _cfg_wm_type:        "auto"
+    property int    _cfg_mainRad:        10
+    property bool   _cfg_barOnTop:       true
+    property bool   _cfg_minibar:        false
+    property int    _cfg_barHeight:      30
+    property int    _cfg_fontSize:       17
+    property string _cfg_fontFamily:     "Mononoki Nerd Font Propo"
+    property bool   _cfg_darkTheme:      true
+    property bool   _cfg_doNotDisturb:   false
+    property bool   _cfg_customWallpaper: false
+
+    // ── Публичные свойства ─────────────────────────────────────────────────
+    property int    mainRad:       _cfg_mainRad
+    property bool   barOnTop:      _cfg_barOnTop
+    property bool   minibar:       _cfg_minibar
+    property int    fontSize:      _cfg_fontSize
+    property int    barHeight:     _cfg_barHeight + 6
+    property string fontFamily:    _cfg_fontFamily
+    property bool   darkTheme:     _cfg_darkTheme
+    property bool   show_wallpaper: !_cfg_customWallpaper
+    property bool   doNotDisturb:  _cfg_doNotDisturb
+    property string wm:      _cfg_wm      == "auto" ? (Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway") : _cfg_wm
+    property string wm_type: _cfg_wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces") : _cfg_wm_type
+
+    Behavior on mainRad { NumberAnimation { duration: 200 } }
+
+    // ── Плагины ────────────────────────────────────────────────────────────
+    ListModel {
+        id: pluginListModel
+    }
+    property var pluginRegistry: ({})
+
+    Repeater {
+        model: pluginListModel
+        delegate: Loader {
+             id: pluginLoader
+            active: model.active
+            source: model.active ? Qt.resolvedUrl(model.source) : ""
+            onLoaded: {
+                // Запоминаем объект плагина
+                root.pluginRegistry[model.name] = item
+                console.log("[plugin] Плагин зарегистрирован:", model.name)
+            }
+        }
+    }
+
+    // ── Bar ────────────────────────────────────────────────────────────────
     Loader {
         id: barLoader
         Component.onCompleted: {
@@ -87,6 +227,7 @@ ShellRoot {
         }
     }
 
+    // ── Компоненты ─────────────────────────────────────────────────────────
     LazyLoader {
         active: show_wallpaper
         Walls {}
@@ -111,15 +252,9 @@ ShellRoot {
 
     Btime {}
 
-    PlayerPopup {
-        isOpen: playerOpen
-    }
-    
-    CalPopup {
-        isOpen: calOpen
-    }
-
-    PopupSys {}
+    PlayerPopup { isOpen: playerOpen }
+    CalPopup    { isOpen: calOpen }
+    PopupSys    {}
 
     LazyLoader {
         id: powerLoader
@@ -127,10 +262,10 @@ ShellRoot {
         Power {}
     }
 
-    Variables { id: vars }
-
+    Variables  { id: vars }
     Screenshot { id: screenpicker }
 
+    // ── IPC ────────────────────────────────────────────────────────────────
     IpcHandler {
         target: "root"
 
@@ -159,8 +294,12 @@ ShellRoot {
         function screenpicker(): void {
             screenpicker.activate()
         }
+        function getPlugin() {
+            Quickshell.execDetached(["notify-send", pluginModel])
+        }
     }
 
+    // ── Скруглённые углы ───────────────────────────────────────────────────
     property int size: mainRad > 0 ? mainRad + 6 : 0
     ScreenCorner {
         cornerDirection: ScreenCorner.TopLeft
@@ -181,83 +320,5 @@ ShellRoot {
         cornerDirection: ScreenCorner.BottomRight
         cornerWidth: size; cornerHeight: size
         cornerColor: "#000000"
-    }
-
-    property var pluginModel: []
-
-    // Убираем весь блок Process и configWatcher, вставляем:
-
-    FileView {
-        id: tomlWatcher
-        path: Qt.resolvedUrl("./config.toml")
-        watchChanges: true
-        onFileChanged: generateJsonConfig()
-        Component.onCompleted: generateJsonConfig()
-    }
-    
-    Process {
-        id: taploProcess
-        command: ["sh", "-c", "taplo get -f ~/.config/quickshell/config.toml -o json > ~/.cache/qs_config.json"]
-        running: true
-        function reload() {
-            if (running) terminate();
-            running = true;
-        }
-    }
-
-    // Функция, запускающая генерацию JSON
-    function generateJsonConfig() {
-        taploProcess.reload();
-    }
-    
-    FileView {
-        id: configView
-        path: Quickshell.env("HOME") + "/.cache/qs_config.json"
-        watchChanges: true
-        onFileChanged: reload()
-        JsonAdapter {
-            id: configJson
-            // Вместо плоских свойств создаём вложенный объект "settings",
-            // структура которого будет зеркально отражать json-файл.
-            property JsonObject settings: JsonObject {
-                property string wm: "auto"
-                property string wm_type: "auto"
-                property int mainRad: 10
-                property bool barOnTop: true
-                property bool minibar: false
-                property int barHeight: 30
-                property int fontSize: 17
-                property string fontFamily: "Mononoki Nerd Font Propo"
-                property bool darkTheme: true
-                property bool doNotDistrub: false
-                property bool custom_wallpaper_engine: false
-            }
-            property list<JsonObject> plugin: []
-        }
-    }
-    property int mainRad: configJson.settings.mainRad
-    property bool barOnTop: configJson.settings.barOnTop
-    property bool minibar: configJson.settings.minibar
-    property int fontSize: configJson.settings.fontSize
-    property int barHeight: configJson.settings.barHeight + 6
-    property string fontFamily: configJson.settings.fontFamily
-    property bool darkTheme: configJson.settings.darkTheme
-    property bool show_wallpaper: !configJson.settings.custom_wallpaper_engine
-    property bool doNotDisturb: configJson.settings.doNotDistrub
-    property string wm: configJson.settings.wm == "auto" ? Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway" : configJson.settings.wm
-    property string wm_type: configJson.settings.wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces" ) : configJson.settings.wm_type
-    Behavior on mainRad { NumberAnimation { duration: 200 } }
-    
-    Repeater {
-        model: configJson.plugin
-        delegate: LazyLoader {
-            id: pluginLoader
-            active: false
-            source: Qt.resolvedUrl(modelData.source)
-    
-            Component.onCompleted: {
-                pluginLoader.active = true;
-            }
-        }
     }
 }

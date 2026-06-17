@@ -73,9 +73,8 @@ Quickshell определяет текущий WM через `$XDG_CURRENT_DESKT
 2. закиньте папку с плагином
 3. откройте config.toml
 4. впишите данные строки:
-   [[plugin]]
-   name = "название плагина"
-   source = "папка плагина/меин файл плагина.qml"
+   [plugin.name-plugin]
+   source = "папка плагина/Главный файл плагина.qml"
    active = true
 ```
 

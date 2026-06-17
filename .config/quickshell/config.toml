@@ -1,3 +1,4 @@
+# It's Micro, for exit use Ctrl+Q, for save - Ctrl+S
 [settings]
 wm = "auto" # or your WM but with a capital letter
 wm_type = "auto" # auto (don't work with unregistred WM) | workspaces | coordinates
@@ -10,7 +11,6 @@ fontFamily = "Mononoki Nerd Font Propo"
 custom_wallpaper_engine = false
 doNotDistrub = false
 
-# [[plugin]]
-# name = "plugin name"
-# source = "plugin directory/main file.qml"
+# [plugin.name]
+# source = "plugin-example/Main.qml"
 # active = true

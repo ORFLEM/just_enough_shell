@@ -1,16 +1,16 @@
 # Plugin Creation Guide
 
-## Rule № 1
-- A plugin **always** resides in its own separate folder.
+## Rule #1
+- A plugin **always** lives in its own dedicated folder.
 
-## Rule № 2
-- The plugin **must not** consume many system resources. Any language is allowed for optimization, but **Go is recommended**.
+## Rule #2
+- A plugin **must not** consume significant device resources. Any language is allowed for performance reasons, but **Go is recommended**.
 
-## Rule № 3
-- File names inside the plugin should briefly explain their purpose, and the file to be included **must be specified in the plugin installation instructions**.
-- If the plugin has complex functionality in a separate window, the instructions must include a ready‑to‑use LazyLoader to load that window.
+## Rule #3
+- File names inside a plugin should briefly describe its purpose. The file to be loaded is **specified in the plugin's installation instructions**.
+- If a plugin has complex functionality in a separate window, that window must be wrapped in a `lazyLoader`.
 
-## Visual guidelines
+## Visual style
 - For the main background of a plugin, use:
 ```qml
 opacity: 0.85
@@ -24,8 +24,7 @@ gradient: Gradient {
     GradientStop { position: 1.0; color: col.background3 }
 }
 ```
-
-- For button backgrounds and similar elements, use:
+- For button backgrounds and similar elements:
 ```qml
 Rectangle {
     opacity: 0.65
@@ -39,11 +38,10 @@ Rectangle {
     }
 }
 ```
-
 - For hover effects, use:
 ```qml
 Item {
-    id: <item_name>
+    id: <block_name>
     property bool hovered: false
     Rectangle {
         anchors.fill: parent
@@ -61,8 +59,8 @@ Item {
         id: <some_meaningful_name>
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - <margins_plus_margin_in_this_module>
-        color: <item_name>.hovered ? col.accent : "transparent" 
+        radius: mainRad - <margins_so_far_plus_margin_in_this_module>
+        color: <trigger> ? col.accent : "transparent"
         Behavior on color { ColorAnimation { duration: 200 } }
     }
     // code
@@ -70,25 +68,25 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            <item_name>.hovered = true
+            <trigger> = true
         }
         onExited: {
-            <item_name>.hovered = false
+            <trigger> = false
         }
     }
 }
 ```
 
-#### background you can use other, in this it's example with button bcakgrounds
+#### A different background can be used — the example above used the button background style.
 
-- For radii, use radius: mainRad. If you use margins, write `radius: mainRad - <margin_value> in the following block`.
-- All colours must be taken from the global col object (defined in `colors.json` and accessible via `shell.qml`).
-- Also JES supported base16 themes (`base.base<01-16>`)
-- Font is set using **fontFamily** and **fontSize**
-- JES has 2 accent colors – dark and light
+- For radii, use `radius: mainRad`. If you apply margins, write `radius: mainRad - <margin_value>` in the inner block.
+- All colors must come from the global `col` object (defined in `colors.json` and available via `shell.qml`).
+- JES also supports base16 themes (`base.base<01-16>`).
+- Font is set via **fontFamily** and **fontSize**.
+- JES has 2 accent colors — dark and light.
 
 ## Passing data to the interface
-- For continuous streams (recommended for performance) use `JsonListen`. For periodic one‑time requests use `JsonPoll`.
-- Data is passed in JSON format. For visual programs without functions – just a plain string (e.g., cava in the bar).
+- Use `JsonListen` for a continuous stream (recommended for performance), and `JsonPoll` for a one-time request on a fixed interval.
+- Data is passed as JSON. For visual-only programs with no logic (e.g. cava in the bar), a plain string is sufficient.
 
-## If something is unclear, refer to BaseBar.qml in the bar/ folder – it is the visual reference for the entire UI.
+## If anything is unclear, refer to BaseBar.qml in the bar/ folder — it is the visual reference for all UI.

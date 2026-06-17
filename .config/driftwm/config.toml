@@ -221,11 +221,11 @@ enabled = true                  # default: true
 path    = "xwayland-satellite"  # path to xwayland-satellite binary ($PATH lookup works)
 
 [[outputs]]
-name = "DP-2"           # connector name (required)
-scale = 1                # fractional scale (default: 1.0)
-transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
-position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
-mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
+# name = "DP-2"           # connector name (required)
+# scale = 1                # fractional scale (default: 1.0)
+# transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+# position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
+# mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
 
 [[window_rules]]
 title            = "Картинка в картинке"

@@ -4,9 +4,9 @@ prev_json=""
 
 while true; do
   # Получаем имя и ID первого подключённого устройства (берём первый элемент)
-  name=$(kdeconnect-cli -a --name-only | head -n1)
-  id=$(kdeconnect-cli -a --id-only | head -n1)
-
+  name=$(kdeconnect-cli -a --name-only 2>/dev/null | head -n1)
+  id=$(kdeconnect-cli -a --id-only 2>/dev/null | head -n1)
+  
   if [[ -z "$id" ]]; then
     # Если устройство не найдено – выводим null
     current_json='{"name":"null","charge":null,"isCharging":null,"icon":null}'

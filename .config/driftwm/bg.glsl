@@ -7,7 +7,7 @@ varying vec2 v_coords;
 uniform vec2 size;
 uniform vec2 u_camera;
 
-const float DOT_SPACING = 80.0;
+const float DOT_SPACING = 240.0;
 const float DOT_RADIUS  = 2.5;   // радиус белого ядра
 const float GAP         = 0.0;   // зазор между ядром и кольцом
 const float RING_WIDTH  = 1.5;   // толщина кольца

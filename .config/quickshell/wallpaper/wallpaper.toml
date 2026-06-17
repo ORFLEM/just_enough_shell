@@ -34,6 +34,6 @@ shader_dir = "~/.config/quickshell/wallpaper/wallpapers/shaders"
 # Этот блок перезаписывается go-скриптом при каждом set/set-shader
 # shell.qml читает его при старте через JsonPoll и применяет wallType
 [state]
-mode      = "image"
-wallpaper = "/mnt/media/файлы/обои/12.jpg"
+mode      = "video"
+wallpaper = "/mnt/media/файлы/обои/видео обои/nissan-silvia-s13-gloomy-rain-moewalls-com.mp4"
 shader    = "raindrops"

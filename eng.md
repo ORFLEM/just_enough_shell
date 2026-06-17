@@ -1,17 +1,17 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Last%20commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=cccccc&label=Repository%20size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
+![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bcbcbc&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
+![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Repo%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
 
 <div align="center">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
-	<p>Created for every day, not for show.</p>
+	<p>Built for everyday use, not for screenshots.</p>
 </div>
 
 ***
 
 <table align="right">
 	<tr>
-		<td colspan="2" align="center">System Parameters</td>
+		<td colspan="2" align="center">System Info</td>
 	</tr>
 	<tr>
 		<th>Component</th>
@@ -86,127 +86,149 @@
 <div align="left">
 	<h3>-- About the project -- :</h3>
 	<p>
-  <i>JES</i> uses <b>QuickShell</b> to render the interface.<br>
+  <i>JES</i> uses <b>QuickShell</b> for rendering the interface.<br>
   <br>
-	Available: <b>SwayFX / Hyprland / niri / DriftWM</b>, but <b>Niri</b> lacks blur and also has a bug with workspaces; the script works incorrectly with it.<br>
-  Also, by editing 3 stub scripts, you can run this interface on any Wayland tiling WM that supports subscribe protocols for workspace, active window, and layout data.<br>
+	<i>JES</i> supports:
+	<ul>
+  	<li>SwayFX</li>
+  	<li>Hyprland</li>
+  	<li>Niri</li>
+		<li>DriftWM</li>
+		<li>Any other WM via 3 scripts and one QML file</li>
+	</ul>
+	<b>Niri</b> has no transparency support and has a bug with workspaces on the bar due to its architecture.<br>
+	<br>
+	The project has some optimization, but it hasn't been tested on weak hardware.<br>
+	Go binaries are used for scripts where fast processing of large data streams matters — this keeps CPU usage at 7–11% idle instead of 35–45%.<br>
   <br>
-	The project includes optimizations, but it hasn't been tested on low-end PCs.<br>
-	Go binaries are used for scripts that require fast reading of large data streams, reducing CPU idle load to 7-11% instead of 35-45%.<br>
-  <br>
-	<i>JES</i> is designed for desktop PCs, allowing deeper refinement for such machines.<br>
-	The author's monitor is UWQHD (3440x1440); tested resolutions: FHD (1920x1080) and above. (FHD is natively supported, <b>but</b> when minibar is enabled, there may be bugs because the size does not adapt while the display model does.)<br>
-	On these resolutions, the panel has no module positioning issues.<br>
+	The project has a simple plugin system, making it extensible.<br>
 	<br>
-	The project uses bash with custom output and updates faster for SwayFX and DriftWM, as it is oriented toward the author's daily use.<br>
-	This fact also gives the project consistency: as long as the author works on their own tasks, the project will evolve and improve.<br>
+	<i>JES</i> was designed for desktop PCs, allowing it to be better tailored to those machines.<br>
+	The author's monitor is UWQHD (3440×1440); tested resolutions: FHD (1920×1080) and above. (FHD is supported natively, <b>but</b> with minibar enabled there may be bugs, since the size doesn't change but the display model does.)<br>
+	On those resolutions the bar has no issues with module placement.<br>
 	<br>
-	For faster distribution, the author decided not to include video wallpapers but instead provides a link to them.<br>
+	The project uses bash with custom output, and updates faster for SwayFX and DriftWM, since it's oriented toward the author's everyday use.<br>
+	This also gives the project longevity — as long as the author goes about his business, the project will keep evolving and improving.<br>
 	<br>
-	The <i>zenburn</i> theme <b>does not</b> apply to <i>JES</i> itself, only to programs, tty (NixOS only), and so on. JES has a built-in generated theme + base16 theme support via base16.json.<br>
+	For faster loading, the author chose not to bundle live wallpapers from the screenshots, leaving a link to them instead.<br>
 	<br>
-  <i>JES is focused not on trends, but on practicality in daily use and convenience.</i><br>
+	The <i>zenburn</i> theme does <b>not</b> apply to <i>JES</i> itself — only to external apps, tty (NixOS only), and similar. <i>JES</i> has a built-in generated theme + base16 theme support via base16.json.<br>
+	<br>
+  <i>JES is oriented not toward trends, but toward practicality and convenience in everyday use.</i><br>
 	</p>
-	<h3>-- Future direction -- :</h3>
+	<h3>-- Roadmap -- :</h3>
 	<p>
 	<b>[c]</b> Add <b>Hyprland</b> support<br>
   <b>[c]</b> Add <b>Niri</b> support<br>
-  <b>[c]</b> Add <b>DriftWM</b> support<br>
-  <b>[p]</b> Create a settings installer<br>
-	<b>[c]</b> Support base16 themes in JES<br>
-  <b>[c]</b> Soft material you<br>
-	<b>[i]</b> Choose style: neutral / vibrant<br>
-	<b>[p]</b> Choose theme: dark / light<br>
-	<b>[c]</b> Display device info connected via kdeconnect<br>
-	<b>[i]</b> Migrate <b>Hyprland</b> to lua configs<br>
+	<b>[c]</b> Add <b>DriftWM</b> support<br>
+	<b>[c]</b> base16 theme support in JES<br>
+  <b>[c]</b> Soft Material You<br>
+	<b>[c]</b> Display info for devices connected via KDE Connect<br>
+	<b>[c]</b> Nice screen picker<br>
+	<b>[c]</b> Animated album art in the player when no cover is available<br>
+	<b>[c]</b> Protection against static wallpapers with wrong format in the wallpaper picker<br>
+	<b>[c]</b> Calendar widget<br>
+	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
+	<b>[i]</b> Neutral / vibrant style toggle<br>
+	<b>[p]</b> Dark / light theme toggle<br>
 	<b>[p]</b> Fix <b>Niri</b><br>
-	<b>[c]</b> Beautiful screen picker<br>
-	<b>[c]</b> Animated cover in player when no cover exists<br>
-	<b>[c]</b> Protection against static wallpapers with incorrect format in wallpaper picker<br>
-	<b>[p]</b> Create a weather widget<br>
-	<b>[c]</b> Create a calendar widget<br>
-	c = completed; n = not completed; i = in progress; p = planned.<br> 
+	<b>[p]</b> Weather widget<br>
+  <b>[p]</b> Settings installer<br>
+	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
 
-> **Who is *JES* for?** 
-> - Desktop PCs with FHD+ resolution (author uses UWQHD)
-> - SwayFX / Hyprland / Niri / DriftWM users or enthusiasts with time for initial setup (the shell itself works on any WM, but tiling binds and settings will be absent)
+> **Who is *JES* for?**
+> - Desktop PCs with FHD+ resolution (the author uses UWQHD)
+> - Users of SwayFX / Hyprland / Niri / DriftWM, or enthusiasts willing to invest time in initial setup (the shell itself works on any WM, but keybinds and tiling config won't be included)
 > - Those who value performance and architecture over trends
-> - Need a pleasant and CPU/GPU-light interface
-> 
-> If you fit this audience — welcome. 
-> If not — maybe the project isn't for you, and that's fine.
+> - Anyone who wants a pleasant, CPU/GPU-lightweight interface
+>
+> If you fall into this audience — welcome.
+> If not — this project might not be for you, and that's okay.
+
+## -- IMPORTANT -- :
+- The author has no experience with Arch Linux; installation on Arch may be incorrect. If that's the case, please describe the issue in an Issue and, if possible, suggest a fix.
+- Installation instructions are at the very bottom.
+- The author is open to suggestions and helps with onboarding; for issues, open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new).
 
 ```
-If you want live video wallpapers, you can choose between video wallpapers and shaders (the latter may work poorly with JES's theme auto‑generation).
+If you want live video wallpapers, there are both video wallpapers and shaders available
+(the latter may work poorly with JES's auto theme generation)
 ```
-
-
 #### **Wallpapers from screenshots**: [click](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [*JES* structure](./structure.md)
+## [*JES* structure](./structure_eng.md)
 
-## -- What can be changed in *JES* --:
-- `wm` - auto, but for WM not in the available list, you must write the name with a capital letter
-- `wm_type` - auto, but for WM not in the available list, choose workspaces or coordinates
-- `mainRad` - corner rounding, default is 10, works ideally with values 0-25
-- `barOnTop` - control panel at the top, as well as adjacent widgets, enabled by default
-- `minibar` - makes the panel 1920px wide, disabled by default
-- `BarHeight` - panel height, default is 30
-- `fontSize` - font size, default is 17
-- `fontFamily` - font, default is Mononoki Nerd Font Propo
-- `custom_wallpaper_engine` - disable JES wallpaper, default is false
-- `doNotDistrub` - disable notifications, default is false
+## -- What you can configure in *JES* -- :
+- `wm` — auto, but for WMs not in the supported list you need to specify the name with a capital letter
+- `wm_type` — auto, but for unsupported WMs choose between `workspaces` or `coordinates`
+- `mainRad` — corner radius, default 10, works best in the range 0–25
+- `barOnTop` — control bar on top along with adjacent widgets, enabled by default
+- `minibar` — constrains the bar width to 1920px, disabled by default
+- `BarHeight` — bar height, default 30
+- `fontSize` — font size, default 17
+- `fontFamily` — font, default Mononoki Nerd Font Propo
+- `custom_wallpaper_engine` — disable the built-in wallpaper engine, default false
+- `doNotDisturb` — silent mode, default false
+
+```
+Note: config.toml lives in the Quickshell folder (~/.config/quickshell/)
+The author left an alias in .bashrc — if you don't want to type the path, just run:
+    edit-JES
+The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
+```
 
 ## [JES for DriftWM](./DriftWM_eng.md)
 
-## -- Keybindings -- :
-| binding | action |
+## -- Keybindings for SwayFX, Hyprland and Niri -- :
+| keybinding | action |
 | :--- | :---: |
 | `super + e` | file manager |
 | `super + q` \| `super + enter` | terminal |
 | `super + p` | power buttons |
-| `super + 1-0` or `super + scroll up \| scroll down` | switch between workspaces |
-| `super + shift + 1-0` or `super + shift + arrows` | move programs between workspaces |
-| `super + right mouse button` | resize windows |
-| `super + shift + arrows` or `super + left mouse button` | move window |
+| `super + 1-0` or `super + scroll up \| scroll down` | switch workspaces |
+| `super + shift + 1-0` or `super + shift + arrows` | move windows between workspaces |
+| `super + RMB` | resize windows |
+| `super + shift + arrows` or `super + LMB` | move window |
 | `super + arrows` | switch between windows |
-| `super + alt + left mouse button` | change window type: floating or tiling |
+| `super + alt + LMB` | toggle window type: floating or tiling |
 | `super + w` | restart the interface |
-| `home` | full-screen screenshot |
+| `home` | fullscreen screenshot |
 | `shift + home` | screenshot of selected area |
 | `super + d` | open app launcher |
-| `super + g` | create a group |
-| `super + ctrl + g` | ungroup programs |
+| `super + g` | create group |
+| `super + ctrl + g` | ungroup windows |
 | `super + tab` | previous workspace |
-| `capslock` or `shift + alt` | change language |
-| `shift + capslock` | enable \| disable caps lock |
-| `super + space` | toggle window always on top |
+| `capslock` or `shift + alt` | switch language |
+| `shift + capslock` | toggle caps lock |
+| `super + space` | raise window above others |
 | `ctrl + /` | play \| pause music |
 | `ctrl + .` | next track |
 | `ctrl + ,` | previous track |
 | `alt + pgup` | increase brightness |
 | `alt + pgdn` | decrease brightness |
-| `alt + F9` | mute audio |
+| `alt + F9` | mute |
 | `alt + F10` | volume down |
 | `alt + F11` | volume up |
 | `alt + F12` | open \| close player |
 
-### The screenshot key choice is at the top because not everyone has a convenient home key or may lack it (like the author's keyboard – print screen)
+### The screenshot key is configurable since not everyone has a convenient `Home` key — the author's keyboard doesn't have Print Screen either.
 
-## -- What *JES* looks like -- :
+### [Keybindings for DriftWM](./DriftWM_eng.md)
+
+## -- How *JES* looks -- :
 ### Desktop
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
-### Bar
+### Control bar (DriftWM version differs, see [`DriftWM_eng.md`](./DriftWM_eng.md))
 ![alt_image](./images/3.webp)
 
 ### Wallpaper picker
 ![alt_image](./images/4.webp)
 
-### Popup player
+### Player
 ![alt_image](./images/5.webp)
 ![alt_image](./images/6.webp)
 
@@ -216,63 +238,75 @@ If you want live video wallpapers, you can choose between video wallpapers and s
 ### fastfetch
 ![alt_image](./images/8.webp)
 
-### Volume and brightness popup
+### Volume / audio popup
 ![alt_image](./images/9.webp)
 
-### Launcher
+### App launcher
 ![alt_image](./images/10.webp)
 
-### Screen lock
+### Lock screen
 ![alt_image](./images/11.webp)
 ![alt_image](./images/12.webp)
 
-### Bash prompt
+### bash prompt
 ```
 1 [02:00 - orflem:~]$  cd gits/just_enough_shell/
-2 [02:00 − orflem:~/gits/just_enough_shell main]$
+2 [02:00 - orflem:~/gits/just_enough_shell main]$  
+```
+command number, time, user, directory, git status (when inside a git-tracked project)
+
+## -- Plugins -- :
+### Installation
+```
+1. open ~/.config/quickshell/
+2. drop the plugin folder there
+3. open config.toml
+4. add the following lines:
+   [plugin.plugin-name]
+   source = "plugin folder/Main plugin file.qml"
+   active = true
 ```
 
-command number, date, user, directories, git status (when inside a git repo)
+### [Detailed plugin creation guide](./plugins_eng.md)
 
-## -- Installation -- :
+## -- Installing JES -- :
 ### NixOS
 ```
 1. Install NixOS
-2. Backup system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
-3. Move config to "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. Backup user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-5. Customize the NixOS config for your needs: add your user in the "USER ACCOUNT" section, localization and region in "LOCALISATION", and additional disks in "FILESYSTEMS" (if any)
-6. Copy files from ".config/" to "~/.config", and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
+2. Back up system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
+3. Copy the config to "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
+4. Back up user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
+5. Customize the NixOS config for your setup — make sure to set your username in "USER ACCOUNT", locale and region in "LOCALISATION", and any extra drives in "FILESYSTEMS" (if applicable)
+6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 7. sudo nixos-rebuild switch
 8. reboot
 ```
-
-### Arch Linux or Arch based
+### Arch Linux or Arch-based (may be incorrect; if so, please open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
 ```
-1. Install Arch Linux (for simplicity, I recommend EndeavourOS)
+1. Install Arch Linux (EndeavourOS is recommended for simplicity)
 2. Install yay or paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
-3. Install official software (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
-4. Install user software (yay -S $(cat ./arch_aur.txt))
-5. Install the zenburn theme for qt and gtk
-6. With the help of AI, try to recolor the entire system to zenburn and set ter-v32n (skip if you don't want an exact 1:1 result like on NixOS)
-7. Backup user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-8. Copy files from ".config/" to "~/.config", and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
+3. Install official packages (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
+4. Install AUR packages (yay -S $(cat ./arch_aur.txt))
+5. Install the zenburn theme for Qt and GTK
+6. Optionally configure system themes (GTK/Qt) to zenburn and install the ter-v32n font
+7. Back up user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
+8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. reboot
 ```
 
 ## -- License -- :
-The notices were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and modernized both visually and partially technically, under the **GNU GPL v3** license.
-I recommend checking it out.
+Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. License: **GNU GPL v3**.
+Worth checking out.
 
 These configurations are distributed under the **GNU GPL v3** license.
 
-In simple terms:
+In plain terms:
 - You are free to use, study, and modify this code.
-- If you share your changes or code built upon this with others (e.g., you publish a fork), you **must** make your source code open and available to everyone under the same license.
+- If you share your modifications or derivative work with others (e.g. by publishing a fork), you **must** make your source code open and available to everyone under the same license.
 
 This ensures that all improvements and derivative works remain free and open, just like the original.
 
-See the full license text in the [LICENSE](./LICENSE) file.
+Full license text: [LICENSE](./LICENSE).
 
 [![boosty](https://img.shields.io/badge/Support_on_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
 

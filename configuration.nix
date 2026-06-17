@@ -67,6 +67,10 @@
       kdePackages.dolphin
       kdePackages.ffmpegthumbs
       kdePackages.kdeconnect-kde
+      kdePackages.kwallet
+      kdePackages.kwallet-pam
+      kdePackages.kwalletmanager
+      kdePackages.ksshaskpass
 
       # office
       libreoffice-qt6-fresh
@@ -96,7 +100,6 @@
 
       # Unity3D
       unityhub
-      seahorse
 
       # ----------------------------------------------------------------
       # CLI
@@ -263,6 +266,11 @@
     xwayland.enable = true;
     package = lib.mkForce unstablePkgs.hyprland;
   };
+
+  programs.niri = {
+    enable = true;
+    package = unstablePkgs.niri;
+  }
 
 
   xdg.portal = {
