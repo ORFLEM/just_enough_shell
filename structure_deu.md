@@ -78,4 +78,4 @@ Quickshell ermittelt den aktuellen WM über `$XDG_CURRENT_DESKTOP` und leitet di
    active = true
 ```
 
-### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_ger.md)
+### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)

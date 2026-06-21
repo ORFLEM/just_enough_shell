@@ -160,7 +160,7 @@ Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und 
 ```
 #### **Hintergründe aus den Screenshots**: [hier](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
 
-## [Struktur von *JES*](./structure_ger.md)
+## [Struktur von *JES*](./structure_deu.md)
 
 ## -- Was sich in *JES* anpassen lässt --:
 - `wm` - auto, aber für die Anbindung eines WM, das nicht in der Liste der verfügbaren steht, muss der Name großgeschrieben angegeben werden
@@ -181,7 +181,7 @@ In der .bashrc hat der Autor einen Alias hinterlegt – wer es sich sparen möch
 Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 ```
 
-## [JES für DriftWM](./DriftWM_ger.md)
+## [JES für DriftWM](./DriftWM_deu.md)
 
 ## -- Tastenkombinationen für SwayFX, Hyprland und Niri -- :
 | Kombination | Was es tut |
@@ -217,14 +217,14 @@ Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 
 ### Die Wahl der Taste für Screenshots wurde nach oben verlegt, da nicht jedem `home` zusagt oder die Taste fehlen kann – wie beim Autor, dessen Tastatur keine print-screen-Taste hat
 
-### [Tastenkombinationen für DriftWM](./DriftWM_ger.md)
+### [Tastenkombinationen für DriftWM](./DriftWM_deu.md)
 
 ## -- So sieht *JES* aus --:
 ### Desktop
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
-### Steuerleiste (die DriftWM-Version unterscheidet sich, siehe [`DriftWM_ger.md`](./DriftWM_ger.md))
+### Steuerleiste (die DriftWM-Version unterscheidet sich, siehe [`DriftWM_deu.md`](./DriftWM_deu.md))
 ![alt_image](./images/3.webp)
 
 ### Hintergrundauswahl
@@ -269,7 +269,7 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
    active = true
 ```
 
-### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_ger.md)
+### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)
 
 ### [Plugin-Repository](./plugin_repo.md)
 ### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
