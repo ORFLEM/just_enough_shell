@@ -271,6 +271,9 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 
 ### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_ger.md)
 
+### [Plugin-Repository](./plugin_repo.md)
+### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
+
 ## -- Installation von JES --:
 ### NixOS
 ```

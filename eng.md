@@ -272,6 +272,9 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 
 ### [Detailed plugin creation guide](./plugins_eng.md)
 
+### [Plugin Repository](./plugin_repo.md)
+### Important: the repository is only available in English, as this part is heavily influenced by the project community, and translating all short descriptions into multiple languages is extremely difficult.
+
 ## -- Installing JES -- :
 ### NixOS
 ```
