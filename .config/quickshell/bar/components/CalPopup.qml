@@ -12,6 +12,7 @@ WlrLayershell {
     layer:  WlrLayer.Top
     namespace: "calendar"
     exclusiveZone: -1
+    screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
 
     property bool isOpen: false
 

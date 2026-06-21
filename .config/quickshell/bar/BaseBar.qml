@@ -12,6 +12,7 @@ WlrLayershell {
     id: panel
     layer: WlrLayer.Top
     namespace: "bar"
+    screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
     
     property var workspacesData: ({})
     property var cameraData: ({})
@@ -561,6 +562,7 @@ WlrLayershell {
                         anchors.centerIn: parent
                         opacity: 0.55
                         height: fontSize
+                        clip: true
                         width: plrText1.implicitWidth + sep1.implicitWidth + plrText2.implicitWidth + sep2.implicitWidth + titleLoader.width
 
                         Text {

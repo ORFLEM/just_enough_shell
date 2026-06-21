@@ -578,7 +578,7 @@ WlrLayershell {
 
             // cellWidth делим на 3 колонки без остатка
             cellWidth: Math.floor(width / 3)
-            cellHeight: Math.floor(cellWidth * 9 / 21) + 28
+            cellHeight: Math.floor(cellWidth * Screen.height / Screen.width) + 28
 
             delegate: Item {
                 width: GridView.view.cellWidth
@@ -618,7 +618,7 @@ WlrLayershell {
                             anchors.top: parent.top
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: Math.floor(parent.width * 9 / 21)
+                            height: Math.floor(parent.width * Screen.height / Screen.width)
                             radius: mainRad - 6
 
                             Image {
@@ -628,7 +628,7 @@ WlrLayershell {
                                 asynchronous: true
                                 // Не грузим полный файл — только нужный размер
                                 sourceSize.width: 320
-                                sourceSize.height: 200
+                                sourceSize.height: (Screen.height / Screen.width) * sourceSize.width
                                 opacity: cardMa.containsMouse ? 0.72 : 1.0
                                 Behavior on opacity { NumberAnimation { duration: 200 } }
 

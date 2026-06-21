@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Shapes
 import "roundCorners"
 import "bar"
-import "navbar"
 import "helpers"
 import "btime"
 import "bar/components"
@@ -18,7 +17,7 @@ import "screenpicker"
 ShellRoot {
     id: root
 
-    // ── Цвета ──────────────────────────────────────────────────────────────
+    // ── Colors ──────────────────────────────────────────────────────────────
     FileView {
         id: colors
         path: darkTheme ? Qt.resolvedUrl("./colors.json") : Qt.resolvedUrl("./colors_light.json")
@@ -64,7 +63,7 @@ ShellRoot {
         }
     }
 
-    // ── Состояния UI ───────────────────────────────────────────────────────
+    // ── UI states ───────────────────────────────────────────────────────
     property bool playerOpen:     false
     property bool calOpen:        false
     property bool scrpicOpen:     false
@@ -74,7 +73,7 @@ ShellRoot {
     property int  wallpaperType:  1
     property string wallShaderName: ""
 
-    // ── Конфиг: TOML → JSON через taplo ───────────────────────────────────
+    // ── Toml-config -> Json-config ───────────────────────────────────
     FileView {
         id: tomlWatcher
         path: Qt.resolvedUrl("./config.toml")
@@ -91,7 +90,6 @@ ShellRoot {
             if (running) kill()
             running = true
         }
-        // Читаем файл только после того, как taplo его дописал
         onExited: (code, status) => {
             console.log("[shell] taplo exited, code:", code)
             if (code === 0) {
@@ -106,11 +104,11 @@ ShellRoot {
         taploProcess.reload()
     }
 
-    // ── Конфиг: читаем JSON и парсим вручную ──────────────────────────────
+    // ── Json-config parcing ──────────────────────────────
     FileView {
         id: configView
         path: Quickshell.env("HOME") + "/.cache/qs_config.json"
-        watchChanges: false  // управляем вручную через taploProcess.onExited
+        watchChanges: false
         onLoaded: {
             let content = text()
             console.log("[shell] configView loaded, text length:", content.length)
@@ -140,10 +138,10 @@ ShellRoot {
             root._cfg_fontSize        = s.fontSize                ?? 17
             root._cfg_fontFamily      = s.fontFamily              ?? "Mononoki Nerd Font Propo"
             root._cfg_darkTheme       = s.darkTheme               ?? true
-            root._cfg_doNotDisturb    = s.doNotDistrub            ?? false  // опечатка в конфиге сохранена
+            root._cfg_doNotDisturb    = s.doNotDisturb            ?? false
             root._cfg_customWallpaper = s.custom_wallpaper_engine ?? false
 
-            // plugin: объект { key: { source, acitve } } → массив для Repeater
+            // plugin: object { key: { source, acitve } } → list for Repeater
             let p = parsed.plugin ?? {}
             console.log("[shell] plugin keys:", Object.keys(p).join(", "))
             pluginListModel.clear()
@@ -154,8 +152,8 @@ ShellRoot {
                     active: p[key].active ?? false
                 })
             }
-            console.log("[shell] pluginListModel заполнен, count:", pluginListModel.count)
-            console.log("[shell] pluginListModel содержимое:")
+            console.log("[shell] pluginListModel parsed, count:", pluginListModel.count)
+            console.log("[shell] pluginListModel info:")
             for (var i = 0; i < pluginListModel.count; i++) {
                 var item = pluginListModel.get(i)
                 console.log("  [" + i + "] name:", item.name, "source:", item.source, "active:", item.active)
@@ -178,7 +176,7 @@ ShellRoot {
     property bool   _cfg_doNotDisturb:   false
     property bool   _cfg_customWallpaper: false
 
-    // ── Публичные свойства ─────────────────────────────────────────────────
+    // ── Public properties ─────────────────────────────────────────────────
     property int    mainRad:       _cfg_mainRad
     property bool   barOnTop:      _cfg_barOnTop
     property bool   minibar:       _cfg_minibar
@@ -193,7 +191,7 @@ ShellRoot {
 
     Behavior on mainRad { NumberAnimation { duration: 200 } }
 
-    // ── Плагины ────────────────────────────────────────────────────────────
+    // ── Plugins ────────────────────────────────────────────────────────────
     ListModel {
         id: pluginListModel
     }
@@ -206,7 +204,7 @@ ShellRoot {
             active: model.active
             source: model.active ? Qt.resolvedUrl(model.source) : ""
             onLoaded: {
-                // Запоминаем объект плагина
+                // remember plugin, it's id
                 root.pluginRegistry[model.name] = item
                 console.log("[plugin] Плагин зарегистрирован:", model.name)
             }
@@ -227,7 +225,7 @@ ShellRoot {
         }
     }
 
-    // ── Компоненты ─────────────────────────────────────────────────────────
+    // ── UI components ─────────────────────────────────────────────────────────
     LazyLoader {
         active: show_wallpaper
         Walls {}
@@ -299,26 +297,37 @@ ShellRoot {
         }
     }
 
-    // ── Скруглённые углы ───────────────────────────────────────────────────
+    // ── Rounded corners ───────────────────────────────────────────────────
     property int size: mainRad > 0 ? mainRad + 6 : 0
-    ScreenCorner {
-        cornerDirection: ScreenCorner.TopLeft
-        cornerWidth: size; cornerHeight: size
-        cornerColor: "#000000"
-    }
-    ScreenCorner {
-        cornerDirection: ScreenCorner.TopRight
-        cornerWidth: size; cornerHeight: size
-        cornerColor: "#000000"
-    }
-    ScreenCorner {
-        cornerDirection: ScreenCorner.BottomLeft
-        cornerWidth: size; cornerHeight: size
-        cornerColor: "#000000"
-    }
-    ScreenCorner {
-        cornerDirection: ScreenCorner.BottomRight
-        cornerWidth: size; cornerHeight: size
-        cornerColor: "#000000"
+    Variants {
+        model: Quickshell.screens
+
+        Item {
+            required property ShellScreen modelData
+            ScreenCorner {
+                cornerDirection: ScreenCorner.TopLeft
+                cornerWidth: size; cornerHeight: size
+                cornerColor: "#000000"
+                screen: modelData
+            }
+            ScreenCorner {
+                cornerDirection: ScreenCorner.TopRight
+                cornerWidth: size; cornerHeight: size
+                cornerColor: "#000000"
+                screen: modelData
+            }
+            ScreenCorner {
+                cornerDirection: ScreenCorner.BottomLeft
+                cornerWidth: size; cornerHeight: size
+                cornerColor: "#000000"
+                screen: modelData
+            }
+            ScreenCorner {
+                cornerDirection: ScreenCorner.BottomRight
+                cornerWidth: size; cornerHeight: size
+                cornerColor: "#000000"
+                screen: modelData
+            }
+        }
     }
 }

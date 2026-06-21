@@ -2,7 +2,6 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import "../"
-import "components"
 
 WlrLayershell {
     id: btime
@@ -11,7 +10,8 @@ WlrLayershell {
     implicitWidth: 12 + textWeekday.width
     implicitHeight: 120
     color: "transparent"
-    exclusiveZone: minibar ? -1 : 0
+    exclusiveZone: minibar && Screen.width >= 3440 ? -1 : 0
+    screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
     mask: Region { }
     anchors {
         bottom: true

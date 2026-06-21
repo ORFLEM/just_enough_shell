@@ -9,7 +9,7 @@ barHeight = 30
 fontSize = 17
 fontFamily = "Mononoki Nerd Font Propo"
 custom_wallpaper_engine = false
-doNotDistrub = false
+doNotDisturb = false
 
 # [plugin.name]
 # source = "plugin-example/Main.qml"

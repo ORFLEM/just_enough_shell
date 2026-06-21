@@ -106,6 +106,7 @@
 	<i>JES</i> was designed for desktop PCs, allowing it to be better tailored to those machines.<br>
 	The author's monitor is UWQHD (3440×1440); tested resolutions: FHD (1920×1080) and above. (FHD is supported natively, <b>but</b> with minibar enabled there may be bugs, since the size doesn't change but the display model does.)<br>
 	On those resolutions the bar has no issues with module placement.<br>
+	Project supports multi-monitor setups.<br>
 	<br>
 	The project uses bash with custom output, and updates faster for SwayFX and DriftWM, since it's oriented toward the author's everyday use.<br>
 	This also gives the project longevity — as long as the author goes about his business, the project will keep evolving and improving.<br>
@@ -128,6 +129,7 @@
 	<b>[c]</b> Animated album art in the player when no cover is available<br>
 	<b>[c]</b> Protection against static wallpapers with wrong format in the wallpaper picker<br>
 	<b>[c]</b> Calendar widget<br>
+	<b>[c]</b> Multi-monitor support<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Neutral / vibrant style toggle<br>
 	<b>[p]</b> Dark / light theme toggle<br>
@@ -148,6 +150,7 @@
 > If not — this project might not be for you, and that's okay.
 
 ## -- IMPORTANT -- :
+- Nvidia graphics cards work TERRIBLY, **everything can freeze instantly for no reason**, the author is not going to fix this issue, because it's **problems on the driver side**!
 - The author has no experience with Arch Linux; installation on Arch may be incorrect. If that's the case, please describe the issue in an Issue and, if possible, suggest a fix.
 - Installation instructions are at the very bottom.
 - The author is open to suggestions and helps with onboarding; for issues, open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new).

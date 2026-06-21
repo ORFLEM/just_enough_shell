@@ -97,9 +97,7 @@
       pcmanfm-qt
       nh
       krusader
-
-      # Unity3D
-      unityhub
+      firefox
 
       # ----------------------------------------------------------------
       # CLI
@@ -225,6 +223,8 @@
       bastet
       moon-buggy
       nsnake
+
+      zen-browser
 
       hyprpicker
 

@@ -13,6 +13,7 @@ WlrLayershell {
     layer: WlrLayer.Top
     namespace: "player"
     exclusiveZone: -1
+    screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
 
     anchors {
         top: true
@@ -22,7 +23,7 @@ WlrLayershell {
     property bool isOpen: false
     property bool showimage: false
     
-    implicitHeight: isOpen ? (barOnTop && !minibar && screen.width >= 3440 ? (showimage ? 530 + barHeight : 230 + barHeight) : (showimage ? 530 : 230)) : 0
+    implicitHeight: isOpen ? (barOnTop && !minibar && screen.width <= 3480 ? (showimage ? 530 + barHeight : 230 + barHeight) : (showimage ? 530 : 230)) : 0
     implicitWidth: showimage ? 689 : 389
     color: "transparent"
 
@@ -35,7 +36,7 @@ WlrLayershell {
 
     Item {
         anchors.fill: parent
-        anchors.topMargin: barOnTop && !minibar && screen.width >= 3440 ? barHeight : 0
+        anchors.topMargin: barOnTop && !minibar && screen.width <= 3480 ? barHeight : 0
         anchors.bottomMargin: isOpen ? 6 : 0
 
         Rectangle {
