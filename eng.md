@@ -174,6 +174,7 @@ If you want live video wallpapers, there are both video wallpapers and shaders a
 - `fontFamily` — font, default Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` — disable the built-in wallpaper engine, default false
 - `doNotDisturb` — silent mode, default false
+- `timezone` — the city for the weather widget; it is not present by default, the value is taken from the `user-config.toml` file of the NixOS configuration.
 
 ```
 Note: config.toml lives in the Quickshell folder (~/.config/quickshell/)

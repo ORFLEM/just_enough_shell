@@ -173,7 +173,7 @@
 - `fontFamily` - шрифт, изначально Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` - выключить встроенные обои, изначально false
 - `doNotDisturb` - тихий режим, изначально false
-- `timezon` - город виджета погоды, изначально не присутствует, берётся данные из `user-config.toml` конфигурации NixOS
+- `timezone` - город виджета погоды, изначально не присутствует, берётся данные из `user-config.toml` конфигурации NixOS
 
 ```
 Важно, config.toml лежит в папке Quickshell (~/.config/quickshell/)

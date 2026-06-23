@@ -173,6 +173,7 @@ Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und 
 - `fontFamily` - Schriftart, standardmäßig Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` - integrierte Hintergründe deaktivieren, standardmäßig false
 - `doNotDisturb` - stiller Modus, standardmäßig false
+- `timezone` — die Stadt für das Wetter-Widget; standardmäßig nicht vorhanden, der Wert wird aus der `user-config.toml`-Datei der NixOS-Konfiguration übernommen.
 
 ```
 Wichtig: config.toml liegt im Quickshell-Ordner (~/.config/quickshell/)
