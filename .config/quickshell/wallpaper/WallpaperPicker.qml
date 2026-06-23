@@ -27,6 +27,30 @@ WlrLayershell {
     property string searchTerm: ""
     property var items: []
     property bool loading: false
+    property string currentScheme: "classic"   // "classic" или "vibrant"
+
+    // Процесс для получения состояния при старте
+    Process {
+        id: stateProc
+        running: false
+        command: [root.bin, "get-state"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var raw = text.trim()
+                if (!raw) return
+                try {
+                    var obj = JSON.parse(raw)
+                    // obj.colorscheme должно быть добавлено в Go
+                    if (obj.colorscheme) root.currentScheme = obj.colorscheme
+                } catch (e) { console.warn("[WallPicker] state parse:", e) }
+            }
+        }
+    }
+
+    function setScheme(scheme) {
+        Quickshell.execDetached([root.bin, "set-scheme", scheme])
+        root.currentScheme = scheme
+    }
 
     // Один процесс на весь пикер
     Process {
@@ -71,7 +95,9 @@ WlrLayershell {
     Component.onCompleted: {
         reload()
         searchInput.forceActiveFocus()
+        stateProc.running = true   // получить текущую схему
     }
+    
 
     // Действие: применить обои
     // setProc живёт в shell.qml — здесь только сигнал через execDetached
@@ -376,7 +402,103 @@ WlrLayershell {
                         }
                     }
                 }
+                
 
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 3
+
+                    // Кнопка Classic
+                    Item {
+                        width: schemeLabel.width + 24
+                        height: 26
+
+                        property bool isActive: root.currentScheme === "scheme-tonal-spot" || root.currentScheme === "classic"
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: mainRad - 3
+                            opacity: 0.65
+                            gradient: Gradient {
+                                orientation: Gradient.Horizontal
+                                GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                                GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                                GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                                GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                            }
+                        }
+                        Rectangle {
+                            id: classicBg
+                            anchors.fill: parent
+                            anchors.margins: 2
+                            radius: mainRad - 5
+                            color: parent.isActive ? col.accent : "transparent"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                        }
+                        Text {
+                            id: schemeLabel
+                            anchors.centerIn: parent
+                            text: "Classic"
+                            color: parent.isActive ? col.fontDark : col.font
+                            font.family: fontFamily
+                            font.pixelSize: 14
+                            font.weight: Font.Bold
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.setScheme("classic")
+                        }
+                    }
+
+                    // Кнопка Vibrant
+                    Item {
+                        width: schemeLabel2.width + 24
+                        height: 26
+
+                        property bool isActive: root.currentScheme === "scheme-vibrant" || root.currentScheme === "vibrant"
+
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: mainRad - 3
+                            opacity: 0.65
+                            gradient: Gradient {
+                                orientation: Gradient.Horizontal
+                                GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                                GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                                GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                                GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                            }
+                        }
+                        Rectangle {
+                            id: vibrantBg
+                            anchors.fill: parent
+                            anchors.margins: 2
+                            radius: mainRad - 5
+                            color: parent.isActive ? col.accent : "transparent"
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                        }
+                        Text {
+                            id: schemeLabel2
+                            anchors.centerIn: parent
+                            text: "Vibrant"
+                            color: parent.isActive ? col.fontDark : col.font
+                            font.family: fontFamily
+                            font.pixelSize: 14
+                            font.weight: Font.Bold
+                            Behavior on color { ColorAnimation { duration: 200 } }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.setScheme("vibrant")
+                        }
+                    }
+                }
                 // Поиск — справа
                 Item {
                     width: 210

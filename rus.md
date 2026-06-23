@@ -131,11 +131,11 @@
 	<b>[c]</b> Создание виджета календаря<br>
 	<b>[c]</b> Поддержка нескольких мониторов<br>
   <b>[c]</b> Создание установщика настроек<br>
+	<b>[c]</b> Выбор стиля нейтральный/яркий<br>
 	<b>[i]</b> Перевод <b>Hyprland</b> на lua конфиги<br>
-	<b>[i]</b> Выбор стиля нейтральный/яркий<br>
-	<b>[p]</b> Выбор темы тёмная/светлая<br>
-	<b>[p]</b> Фикс <b>Niri</b><br>
+	<b>[i]</b> Фикс <b>Niri</b><br>
 	<b>[p]</b> Создание виджета погоды<br>
+	<b>[n]</b> Выбор темы тёмная/светлая<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
@@ -172,6 +172,7 @@
 - `fontSize` - размер шрифта, изначально 17
 - `fontFamily` - шрифт, изначально Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` - выключить встроенные обои, изначально false
+- `disableGenerate` - переключение JES matugen темы на base16, изначально false
 - `doNotDisturb` - тихий режим, изначально false
 - `timezone` - город виджета погоды, изначально не присутствует, берётся данные из `user-config.toml` конфигурации NixOS
 

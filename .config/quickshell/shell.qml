@@ -18,13 +18,14 @@ ShellRoot {
     id: root
 
     // ── Colors ──────────────────────────────────────────────────────────────
+        // ── Colors ──────────────────────────────────────────────────────────────
     FileView {
-        id: colors
-        path: darkTheme ? Qt.resolvedUrl("./colors.json") : Qt.resolvedUrl("./colors_light.json")
+        id: colorsFile
+        path: Qt.resolvedUrl("./colors.json")
         watchChanges: true
         onFileChanged: reload()
         JsonAdapter {
-            id: col
+            id: colorsJson
             property string background1
             property string background2
             property string background3
@@ -62,6 +63,20 @@ ShellRoot {
             property string base16
         }
     }
+    // Унифицированный доступ к цветам
+    QtObject {
+        id: col
+        readonly property string background1:  disableGenerate ? base.base03 : colorsJson.background1
+        readonly property string background2:  disableGenerate ? base.base04 : colorsJson.background2
+        readonly property string background3:  disableGenerate ? base.base05 : colorsJson.background3
+        readonly property string backgroundAlt1: disableGenerate ? base.base02 : colorsJson.backgroundAlt1
+        readonly property string backgroundAlt2: disableGenerate ? base.base01 : colorsJson.backgroundAlt2
+        readonly property string font:         disableGenerate ? base.base06 : colorsJson.font
+        readonly property string fontDark:     disableGenerate ? base.base01 : colorsJson.fontDark
+        readonly property string accent:       disableGenerate ? base.base08 : colorsJson.accent
+        readonly property string accent2:      disableGenerate ? base.base05 : colorsJson.accent2
+    }
+
 
     // ── UI states ───────────────────────────────────────────────────────
     property bool playerOpen:     false
@@ -142,7 +157,7 @@ ShellRoot {
             root._cfg_barHeight       = s.barHeight               ?? 30
             root._cfg_fontSize        = s.fontSize                ?? 17
             root._cfg_fontFamily      = s.fontFamily              ?? "Mononoki Nerd Font Propo"
-            root._cfg_darkTheme       = s.darkTheme               ?? true
+            root._cfg_disableGenerate = s.disableGenerate         ?? false
             root._cfg_doNotDisturb    = s.doNotDisturb            ?? false
             root._cfg_customWallpaper = s.custom_wallpaper_engine ?? false
 
@@ -170,30 +185,30 @@ ShellRoot {
 
     // ── Backing properties ─────────────────────────────────────────────────
     property string _cfg_wm:              "auto"
-    property string _cfg_wm_type:        "auto"
-    property int    _cfg_mainRad:        10
-    property int    _cfg_mainRadOld:     10
-    property bool   _cfg_barOnTop:       true
-    property bool   _cfg_minibar:        false
-    property int    _cfg_barHeight:      30
-    property int    _cfg_fontSize:       17
-    property string _cfg_fontFamily:     "Mononoki Nerd Font Propo"
-    property bool   _cfg_darkTheme:      true
-    property bool   _cfg_doNotDisturb:   false
+    property string _cfg_wm_type:         "auto"
+    property int    _cfg_mainRad:         10
+    property int    _cfg_mainRadOld:      10
+    property bool   _cfg_barOnTop:        true
+    property bool   _cfg_minibar:         false
+    property int    _cfg_barHeight:       30
+    property int    _cfg_fontSize:        17
+    property string _cfg_fontFamily:      "Mononoki Nerd Font Propo"
+    property bool   _cfg_disableGenerate: false
+    property bool   _cfg_doNotDisturb:    false
     property bool   _cfg_customWallpaper: false
 
     // ── Public properties ─────────────────────────────────────────────────
-    property int    mainRad:       _cfg_mainRad
-    property bool   barOnTop:      _cfg_barOnTop
-    property bool   minibar:       _cfg_minibar
-    property int    fontSize:      _cfg_fontSize
-    property int    barHeight:     _cfg_barHeight + 6
-    property string fontFamily:    _cfg_fontFamily
-    property bool   darkTheme:     _cfg_darkTheme
-    property bool   show_wallpaper: !_cfg_customWallpaper
-    property bool   doNotDisturb:  _cfg_doNotDisturb
-    property string wm:      _cfg_wm      == "auto" ? (Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway") : _cfg_wm
-    property string wm_type: _cfg_wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces") : _cfg_wm_type
+    property int    mainRad:         _cfg_mainRad
+    property bool   barOnTop:        _cfg_barOnTop
+    property bool   minibar:         _cfg_minibar
+    property int    fontSize:        _cfg_fontSize
+    property int    barHeight:       _cfg_barHeight + 6
+    property string fontFamily:      _cfg_fontFamily
+    property bool   disableGenerate: _cfg_disableGenerate
+    property bool   show_wallpaper:  !_cfg_customWallpaper
+    property bool   doNotDisturb:    _cfg_doNotDisturb
+    property string wm:              _cfg_wm      == "auto" ? (Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway") : _cfg_wm
+    property string wm_type:         _cfg_wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces") : _cfg_wm_type
 
     Behavior on mainRad { NumberAnimation { duration: 200 } }
 

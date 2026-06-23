@@ -237,15 +237,17 @@ WlrLayershell {
                             ]
 
                             delegate: Item {
+                                id: playerButton
                                 width: 48
                                 height: 34
+                                property bool hovered: false
 
                                 Rectangle {
                                     id: btnBg
                                     anchors.fill: parent
                                     anchors.margins: 0
                                     radius: mainRad - 5
-                                    color: "transparent"
+                                    color: playerButton.hovered ? col.fontDark : "transparent"
                                     Behavior on color { ColorAnimation { duration: 150 } }
                                 }
 
@@ -253,7 +255,7 @@ WlrLayershell {
                                     id: btnIcon
                                     anchors.centerIn: parent
                                     text: modelData.icon
-                                    color: col.fontDark
+                                    color: playerButton.hovered ? col.font : col.fontDark
                                     font.family: fontFamily
                                     font.pixelSize: 25
                                     Behavior on color { ColorAnimation { duration: 150 } }
@@ -263,12 +265,10 @@ WlrLayershell {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     onEntered: {
-                                        btnBg.color = col.backgroundAlt1
-                                        btnIcon.color = col.accent
+                                        playerButton.hovered = true
                                     }
                                     onExited: {
-                                        btnBg.color = "transparent"
-                                        btnIcon.color = col.fontDark
+                                        playerButton.hovered = false
                                     }
                                     onClicked: Quickshell.execDetached(["sh", "-c", modelData.cmd])
                                 }

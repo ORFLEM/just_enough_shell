@@ -131,11 +131,11 @@
 	<b>[c]</b> Erstellung eines Kalender-Widgets<br>
 	<b>[c]</b> Unterstützung mehrerer Monitore<br>
   <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
+	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
-	<b>[i]</b> Auswahl des Stils neutral/auffällig<br>
-	<b>[p]</b> Auswahl des Themes dunkel/hell<br>
-	<b>[p]</b> Fix für <b>Niri</b><br>
+	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
+	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
@@ -172,6 +172,7 @@ Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und 
 - `fontSize` - Schriftgröße, standardmäßig 17
 - `fontFamily` - Schriftart, standardmäßig Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` - integrierte Hintergründe deaktivieren, standardmäßig false
+- `disableGenerate` — Umschaltung des JES-matugen-Themas auf base16, standardmäßig false
 - `doNotDisturb` - stiller Modus, standardmäßig false
 - `timezone` — die Stadt für das Wetter-Widget; standardmäßig nicht vorhanden, der Wert wird aus der `user-config.toml`-Datei der NixOS-Konfiguration übernommen.
 

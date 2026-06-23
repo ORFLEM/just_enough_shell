@@ -131,11 +131,11 @@
 	<b>[c]</b> Calendar widget<br>
 	<b>[c]</b> Multi-monitor support<br>
   <b>[c]</b> Settings installer<br>
+	<b>[c]</b> Neutral / vibrant style toggle<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
-	<b>[i]</b> Neutral / vibrant style toggle<br>
-	<b>[p]</b> Dark / light theme toggle<br>
-	<b>[p]</b> Fix <b>Niri</b><br>
+	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>
+	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
@@ -173,6 +173,7 @@ If you want live video wallpapers, there are both video wallpapers and shaders a
 - `fontSize` — font size, default 17
 - `fontFamily` — font, default Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` — disable the built-in wallpaper engine, default false
+- `disableGenerate` - replace JES matugen theme on base16, default false
 - `doNotDisturb` — silent mode, default false
 - `timezone` — the city for the weather widget; it is not present by default, the value is taken from the `user-config.toml` file of the NixOS configuration.
 

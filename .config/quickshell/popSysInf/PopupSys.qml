@@ -34,7 +34,7 @@ Variants {
         }
         
         JsonListen {
-            command: "~/.config/quickshell/scripts/birghtness.sh"
+            command: "~/.config/quickshell/scripts/birghtness.sh stream"
             onDataChanged: {
                 lght = data
                 showBright = true
