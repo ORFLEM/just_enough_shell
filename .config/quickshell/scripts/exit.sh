@@ -1,6 +1,7 @@
 #!/bin/sh
 
 if [ "$XDG_CURRENT_DESKTOP" == "sway" ]; then
+    pkill -f persway
     swaymsg exit
 elif [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
     hyprctl dispatch exit

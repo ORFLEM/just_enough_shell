@@ -22,8 +22,13 @@ get_icon() {
 # Получение данных о погоде
 get_weather_data() {
     local KEY="e434b5435a979de6e155570590bee89b"
-    local CITY="Tomsk"
+    local CITY=$(grep 'timezone' ~/.config/quickshell/config.toml | cut -d '"' -f2)
     local API="https://api.openweathermap.org/data/2.5"
+    local DISTRO= $(. /etc/os-release && echo $ID)
+
+    if [[ $CITY == "" && $DISTRO == "nixos" ]]; then
+        CITY=$(grep 'timezone' /etc/nixos/user-config.toml | cut -d '"' -f2 | awk -F '/' '{print $2}')
+    fi
 
     # Текущая погода
     local current

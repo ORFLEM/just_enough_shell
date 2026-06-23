@@ -27,7 +27,7 @@
 ## -- Data flow and IPC -- :
 1. **Initialization**: `shell.qml` launches modules. Each module, on startup, calls its corresponding script from `scripts/`.
 2. **Data collection**:
-   - Go binaries (`sys_info`, `music`, `Cava-internal`, `timed`, `cal`) handle logic involving large volumes of data that need processing.
+   - Go binaries (`music`, `Cava-internal`, `cal`) handle logic involving large volumes of data that need processing.
    - Bash scripts (`brightness.sh`, `vol.sh`, `workspace-*.sh`) provide the main logic and are written this way for portability and readability.
 3. **Delivery to UI**: Data is passed via `stdout` (JSON, or a plain string for visual programs like cava) → parsed in QML via `JsonListen`/`JsonPoll` → updates widget properties.
 4. **User feedback**: User actions (click, hotkey) → script/binary call → command sent to WM/MPD/PipeWire → event updates the UI.
@@ -43,7 +43,7 @@
 | Lock | Hyprlock | Lock screen |
 | Audio | PipeWire + wpctl/pavucontrol | Mixing, MPRIS, Cava |
 
-**Metrics**: CPU idle ~7–11% (Go subscribe) vs 35–45% (bash polling). Binaries are statically compiled; total logic weight ~10–11 MB.
+**Metrics**: CPU idle ~5–11% (Go subscribe) vs 35–45% (bash polling). Binaries are statically compiled; total logic weight ~8-8.5 MB.
 
 ## -- WM compatibility layer -- :
 Abstraction from the tiling WM is implemented via three pairs of scripts and one file for connecting to shell.qml:

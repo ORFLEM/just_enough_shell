@@ -130,12 +130,12 @@
 	<b>[c]</b> Schutz vor statischen Hintergründen mit falschem Format im wallpaper picker<br>
 	<b>[c]</b> Erstellung eines Kalender-Widgets<br>
 	<b>[c]</b> Unterstützung mehrerer Monitore<br>
+  <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Auswahl des Stils neutral/auffällig<br>
 	<b>[p]</b> Auswahl des Themes dunkel/hell<br>
 	<b>[p]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
-  <b>[p]</b> Erstellung eines Konfigurations-Installers<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
@@ -275,17 +275,13 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 ### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
 
 ## -- Installation von JES --:
-### NixOS
-```
-1. Installieren Sie NixOS
-2. Erstellen Sie ein Backup der Systemdateien (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
-3. Verschieben Sie die Konfiguration nach "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. Erstellen Sie ein Backup der Benutzerkonfigurationen (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-5. Passen Sie die NixOS-Konfiguration an Ihre Bedürfnisse an – tragen Sie dabei Ihren Benutzer im Abschnitt "USER ACCOUNT", Sprache und Region in "LOCALISATION" sowie zusätzliche Laufwerke in "FILESYSTEMS" ein (falls vorhanden)
-6. Kopieren Sie die Dateien aus ".config/" nach "~/.config" und aus ".local/" nach "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
-7. sudo nixos-rebuild switch
-8. Geben Sie reboot ein
-```
+### NixOS- Installieren Sie NixOS
+- Führen Sie das Installationsprogramm aus:
+  ```bash
+  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+	```
+- Starten Sie mit `reboot` neu
+
 ### Arch Linux oder Arch-basiert (kann fehlerhaft sein, bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
 ```
 1. Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
@@ -298,6 +294,8 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 8. Kopieren Sie die Dateien aus ".config/" nach "~/.config" und aus ".local/" nach "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. Geben Sie reboot ein
 ```
+
+> Das Skript funktioniert nur unter NixOS. Wenn Sie ein Skript für Arch wünschen, geben Sie bitte ein fertiges Skript an, der Autor wird es in das Projekt aufnehmen.
 
 ## -- Lizenz --:
 Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert, Lizenz **GNU GPL v3**

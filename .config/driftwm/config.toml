@@ -3,9 +3,13 @@ window_placement = "cursor"
 
 autostart = [
   "qs -d",
+  "Telegram",
+  "zen-beta",
   "wl-paste --type text --watch cliphist store",
   "wl-paste --type image --watch cliphist store",
   "mkdir -p ~/Screenshots",
+  "openrgb --profile orflem",
+  "mpd-mpris",
   "kwalletd6",
   "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
   "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
@@ -75,7 +79,7 @@ cursor_zone = 0.0          # cursor edge-pan activation zone (px) — kept small
 [decorations]
 bg_color = "#2b2b2b"           # title bar background (default: dark gray)
 fg_color = "#FFFFFF"           # title text + close button × color (default: white)
-corner_radius = 10             # clip window corners to this radius
+corner_radius = 10
 shadow = false                 # drop shadow under window chrome
 
 default_mode = "minimal"
@@ -131,7 +135,7 @@ transparent_shader = true
 
 # --- Power menu / дашборд ---
 "mod+p" = "spawn qs ipc call root togglePower"
-"mod+w" = "spawn ~/.config/sway/qs_restart.sh"
+"mod+w" = "spawn ~/.config/quickshell/scripts/qs_restart.sh"
 
 # --- Медиа (используем spawn, т.к. не нужно снимать fullscreen) ---
 "Alt+F9"  = "spawn pamixer -t"
@@ -143,8 +147,8 @@ transparent_shader = true
 "Alt+F2"  = "spawn playerctl previous"
 
 # --- Яркость (монитор через ddcutil) ---
-"Alt+Prior" = "spawn ddcutil --bus 11 setvcp 10 + 5"
-"Alt+Next"  = "spawn ddcutil --bus 11 setvcp 10 - 5"
+"Alt+Prior" = "spawn ~/.config/quickshell/scripts/birghtness.sh change-up"
+"Alt+Next"= "spawn ~/.config/quickshell/scripts/birghtness.sh change-down"
 
 # --- Скриншоты ---
 "Home" = "spawn sh -c 'qs ipc call root screenpicker'"
@@ -221,11 +225,11 @@ enabled = true                  # default: true
 path    = "xwayland-satellite"  # path to xwayland-satellite binary ($PATH lookup works)
 
 [[outputs]]
-# name = "DP-2"           # connector name (required)
-# scale = 1                # fractional scale (default: 1.0)
-# transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
-# position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
-# mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
+name = "DP-2"           # connector name (required)
+scale = 1                # fractional scale (default: 1.0)
+transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
+mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
 
 [[window_rules]]
 title            = "Картинка в картинке"

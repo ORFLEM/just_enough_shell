@@ -399,16 +399,15 @@ WlrLayershell {
                 Item {
                     id: timeItem
                     property bool hovered: false
+                    property bool dateInfo: false
                     width: timeRow.width + 12
                     height: panel.height - 12
 
-                    JsonListen {
-                        command: "~/.config/quickshell/scripts/timed show"
-                        onDataChanged: {
-                            timed = typeof data === 'string' ? data : ""
-                        }
+                    SystemClock {
+                      id: clock
+                      precision: SystemClock.Seconds
                     }
-                    
+
                     Rectangle {
                         anchors.fill: parent
                         radius: mainRad - 3
@@ -438,7 +437,7 @@ WlrLayershell {
                         
                         Text {
                             id: timeIcon
-                            text: "󱑎"
+                            text: timeItem.dateInfo ? "" : "󱑎"
                             color: timeItem.hovered ? col.fontDark : col.accent
                             font.family: fontFamily
                             font.pixelSize: fontSize
@@ -454,7 +453,7 @@ WlrLayershell {
                             font.pixelSize: fontSize
                             font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
-                            text: timed
+                            text: timeItem.dateInfo ? Qt.formatDateTime(clock.date, "yyyy-MM-dd") : Qt.formatDateTime(clock.date, "hh:mm:ss")
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
                     }
@@ -469,7 +468,7 @@ WlrLayershell {
                         
                         onClicked: function(mouse) {
                             if (mouse.button === Qt.LeftButton) {
-                                Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/timed t-d"])
+                                timeItem.dateInfo = !timeItem.dateInfo
                             }
                             if (mouse.button === Qt.RightButton) {
                                 calOpen = !calOpen

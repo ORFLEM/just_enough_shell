@@ -78,8 +78,13 @@ ShellRoot {
         id: tomlWatcher
         path: Qt.resolvedUrl("./config.toml")
         watchChanges: true
-        onFileChanged: generateJsonConfig()
-        Component.onCompleted: generateJsonConfig()
+        onFileChanged: {
+            generateJsonConfig()
+            Quickshell.execDetached(["sh", "-c", "~/.config/quickshell/scripts/change-rad.sh"])
+        }
+        Component.onCompleted: {
+            generateJsonConfig()
+        }
     }
 
     Process {
@@ -167,6 +172,7 @@ ShellRoot {
     property string _cfg_wm:              "auto"
     property string _cfg_wm_type:        "auto"
     property int    _cfg_mainRad:        10
+    property int    _cfg_mainRadOld:     10
     property bool   _cfg_barOnTop:       true
     property bool   _cfg_minibar:        false
     property int    _cfg_barHeight:      30

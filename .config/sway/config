@@ -9,7 +9,7 @@ set $filemanager dolphin
 set $menu qs ipc call root toggleLaunch
 
 #--- АВТОСТАРТ ------------------------------------------------------------------------
-exec /run/wrappers/bin/gnome-keyring-daemon --start --components=secrets,ssh
+exec --no-startup-id kwalletd6
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
@@ -34,7 +34,7 @@ exec mkdir -p ~/Screenshots
 exec_always ~/.config/sway/persway_start.sh
 
 #--- ДЕКОРАЦИИ ------------------------------------------------------------------------
-corner_radius 10
+corner_radius 25
 smart_corner_radius enable
 
 blur enable
@@ -110,7 +110,7 @@ layer_effects "power" {
 }
 
 #--- МОНИТОРЫ -------------------------------------------------------------------------
-# output * mode 3440x1440@144Hz
+output * mode 3440x1440@144Hz
 
 #--- ВВОД -----------------------------------------------------------------------------
 input type:keyboard {
@@ -173,7 +173,7 @@ bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaym
 # Power menu / дашборд
 bindsym --to-code $mod+p exec qs ipc call root togglePower
 # bindsym --to-code $mod+l exec eww open --toggle dashboard
-bindsym --to-code $mod+w exec ~/.config/sway/qs_restart.sh
+bindsym --to-code $mod+w exec ~/.config/quickshell/scripts/qs_restart.sh
 
 # Медиа
 bindsym Alt+F9  exec pamixer -t
@@ -185,8 +185,9 @@ bindsym --to-code --locked Control+period exec playerctl next
 bindsym --to-code --locked Control+comma  exec playerctl previous
 
 # Яркость
-bindsym --locked Mod1+Prior exec ddcutil --bus 11 setvcp 10 + 5
-bindsym --locked Mod1+Next  exec ddcutil --bus 11 setvcp 10 - 5
+bindsym --locked Mod1+Prior exec sh -c "~/.config/quickshell/scripts/birghtness.sh change-up"
+bindsym --locked Mod1+Next exec sh -c "~/.config/quickshell/scripts/birghtness.sh change-down"
+
 
 # Скриншоты (оригинальный рабочий вариант)
 bindsym $screenPicker exec sh -c 'pkill -f ~/.config/sway/opacity-changer.sh && qs ipc call root screenpicker && ~/.config/sway/opacity-changer.sh'

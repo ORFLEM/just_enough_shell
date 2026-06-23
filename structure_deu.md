@@ -27,7 +27,7 @@
 ## -- Datenfluss und IPC --:
 1. **Initialisierung**: `shell.qml` startet die Module. Jedes Modul ruft beim Start das entsprechende Skript aus `scripts/` auf.
 2. **Datenerfassung**: 
-   - Go-Binärdateien (`sys_info`, `music`, `Cava-internal`, `timed`, `cal`) übernehmen die Logik für große Datenmengen, die verarbeitet werden müssen.
+   - Go-Binärdateien (`music`, `Cava-internal`, `cal`) übernehmen die Logik für große Datenmengen, die verarbeitet werden müssen.
    - Bash-Skripte (`brightness.sh`, `vol.sh`, `workspace-*.sh`) bilden die Kernlogik – aus Gründen der Portabilität und Lesbarkeit.
 3. **Übermittlung an die UI**: Die Daten werden über `stdout` übertragen (JSON oder bei visuellen Programmen einfach ein String (wie bei cava)) → werden in QML über `JsonListen`/`JsonPoll` geparst → aktualisieren die Eigenschaften der Widgets.
 4. **Rückkopplung**: Benutzeraktionen (Klick, Hotkey) → Aufruf eines Skripts/Binärfiles → Senden eines Befehls an WM/MPD/pipewire → ein Ereignis aktualisiert die UI.
@@ -43,7 +43,7 @@
 | Lock | Hyprlock | Sperrbildschirm |
 | Audio | PipeWire + wpctl/pavucontrol | Mixing, MPRIS, Cava |
 
-**Metriken**: CPU im Leerlauf ~7–11% (Go subscribe) gegenüber 35–45% (bash polling). Die Binärdateien sind statisch gebaut, das Gewicht der Logik beträgt ~10-11 MB.
+**Metriken**: CPU im Leerlauf ~5–11% (Go subscribe) gegenüber 35–45% (bash polling). Die Binärdateien sind statisch gebaut, das Gewicht der Logik beträgt ~8-8.5 MB.
 
 ## -- WM-Kompatibilitätsschicht --:
 Die Abstraktion vom Tiling wird über drei Skript-Paare und eine Datei zur Anbindung an shell.qml realisiert:

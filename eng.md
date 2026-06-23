@@ -130,12 +130,12 @@
 	<b>[c]</b> Protection against static wallpapers with wrong format in the wallpaper picker<br>
 	<b>[c]</b> Calendar widget<br>
 	<b>[c]</b> Multi-monitor support<br>
+  <b>[c]</b> Settings installer<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Neutral / vibrant style toggle<br>
 	<b>[p]</b> Dark / light theme toggle<br>
 	<b>[p]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>
-  <b>[p]</b> Settings installer<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
@@ -277,16 +277,13 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 
 ## -- Installing JES -- :
 ### NixOS
-```
-1. Install NixOS
-2. Back up system files (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
-3. Copy the config to "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. Back up user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-5. Customize the NixOS config for your setup — make sure to set your username in "USER ACCOUNT", locale and region in "LOCALISATION", and any extra drives in "FILESYSTEMS" (if applicable)
-6. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
-7. sudo nixos-rebuild switch
-8. reboot
-```
+- install NixOS
+- start JES installer:
+  ```bash
+  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+  ```
+- reboot
+
 ### Arch Linux or Arch-based (may be incorrect; if so, please open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
 ```
 1. Install Arch Linux (EndeavourOS is recommended for simplicity)
@@ -299,6 +296,8 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. reboot
 ```
+
+> The script will work only on NixOS. If you want a script for Arch, please provide a ready-made script, the author will include it in the project.
 
 ## -- License -- :
 Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. License: **GNU GPL v3**.

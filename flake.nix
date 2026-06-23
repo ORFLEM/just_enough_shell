@@ -24,20 +24,15 @@
 
     driftwm.url = "github:malbiruk/driftwm";
 
-    zwm = {
-      url = "git+https://codeberg.org/blx/zwm.git";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     persway.url = "github:saylesss88/persway";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, driftwm, zen-browser, zwm, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, driftwm, zen-browser, ... }@inputs:
   let
     system = "x86_64-linux";
-    host = "ORFLEMPC";
-    username = "orflem";
+    userConfig = builtins.fromTOML (builtins.readFile ./user-config.toml);
 
-    specialArgs = { inherit inputs system host username; };
+    specialArgs = { inherit inputs system userConfig; };
 
     unstablePkgs = import nixpkgs-unstable {
       inherit system;
@@ -50,7 +45,7 @@
     };
 
   in {
-    nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.${userConfig.hostname} = nixpkgs.lib.nixosSystem {
       inherit system specialArgs;
 
       modules = [
@@ -63,7 +58,6 @@
 
         # Сторонние модули
         stylix.nixosModules.stylix
-        zwm.nixosModules.default
         home-manager.nixosModules.home-manager
 
         # Hyprland из unstable

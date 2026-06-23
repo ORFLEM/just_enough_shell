@@ -1,4 +1,4 @@
-{ config, pkgs, unstablePkgs, inputs, host, username, lib, ... }:
+{ config, pkgs, unstablePkgs, inputs, userConfig, lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -16,9 +16,9 @@
     GTK_BACKEND = "wayland";
     TERMINAL = "foot";
   };
-  
+
   # boxflat fix
-    services.udev.packages = [
+  services.udev.packages = [
     (pkgs.writeTextFile {
       name = "moza-boxflat-udev-rules";
       text = ''
@@ -40,7 +40,9 @@
   # ============================================================
   nixpkgs.config = {
     allowUnfree = true;
-    rocmSupport = true;
+    # Включаем поддержку ROCm только для AMD, CUDA для NVIDIA
+    rocmSupport = (userConfig.gpu == "amd");
+    cudaSupport = (userConfig.gpu == "nvidia");
   };
 
   nix.settings = {
@@ -51,11 +53,7 @@
   environment.systemPackages =
     # STABLE
     (with pkgs; [
-      # ----------------------------------------------------------------
       # GUI
-      # ----------------------------------------------------------------
-
-      # Media player, recoder & image editor
       krita
       obs-studio
       (mpv.override { scripts = with pkgs.mpvScripts; [ mpris ]; })
@@ -99,11 +97,7 @@
       krusader
       firefox
 
-      # ----------------------------------------------------------------
       # CLI
-      # ----------------------------------------------------------------
-
-      # Editors
       helix
       micro
 
@@ -151,7 +145,7 @@
       slurp
       wl-clipboard
 
-      # Daliy utils
+      # Daily utils
       appimage-run
       bat
       btop-rocm
@@ -172,94 +166,72 @@
 
       taplo
 
-      # ----------------------------------------------------------------
-      # AMD GPU — ROCm
-      # ----------------------------------------------------------------
-      libdrm
-      libGL
-      libpulseaudio
-      libva
-      libvdpau
-      mesa
-      mesa-demos
-      vulkan-loader
-      vulkan-validation-layers
-      wayland
-      rocmPackages.rocminfo
-      rocmPackages.rocm-smi
-      rocmPackages.rocm-runtime
-      rocmPackages.hipcc
-      rocmPackages.hipblas
-      rocmPackages.rocm-device-libs
-
-      # ----------------------------------------------------------------
       # Disks & file systems
-      # ----------------------------------------------------------------
       kbd
       udisks2
       udiskie
       ntfs3g
       exfat
 
-      # ----------------------------------------------------------------
       # Themes & icons
-      # ----------------------------------------------------------------
       gsettings-desktop-schemas
       gnome-themes-extra
       rose-pine-cursor
       rose-pine-hyprcursor
       tela-icon-theme
 
-      
       inputs.driftwm.packages.${pkgs.stdenv.hostPlatform.system}.default
+
     ])
-  
     # UNSTABLE
     ++ (with unstablePkgs; [
       matugen
-
       go
-
       bastet
       moon-buggy
       nsnake
-
       zen-browser
-
       hyprpicker
-
       inputs.persway.packages.${pkgs.stdenv.hostPlatform.system}.default
     ])
 
-    # NUR
+    # NUR (пусто)
     ++ (with pkgs.nur.repos; [
       # lonerOrz.linux-wallpaperengine
-    ]);
-
+    ])
+    # Добавляем пакеты в зависимости от GPU
+    # Добавляем пакеты в зависимости от GPU
+    ++ (lib.optionals (lib.attrByPath [ "amd" ] false userConfig) (with pkgs; [
+      rocmPackages.rocminfo
+      rocmPackages.rocm-smi
+    ]))
+    ++ (lib.optionals (userConfig.gpu == "nvidia") (with pkgs; [
+      nvtopPackages.full
+      vulkan-tools
+    ]))
+    ++ (lib.optionals (userConfig.gpu == "intel") (with pkgs; [
+      intel-gpu-tools
+    ]));
+     
   # ============================================================
   # DISPLAY MANAGER & GREETD
   # ============================================================
   services.greetd = {
     enable = true;
     settings.default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd sway";
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${userConfig.preferred_wm}";
     };
   };
   systemd.services.greetd.serviceConfig.ExecStartPre = [ "${pkgs.kbd}/bin/setfont ter-v32n" ];
 
   # ============================================================
-  # WINDOW MANAGER (SwayFX)
+  # WINDOW MANAGERS
   # ============================================================
   programs.sway = {
     enable = true;
     package = unstablePkgs.swayfx;
     wrapperFeatures.gtk = true;
   };
-
-  # environment.etc."hypr/plugins.conf".text = ''
-  #   plugin = ${unstablePkgs.hyprlandPlugins.hy3}/lib/libhy3.so
-  #   plugin = ${unstablePkgs.hyprlandPlugins.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so
-  # '';
 
   programs.hyprland = {
     enable = true;
@@ -270,8 +242,7 @@
   programs.niri = {
     enable = true;
     package = unstablePkgs.niri;
-  }
-
+  };
 
   xdg.portal = {
     enable = true;
@@ -290,7 +261,7 @@
   # ============================================================
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/zenburn.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/${userConfig.theme}.yaml";
     targets.qt.enable = true;
     targets.gtk.enable = true;
     targets.grub.enable = false;
@@ -298,11 +269,58 @@
   };
 
   # ============================================================
-  # USER ACCOUNT
+  # HARDWARE – GPU (условные блоки)
   # ============================================================
-  users.users.user = {
+  # Общие настройки графики
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # Важно для Steam и 32-битных игр
+    
+    extraPackages = with pkgs; [
+      # Для Intel: VA-API драйвер (современный qsv для процессоров 8-го поколения и новее)
+      (lib.mkIf (userConfig.gpu == "intel") intel-media-driver)
+      
+      # Для AMD: встроен в Mesa, но можно добавить для старых приложений vdpau
+      (lib.mkIf (userConfig.gpu == "amd") vaapiVdpau)
+      
+      # Для Nvidia: интеграция VA-API с проприетарным драйвером
+      (lib.mkIf (userConfig.gpu == "nvidia") nvidia-vaapi-driver)
+    ];
+  };
+
+  # AMD
+  hardware.amdgpu = lib.mkIf (userConfig.gpu == "amd") {
+    initrd.enable = true; # Корректная опция вместо закомментированного enable
+    overdrive.enable = true; 
+  };
+
+  # NVIDIA
+  # Использован lib.mkMerge, чтобы не ломать структуру Nix при ложном условии
+  hardware.nvidia = lib.mkIf (userConfig.gpu == "nvidia") {
+    modesetting.enable = true;
+    powerManagement.enable = true;
+    nvidiaSettings = true; 
+    open = false; # Обязательный параметр в новых версиях NixOS (true для open-source, false для закрытого драйвера)
+  };
+
+  # Переменные окружения для GPU
+  environment.variables = lib.mkMerge [
+    (lib.mkIf (userConfig.gpu == "amd") {
+      HSA_OVERRIDE_GFX_VERSION = userConfig.rocm_version or "11.0.0";
+    })
+    (lib.mkIf (userConfig.gpu == "nvidia") {
+      # Переменные для корректной работы Nvidia + Wayland
+      LIBVA_DRIVER_NAME = "nvidia";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    })
+  ];
+
+  # ============================================================
+  # USER ACCOUNT – динамический
+  # ============================================================
+  users.users.${userConfig.username} = {
     isNormalUser = true;
-    description = "Example User";
+    description = userConfig.description;
     extraGroups = [ "networkmanager" "wheel" "input" "plugdev" "storage" "i2c" "usbmux" ];
     packages = with pkgs; [];
   };
@@ -310,11 +328,11 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs username host; };
-    users.user = {
+    extraSpecialArgs = { inherit inputs userConfig; };
+    users.${userConfig.username} = {
       home = {
-        username = "user";
-        homeDirectory = "/home/user";
+        username = userConfig.username;
+        homeDirectory = "/home/${userConfig.username}";
         inherit (config.system) stateVersion;
       };
 
@@ -362,7 +380,7 @@
   ];
 
   # ============================================================
-  # FILESYSTEMS (examples, adjust to your hardware)
+  # FILESYSTEMS (пример)
   # ============================================================
   # fileSystems."/mnt/data" = {
   #   device = "/dev/disk/by-uuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
@@ -374,7 +392,7 @@
   # ============================================================
   # NETWORK
   # ============================================================
-  networking.hostName = "nixos";
+  networking.hostName = userConfig.hostname;
   networking.networkmanager.enable = true;
   hardware.enableRedistributableFirmware = true;
 
@@ -413,7 +431,7 @@
   # ============================================================
   # LOCALISATION
   # ============================================================
-  time.timeZone = "Europe/London";   # change to your zone
+  time.timeZone = userConfig.timezone;
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -436,5 +454,5 @@
     options = "--delete-older-than 10d";
   };
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "26.05";
 }

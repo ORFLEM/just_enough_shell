@@ -10,6 +10,7 @@ fontSize = 17
 fontFamily = "Mononoki Nerd Font Propo"
 custom_wallpaper_engine = false
 doNotDisturb = false
+timezone = "Tomsk"
 
 # [plugin.name]
 # source = "plugin-example/Main.qml"

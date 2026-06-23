@@ -130,12 +130,12 @@
 	<b>[c]</b> Защита от статических обоев с неверным форматом в wallpaper picker<br>
 	<b>[c]</b> Создание виджета календаря<br>
 	<b>[c]</b> Поддержка нескольких мониторов<br>
+  <b>[c]</b> Создание установщика настроек<br>
 	<b>[i]</b> Перевод <b>Hyprland</b> на lua конфиги<br>
 	<b>[i]</b> Выбор стиля нейтральный/яркий<br>
 	<b>[p]</b> Выбор темы тёмная/светлая<br>
 	<b>[p]</b> Фикс <b>Niri</b><br>
 	<b>[p]</b> Создание виджета погоды<br>
-  <b>[p]</b> Создание установщика настроек<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
 </div>
@@ -173,6 +173,7 @@
 - `fontFamily` - шрифт, изначально Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` - выключить встроенные обои, изначально false
 - `doNotDisturb` - тихий режим, изначально false
+- `timezon` - город виджета погоды, изначально не присутствует, берётся данные из `user-config.toml` конфигурации NixOS
 
 ```
 Важно, config.toml лежит в папке Quickshell (~/.config/quickshell/)
@@ -276,16 +277,14 @@
 
 ## -- Установка JES --:
 ### NixOS
-```
-1. Установите NixOS
-2. сделайте бекап файлов системы (sudo mkdir -p /etc/nixos/backups && sudo cp /etc/nixos/* /etc/nixos/backups/*.backup)
-3. переместите конфиг в "/etc/nixos" (sudo cp ./*.nix /etc/nixos/)
-4. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-5. Доработайте конфиг NixOS под себя, учтите, что нужно вписать своего юзера в разделе "USER ACCOUNT", локализацию с регионом в "LOCALISATION" и доп. диски в "FILESYSTEMS" (если есть)
-6. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
-7. sudo nixos-rebuild switch
-8. введите reboot
-```
+
+- Установите NixOS
+- запустите установщик:
+  ```bash
+  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+  ```
+- перезапуститесь `reboot`
+
 ### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
 ```
 1. Установите Arch Linux (для простоты советую EndeavourOS)
@@ -298,6 +297,7 @@
 8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. введите reboot
 ```
+> Скрипт будет только под NixOS, если хочется скрипт под arch, просьба дать готовый скрипт, автор его вложит в проект
 
 ## -- Лицензия --:
 Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия **GNU GPL v3**
