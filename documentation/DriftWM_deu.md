@@ -22,6 +22,7 @@
 | `super + Pfeiltasten` | Wechsel zwischen Fenstern |
 | `super + f` | Ändern des Fenstertyps: schwebend oder Tiling |
 | `super + w` | Neustart der Oberfläche |
+| `super + m` | öffnen \| Minimap schließen |
 | `home` | Vollbildschirmfoto |
 | `shift + home` | Screenshot eines ausgewählten Bereichs |
 | `super + d` | App-Launcher öffnen |

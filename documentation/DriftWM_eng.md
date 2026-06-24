@@ -22,6 +22,7 @@
 | `super + arrows` | switch between windows |
 | `super + f` | toggle window type: floating or tiling |
 | `super + w` | restart the interface |
+| `super + m` | open \| close minimap |
 | `home` | fullscreen screenshot |
 | `shift + home` | screenshot of selected area |
 | `super + d` | open app launcher |

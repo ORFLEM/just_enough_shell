@@ -13,6 +13,7 @@ import "notifications"
 import "launcher"
 import "wallpaper"
 import "screenpicker"
+import "minimap"
 
 ShellRoot {
     id: root
@@ -85,6 +86,7 @@ ShellRoot {
     property bool powerOpen:      false
     property bool launchOpen:     false
     property bool wallPickerOpen: false
+    property bool minimapOpen:    false
     property int  wallpaperType:  1
     property string wallShaderName: ""
 
@@ -269,6 +271,11 @@ ShellRoot {
         Launch {}
     }
 
+    LazyLoader {
+        active: minimapOpen
+        MiniMap {}
+    }
+
     Btime {}
 
     PlayerPopup { isOpen: playerOpen }
@@ -309,6 +316,9 @@ ShellRoot {
         }
         function toggleLaunch() {
             launchOpen = !launchOpen
+        }
+        function toggleMap() {
+            minimapOpen = !minimapOpen
         }
         function screenpicker(): void {
             screenpicker.activate()

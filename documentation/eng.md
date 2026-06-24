@@ -99,7 +99,7 @@
 	<b>Niri</b> has no transparency support and has a bug with workspaces on the bar due to its architecture.<br>
 	<br>
 	The project has some optimization, but it hasn't been tested on weak hardware.<br>
-	Go binaries are used for scripts where fast processing of large data streams matters — this keeps CPU usage at 7–11% idle instead of 35–45%.<br>
+	Go binaries are used for scripts where fast processing of large data streams matters — this keeps CPU usage at 5–10% idle instead of 35–45%.<br>
   <br>
 	The project has a simple plugin system, making it extensible.<br>
 	<br>
@@ -132,7 +132,7 @@
 	<b>[c]</b> Multi-monitor support<br>
   <b>[c]</b> Settings installer<br>
 	<b>[c]</b> Neutral / vibrant style toggle<br>
-	<b>[i]</b> Popup minimap for <b>driftwm</b><br>
+	<b>[c]</b> Popup minimap for <b>driftwm</b><br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>

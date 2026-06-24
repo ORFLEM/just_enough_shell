@@ -131,10 +131,11 @@ transparent_shader = true
 # --- Перезагрузка конфига и выход ---
 "mod+Shift+r" = "reload-config"
 # Выход с подтверждением (spawn не ждёт завершения, поэтому команда с nag просто запустится)
-"mod+m" = "spawn swaynag -t warning -m 'Exit driftwm?' -B 'Yes' 'pkill driftwm'"
+"mod+Shift+m" = "spawn swaynag -t warning -m 'Exit driftwm?' -B 'Yes' 'pkill driftwm'"
 
 # --- Power menu / дашборд ---
 "mod+p" = "spawn qs ipc call root togglePower"
+"mod+m" = "spawn qs ipc call root toggleMap"
 "mod+w" = "spawn ~/.config/quickshell/scripts/qs_restart.sh"
 
 # --- Медиа (используем spawn, т.к. не нужно снимать fullscreen) ---
