@@ -54,6 +54,9 @@
 ### Выбор обоев
 ![alt_image](./images/4_driftwm.webp)
 
+### Mиникарта
+![alt_image](./images/minimap.webp)
+
 ### Проигрыватель
 ![alt_image](./images/5.webp)
 ![alt_image](./images/6.webp)

@@ -54,6 +54,9 @@
 ### Wallpaper picker
 ![alt_image](./images/4_driftwm.webp)
 
+### Minimap
+![alt_image](./images/minimap.webp)
+
 ### Player
 ![alt_image](./images/5.webp)
 ![alt_image](./images/6.webp)
