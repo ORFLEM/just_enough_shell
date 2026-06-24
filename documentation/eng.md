@@ -1,7 +1,7 @@
-![last_commit](https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bcbcbc&label=Last%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B)
-![repo_size](https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Repo%20Size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B)
-
 <div align="center">
+  <img src="https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&logo=git&logoColor=D9E0EE&labelColor=1E202B" alt="GitHub last commit">
+  <img src="https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Project%20size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
+  <img src="https://img.shields.io/github/stars/ORFLEM/just_enough_shell?color=bbbbbb&label=Project%20stars&logo=andela&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
 	<img src="./images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
 	<p>Built for everyday use, not for screenshots.</p>
