@@ -99,7 +99,7 @@
 	<b>Niri</b> hat keine Transparenz und aufgrund seiner Architektur einen Bug bei den Workspaces in der Leiste.<br>
 	<br>
 	Das Projekt ist optimiert, wurde aber nicht auf schwachen PCs getestet.<br>
-	Go-Binärdateien werden für Skripte verwendet, bei denen eine schnelle Verarbeitung großer Datenmengen wichtig ist – dadurch liegt die CPU-Auslastung im Leerlauf bei 5–10&nbsp;% statt bei 35–45&nbsp;%.<br>
+	Go-Binärdateien werden für Skripte verwendet, bei denen eine schnelle Verarbeitung großer Datenmengen wichtig ist – dadurch liegt die CPU-Auslastung im Leerlauf bei 5–10&nbsp;% (nur <i>JES</i> - 1-2&nbsp;% CPU und ~400 MB RAM) statt bei 35–45&nbsp;%.<br>
   <br>
 	Das Projekt hat ein einfaches Plugin-System, das es erweiterbar macht.<br>
 	<br>
@@ -133,6 +133,7 @@
   <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
 	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
 	<b>[c]</b> Popup-Minimap für <b>driftwm</b><br>
+	<b>[i]</b> Wegpunkte zur Karte hinzufügen<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
