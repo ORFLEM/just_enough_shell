@@ -67,11 +67,11 @@ ShellRoot {
     // Унифицированный доступ к цветам
     QtObject {
         id: col
-        readonly property string background1:  disableGenerate ? base.base03 : colorsJson.background1
+        readonly property string background1:  disableGenerate ? base.base05 : colorsJson.background1
         readonly property string background2:  disableGenerate ? base.base04 : colorsJson.background2
-        readonly property string background3:  disableGenerate ? base.base05 : colorsJson.background3
-        readonly property string backgroundAlt1: disableGenerate ? base.base02 : colorsJson.backgroundAlt1
-        readonly property string backgroundAlt2: disableGenerate ? base.base01 : colorsJson.backgroundAlt2
+        readonly property string background3:  disableGenerate ? base.base03 : colorsJson.background3
+        readonly property string backgroundAlt1: disableGenerate ? base.base01 : colorsJson.backgroundAlt1
+        readonly property string backgroundAlt2: disableGenerate ? base.base02 : colorsJson.backgroundAlt2
         readonly property string font:         disableGenerate ? base.base06 : colorsJson.font
         readonly property string fontDark:     disableGenerate ? base.base01 : colorsJson.fontDark
         readonly property string accent:       disableGenerate ? base.base08 : colorsJson.accent

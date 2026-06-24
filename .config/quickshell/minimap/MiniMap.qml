@@ -82,9 +82,9 @@ WlrLayershell {
                     width: Math.max(relW, 5)
                     height: Math.max(relH, 5)
                     radius: mainRad * windowsContainer.mapZoom * 10
-                    color: model.is_focused ? "#555555" : col.backgroundAlt1
+                    color: model.is_focused ? col.background1 : col.backgroundAlt1
                     opacity: 0.65
-                    border.color: model.is_focused ? "#FFFFFF" : "transparent"
+                    border.color: model.is_focused ? col.accent : "transparent"
                     border.width: model.is_focused ? 2 : 0
            
                     Behavior on color { ColorAnimation { duration: 100 }}
