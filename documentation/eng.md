@@ -132,6 +132,7 @@
 	<b>[c]</b> Multi-monitor support<br>
   <b>[c]</b> Settings installer<br>
 	<b>[c]</b> Neutral / vibrant style toggle<br>
+	<b>[i]</b> Popup minimap for <b>driftwm</b><br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>

@@ -132,6 +132,7 @@
 	<b>[c]</b> Unterstützung mehrerer Monitore<br>
   <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
 	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
+	<b>[i]</b> Popup-Minimap für <b>driftwm</b><br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
