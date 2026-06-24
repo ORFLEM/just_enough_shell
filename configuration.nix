@@ -201,7 +201,7 @@
     ])
     # Добавляем пакеты в зависимости от GPU
     # Добавляем пакеты в зависимости от GPU
-    ++ (lib.optionals (lib.attrByPath [ "amd" ] false userConfig) (with pkgs; [
+    ++ (lib.optionals (lib.attrByPath [ "rocm" ] false userConfig) (with pkgs; [
       rocmPackages.rocminfo
       rocmPackages.rocm-smi
     ]))

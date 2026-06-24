@@ -134,14 +134,14 @@ ru_install () {
   echo -ne "\r  [#######--------]"
   USERNAME=$(grep 'users.users.' /etc/nixos/configuration.nix | awk -F '.' '{print $3}' | awk -F ' ' '{print $1}')
   sleep 1
-  echo -ne "\r  [########------]"
+  echo -ne "\r  [########-------]"
   TIMEZONE=$(grep 'time.timeZone' /etc/nixos/configuration.nix | awk -F ' ' '{print $3}' | cut -d '"' -f 2)
   sleep 1
-  echo -ne "\r  [#########-----]"
+  echo -ne "\r  [#########------]"
   PREFERED_WM=sway
   HOSTNAME=${HOSTNAME:-$(hostname)}
   sleep 1
-  echo -ne "\r  [##########----]"
+  echo -ne "\r  [##########-----]"
   GPU=amd
   ROCM=11.0.0
   THEME=zenburn
@@ -251,7 +251,7 @@ EOF
   echo ""
   echo -ne "\r  генерация flake.lock\n  [#############--]"
   sleep 1
-  cp ./configuration.nix /etc/nixos/
+  sudo cp ./configuration.nix /etc/nixos/
   cd /etc/nixos || { echo "  [ERROR] Не удалось перейти в /etc/nixos"; exit 1; }
   if ! sudo nix flake update --extra-experimental-features "nix-command flakes"; then
     echo "  [ERROR] Ошибка обновления flake.lock: установка преостановлена, проверьте /etc/nixos/flake.nix + другие файлы в /etc/nixos и запустите сборку flake и системы вручную, а после перезапустите ПК."
@@ -262,7 +262,7 @@ EOF
   echo -ne "\r  проверка файлов  \n  [##############-]"
   sleep 1
   if [[ -f /etc/nixos/configuration.nix && -f /etc/nixos/flake.nix && -f /etc/nixos/flake.lock && -f /etc/nixos/user-config.toml && -f /etc/nixos/hardware-configuration.nix ]]; then
-    echo "  Сборка системы:"
+    echo -e "\r  Сборка системы:   "
     if sudo nixos-rebuild switch; then
       echo "  сборка закончена! перезапустите ПК)"
       exit 0
@@ -326,7 +326,7 @@ en_install () {
   PREFERED_WM=sway
   HOSTNAME=${HOSTNAME:-$(hostname)}
   sleep 1
-  echo -ne "\r  [##########----]"
+  echo -ne "\r  [##########-----]"
   GPU=amd
   ROCM=11.0.0
   THEME=zenburn
@@ -437,7 +437,7 @@ EOF
   echo ""
   echo -ne "\r  Generating flake.lock\n  [#############--]"
   sleep 1
-  cp ./configuration.nix /etc/nixos/
+  sudo cp ./configuration.nix /etc/nixos/
   cd /etc/nixos || { echo "  [ERROR] can't cd to /etc/nixos"; exit 1; }
   if ! sudo nix flake update --extra-experimental-features "nix-command flakes"; then
     echo "  [ERROR] updating flake.lock: installation stopped, check /etc/nixos/flake.nix & other files in /etc/nixos and re-run generating flake.lock yourself then rebuild NixOS and restart PC."
@@ -448,7 +448,7 @@ EOF
   echo -ne "\r  Checking files     \n  [##############-]"
   sleep 1
   if [[ -f /etc/nixos/configuration.nix && -f /etc/nixos/flake.nix && -f /etc/nixos/flake.lock && -f /etc/nixos/user-config.toml && -f /etc/nixos/hardware-configuration.nix ]]; then
-    echo "  Building the system:"
+    echo -e "\r  Building the system:    "
     if sudo nixos-rebuild switch; then
       echo "  System was built! restart PC)"
       exit 0
