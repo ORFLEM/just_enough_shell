@@ -133,7 +133,7 @@
   <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
 	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
 	<b>[c]</b> Popup-Minimap für <b>driftwm</b><br>
-	<b>[i]</b> Wegpunkte zur Karte hinzufügen<br>
+	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>

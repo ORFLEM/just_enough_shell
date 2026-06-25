@@ -133,7 +133,7 @@
   <b>[c]</b> Settings installer<br>
 	<b>[c]</b> Neutral / vibrant style toggle<br>
 	<b>[c]</b> Popup minimap for <b>driftwm</b><br>
-	<b>[i]</b> add waypoints to map<br>
+	<b>[c]</b> add waypoints to map<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>

@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import Quickshell.Wayland
 import Quickshell.Io
+import Quickshell.Widgets
 import "../helpers"
 
 WlrLayershell {
@@ -17,17 +18,16 @@ WlrLayershell {
 
     implicitHeight: 306
     implicitWidth: 300 * Screen.width / Screen.height + 6
-
     color: "transparent"
 
-    // ---------- Фон с градиентом (как в BaseBar) ----------
+    // ---------- Фон ----------
     Rectangle {
         id: background
         anchors.fill: parent
         anchors.bottomMargin: 6
         anchors.leftMargin: 6
         color: "transparent"
-        radius: mainRad   // глобальная переменная, определена в корневом QML
+        radius: mainRad
 
         Rectangle {
             anchors.fill: parent
@@ -44,8 +44,8 @@ WlrLayershell {
             }
         }
 
-        // ---------- Контейнер для окон ----------
-        Rectangle {
+        // ---------- Контейнер для окон и waypoints ----------
+        ClippingRectangle {
             id: windowsContainer
             anchors.fill: parent
             radius: mainRad - 3
@@ -54,29 +54,28 @@ WlrLayershell {
             clip: true
 
             // Параметры камеры
-            property real cameraX: 0
-            property real cameraY: 0
-            property real cameraZoom: 1.0
-
-            // Масштаб мини-карты – в 20 раза меньше камеры
+            property real cameraX: bar.cameraData.x
+            property real cameraY: bar.cameraData.y
+            property real cameraZoom: bar.cameraData.zoom
             property real mapZoom: cameraZoom / 20.0
-
-            // Центр области рисования
             property real centerX: width / 2
             property real centerY: height / 2
 
+            // ---------- Модель окон ----------
             ListModel { id: windowModel }
 
+            // ---------- Модель waypoints ----------
+            ListModel { id: waypointModel }
+
+            // ---------- Окна ----------
             Repeater {
                 model: windowModel
                 delegate: Rectangle {
-                    // Центр окна на мини-карте
                     property real centerX: (model.posX - windowsContainer.cameraX) * windowsContainer.mapZoom + windowsContainer.centerX
                     property real centerY: (windowsContainer.cameraY - model.posY) * windowsContainer.mapZoom + windowsContainer.centerY
                     property real relW: model.width * windowsContainer.mapZoom
                     property real relH: model.height * windowsContainer.mapZoom
-                    clip: true
-            
+                    
                     x: centerX - relW / 2
                     y: centerY - relH / 2
                     width: Math.max(relW, 5)
@@ -86,27 +85,75 @@ WlrLayershell {
                     opacity: 0.65
                     border.color: model.is_focused ? col.accent : "transparent"
                     border.width: model.is_focused ? 2 : 0
-           
-                    Behavior on color { ColorAnimation { duration: 100 }}
+
+                    IconImage {
+                        x: 2
+                        y: 2
+                        width: Math.min(64 * windowsContainer.mapZoom * 10, parent.width - 4)
+                        height: Math.min(64 * windowsContainer.mapZoom * 10, parent.height - 4)
+                        source: Quickshell.iconPath(model.app_id ?? "", true)
+                        smooth: true
+                    }
+
+                    Behavior on color { ColorAnimation { duration: 200 } }
+                    // Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
+                    // Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
+
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            Quickshell.execDetached(["driftwm", "msg", "camera", model.posX, model.posY])
+                        }
+                    }
                 }
             }
 
-            // ---------- Получение данных через JsonListen ----------
+            // ---------- Точки waypoints ----------
+            Repeater {
+                model: waypointModel
+                delegate: Rectangle {
+                    property real px: (model.x - windowsContainer.cameraX) * windowsContainer.mapZoom + windowsContainer.centerX
+                    property real py: (windowsContainer.cameraY - model.y) * windowsContainer.mapZoom + windowsContainer.centerY
+
+                    x: px - width/2
+                    y: py - height/2
+                    width: waypointText.width + 8
+                    height: waypointText.height + 4
+                    radius: mainRad * windowsContainer.mapZoom * 10
+                    color: col.backgroundAlt1
+                    border.color: col.accent
+                    border.width: 1
+                    // Подпись (если есть label)
+                    Text {
+                        id: waypointText
+                        anchors.centerIn: parent
+                        text: model.label || ""
+                        color: col.font
+                        font.pixelSize: fontSize
+                        font.family: fontFamily
+                        visible: model.label ? true : false
+                    }
+
+                    // Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
+                    // Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            // При клике на waypoint перемещаем камеру
+                            Quickshell.execDetached(["driftwm", "msg", "camera", model.x, model.y])
+                        }
+                    }
+                }
+            }
+
+            // ---------- Источник окон (JsonListen) ----------
             JsonListen {
                 id: minimapJson
                 command: "~/.config/quickshell/scripts/minimap-driftwm.sh stream-json"
-                // debug: true  // при необходимости можно включить
-
                 onDataChanged: {
                     if (typeof data === 'object' && data !== null) {
-                        // Обновляем камеру
-                        if (data.camera) {
-                            windowsContainer.cameraX = data.camera.x || 0
-                            windowsContainer.cameraY = data.camera.y || 0
-                            windowsContainer.cameraZoom = data.camera.zoom || 1.0
-                        }
-
-                        // Обновляем список окон
                         windowModel.clear()
                         if (data.windows && Array.isArray(data.windows)) {
                             for (var i = 0; i < data.windows.length; i++) {
@@ -120,16 +167,46 @@ WlrLayershell {
                                     title: win.title || "",
                                     is_focused: win.is_focused || false
                                 })
-                                    console.log(windowModel.height)
                             }
                         }
                     }
                 }
             }
 
-            // (Опционально) если процесс упал – JsonListen сам перезапустится,
-            // так как его свойство running по умолчанию true, и он перезапускается при изменении command.
-            // Можно добавить таймер для принудительного перезапуска, но обычно не требуется.
+            // ---------- Источник waypoints (TextFile) ----------
+            FileView {
+                id: waypointFile
+                path: Qt.resolvedUrl("./waypoints.json")
+                watchChanges: true
+
+                onFileChanged: reload()
+                
+                onTextChanged: {
+                    // text – это функция, вызываем её
+                    var content = text()
+                    if (!content || content.trim() === "") {
+                        waypointModel.clear()
+                        return
+                    }
+                    try {
+                        var data = JSON.parse(content)
+                        if (Array.isArray(data)) {
+                            waypointModel.clear()
+                            for (var i = 0; i < data.length; i++) {
+                                waypointModel.append({
+                                    x: data[i].x || 0,
+                                    y: data[i].y || 0,
+                                    label: data[i].label || ""
+                                })
+                            }
+                            // Если есть Canvas для линий – перерисовать
+                            // if (typeof waypointLines !== 'undefined') waypointLines.requestPaint()
+                        }
+                    } catch (e) {
+                        console.warn("Ошибка парсинга waypoints.json:", e)
+                    }
+                }
+            }
         }
     }
 }
