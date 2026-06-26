@@ -327,6 +327,7 @@ ShellRoot {
             Quickshell.execDetached(["notify-send", pluginModel])
         }
     }
+    property var bar: barLoader.item
 
     // ── Rounded corners ───────────────────────────────────────────────────
     property int size: mainRad > 0 ? mainRad + 6 : 0

@@ -3,20 +3,6 @@
 RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 STATE_FILE="${RUNTIME_DIR}/driftwm/state"
 
-get_value() {
-    local key="$1"
-    local default="$2"
-    local val="$default"
-    if [[ -f "$STATE_FILE" ]]; then
-        local line=$(grep -m1 "^${key}=" "$STATE_FILE" | head -n1)
-        if [[ -n "$line" ]]; then
-            val="${line#*=}"
-            val="${val//[$'\t\r\n ']}"
-        fi
-    fi
-    echo "$val"
-}
-
 get_windows() {
     if [[ -f "$STATE_FILE" ]]; then
         grep -m1 '^windows=' "$STATE_FILE" | cut -d'=' -f2-
@@ -26,9 +12,6 @@ get_windows() {
 }
 
 generate_json() {
-    local x=$(get_value "x" "0")
-    local y=$(get_value "y" "0")
-    local zoom=$(get_value "zoom" "1.0")
     local windows=$(get_windows)
 
     # Проверяем, что windows – валидный JSON
@@ -37,7 +20,7 @@ generate_json() {
     fi
 
     # Выводим одну строку JSON
-    echo "{\"camera\":{\"x\":$x,\"y\":$y,\"zoom\":$zoom},\"windows\":$windows}"
+    echo "{\"windows\":$windows}"
 }
 
 stream_json() {
