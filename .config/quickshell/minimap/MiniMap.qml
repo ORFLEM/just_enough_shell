@@ -11,13 +11,15 @@ WlrLayershell {
     namespace: "minimap"
     screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
 
+    property bool openMap: false
+
     anchors {
         bottom: true
         left: true
     }
 
-    implicitHeight: 306
-    implicitWidth: 300 * Screen.width / Screen.height + 6
+    implicitHeight: openMap ? Screen.height - barHeight - 6 : 306
+    implicitWidth: openMap ? Screen.width - 6 : 300 * Screen.width / Screen.height + 6
     color: "transparent"
 
     // ---------- Фон ----------
@@ -53,13 +55,34 @@ WlrLayershell {
             color: "transparent"
             clip: true
 
-            // Параметры камеры
-            property real cameraX: bar.cameraData.x
-            property real cameraY: bar.cameraData.y
-            property real cameraZoom: bar.cameraData.zoom
-            property real mapZoom: cameraZoom / 20.0
+            // Локальные копии камеры (независимы от bar)
+            property int localCameraX: barLoader.item?.cameraData?.x ?? 0
+            property int localCameraY: barLoader.item?.cameraData?.y ?? 0
+            property real localCameraZoom: barLoader.item?.cameraData?.zoom ?? 1.0
+
+            // Дополнительный зум от колёсика
+            property real resizeZoom: 0
+
+            // Итоговый масштаб
+            property real mapZoom: (localCameraZoom + resizeZoom) / 20.0
+
             property real centerX: width / 2
             property real centerY: height / 2
+
+            // Флаг активности drag
+            property bool dragActive: false
+
+            // Обновляем локальные данные из бара, если не активен drag
+            Connections {
+                target: barLoader.item
+                onCameraDataChanged: {
+                    if (!windowsContainer.dragActive) {
+                        windowsContainer.localCameraX = barLoader.item.cameraData.x
+                        windowsContainer.localCameraY = barLoader.item.cameraData.y
+                        windowsContainer.localCameraZoom = barLoader.item.cameraData.zoom
+                    }
+                }
+            }
 
             // ---------- Модель окон ----------
             ListModel { id: windowModel }
@@ -71,11 +94,11 @@ WlrLayershell {
             Repeater {
                 model: windowModel
                 delegate: Rectangle {
-                    property real centerX: (model.posX - windowsContainer.cameraX) * windowsContainer.mapZoom + windowsContainer.centerX
-                    property real centerY: (windowsContainer.cameraY - model.posY) * windowsContainer.mapZoom + windowsContainer.centerY
+                    property real centerX: (model.posX - windowsContainer.localCameraX) * windowsContainer.mapZoom + windowsContainer.centerX
+                    property real centerY: (windowsContainer.localCameraY - model.posY) * windowsContainer.mapZoom + windowsContainer.centerY
                     property real relW: model.width * windowsContainer.mapZoom
                     property real relH: model.height * windowsContainer.mapZoom
-                    
+
                     x: centerX - relW / 2
                     y: centerY - relH / 2
                     width: Math.max(relW, 5)
@@ -96,14 +119,13 @@ WlrLayershell {
                     }
 
                     Behavior on color { ColorAnimation { duration: 200 } }
-                    // Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
-                    // Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
-
 
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             Quickshell.execDetached(["driftwm", "msg", "camera", model.posX, model.posY])
+                            // Сброс зума при клике на окно (опционально)
+                            // windowsContainer.resizeZoom = 0
                         }
                     }
                 }
@@ -113,8 +135,8 @@ WlrLayershell {
             Repeater {
                 model: waypointModel
                 delegate: Rectangle {
-                    property real px: (model.x - windowsContainer.cameraX) * windowsContainer.mapZoom + windowsContainer.centerX
-                    property real py: (windowsContainer.cameraY - model.y) * windowsContainer.mapZoom + windowsContainer.centerY
+                    property real px: (model.x - windowsContainer.localCameraX) * windowsContainer.mapZoom + windowsContainer.centerX
+                    property real py: (windowsContainer.localCameraY - model.y) * windowsContainer.mapZoom + windowsContainer.centerY
 
                     x: px - width/2
                     y: py - height/2
@@ -124,7 +146,7 @@ WlrLayershell {
                     color: col.backgroundAlt1
                     border.color: col.accent
                     border.width: 1
-                    // Подпись (если есть label)
+
                     Text {
                         id: waypointText
                         anchors.centerIn: parent
@@ -135,18 +157,57 @@ WlrLayershell {
                         visible: model.label ? true : false
                     }
 
-                    // Behavior on x { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
-                    // Behavior on y { NumberAnimation { duration: 200; easing.type: Easing.Linear } }
-
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            // При клике на waypoint перемещаем камеру
                             Quickshell.execDetached(["driftwm", "msg", "camera", model.x, model.y])
                         }
                     }
                 }
             }
+
+            // ---------- World Map overlay ----------
+            
+            Item {
+                visible: openMap
+                anchors.fill: parent
+
+                Rectangle {
+                    anchors.centerIn: parent
+                    color: "transparent"
+                    width: 10
+                    height: width
+                    border.width: 2
+                    border.color: col.accent2
+                }
+
+                Item {
+                    anchors.bottom: parent.bottom
+                    width: textMap.width + 8
+                    height: textMap.height + 4
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: mainRad - 3
+                        opacity: 0.65
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                            
+                        }
+                    }
+                    Text {
+                        anchors.centerIn: parent
+                        id: textMap
+                        font.pixelSize: fontSize
+                        font.family: fontFamily
+                        color: col.font
+                        text: "x: " + windowsContainer.localCameraX + " y: " + windowsContainer.localCameraY + " zoom: " + windowsContainer.mapZoom
+                    }
+                }
+            } 
 
             // ---------- Источник окон (JsonListen) ----------
             JsonListen {
@@ -173,16 +234,15 @@ WlrLayershell {
                 }
             }
 
-            // ---------- Источник waypoints (TextFile) ----------
+            // ---------- Источник waypoints ----------
             FileView {
                 id: waypointFile
                 path: Qt.resolvedUrl("./waypoints.json")
                 watchChanges: true
 
                 onFileChanged: reload()
-                
+
                 onTextChanged: {
-                    // text – это функция, вызываем её
                     var content = text()
                     if (!content || content.trim() === "") {
                         waypointModel.clear()
@@ -199,12 +259,77 @@ WlrLayershell {
                                     label: data[i].label || ""
                                 })
                             }
-                            // Если есть Canvas для линий – перерисовать
-                            // if (typeof waypointLines !== 'undefined') waypointLines.requestPaint()
                         }
                     } catch (e) {
                         console.warn("Ошибка парсинга waypoints.json:", e)
                     }
+                }
+            }
+
+            // ---------- Drag для правой кнопки ----------
+            MouseArea {
+                id: dragArea
+                anchors.fill: parent
+                acceptedButtons: Qt.RightButton
+                hoverEnabled: false
+
+                property int startX: 0
+                property int startY: 0
+                property int origX: 0
+                property int origY: 0
+
+                onPressed: {
+                    startX = mouse.x
+                    startY = mouse.y
+                    origX = windowsContainer.localCameraX
+                    origY = windowsContainer.localCameraY
+                    windowsContainer.dragActive = true
+                }
+
+                onPositionChanged: {
+                    if (pressedButtons & Qt.RightButton) {
+                        var dx = (mouse.x - startX) / windowsContainer.mapZoom
+                        var dy = (mouse.y - startY) / windowsContainer.mapZoom
+                        windowsContainer.localCameraX = origX - dx
+                        windowsContainer.localCameraY = origY + dy
+                    }
+                }
+
+                onReleased: {
+                    windowsContainer.dragActive = false
+                }
+            }
+        }
+
+        // ---------- Фоновая MouseArea для кликов левой кнопкой и колёсика ----------
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.MiddleButton | Qt.NoButton
+            hoverEnabled: true
+
+            onPressed: function(mouse) {
+                if (mouse.button === Qt.MiddleButton) {
+                    openMap = !openMap
+                    windowsContainer.resizeZoom = 0
+                    windowsContainer.localCameraX = barLoader.item?.cameraData?.x ?? 0
+                    windowsContainer.localCameraY = barLoader.item?.cameraData?.y ?? 0
+                    windowsContainer.localCameraZoom = barLoader.item?.cameraData?.zoom ?? 1.0
+                }
+            }
+
+            onExited: {
+                // Сброс зума и позиции
+                windowsContainer.resizeZoom = 0
+                windowsContainer.localCameraX = barLoader.item?.cameraData?.x ?? 0
+                windowsContainer.localCameraY = barLoader.item?.cameraData?.y ?? 0
+                windowsContainer.localCameraZoom = barLoader.item?.cameraData?.zoom ?? 1.0
+            }
+
+            onWheel: function(wheel) {
+                if (wheel.angleDelta.y > 0) {
+                    windowsContainer.resizeZoom = Math.min(windowsContainer.resizeZoom + 0.1, 10) // ограничим
+                } else if (wheel.angleDelta.y < 0) {
+                    windowsContainer.resizeZoom = Math.max(windowsContainer.resizeZoom - 0.1, -1) // ограничим
                 }
             }
         }

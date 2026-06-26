@@ -41,6 +41,11 @@
 | `alt + F11` | volume up |
 | `alt + F12` | open \| close player |
 
+### minimap controls:
+- scroll wheel click – expand the minimap into a full‑sized map
+- hold RMB and move the mouse – pan around the minimap
+- LMB on a program or waypoint – move to that coordinate
+
 ### Other bindings I may have missed can be found in [DriftWM](https://github.com/malbiruk/driftwm)
 
 ## -- How JES looks on DriftWM -- :
@@ -56,6 +61,7 @@
 
 ### Minimap
 ![alt_image](./images/minimap.webp)
+![alt_image](./images/minimap2.webp)
 
 ### Player
 ![alt_image](./images/5.webp)

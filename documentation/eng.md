@@ -117,6 +117,12 @@
 	<br>
   <i>JES is oriented not toward trends, but toward practicality and convenience in everyday use.</i><br>
 	</p>
+	<h3>-- acknowledgements -- :</h3>
+	<p>
+	Thanks to <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> and its author</b> for help with learning Quickshell and hosting the website.<br>
+	Thanks to <b><a href="https://github.com/f026/">f026</a></b> for the <a href="https://github.com/f026/activate-linux-plugin">first plugin</a> for JES.<br>
+	Thanks to <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> for help with DriftWM IPC, adding new features to the WM for JES, and in general for being supportive of the project.<br>
+	</p>
 	<h3>-- Roadmap -- :</h3>
 	<p>
 	<b>[c]</b> Add <b>Hyprland</b> support<br>
@@ -133,7 +139,8 @@
   <b>[c]</b> Settings installer<br>
 	<b>[c]</b> Neutral / vibrant style toggle<br>
 	<b>[c]</b> Popup minimap for <b>driftwm</b><br>
-	<b>[c]</b> add waypoints to map<br>
+	<b>[c]</b> Add waypoints to map<br>
+	<b>[c]</b> Add full map<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>

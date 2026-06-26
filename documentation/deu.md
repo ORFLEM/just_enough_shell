@@ -117,6 +117,12 @@
 	<br>
   <i>JES orientiert sich nicht an Trends, sondern an Praktikabilität im Alltag und Komfort.</i><br>
 	</p>
+	<h3>-- Danksagungen -- :</h3>
+	<p>
+	Dank an <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> und seinen Autor</b> für die Hilfe beim Erlernen von Quickshell und das Hosting der Website.<br>
+	Dank an <b><a href="https://github.com/f026/">f026</a></b> für das <a href="https://github.com/f026/activate-linux-plugin">erste Plugin</a> für JES.<br>
+	Dank an <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> für die Hilfe bei DriftWM IPC, das Hinzufügen neuer Funktionen zum WM für JES und allgemein für die Unterstützung des Projekts.<br>
+	</p>
 	<h3>-- Weiterer Fahrplan --:</h3>
 	<p>
 	<b>[c]</b> Hinzufügen der Unterstützung für <b>Hyprland</b><br>
@@ -134,6 +140,7 @@
 	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
 	<b>[c]</b> Popup-Minimap für <b>driftwm</b><br>
 	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
+	<b>[c]</b> Vollwertige Karte hinzufügen<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>

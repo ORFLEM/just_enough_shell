@@ -41,6 +41,11 @@
 | `alt + F11` | lauter |
 | `alt + F12` | Player öffnen \| schließen |
 
+### Minimap‑Steuerung:
+- Mausrad klicken – die Minimap zu einer vollwertigen Karte erweitern
+- rechte Maustaste gedrückt halten und Maus bewegen – auf der Minimap verschieben
+- linke Maustaste auf ein Programm oder einen Wegpunkt – zu dieser Koordinate springen
+
 ### Weitere Tastenkombinationen, die ich eventuell vergessen habe, finden Sie bei (DriftWM)[https://github.com/malbiruk/driftwm]
 
 ## -- So sieht JES unter DriftWM aus -- :
@@ -56,6 +61,7 @@
 
 ### Minimap
 ![alt_image](./images/minimap.webp)
+![alt_image](./images/minimap2.webp)
 
 ### Player
 ![alt_image](./images/5.webp)
