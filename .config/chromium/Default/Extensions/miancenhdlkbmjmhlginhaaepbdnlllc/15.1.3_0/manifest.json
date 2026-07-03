@@ -1,0 +1,91 @@
+{
+   "action": {
+      "default_icon": {
+         "16": "img/icon-color-16.png",
+         "32": "img/icon-color-32.png"
+      },
+      "default_popup": "html/popup.html",
+      "default_title": "__MSG_extensionName__"
+   },
+   "background": {
+      "service_worker": "mjs/background.js",
+      "type": "module"
+   },
+   "commands": {
+      "_execute_action": {
+         "suggested_key": {
+            "default": "Alt+Shift+C"
+         }
+      },
+      "commandCopyAsciiDoc": {
+         "description": "__MSG_commandCopyAsciiDoc__"
+      },
+      "commandCopyBBCode": {
+         "description": "__MSG_commandCopyBBCode__"
+      },
+      "commandCopyCSV": {
+         "description": "__MSG_commandCopyCSV__"
+      },
+      "commandCopyDokuWiki": {
+         "description": "__MSG_commandCopyDokuWiki__"
+      },
+      "commandCopyHTMLHyper": {
+         "description": "__MSG_commandCopyHTMLHyper__"
+      },
+      "commandCopyHTMLPlain": {
+         "description": "__MSG_commandCopyHTMLPlain__"
+      },
+      "commandCopyJira": {
+         "description": "__MSG_commandCopyJira__"
+      },
+      "commandCopyLaTeX": {
+         "description": "__MSG_commandCopyLaTeX__"
+      },
+      "commandCopyMarkdown": {
+         "description": "__MSG_commandCopyMarkdown__"
+      },
+      "commandCopyMediaWiki": {
+         "description": "__MSG_commandCopyMediaWiki__"
+      },
+      "commandCopyOrgMode": {
+         "description": "__MSG_commandCopyOrgMode__"
+      },
+      "commandCopyTextOnly": {
+         "description": "__MSG_commandCopyTextOnly__"
+      },
+      "commandCopyTextURL": {
+         "description": "__MSG_commandCopyTextURL__"
+      },
+      "commandCopyTextile": {
+         "description": "__MSG_commandCopyTextile__"
+      },
+      "commandCopyURLOnly": {
+         "description": "__MSG_commandCopyURLOnly__"
+      },
+      "commandCopyreStructuredText": {
+         "description": "__MSG_commandCopyreStructuredText__"
+      }
+   },
+   "default_locale": "en",
+   "description": "__MSG_extensionDescription__",
+   "homepage_url": "https://github.com/asamuzaK/url2clipboard",
+   "icons": {
+      "128": "img/icon-color-128.png",
+      "16": "img/icon-black-16.png",
+      "32": "img/icon-black-32.png",
+      "48": "img/icon-color-48.png",
+      "96": "img/icon-color-96.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkoxcxexSpGvBMY7jXd/MAYBb7bu3+dPHl0g6/PzjsUJgezL+tARW1xOS1EE9UjlUyxJd/YPcRQnV6B/GxIN4CKmd5ey12CoQqvfeXdOUMSduZtx9+eQlhVJG0f1gGRhKA+hCUjEjylCBhQbAB9QMKBEiTQLbVOj0lLlwn1eaRIW2SgOUm1AXtgpKoZoPagVcciHAfVTy+eoOXV9vMi2W3UCGHjPtd3b1dS9IauL2irnm3RbnOVQVyNuc2qAB8djY78C5UsRKjUCxnBl3Z56wp4ZuEpw1H3aRGg68FIF76UJjDxzfsMaZHgOYPcnXPA1ts7bajTxDO8UGp9amgVAPKwIDAQAB",
+   "manifest_version": 3,
+   "name": "__MSG_extensionName__",
+   "optional_permissions": [ "notifications" ],
+   "options_ui": {
+      "open_in_tab": true,
+      "page": "html/options.html"
+   },
+   "permissions": [ "activeTab", "clipboardWrite", "contextMenus", "offscreen", "scripting", "storage", "tabs" ],
+   "short_name": "__MSG_extensionShortName__",
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "15.1.3"
+}

@@ -1,0 +1,135 @@
+# Helix Theme: Zenburn with More Blue + Green Variables
+
+# --- Syntax Elements (blue/cyan emphasis, green variables) ---
+
+"comment" = { fg = "comment" }
+"comment.block.documentation" = { bg = "comment_doc", modifiers = ["italic"] }
+"comment.line.documentation" = { bg = "comment_doc", modifiers = ["italic"] }
+
+"constant" = { fg = "t11" }
+"function" = { fg = "t10" }
+"function.method" = { fg = "t7" }
+"function.macro" = { fg = "t7" }
+"keyword.storage.modifier" = { fg = "t7" }
+"keyword.control.import" = { fg = "t8" }
+"keyword.control" = { fg = "t8" }
+"keyword.function" = { fg = "t11" }
+"keyword" = { fg = "t6" }
+"operator" = { fg = "t8" }
+"punctuation" = { fg = "t9" }
+"string" = { fg = "t6", modifiers = ["italic"] }
+"string.regexp" = { fg = "t6" }
+"tag" = { fg = "t4" }
+"type" = { fg = "t8", modifiers = ["bold"] }
+"namespace" = { fg = "t6", modifiers = ["bold"] }
+"variable" = { fg = "t4" }
+"variable.parameter" = { fg = "t6" } 
+"variable.other.member" = { fg = "t3" } 
+"label" = { fg = "t4" }
+
+"diff.plus" = { fg = "diff_plus" }
+"diff.delta" = { fg = "diff_delta" }
+"diff.delta.moved" = { fg = "diff_delta_moved" }
+"diff.minus" = { fg = "diff_minus" }
+
+"markup.heading" = { fg = "t7" }
+"markup.list" = { fg = "t7" }
+"markup.bold" = { fg = "t4" }
+"markup.italic" = { fg = "t4" }
+"markup.strikethrough" = { fg = "t4", modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "t11", modifiers = ["underlined"] }
+"markup.link.text" = { fg = "t11" }
+"markup.quote" = { fg = "t5" }
+"markup.raw" = { fg = "t4" }
+
+# --- UI Elements (Matugen - Dynamic) – unchanged ---
+
+"ui.background" = { fg = "#dee4df", bg = "none" }
+
+"ui.linenr" = { fg = "#bfc9c2" }
+"ui.linenr.selected" = { fg = "#a6f2d2"}
+
+"ui.statusline" = { fg = "#a6f2d2", bg = "none" }
+"ui.statusline.inactive" = { fg = "#bfc9c2", bg = "none" }
+"ui.statusline.normal" = { fg = "#0f1512", bg = "none", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "#0f1512", bg = "none", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "#0f1512", bg = "none", modifiers = ["bold"] }
+
+"ui.popup" = { fg = "#dee4df", bg = "none" }
+"ui.window" = { fg = "#bfc9c2" }
+"ui.help" = { fg = "#bfc9c2", bg = "none" }
+
+"ui.bufferline" = { fg = "#bfc9c2", bg = "none" }
+"ui.bufferline.active" = { fg = "#003828", bg = "#8ad6b7", underline = { color = "#8ad6b7", style = "line" } }
+"ui.bufferline.background" = { bg = "none" }
+
+"ui.text" = "#dee4df"
+"ui.text.focus" = { fg = "#8ad6b7", bg = "none", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "#bfc9c2" }
+"ui.text.directory" = { fg = "#8ad6b7" }
+
+"ui.virtual" = "#bfc9c2"
+"ui.virtual.ruler" = { bg = "none" }
+"ui.virtual.indent-guide" = "#171d1a"
+"ui.virtual.inlay-hint" = { fg = "#bfc9c2", bg = "none" }
+"ui.virtual.jump-label" = { fg = "#00513c", modifiers = ["bold"] }
+
+"ui.selection" = { bg = "#404944" }
+
+"ui.cursor" = { fg = "#0f1512", bg = "#a6f2d2" }
+"ui.cursor.primary" = { fg = "#0f1512", bg = "#a6f2d2" }
+"ui.cursor.match" = { fg = "#a6f2d2", modifiers = ["bold"] }
+
+"ui.highlight" = { bg = "#354c42", modifiers = ["bold"] }
+
+"ui.menu" = { fg = "#dee4df", bg = "none" }
+"ui.menu.selected" = { fg = "#8ad6b7", bg = "none", modifiers = ["bold"] }
+
+# --- Diagnostics (Matugen - Dynamic) ---
+"diagnostic.error" = { fg = "#ffb4ab", underline = { color = "#ffb4ab", style = "curl" } }
+"diagnostic.warning" = { fg = "#b3ccbf", underline = { color = "#b3ccbf", style = "curl" } }
+"diagnostic.info" = { fg = "#a6cce0", underline = { color = "#a6cce0", style = "curl" } }
+"diagnostic.hint" = { fg = "#264b5c", underline = { color = "#264b5c", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+
+# --- Fallbacks (Matugen - Dynamic) ---
+error = "#ffb4ab"
+warning = "#b3ccbf"
+info = "#8ad6b7"
+hint = "#a6cce0"
+
+[palette]
+t1 = "#323230"
+t2 = "#474945"
+t3 = "#a19999"
+t4 = "#b0b4b6"
+t5 = "#c3d0d1"
+t6 = "#bde1e4"
+t7 = "#ffa3a9"
+t8 = "#feffff"
+t9 = "#ffffff"
+t10 = "#ffffff"
+t11 = "#ffe8a6"
+
+highlight = "#ff6cc3"
+highlight_two = "#ffff74"
+highlight_three = "#ffffe1"
+
+selection = "#89fdff"
+selection_fg = "#292c2d"
+
+black = "#000000"
+comment = "#b0837d"
+comment_doc = "#507a86"
+hints = "#646a74"
+ruler = "#4f504c"
+
+error = "#ff7a1d"
+warning = "#ffff1d"
+display = "#7dffff"
+info = "#ffffff"
+
+diff_minus = "#ff7a1d"
+diff_delta = "#1dcbff"
+diff_plus = "#ffff1d"
+diff_delta_moved = "#1d86ff"

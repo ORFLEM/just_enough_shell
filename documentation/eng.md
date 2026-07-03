@@ -141,6 +141,7 @@
 	<b>[c]</b> Popup minimap for <b>driftwm</b><br>
 	<b>[c]</b> Add waypoints to map<br>
 	<b>[c]</b> Add full map<br>
+	<b>[c]</b> Add normal ui in full map<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>

@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "更新所有扩展"
+   },
+   "extension_Description": {
+      "description": "扩展的说明，显示在 Chrome Web Store 中。",
+      "message": "在基于 Chromium 的浏览器上启用对来自 Chrome Web Store (或其它地方)的扩展的安装和半自动更新。"
+   },
+   "extension_Name": {
+      "description": "扩展的标题，显示在 Chrome Web Store 中。",
+      "message": "Chromium Web Store"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "",
+      "message": "1. 激活“开发者模式”\n2. 拖拽文件"
+   },
+   "notify_manuallyInstall_title": {
+      "description": "",
+      "message": "插件下载完成！请手动安装："
+   },
+   "options_advanced": {
+      "description": "",
+      "message": "高级"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "自动检查扩展更新"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "点击 Chromium Web Store 标记来执行手动检查"
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "忽略的扩展"
+   },
+   "options_importExportDescription": {
+      "description": "installButton 是按钮上的文本，在 options_importExportInstallAllButton 中定义",
+      "message": "保存这里的文本到一个用来导出的文件。 要导入则把文本粘贴到这里并按下 $installButton$",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "",
+      "message": "导入/导出"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "",
+      "message": "安装全部"
+   },
+   "options_manuallyInstall": {
+      "description": "",
+      "message": "手动安装"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "",
+      "message": "解除 Chrome 等浏览器对第三方插件源的 'CRX_REQUIRED_PROOF_MISSING' 屏蔽"
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "从不检查这个扩展的更新"
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes 将是用户可以编辑的一个字段",
+      "message": "每隔 $delayInMinutes$ 分钟检查一次更新",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "更新选项"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "检查非 Chrome Web Store 扩展的更新"
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "仅支持自动更新的扩展有效"
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "检查 Chrome Web Store 扩展的更新"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "将会联系 Google 检查更新"
+   },
+   "options_webstoreIntegration": {
+      "description": "MTL",
+      "message": "启用 Chrome 网上应用店集成"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "MTL",
+      "message": "启用 Chrome 网上应用店中的安装/卸载按钮。 （可能会向 Google 公开有关您安装的扩展程序的信息。）"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "所有扩展都是最新的!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "正在检查更新..."
+   },
+   "popup_removedExtensions": {
+      "description": "将会显示在已移除扩展的列表上方。",
+      "message": "下列扩展已从 Chrome Web Store 中移除"
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "当悬停在 popup_removedExtensions 时显示。",
+      "message": "这些可能由于违反服务条款而被移除。"
+   },
+   "popup_updateFailed": {
+      "description": "extName 将是未能更新的扩展的名称。",
+      "message": "$extName$ 更新失败",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "添加到 Chromium"
+   },
+   "webstore_removeButton": {
+      "description": "MTL",
+      "message": "从 Chromium 中删除"
+   }
+}

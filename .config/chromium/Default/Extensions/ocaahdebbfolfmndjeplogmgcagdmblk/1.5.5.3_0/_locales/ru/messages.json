@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "Обновить все расширения"
+   },
+   "extension_Description": {
+      "description": "Описание расширения, отображаемое в Web Store.",
+      "message": "Включает установку и полуавтоматическое обновление расширений из Chrome Web Store (или других сайтов) в браузерах, основанных на Chromium."
+   },
+   "extension_Name": {
+      "description": "Название расширения, отображаемое в Web Store.",
+      "message": "Chromium Web Store"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "MTL",
+      "message": "1. Включите режим разработчика (вверху справа)\n2. Перетащите .crx с панели загрузок на страницу расширений."
+   },
+   "notify_manuallyInstall_title": {
+      "description": "MTL",
+      "message": "Расширение скачано! Пожалуйста, установите вручную:"
+   },
+   "options_advanced": {
+      "description": "MTL",
+      "message": "Передовой"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "Автоматически проверять обновления расширений"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "Нажмите на ярлык Chromium Web Store, чтобы выполнить ручную проверку"
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "Исключенные расширения"
+   },
+   "options_importExportDescription": {
+      "description": "MTL",
+      "message": "Сохраните текст здесь в файл для экспорта. Чтобы импортировать, вставьте этот текст сюда и нажмите $installButton$.",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "MTL",
+      "message": "Импорт/Экспорт"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "MTL",
+      "message": "Установить все"
+   },
+   "options_manuallyInstall": {
+      "description": "MTL",
+      "message": "Всегда скачивайте файлы CRX"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "MTL",
+      "message": "Включите эту опцию, если вы получаете ошибки «CRX_REQUIRED_PROOF_MISSING»."
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "Никогда не проверять обновления для этого расширения"
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes - поле, содержимое которого может изменять пользователь",
+      "message": "Проверять наличие обновлений каждые $delayInMinutes$ минут",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "Настройки обновлений"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "Проверять обновления расширений не из Web Store"
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "Работает только в том случае, если расширение поддерживает автоматическое обновление"
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "Проверять обновления расширений из Web Store"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "Для проверки обновлений требуется подключение к серверам Google"
+   },
+   "options_webstoreIntegration": {
+      "description": "MTL",
+      "message": "Включить интеграцию с Интернет-магазином Chrome"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "MTL",
+      "message": "Включите кнопки «Установить/Удалить» в Интернет-магазине Chrome. (Может предоставить Google информацию о том, какие расширения вы установили.)"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "Обновлений расширений нет!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "Проверка обновлений..."
+   },
+   "popup_removedExtensions": {
+      "description": "Отображается вверху списка удаленных расширений.",
+      "message": "Данные расширения были удалены из Chrome Web Store"
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "Отображается при наведении на popup_removedExtensions.",
+      "message": "Они могли быть удалены из-за нарушения Условий использования."
+   },
+   "popup_updateFailed": {
+      "description": "extName - название расширения, которое не удалось обновить.",
+      "message": "$extName$: не удалось обновить",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "Добавить в Chromium"
+   },
+   "webstore_removeButton": {
+      "description": "MTL",
+      "message": "Удалить из Chromium"
+   }
+}

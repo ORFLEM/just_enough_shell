@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "version": "1.0",
+  "name": "Matugen Auto Theme",
+  "theme": {
+    "colors": {
+      "frame": [ 53, 62, 58 ],
+      "toolbar": [ 53, 62, 58 ],
+      "omnibox_background": [ 53, 62, 58 ],
+      "omnibox_text": [255, 255, 255],
+      "tab_text": [ 222, 228, 223 ],
+      "ntp_background": [ 53, 62, 58 ]
+    }
+  }
+}

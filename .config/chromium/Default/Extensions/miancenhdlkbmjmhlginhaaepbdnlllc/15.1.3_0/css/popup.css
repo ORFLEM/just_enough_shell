@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+/**
+ * popup.css
+ */
+:root {
+  --background-color: #fff;
+  --button-active-bgcolor: rgb(207 207 216);
+  --button-hover-bgcolor: rgb(207 207 216 / 66%);
+  --foreground-color: #15141a;
+  --scale-size: calc(1rem / 3);
+
+  color-scheme: light;
+  font: caption;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: rgb(43 42 51);
+    --button-hover-bgcolor: rgb(82 82 94);
+    --button-active-bgcolor: rgb(91 91 102);
+    --foreground-color: rgb(251 251 254);
+
+    color-scheme: dark;
+  }
+}
+
+html, body, body * {
+  box-sizing: content-box;
+}
+
+body {
+  margin: 0;
+  border: none;
+  padding: 0.5rem;
+  min-width: 16rem;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+}
+
+main {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+summary {
+  margin: 0 0.5rem;
+  border: none;
+  padding: 0.25rem 0;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+ul {
+  display: block;
+  margin: 0.25rem 0;
+  padding: 0.25rem 0.25rem 0;
+  list-style: none;
+}
+
+li {
+  display: block;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+label,
+input {
+  display: block;
+  margin: 0 0.5rem;
+}
+
+button {
+  all: unset;
+  appearance: none;
+  display: block;
+  margin: 0;
+  border-radius: var(--scale-size);
+  padding: 0;
+  line-height: 1.5;
+  text-indent: 1rem;
+  width: 100%;
+}
+
+button[disabled] {
+  background-color: transparent;
+  color: #808080;
+}
+
+button:not([disabled]):hover,
+button:not([disabled]):focus {
+  background-color: var(--button-hover-bgcolor);
+  color: var(--foreground-color);
+}
+
+button:not([disabled]):active,
+button:not([disabled]):focus:active {
+  background-color: var(--button-active-bgcolor);
+  color: var(--foreground-color);
+}
+
+[hidden] label,
+[hidden] input,
+[hidden] button {
+  display: none;
+}

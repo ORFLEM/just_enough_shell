@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "Aggiorna tutte le estensioni"
+   },
+   "extension_Description": {
+      "description": "La descrizione dell'estensione, mostrata nel Chrome Web Store.",
+      "message": "Permette di installare ed aggiornare in modo semiautomatico estensioni del Chrome Web Store"
+   },
+   "extension_Name": {
+      "description": "Il titolo dell'estensione, mostrato nel Chrome Web Store.",
+      "message": "Chromium Web Store"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "MTL",
+      "message": "1. Abilita la modalità sviluppatore (in alto a destra)\n2. Trascina .crx dalla barra dei download sulla pagina delle estensioni"
+   },
+   "notify_manuallyInstall_title": {
+      "description": "MTL",
+      "message": "Estensione scaricata! Si prega di installare manualmente:"
+   },
+   "options_advanced": {
+      "description": "MTL",
+      "message": "Avanzate"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "Controlla automaticamente se ci sono aggiornamenti delle estensioni"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "Clicca sul badge del Chromium Web Store per fare un controllo manuale degli aggiornamenti"
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "Estensioni ignorate"
+   },
+   "options_importExportDescription": {
+      "description": "MTL",
+      "message": "Salva il testo qui in un file da esportare. Per importare, incolla qui il testo e premi $installButton$",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "",
+      "message": "Importa/Esporta"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "",
+      "message": "Installa tutto"
+   },
+   "options_manuallyInstall": {
+      "description": "MTL",
+      "message": "Scarica sempre i file CRX"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "MTL",
+      "message": "Attiva questa opzione se ricevi errori 'CRX_REQUIRED_PROOF_MISSING'."
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "Non controllare mai se ci sono aggiornamenti per questa estensione"
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes sarà un valore che può essere modificato dall'utente",
+      "message": "Controlla se ci sono aggiornamenti ogni $delayInMinutes$ minuti",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "Opzioni di aggiornamento"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "Controlla gli aggiornamenti per estensioni che non vengono dal Chrome Web Store"
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "Funziona solo se l'estensione supporta l'auto-aggiornamento"
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "Controlla gli aggiornamenti per estensioni del Chrome Web Store"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "Contatterà Google per controllare gli aggiornamenti"
+   },
+   "options_webstoreIntegration": {
+      "description": "MTL",
+      "message": "Abilita l'integrazione del Chrome Web Store"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "MTL",
+      "message": "Abilita i pulsanti Installa/Disinstalla sul Chrome Web Store. (Potrebbe esporre a Google informazioni su quali estensioni hai installato.)"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "Tutte le estensioni sono aggiornate!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "Controllando se ci sono aggiornamenti..."
+   },
+   "popup_removedExtensions": {
+      "description": "Sarà mostrato sopra alla lista delle estensioni rimosse.",
+      "message": "Le seguenti estensioni sono state rimosse dal Chrome Web Store"
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "Mostrato quando si passa sopra a popup_removedExtensions",
+      "message": "Queste potrebbero essere state rimosse per una violazione dei Termini di Servizio"
+   },
+   "popup_updateFailed": {
+      "description": "extName sarà il nome dell'estensione che non è stato possibile aggiornare.",
+      "message": "L'aggiornamento di $extName$ non è riuscito",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "Aggiungi a Chromium"
+   },
+   "webstore_removeButton": {
+      "description": "MTL",
+      "message": "Rimuovere da Chromium"
+   }
+}

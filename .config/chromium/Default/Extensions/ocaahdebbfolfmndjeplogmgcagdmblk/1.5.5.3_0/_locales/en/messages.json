@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "Update all extensions"
+   },
+   "extension_Description": {
+      "description": "The description of the extension, displayed in the Chrome Web Store.",
+      "message": "Enables installation and semi-automatic updating for extensions from the Chrome Web Store (or elsewhere) on Chromium based browsers."
+   },
+   "extension_Name": {
+      "description": "The title of the extension, displayed in the Chrome Web Store.",
+      "message": "Chromium Web Store"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "",
+      "message": "1. Enable Developer mode (top right)\n2. Drag .crx from downloads bar onto extensions page"
+   },
+   "notify_manuallyInstall_title": {
+      "description": "",
+      "message": "Extension downloaded! Please install manually:"
+   },
+   "options_advanced": {
+      "description": "",
+      "message": "Advanced"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "Automatically check for extension updates"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "Click the Chromium Web Store badge to perform a manual check"
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "Ignored extensions"
+   },
+   "options_importExportDescription": {
+      "description": "installButton is the text on the button, defined in options_importExportInstallAllButton",
+      "message": "Save the text here to a file to export. To import paste that text here and press $installButton$",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "",
+      "message": "Import/Export"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "",
+      "message": "Install All"
+   },
+   "options_manuallyInstall": {
+      "description": "",
+      "message": "Always download CRX files"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "",
+      "message": "Toggle this option if you are getting 'CRX_REQUIRED_PROOF_MISSING' errors"
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "Never check for updates to this extension"
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes will be a field that can be edited by the user",
+      "message": "Check for updates every $delayInMinutes$ minutes",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "Update options"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "Check for updates to non-Chrome Web Store extensions"
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "Only works if extension supports auto-updating"
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "Check for updates to Chrome Web Store extensions"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "Will contact Google to check for updates"
+   },
+   "options_webstoreIntegration": {
+      "description": "",
+      "message": "Enable Chrome Web Store Integration"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "",
+      "message": "Enable Install/Uninstall buttons on the Chrome Web Store. (Could expose information about which extensions you have installed to Google.)"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "All extensions are up to date!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "Checking for updates..."
+   },
+   "popup_removedExtensions": {
+      "description": "Will be shown above list of removed extensions.",
+      "message": "The following extensions have been removed from the Chrome Web Store"
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "Shown when hovering over popup_removedExtensions.",
+      "message": "These may have been removed due to a violation of the Terms of Service."
+   },
+   "popup_updateFailed": {
+      "description": "extName will be the name of the extension that failed to update.",
+      "message": "$extName$ Update Failed",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "Add to Chromium"
+   },
+   "webstore_removeButton": {
+      "description": "",
+      "message": "Remove from Chromium"
+   }
+}

@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "Alle Erweiterungen aktualisieren."
+   },
+   "extension_Description": {
+      "description": "The description of the extension, displayed in the Chrome Web Store.",
+      "message": "Ermöglicht die Installation und die halbautomatische Aktualisierung für Erweiterungen aus dem Chrome Web Store (oder aus anderen Quellen) auf Chromium-basierten Browsern."
+   },
+   "extension_Name": {
+      "description": "The title of the extension, displayed in the Chrome Web Store.",
+      "message": "Chromium Web Store"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "MTL",
+      "message": "1. Entwicklermodus aktivieren (oben rechts)\n2. Ziehen Sie .crx aus der Downloadleiste auf die Erweiterungsseite"
+   },
+   "notify_manuallyInstall_title": {
+      "description": "MTL",
+      "message": "Erweiterung heruntergeladen! Bitte manuell installieren:"
+   },
+   "options_advanced": {
+      "description": "MTL",
+      "message": "Fortschrittlich"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "Automatisch nach Erweiterungs-Aktualisierung suchen"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "Klicken Sie auf das Chromium Web Store-Abzeichen, um eine manuelle Aktualisierungsprüfung durchzuführen"
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "Ignorierte Erweiterungen"
+   },
+   "options_importExportDescription": {
+      "description": "MTL",
+      "message": "Speichern Sie den Text hier in einer Datei zum Exportieren. Um den Text zu importieren, fügen Sie ihn hier ein und drücken Sie $installButton$",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "MTL",
+      "message": "Import/Export"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "MTL",
+      "message": "Alle installieren"
+   },
+   "options_manuallyInstall": {
+      "description": "MTL",
+      "message": "Laden Sie immer CRX-Dateien herunter"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "MTL",
+      "message": "Schalten Sie diese Option um, wenn Sie „CRX_REQUIRED_PROOF_MISSING“-Fehler erhalten"
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "Nie nach Aktualisierungen für diese Erweiterung suchen"
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes will be a field that can be edited by the user",
+      "message": "Alle $delayInMinutes$ Minuten auf Aktualisierungen prüfen",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "Aktualisiere Einstellungen"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "Nach Aktualisierung für Erweiterungen suchen, die nicht aus dem Chrome Web Store sind."
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "Funktioniert nur, wenn die Erweiterung automatische Aktualisierungen unterstützt"
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "Nach Aktualisierung für Chrome Web Store-Erweiterungen suchen"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "Wird Google kontaktieren, um nach Aktualisierungen zu suchen"
+   },
+   "options_webstoreIntegration": {
+      "description": "MTL",
+      "message": "Aktivieren Sie die Chrome Web Store-Integration"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "MTL",
+      "message": "Aktivieren Sie die Schaltflächen „Installieren/Deinstallieren“ im Chrome Web Store. (Könnte Informationen darüber offenlegen, welche Erweiterungen Sie an Google installiert haben.)"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "Alle Erweiterungen sind auf dem neuesten Stand!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "Prüfe auf Aktualisierungen..."
+   },
+   "popup_removedExtensions": {
+      "description": "Will be shown above list of removed extensions.",
+      "message": "Die folgenden Erweiterungen wurden aus dem Chrome Web Store entfernt"
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "Shown when hovering over popup_removedExtensions.",
+      "message": "Diese Erweiterung könnte aufgrund eines Verstoßes gegen die Nutzungsbedingungen entfernt worden sein."
+   },
+   "popup_updateFailed": {
+      "description": "extName will be the name of the extension that failed to update.",
+      "message": "$extName$: Aktualisierung fehlgeschlagen",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "Zu Chromium hinzufügen"
+   },
+   "webstore_removeButton": {
+      "description": "MTL",
+      "message": "Aus Chromium entfernen"
+   }
+}

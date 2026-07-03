@@ -141,6 +141,7 @@
 	<b>[c]</b> Popup-Minimap für <b>driftwm</b><br>
 	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
 	<b>[c]</b> Vollwertige Karte hinzufügen<br>
+	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>

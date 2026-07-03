@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title data-i18n="optionsTitle">Copy URL To Clipboard - Options</title>
+    <link rel="icon" href="../img/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../css/options.css" />
+    <script src="../mjs/options.js" type="module"></script>
+  </head>
+  <body>
+    <header>
+      <h1 data-i18n="optionsTitle">Copy URL To Clipboard - Options</h1>
+    </header>
+    <main>
+      <form id="optionsForm">
+        <fieldset id="toolbarIcon" hidden>
+          <legend data-i18n="optionsToolbarIcon">
+            Toolbar Button Icon
+          </legend>
+          <div>
+            <p aria-details="iconDetail">
+              <input type="radio" id="buttonIconColor" name="buttonIconRadio"
+                     value="icon-color-16.png" />
+              <label for="buttonIconColor" data-i18n="optionsIconColorLabel"
+                     aria-label="Color Icon">
+                <img data-i18n="optionsIconColor" src="../img/icon.svg#color"
+                     alt="Color" />
+              </label>
+              <input type="radio" id="buttonIconBlack" name="buttonIconRadio"
+                     value="icon-black-16.png" />
+              <label for="buttonIconBlack" data-i18n="optionsIconBlackLabel"
+                     aria-label="Black Icon">
+                <img data-i18n="optionsIconBlack" src="../img/icon.svg#black"
+                     alt="Black" />
+              </label>
+              <input type="radio" id="buttonIconDark" name="buttonIconRadio"
+                     value="icon-dark-16.png" />
+              <label for="buttonIconDark" data-i18n="optionsIconDarkLabel"
+                     aria-label="Dark Icon">
+                <img id="iconDark" data-i18n="optionsIconDark"
+                     src="../img/icon.svg#dark" alt="Dark" />
+              </label>
+              <input type="radio" id="buttonIconLight" name="buttonIconRadio"
+                     value="icon-light-16.png" />
+              <label for="buttonIconLight" data-i18n="optionsIconLightLabel"
+                     aria-label="Light Icon">
+                <img id="iconLight" data-i18n="optionsIconLight"
+                     src="../img/icon.svg#light" alt="Light" />
+              </label>
+              <input type="radio" id="buttonIconWhite" name="buttonIconRadio"
+                     value="icon-white-16.png" />
+              <label for="buttonIconWhite" data-i18n="optionsIconWhiteLabel"
+                     aria-label="White Icon">
+                <img id="iconWhite" data-i18n="optionsIconWhite"
+                     src="../img/icon.svg#white" alt="White" />
+              </label>
+            </p>
+            <details id="iconDetail">
+              <div>
+                <p data-i18n="optionsIconDetail">
+                  Choose the icon.
+                </p>
+              </div>
+            </details>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="formats">
+            Formats
+          </legend>
+          <div>
+            <p aria-details="enableHTMLPlainDetail">
+              <span>
+                <input type="checkbox" id="HTMLPlain" checked="checked" />
+                <label for="HTMLPlain" class="checkboxLabel">
+                  HTML (text/plain)
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="includeTitleHTMLPlain"
+                       data-sub-item-of="HTMLPlain" />
+                <label for="includeTitleHTMLPlain" class="label"
+                       data-i18n="optionsIncludeTitle">
+                  Add title attribute
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="includeAttrHTMLPlain"
+                       data-sub-item-of="HTMLPlain" />
+                <label for="includeAttrHTMLPlain" class="label"
+                       data-i18n="optionsIncludeAttr">
+                  Add other attributes
+                </label>
+                <span class="related">
+                  <input type="text" id="attributesHTMLPlain"
+                         data-sub-item-of="HTMLPlain"
+                         placeholder="class=&quot;foo bar&quot; target=&quot;_blank&quot;" />
+                  <button id="saveAttributesHTMLPlain" type="button"
+                          data-i18n="optionsSave">
+                    Save
+                  </button>
+                </span>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="createTextFragmentsHTMLPlain"
+                       data-sub-item-of="HTMLPlain" />
+                <label for="createTextFragmentsHTMLPlain" class="label"
+                       data-i18n="optionsCreateTextFragments">
+                  Link directly to a specific portion of text
+                </label>
+                <sub>
+                  <a href="#:~:text=Text%20fragments" rel="noopener">[1]</a>
+                </sub>
+              </span>
+            </p>
+            <details id="enableHTMLPlainDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,HTML (text/plain)">
+                  Show HTML (text/plain) menu item in the context menu.
+                </p>
+                <p data-i18n="optionsAttributesDetail">
+                  `onxxx` attributes will be ignored.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableHTMLHyperDetail">
+              <span>
+                <input type="checkbox" id="HTMLHyper" checked="checked" />
+                <label for="HTMLHyper" class="checkboxLabel">
+                  HTML (text/html)
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="includeTitleHTMLHyper"
+                       data-sub-item-of="HTMLHyper" />
+                <label for="includeTitleHTMLHyper" class="label"
+                       data-i18n="optionsIncludeTitle">
+                  Add title attribute
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="includeAttrHTMLHyper"
+                       data-sub-item-of="HTMLHyper" />
+                <label for="includeAttrHTMLHyper" class="label"
+                       data-i18n="optionsIncludeAttr">
+                  Add other attributes
+                </label>
+                <span class="related">
+                  <input type="text" id="attributesHTMLHyper"
+                         data-sub-item-of="HTMLHyper"
+                         placeholder="class=&quot;foo bar&quot; target=&quot;_blank&quot;" />
+                  <button id="saveAttributesHTMLHyper" type="button"
+                          data-i18n="optionsSave">
+                    Save
+                  </button>
+                </span>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="createTextFragmentsHTMLHyper"
+                       data-sub-item-of="HTMLHyper" />
+                <label for="createTextFragmentsHTMLHyper" class="label"
+                       data-i18n="optionsCreateTextFragments">
+                  Link directly to a specific portion of text
+                </label>
+                <sub>
+                  <a href="#:~:text=Text%20fragments" rel="noopener">[1]</a>
+                </sub>
+              </span>
+            </p>
+            <details id="enableHTMLHyperDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,HTML (text/html)">
+                  Show HTML (text/html) menu item in the context menu.
+                </p>
+                <p data-i18n="optionsAttributesDetail">
+                  `onxxx` attributes will be ignored.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableMarkdownDetail">
+              <span>
+                <input type="checkbox" id="Markdown" checked="checked" />
+                <label for="Markdown" class="checkboxLabel">
+                  Markdown
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="includeTitleMarkdown"
+                       data-sub-item-of="Markdown"/>
+                <label for="includeTitleMarkdown" class="label"
+                       data-i18n="optionsIncludeTitle">
+                  Add title attribute
+                </label>
+              </span>
+            </p>
+            <details id="enableMarkdownDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,Markdown">
+                  Show Markdown menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableBBCodeDetail">
+              <span>
+                <input type="checkbox" id="BBCode" checked="checked" />
+                <label for="BBCode" class="checkboxLabel">
+                  BBCode
+                </label>
+              </span>
+            </p>
+            <details id="enableBBCodeDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,BBCode">
+                  Show BBCode menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableTextileDetail">
+              <span>
+                <input type="checkbox" id="Textile" checked="checked" />
+                <label for="Textile" class="checkboxLabel">
+                  Textile
+                </label>
+              </span>
+            </p>
+            <details id="enableTextileDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,Textile">
+                  Show Textile menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableAsciiDocDetail">
+              <span>
+                <input type="checkbox" id="AsciiDoc" checked="checked" />
+                <label for="AsciiDoc" class="checkboxLabel">
+                  AsciiDoc
+                </label>
+              </span>
+            </p>
+            <details id="enableAsciiDocDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,AsciiDoc">
+                  Show AsciiDoc menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableMediaWikiDetail">
+              <span>
+                <input type="checkbox" id="MediaWiki" checked="checked" />
+                <label for="MediaWiki" class="checkboxLabel">
+                  MediaWiki
+                </label>
+              </span>
+            </p>
+            <details id="enableMediaWikiDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,MediaWiki">
+                  Show MediaWiki menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableDokuWikiDetail">
+              <span>
+                <input type="checkbox" id="DokuWiki" checked="checked" />
+                <label for="DokuWiki" class="checkboxLabel">
+                  DokuWiki
+                </label>
+              </span>
+            </p>
+            <details id="enableDokuWikiDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,DokuWiki">
+                  Show DokuWiki menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableJiraDetail">
+              <span>
+                <input type="checkbox" id="Jira" checked="checked" />
+                <label for="Jira" class="checkboxLabel">
+                  Jira
+                </label>
+              </span>
+            </p>
+            <details id="enableJiraDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,Jira">
+                  Show Jira menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableReStructuredTextDetail">
+              <span>
+                <input type="checkbox" id="reStructuredText"
+                       checked="checked" />
+                <label for="reStructuredText" class="checkboxLabel">
+                  reStructuredText
+                </label>
+              </span>
+            </p>
+            <details id="enableReStructuredTextDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,reStructuredText">
+                  Show reStructuredText menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableLaTeXDetail">
+              <span>
+                <input type="checkbox" id="LaTeX" checked="checked" />
+                <label for="LaTeX" class="checkboxLabel">
+                  LaTeX
+                </label>
+              </span>
+            </p>
+            <details id="enableLaTeXDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,LaTeX">
+                  Show LaTeX menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableOrgModeDetail">
+              <span>
+                <input type="checkbox" id="OrgMode" checked="checked" />
+                <label for="OrgMode" class="checkboxLabel">
+                  Org Mode
+                </label>
+              </span>
+            </p>
+            <details id="enableOrgModeDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,OrgMode">
+                  Show Org Mode menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableCSVDetail">
+              <span>
+                <input type="checkbox" id="CSV" checked="checked" />
+                <label for="CSV" class="checkboxLabel">
+                  CSV
+                </label>
+              </span>
+            </p>
+            <details id="enableCSVDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,CSV">
+                  Show CSV menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableTextURLDetail">
+              <span>
+                <input type="checkbox" id="TextURL" checked="checked" />
+                <label for="TextURL" class="checkboxLabel">
+                  Text &amp; URL
+                </label>
+              </span>
+              <span class="sub-item">
+                <input type="checkbox" id="separateTextURL"
+                       data-sub-item-of="TextURL" />
+                <label for="separateTextURL" class="label"
+                       data-i18n="optionsSeparateTextURL">
+                  Copy text and URL on separate lines
+                </label>
+              </span>
+            </p>
+            <details id="enableTextURLDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,Text &amp; URL">
+                  Show Text &amp; URL menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableTextOnlyDetail">
+              <span>
+                <input type="checkbox" id="TextOnly" checked="checked" />
+                <label for="TextOnly" class="checkboxLabel">
+                  Text
+                </label>
+              </span>
+            </p>
+            <details id="enableTextOnlyDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,Text">
+                  Show Text menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="enableURLOnlyDetail">
+              <span>
+                <input type="checkbox" id="URLOnly" checked="checked" />
+                <label for="URLOnly" class="checkboxLabel">
+                  URL
+                </label>
+              </span>
+            </p>
+            <details id="enableURLOnlyDetail">
+              <div>
+                <p data-i18n="optionsEnableFormatDetail,URL">
+                  Show URL menu item in the context menu.
+                </p>
+              </div>
+            </details>
+          </div>
+          <ol>
+            <li>
+              <a href="https://developer.mozilla.org/en-US/docs/Web/URI/Fragment/Text_fragments">Text fragments | MDN</a>
+            </li>
+          </ol>
+        </fieldset>
+        <fieldset>
+          <legend data-i18n="onCopySettings">
+            On Copy
+          </legend>
+          <div>
+            <p aria-details="promptContentDetail">
+              <span>
+                <input type="checkbox" id="promptContent" />
+                <label for="promptContent" class="checkboxLabel"
+                       data-i18n="optionsPromptContent">
+                  Edit contents when copying
+                </label>
+              </span>
+            </p>
+            <details id="promptContentDetail">
+              <div>
+                <p data-i18n="optionsPromptContentDetail">
+                  If enabled, prompt window will appear when copying and you can edit content text of the link.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="notifyOnCopyDetail">
+              <span>
+                <input type="checkbox" id="notifyOnCopy" />
+                <label for="notifyOnCopy" class="checkboxLabel"
+                       data-i18n="optionsNotifyOnCopy">
+                  Notify when copied
+                </label>
+              </span>
+            </p>
+            <details id="notifyOnCopyDetail">
+              <div>
+                <p data-i18n="optionsNotifyOnCopyDetail">
+                  It will notify when successfully copied.
+                  Requires additional permission.
+                </p>
+              </div>
+            </details>
+          </div>
+          <div>
+            <p aria-details="preferCanonicalUrlDetail">
+              <span>
+                <input type="checkbox" id="preferCanonicalUrl" />
+                <label for="preferCanonicalUrl" class="checkboxLabel"
+                       data-i18n="optionsPreferCanonicalUrl">
+                  Prefer canonical URL if present
+                </label>
+              </span>
+            </p>
+            <details id="preferCanonicalUrlDetail">
+              <div>
+                <p data-i18n="optionsPreferCanonicalUrlDetail">
+                  Use the canonical URL if it exists on the web page.
+                </p>
+              </div>
+            </details>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>
+          </legend>
+          <div>
+            <p>
+              <span class="label" data-i18n="optionsWebsite">
+                Support site:
+              </span>
+              <a id="issues"
+                 href="https://github.com/asamuzaK/url2clipboard/issues">
+                https://github.com/asamuzaK/url2clipboard/issues
+              </a>
+            </p>
+          </div>
+          <div>
+            <p>
+              <span class="label" data-i18n="optionsContribute">
+                Contribute:
+              </span>
+              <a id="fund" href="https://paypal.me/asamuzakjp">
+                https://paypal.me/asamuzakjp
+              </a>
+            </p>
+          </div>
+        </fieldset>
+      </form>
+    </main>
+  </body>
+</html>

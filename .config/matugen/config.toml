@@ -33,22 +33,97 @@ block_prefix = "<*"
 block_postfix = "*>"
 
 [templates.colors]
-input_path = "~/.config/matugen/templates/colors.json.template"
+input_path = "./templates/colors.json.template"
 output_path = "~/.config/quickshell/colors.json"
 
 [templates.sway]
-input_path = "~/.config/matugen/templates/sway.template"
+input_path = "./templates/sway.template"
 output_path = "~/.config/sway/colors.conf"
 post_hook= "swaymsg reload"
 
 [templates.hyprland]
-input_path = "~/.config/matugen/templates/hyprland.template"
+input_path = "./templates/hyprland.template"
 output_path = "~/.config/hypr/colors.conf"
 
-[templates.base16]
-input_path = "~/.config/matugen/templates/base16.mustache"
-output_path = "~/.config/stylix/scheme.yaml"
+[templates.foot]
+input_path = "./templates/foot.ini"
+output_path = "~/.config/foot/foot.ini"
+post_hook = '~/.config/matugen/post-hook-scripts/foot-reload.sh'
 
-[templates.zen]
-input_path = "~/.config/matugen/templates/zen-chrome.css"
-output_path = "~/.zen/2dex7qss.Default Profile/chrome/userChrome.css"
+[templates.helix]
+input_path = './templates/helix.toml'
+output_path = '~/.config/helix/themes/matugen.toml'
+post_hook = "pkill -USR1 hx"
+
+[templates.ungoogled-chromium]
+input_path = './templates/ungoogled-crhomium.json'
+output_path = '~/.config/chromium/themes/manifest.json'
+post_hook = "rm -f ~/.config/chromium/themes/Cached\\ Theme.pak"
+
+# [templates.zen]
+# input_path = "./templates/matugen-vars.json"
+# output_path = "~/.config/zen/2dex7qss.Default Profile/chrome/matugen-vars.json"
+
+[templates.vscode-raw]
+input_path = './templates/vscode-colors'
+output_path = '~/.cache/matugen/vscode-colors'
+
+[templates.vscode-json]
+input_path = './templates/vscode-colors.json'
+output_path = '~/.cache/matugen/vscode-colors.json'
+
+[templates.btop]
+input_path = './templates/btop.theme'
+output_path = '~/.config/btop/themes/matugen.theme'
+post_hook = 'pkill -USR2 btop || true'
+
+[templates.cava]
+input_path = './templates/cava-colors.ini'
+output_path = '~/.config/cava/themes/your-theme'
+# post_hook = 'pkill -USR1 cava'
+
+[templates.gtk3]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[templates.gtk4]
+input_path = './templates/gtk-colors.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+post_hook = '~/.config/matugen/post-hook-scripts/gtk-themes-reload.sh'
+
+[templates.kvantum_kvconfig]
+input_path = './templates/kvantum-colors.kvconfig'
+output_path = '~/.config/Kvantum/matugen/matugen.kvconfig'
+
+[templates.kvantum_svg]
+input_path = './templates/kvantum-colors.svg'
+output_path = '~/.config/Kvantum/matugen/matugen.svg'
+
+[templates.prismlauncher]
+input_path = './templates/prismlauncher.json'
+output_path = '~/.local/share/PrismLauncher/themes/Matugen/theme.json'
+
+[templates.qt5ct]
+input_path = './templates/qtct-colors.conf'
+output_path = '~/.config/qt5ct/colors/matugen.conf'
+
+[templates.qt6ct]
+input_path = './templates/qtct-colors.conf'
+output_path = '~/.config/qt6ct/colors/matugen.conf'
+
+[templates.rmpc]
+input_path = './templates/rmpc/rmpc.ron'
+output_path = '~/.config/rmpc/themes/matugen.ron'
+
+[templates.obs]
+input_path = './templates/matugen.obt'
+output_path = '~/.config/obs-studio/themes/matugen.obt'
+
+[templates.firefox]
+input_path = './templates/firefox-colors.css'
+output_path = '~/.cache/firefox-colors.css'
+
+[templates.firefox-website-colors]
+input_path = './templates/firefox-colors.css'
+output_path = "~/.config/mozilla/firefox/bwjx8sfb.default-1782643691397/chrome/colors.css"

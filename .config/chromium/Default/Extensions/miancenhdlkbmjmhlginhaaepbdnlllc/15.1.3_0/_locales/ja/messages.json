@@ -1,0 +1,434 @@
+{
+   "commandCopyAsciiDoc": {
+      "message": "AsciiDoc でコピー"
+   },
+   "commandCopyBBCode": {
+      "message": "BBCode でコピー"
+   },
+   "commandCopyCSV": {
+      "message": "CSV でコピー"
+   },
+   "commandCopyDokuWiki": {
+      "message": "DokuWiki でコピー"
+   },
+   "commandCopyHTMLHyper": {
+      "message": "HTML (text/html) でコピー"
+   },
+   "commandCopyHTMLPlain": {
+      "message": "HTML (text/plain) でコピー"
+   },
+   "commandCopyJira": {
+      "message": "Jira でコピー"
+   },
+   "commandCopyLaTeX": {
+      "message": "LaTeX でコピー"
+   },
+   "commandCopyMarkdown": {
+      "message": "Markdown でコピー"
+   },
+   "commandCopyMediaWiki": {
+      "message": "MediaWiki でコピー"
+   },
+   "commandCopyOrgMode": {
+      "message": "Org Mode でコピー"
+   },
+   "commandCopyTextOnly": {
+      "message": "Text をコピー"
+   },
+   "commandCopyTextURL": {
+      "message": "Text & URL をコピー"
+   },
+   "commandCopyTextile": {
+      "message": "Textile でコピー"
+   },
+   "commandCopyURLOnly": {
+      "message": "URL をコピー"
+   },
+   "commandCopyreStructuredText": {
+      "message": "reStructuredText でコピー"
+   },
+   "copyAllTabsURL": {
+      "message": "すべてのタブの URL をコピー"
+   },
+   "copyAllTabsURL_format": {
+      "message": "すべてのタブの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyAllTabsURL_format_key": {
+      "message": "すべてのタブの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyAllTabsURL_key": {
+      "message": "すべてのタブの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyLinkURL": {
+      "message": "リンクの URL をコピー"
+   },
+   "copyLinkURL_format": {
+      "message": "リンクの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyLinkURL_format_key": {
+      "message": "リンクの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyLinkURL_key": {
+      "message": "リンクの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyOtherTabsURL": {
+      "message": "他のタブの URL をコピー"
+   },
+   "copyOtherTabsURL_format": {
+      "message": "他のタブの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyOtherTabsURL_format_key": {
+      "message": "他のタブの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyOtherTabsURL_key": {
+      "message": "他のタブの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyPageURL": {
+      "message": "ページの URL をコピー"
+   },
+   "copyPageURL_format": {
+      "message": "ページの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyPageURL_format_key": {
+      "message": "ページの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyPageURL_key": {
+      "message": "ページの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyTabURL": {
+      "message": "タブの URL をコピー"
+   },
+   "copyTabURL_format": {
+      "message": "タブの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabURL_format_key": {
+      "message": "タブの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabURL_key": {
+      "message": "タブの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabsURL": {
+      "message": "選択したタブの URL をコピー"
+   },
+   "copyTabsURL_format": {
+      "message": "選択したタブの URL を $FORMAT$ でコピー",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabsURL_format_key": {
+      "message": "選択したタブの URL を $FORMAT$ でコピー$KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&S)"
+         }
+      }
+   },
+   "copyTabsURL_key": {
+      "message": "選択したタブの URL をコピー$KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&S)"
+         }
+      }
+   },
+   "extensionDescription": {
+      "message": "ドキュメントのURLやリンクのURLを、HTML、Markdown、Text形式などでクリップボードにコピー"
+   },
+   "extensionLocale": {
+      "message": "ja"
+   },
+   "extensionName": {
+      "message": "URL をクリップボードにコピー"
+   },
+   "extensionShortName": {
+      "message": "url2clipboard"
+   },
+   "formats": {
+      "message": "フォーマット"
+   },
+   "notifyOnCopyMsg": {
+      "message": "コピーしました"
+   },
+   "notifyOnCopyMsg_format": {
+      "message": "$FORMAT$ でコピーしました",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "onCopySettings": {
+      "message": "コピー時の設定"
+   },
+   "openOptions_key": {
+      "message": "設定 $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "optionsAttributesDetail": {
+      "message": "`onxxx` 属性は無視されます。"
+   },
+   "optionsContribute": {
+      "message": "寄付する:"
+   },
+   "optionsCreateTextFragments": {
+      "message": "テキストの特定部分に直接リンクする"
+   },
+   "optionsEnableFormatDetail": {
+      "message": "コンテキストメニューに $FORMAT$ のメニュー項目を表示します。",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "optionsIconBlack": {
+      "message": ""
+   },
+   "optionsIconBlackLabel": {
+      "message": ""
+   },
+   "optionsIconBlackLabel_ariaLabel": {
+      "message": "ブラックアイコン"
+   },
+   "optionsIconBlack_alt": {
+      "message": "ブラック"
+   },
+   "optionsIconColor": {
+      "message": ""
+   },
+   "optionsIconColorLabel": {
+      "message": ""
+   },
+   "optionsIconColorLabel_ariaLabel": {
+      "message": "カラーアイコン"
+   },
+   "optionsIconColor_alt": {
+      "message": "カラー"
+   },
+   "optionsIconDark": {
+      "message": ""
+   },
+   "optionsIconDarkLabel": {
+      "message": ""
+   },
+   "optionsIconDarkLabel_ariaLabel": {
+      "message": "暗色アイコン"
+   },
+   "optionsIconDark_alt": {
+      "message": "暗色"
+   },
+   "optionsIconDetail": {
+      "message": "アイコンを選択してください。"
+   },
+   "optionsIconLight": {
+      "message": ""
+   },
+   "optionsIconLightLabel": {
+      "message": ""
+   },
+   "optionsIconLightLabel_ariaLabel": {
+      "message": "明色アイコン"
+   },
+   "optionsIconLight_alt": {
+      "message": "明色"
+   },
+   "optionsIconWhite": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel_ariaLabel": {
+      "message": "ホワイトアイコン"
+   },
+   "optionsIconWhite_alt": {
+      "message": "ホワイト"
+   },
+   "optionsIncludeAttr": {
+      "message": "他の属性を追加する"
+   },
+   "optionsIncludeTitle": {
+      "message": "タイトル属性を追加する"
+   },
+   "optionsLabel": {
+      "message": "設定"
+   },
+   "optionsNotifyOnCopy": {
+      "message": "コピー後に通知する"
+   },
+   "optionsNotifyOnCopyDetail": {
+      "message": "正常にコピーしたら通知します。追加の許可が必要です。"
+   },
+   "optionsPreferCanonicalUrl": {
+      "message": "正規URLが存在する場合はそれを優先する"
+   },
+   "optionsPreferCanonicalUrlDetail": {
+      "message": "正規URLがウェブページに存在する場合には正規URLを使用します。"
+   },
+   "optionsPromptContent": {
+      "message": "コピー時にコンテンツを編集する"
+   },
+   "optionsPromptContentDetail": {
+      "message": "有効化すると、コピー時にプロンプ​​トウィンドウが表示されて、リンクのコンテンツテキストを編集できます。特権的なURLではプロンプトウィンドウが表示されないため、編集できない場合があります。"
+   },
+   "optionsSave": {
+      "message": "保存"
+   },
+   "optionsSeparateTextURL": {
+      "message": "テキストとURLを別々の行にコピーする"
+   },
+   "optionsTextOutputOnlyTextLabel": {
+      "message": "テキストだけをコピー"
+   },
+   "optionsTextOutputOnlyUrlLabel": {
+      "message": "URL だけをコピー"
+   },
+   "optionsTextOutputTextUrlLabel": {
+      "message": "テキストと URL をコピー"
+   },
+   "optionsTitle": {
+      "message": "URL をクリップボードにコピー - 設定"
+   },
+   "optionsToolbarIcon": {
+      "message": "ツールバーボタンアイコン"
+   },
+   "optionsWebsite": {
+      "message": "サポートサイト:"
+   },
+   "userInput": {
+      "message": "$FORMAT$ リンクのテキストを編集してください",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   }
+}

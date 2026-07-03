@@ -1,0 +1,135 @@
+# Helix Theme: Zenburn with More Blue + Green Variables
+
+# --- Syntax Elements (blue/cyan emphasis, green variables) ---
+
+"comment" = { fg = "comment" }
+"comment.block.documentation" = { bg = "comment_doc", modifiers = ["italic"] }
+"comment.line.documentation" = { bg = "comment_doc", modifiers = ["italic"] }
+
+"constant" = { fg = "t11" }
+"function" = { fg = "t10" }
+"function.method" = { fg = "t7" }
+"function.macro" = { fg = "t7" }
+"keyword.storage.modifier" = { fg = "t7" }
+"keyword.control.import" = { fg = "t8" }
+"keyword.control" = { fg = "t8" }
+"keyword.function" = { fg = "t11" }
+"keyword" = { fg = "t6" }
+"operator" = { fg = "t8" }
+"punctuation" = { fg = "t9" }
+"string" = { fg = "t6", modifiers = ["italic"] }
+"string.regexp" = { fg = "t6" }
+"tag" = { fg = "t4" }
+"type" = { fg = "t8", modifiers = ["bold"] }
+"namespace" = { fg = "t6", modifiers = ["bold"] }
+"variable" = { fg = "t4" }
+"variable.parameter" = { fg = "t6" } 
+"variable.other.member" = { fg = "t3" } 
+"label" = { fg = "t4" }
+
+"diff.plus" = { fg = "diff_plus" }
+"diff.delta" = { fg = "diff_delta" }
+"diff.delta.moved" = { fg = "diff_delta_moved" }
+"diff.minus" = { fg = "diff_minus" }
+
+"markup.heading" = { fg = "t7" }
+"markup.list" = { fg = "t7" }
+"markup.bold" = { fg = "t4" }
+"markup.italic" = { fg = "t4" }
+"markup.strikethrough" = { fg = "t4", modifiers = ["crossed_out"] }
+"markup.link.url" = { fg = "t11", modifiers = ["underlined"] }
+"markup.link.text" = { fg = "t11" }
+"markup.quote" = { fg = "t5" }
+"markup.raw" = { fg = "t4" }
+
+# --- UI Elements (Matugen - Dynamic) – unchanged ---
+
+"ui.background" = { fg = "{{ colors.on_background.default.hex }}", bg = "none" }
+
+"ui.linenr" = { fg = "{{ colors.on_surface_variant.default.hex }}" }
+"ui.linenr.selected" = { fg = "{{ colors.primary_fixed.default.hex }}"}
+
+"ui.statusline" = { fg = "{{ colors.on_primary_container.default.hex }}", bg = "none" }
+"ui.statusline.inactive" = { fg = "{{ colors.on_surface_variant.default.hex }}", bg = "none" }
+"ui.statusline.normal" = { fg = "{{ colors.background.default.hex }}", bg = "none", modifiers = ["bold"] }
+"ui.statusline.insert" = { fg = "{{ colors.background.default.hex }}", bg = "none", modifiers = ["bold"] }
+"ui.statusline.select" = { fg = "{{ colors.background.default.hex }}", bg = "none", modifiers = ["bold"] }
+
+"ui.popup" = { fg = "{{ colors.on_surface.default.hex }}", bg = "none" }
+"ui.window" = { fg = "{{ colors.on_surface_variant.default.hex }}" }
+"ui.help" = { fg = "{{ colors.on_surface_variant.default.hex }}", bg = "none" }
+
+"ui.bufferline" = { fg = "{{ colors.on_surface_variant.default.hex }}", bg = "none" }
+"ui.bufferline.active" = { fg = "{{ colors.on_primary.default.hex }}", bg = "{{ colors.primary.default.hex }}", underline = { color = "{{ colors.primary.default.hex }}", style = "line" } }
+"ui.bufferline.background" = { bg = "none" }
+
+"ui.text" = "{{ colors.on_background.default.hex }}"
+"ui.text.focus" = { fg = "{{ colors.primary.default.hex }}", bg = "none", modifiers = ["bold"] }
+"ui.text.inactive" = { fg = "{{ colors.on_surface_variant.default.hex }}" }
+"ui.text.directory" = { fg = "{{ colors.primary.default.hex }}" }
+
+"ui.virtual" = "{{ colors.on_surface_variant.default.hex }}"
+"ui.virtual.ruler" = { bg = "none" }
+"ui.virtual.indent-guide" = "{{ colors.surface_container_low.default.hex }}"
+"ui.virtual.inlay-hint" = { fg = "{{ colors.on_surface_variant.default.hex }}", bg = "none" }
+"ui.virtual.jump-label" = { fg = "{{ colors.primary_container.default.hex }}", modifiers = ["bold"] }
+
+"ui.selection" = { bg = "{{ colors.outline_variant.default.hex }}" }
+
+"ui.cursor" = { fg = "{{ colors.background.default.hex }}", bg = "{{ colors.on_primary_container.default.hex }}" }
+"ui.cursor.primary" = { fg = "{{ colors.background.default.hex }}", bg = "{{ colors.primary_fixed.default.hex }}" }
+"ui.cursor.match" = { fg = "{{ colors.on_primary_container.default.hex }}", modifiers = ["bold"] }
+
+"ui.highlight" = { bg = "{{ colors.secondary_container.default.hex }}", modifiers = ["bold"] }
+
+"ui.menu" = { fg = "{{ colors.on_surface.default.hex }}", bg = "none" }
+"ui.menu.selected" = { fg = "{{ colors.primary.default.hex }}", bg = "none", modifiers = ["bold"] }
+
+# --- Diagnostics (Matugen - Dynamic) ---
+"diagnostic.error" = { fg = "{{ colors.error.default.hex }}", underline = { color = "{{ colors.error.default.hex }}", style = "curl" } }
+"diagnostic.warning" = { fg = "{{ colors.secondary.default.hex }}", underline = { color = "{{ colors.secondary.default.hex }}", style = "curl" } }
+"diagnostic.info" = { fg = "{{ colors.tertiary.default.hex }}", underline = { color = "{{ colors.tertiary.default.hex }}", style = "curl" } }
+"diagnostic.hint" = { fg = "{{ colors.tertiary_container.default.hex }}", underline = { color = "{{ colors.tertiary_container.default.hex }}", style = "curl" } }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+
+# --- Fallbacks (Matugen - Dynamic) ---
+error = "{{ colors.error.default.hex }}"
+warning = "{{ colors.secondary.default.hex }}"
+info = "{{ colors.primary.default.hex }}"
+hint = "{{ colors.tertiary.default.hex }}"
+
+[palette]
+t1 = "#323230"
+t2 = "#474945"
+t3 = "#a19999"
+t4 = "#b0b4b6"
+t5 = "#c3d0d1"
+t6 = "#bde1e4"
+t7 = "#ffa3a9"
+t8 = "#feffff"
+t9 = "#ffffff"
+t10 = "#ffffff"
+t11 = "#ffe8a6"
+
+highlight = "#ff6cc3"
+highlight_two = "#ffff74"
+highlight_three = "#ffffe1"
+
+selection = "#89fdff"
+selection_fg = "#292c2d"
+
+black = "#000000"
+comment = "#b0837d"
+comment_doc = "#507a86"
+hints = "#646a74"
+ruler = "#4f504c"
+
+error = "#ff7a1d"
+warning = "#ffff1d"
+display = "#7dffff"
+info = "#ffffff"
+
+diff_minus = "#ff7a1d"
+diff_delta = "#1dcbff"
+diff_plus = "#ffff1d"
+diff_delta_moved = "#1d86ff"

@@ -42,9 +42,10 @@
 | `alt + F12` | open \| close player |
 
 ### minimap controls:
-- scroll wheel click – expand the minimap into a full‑sized map
-- hold RMB and move the mouse – pan around the minimap
-- LMB on a program or waypoint – move to that coordinate
+- `Middle-click` – expand the minimap to a full-size map
+- `Hold right mouse button and move the mouse` – pan around the minimap
+- `Left-click on a program or waypoint` – move to that coordinate
+- `Ctrl + scroll wheel` – zoom in/out the map
 
 ### Other bindings I may have missed can be found in [DriftWM](https://github.com/malbiruk/driftwm)
 

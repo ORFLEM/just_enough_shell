@@ -180,8 +180,6 @@
       rose-pine-hyprcursor
       tela-icon-theme
 
-      inputs.driftwm.packages.${pkgs.stdenv.hostPlatform.system}.default
-
     ])
     # UNSTABLE
     ++ (with unstablePkgs; [
@@ -190,8 +188,8 @@
       bastet
       moon-buggy
       nsnake
-      zen-browser
       hyprpicker
+      ungoogled-chromium
       inputs.persway.packages.${pkgs.stdenv.hostPlatform.system}.default
     ])
 
@@ -252,15 +250,14 @@
     ];
   };
 
-  services.displayManager.sessionPackages = [
-    inputs.driftwm.packages.${pkgs.stdenv.hostPlatform.system}.default
-  ];
+  programs.driftwm.enable = true;
+
 
   # ============================================================
   # THEMING (stylix)
   # ============================================================
   stylix = {
-    enable = true;
+    enable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/${userConfig.theme}.yaml";
     targets.qt.enable = true;
     targets.gtk.enable = true;
@@ -336,23 +333,23 @@
         inherit (config.system) stateVersion;
       };
 
-      stylix.targets.kde.enable = true;
-      stylix.targets.foot.enable = true;
-      programs.foot = {
-        enable = true;
-        settings = {
-          main = {
-            shell = "bash";
-            term = "foot";
-            font = lib.mkForce "Mononoki Nerd Font Propo:size=13";
-            pad = "5x5";
-          };
-          cursor.style = "block";
-          key-bindings = {
-            clipboard-copy = "Control+Shift+c";
-            clipboard-paste = "Control+Shift+v";
-          };
-        };
+      # stylix.targets.kde.enable = true;
+      # stylix.targets.foot.enable = true;
+      # programs.foot = {
+      #   enable = true;
+      #   settings = {
+      #     main = {
+      #       shell = "bash";
+      #       term = "foot";
+      #       font = lib.mkForce "Mononoki Nerd Font Propo:size=13";
+      #       pad = "5x5";
+      #     };
+      #     cursor.style = "block";
+      #     key-bindings = {
+      #       clipboard-copy = "Control+Shift+c";
+      #       clipboard-paste = "Control+Shift+v";
+      #     };
+      #   };
       };
     };
     backupFileExtension = "backup";

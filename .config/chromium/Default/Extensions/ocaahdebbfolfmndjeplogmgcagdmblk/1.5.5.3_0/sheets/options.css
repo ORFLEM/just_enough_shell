@@ -1,0 +1,69 @@
+body {
+    margin-bottom: 2rem;
+    width: 500px;
+    font-size: 81.25%;
+}
+
+h2 {
+    line-height: 1.8;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+}
+
+label {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1rem;
+    line-height: 1.8;
+}
+
+label.sub {
+    margin-left: 2.5rem;
+}
+
+label > span {
+    margin-left: 0.3rem;
+    user-select: none;
+}
+
+label > input {
+    flex: 0 0 auto;
+}
+
+label > img {
+    flex: 0 0 auto;
+    margin: auto 4px auto 8px;
+    width: 16px;
+    height: 16px;
+}
+
+input[type="number"] {
+    width: 3.8rem;
+    line-height: 1rem;
+}
+
+label.disabled {
+    color: grey;
+}
+
+textarea {
+    margin-left: 1rem;
+    width: calc(100% - 2rem);
+    resize: vertical;
+}
+
+#import_export_list {
+    height: 20em;
+}
+
+#import_all_button {
+    margin-left: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+body,textarea {
+    background-color: #313131;
+    color: #bfbfbf;
+}
+}

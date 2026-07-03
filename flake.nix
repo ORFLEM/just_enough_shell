@@ -17,17 +17,12 @@
 
     stylix.url = "github:nix-community/stylix/release-26.05";
 
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     driftwm.url = "github:malbiruk/driftwm";
 
     persway.url = "github:saylesss88/persway";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, driftwm, zen-browser, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nur, home-manager, stylix, driftwm, ... }@inputs:
   let
     system = "x86_64-linux";
     userConfig = builtins.fromTOML (builtins.readFile ./user-config.toml);
@@ -39,7 +34,6 @@
       config.allowUnfree = true;
       overlays = [
         (final: prev: {
-          zen-browser = zen-browser.packages.${system}.default;
         })
       ];
     };
@@ -59,6 +53,7 @@
         # Сторонние модули
         stylix.nixosModules.stylix
         home-manager.nixosModules.home-manager
+        driftwm.nixosModules.default
 
         # Hyprland из unstable
         {

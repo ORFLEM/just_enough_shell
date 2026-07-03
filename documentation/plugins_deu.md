@@ -13,15 +13,17 @@
 ## Visuelle Komponente
 - Für den Haupthintergrund wird im Plugin Folgendes verwendet:
 ```qml
-opacity: 0.85
-gradient: Gradient {
-    orientation: Gradient.Horizontal
-    GradientStop { position: 0.0; color: col.background3 }
-    GradientStop { position: 0.05; color: col.background2 }
-    GradientStop { position: 0.3; color: col.background1 }
-    GradientStop { position: 0.7; color: col.background1 }
-    GradientStop { position: 0.95; color: col.background2 }
-    GradientStop { position: 1.0; color: col.background3 }
+Rectangle {
+    opacity: 0.85
+    gradient: Gradient {
+        orientation: Gradient.Horizontal
+        GradientStop { position: 0.0; color: col.background3 }
+        GradientStop { position: 0.05; color: col.background2 }
+        GradientStop { position: 0.3; color: col.background1 }
+        GradientStop { position: 0.7; color: col.background1 }
+        GradientStop { position: 0.95; color: col.background2 }
+        GradientStop { position: 1.0; color: col.background3 }
+    }
 }
 ```
 - Und für den Hintergrund von Buttons und Ähnlichem:
@@ -29,19 +31,18 @@ gradient: Gradient {
 Rectangle {
     opacity: 0.65
     gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop { position: 0.0; color: col.backgroundAlt2 }
-            GradientStop { position: 0.275; color: col.backgroundAlt1 }
-            GradientStop { position: 0.725; color: col.backgroundAlt1 }
-            GradientStop { position: 1.0; color: col.backgroundAlt2 }
-        }
+        orientation: Gradient.Horizontal
+        GradientStop { position: 0.0; color: col.backgroundAlt2 }
+        GradientStop { position: 0.275; color: col.backgroundAlt1 }
+        GradientStop { position: 0.725; color: col.backgroundAlt1 }
+        GradientStop { position: 1.0; color: col.backgroundAlt2 }
     }
 }
 ```
 - Für Hover-Effekte wird Folgendes verwendet:
 ```qml
 Item {
-    id: <Blockname>
+    id: button
     property bool hovered: false
     Rectangle {
         anchors.fill: parent
@@ -56,11 +57,10 @@ Item {
         }
     }
     Rectangle {
-        id: <aussagekräftiger_name>
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - <margins_plus_margin_in_diesem_modul>
-        color: <Trigger> ? col.accent : "transparent" 
+        radius: mainRad - 5 // Wir addieren alle Margins
+        color: button.hovered ? col.accent : "transparent" 
         Behavior on color { ColorAnimation { duration: 200 } }
     }
     // Code
@@ -68,10 +68,10 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            <Trigger> = true
+            button.hovered = true
         }
         onExited: {
-            <Trigger> = false
+            button.hovered = false
         }
     }
 }

@@ -42,9 +42,10 @@
 | `alt + F12` | Player öffnen \| schließen |
 
 ### Minimap‑Steuerung:
-- Mausrad klicken – die Minimap zu einer vollwertigen Karte erweitern
-- rechte Maustaste gedrückt halten und Maus bewegen – auf der Minimap verschieben
-- linke Maustaste auf ein Programm oder einen Wegpunkt – zu dieser Koordinate springen
+- `Mittelklick` – die Minikarte zu einer vollwertigen Karte erweitern
+- `Rechte Maustaste gedrückt halten und Maus bewegen` – in der Minikarte verschieben
+- `Linksklick auf ein Programm oder einen Wegpunkt` – zu dieser Koordinate bewegen
+- `Ctrl + Mausrad drehen` – Karte vergrößern/verkleinern
 
 ### Weitere Tastenkombinationen, die ich eventuell vergessen habe, finden Sie bei (DriftWM)[https://github.com/malbiruk/driftwm]
 

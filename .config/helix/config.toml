@@ -1,4 +1,4 @@
-theme = "base16_default_dark"
+theme = "matugen"
 
 [editor]
 line-number = "relative"
@@ -15,10 +15,4 @@ insert = "bar"
 
 [editor.file-picker]
 hidden = false
-
-[keys.normal]
-A-v = ":vsplit"
-A-h = ":hsplit"
-A-s = ":w"
-A-q = ":q"
 

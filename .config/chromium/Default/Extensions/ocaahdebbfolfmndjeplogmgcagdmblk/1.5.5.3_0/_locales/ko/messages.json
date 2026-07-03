@@ -1,0 +1,137 @@
+{
+   "contextMenu_updateAll": {
+      "description": "",
+      "message": "모든 확장 프로그램 업데이트"
+   },
+   "extension_Description": {
+      "description": "Chrome 웹 스토어에 표시되는 확장 프로그램의 개요입니다.",
+      "message": "Chromium 기반 브라우저에서 Chrome 웹 스토어(또는 다른 곳)를 통해 확장 프로그램을 설치하고 반자동으로 업데이트할 수 있습니다."
+   },
+   "extension_Name": {
+      "description": "Chrome 웹 스토어에 표시되는 확장 프로그램의 이름입니다.",
+      "message": "Chromium 웹 스토어"
+   },
+   "notify_manuallyInstall_message": {
+      "description": "",
+      "message": "1. 개발자 모드 활성화(오른쪽 상단)\n2. 다운로드 바에서 확장 프로그램 페이지로 .crx 파일을 드래그하세요."
+   },
+   "notify_manuallyInstall_title": {
+      "description": "",
+      "message": "확장 프로그램이 다운로드되었습니다! 수동으로 설치하세요:"
+   },
+   "options_advanced": {
+      "description": "",
+      "message": "고급"
+   },
+   "options_autoUpdate": {
+      "description": "",
+      "message": "확장 프로그램 업데이트를 자동으로 확인"
+   },
+   "options_autoUpdateTooltip": {
+      "description": "",
+      "message": "수동으로 확인하려면 Chromium 웹 스토어 배지를 클릭하세요."
+   },
+   "options_ignoredExtensionsHeading": {
+      "description": "",
+      "message": "제외할 확장 프로그램"
+   },
+   "options_importExportDescription": {
+      "description": "installButton은 options_importExportInstallAllButton에 정의된 버튼의 텍스트입니다.",
+      "message": "내보낼 파일에 이곳의 텍스트를 저장합니다. 가져오려면 해당 텍스트를 여기에 붙여넣고 $installButton$을 누르세요.",
+      "placeholders": {
+         "installButton": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_importExportHeading": {
+      "description": "",
+      "message": "가져오기/내보내기"
+   },
+   "options_importExportInstallAllButton": {
+      "description": "",
+      "message": "모두 설치"
+   },
+   "options_manuallyInstall": {
+      "description": "",
+      "message": "항상 CRX 파일을 다운로드"
+   },
+   "options_manuallyInstallTooltip": {
+      "description": "",
+      "message": "'CRX_REQUIRED_PROOF_MISSING' 오류가 계속 발생하면 이 옵션을 켜세요."
+   },
+   "options_neverCheckTooltip": {
+      "description": "",
+      "message": "이 확장 프로그램의 업데이트를 확인하지 않습니다."
+   },
+   "options_updateDelay": {
+      "description": "delayInMinutes는 사용자가 편집할 수 있는 영역입니다.",
+      "message": "$delayInMinutes$ 분 간격으로 업데이트 확인",
+      "placeholders": {
+         "delayInMinutes": {
+            "content": "$1"
+         }
+      }
+   },
+   "options_updateHeading": {
+      "description": "",
+      "message": "업데이트 옵션"
+   },
+   "options_updateNonWebstore": {
+      "description": "",
+      "message": "다른 스토어에서 설치한 확장 프로그램의 업데이트 확인"
+   },
+   "options_updateNonWebstoreTooltip": {
+      "description": "",
+      "message": "해당 확장 프로그램이 자동 업데이트를 지원해야 합니다."
+   },
+   "options_updateWebstore": {
+      "description": "",
+      "message": "Chrome 웹 스토어에서 설치한 확장 프로그램의 업데이트 확인"
+   },
+   "options_updateWebstoreTooltip": {
+      "description": "",
+      "message": "업데이트 확인을 위해 Google에 접속합니다."
+   },
+   "options_webstoreIntegration": {
+      "description": "",
+      "message": "Chrome 웹 스토어 통합"
+   },
+   "options_webstoreIntegrationTooltip": {
+      "description": "",
+      "message": "Chrome 웹 스토어에서 추가/삭제 버튼을 활성화합니다. (확장 프로그램 설치 정보가 Google에 노출될 수 있습니다.)"
+   },
+   "popup_allUpToDate": {
+      "description": "",
+      "message": "모든 확장 프로그램이 최신 버전입니다!"
+   },
+   "popup_checkingForUpdates": {
+      "description": "",
+      "message": "업데이트 확인 중..."
+   },
+   "popup_removedExtensions": {
+      "description": "제거된 확장 프로그램 목록 위에 표시됩니다.",
+      "message": "다음 확장 프로그램이 Chrome 웹 스토어에서 제거되었습니다."
+   },
+   "popup_removedExtensionsTooltip": {
+      "description": "popup_removedExtensions 위로 마우스를 가져가면 표시됩니다.",
+      "message": "서비스 약관 위반으로 인해 제거되었을 수 있습니다."
+   },
+   "popup_updateFailed": {
+      "description": "extName은 업데이트에 실패한 확장 프로그램의 이름입니다.",
+      "message": "$extName$ 업데이트 실패",
+      "placeholders": {
+         "extName": {
+            "content": "$1"
+         }
+      }
+   },
+   "webstore_addButton": {
+      "description": "",
+      "message": "Chromium에 추가"
+   },
+   "webstore_removeButton": {
+      "description": "",
+      "message": "Chromium에서 삭제"
+   }
+}

@@ -1,0 +1,166 @@
+#app {
+    font-size: 14px;
+    color: #333;
+    user-select: none;
+}
+
+.message {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+}
+
+ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.message,
+ul li {
+    margin: 6px 4px;
+    min-height: 32px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px #e3e3e3, 0 0 2px 0 rgba(229, 233, 239, 0.3);
+    transition: background-color 0.15s;
+    overflow: hidden;
+}
+
+.message {
+    height:auto;
+    display: flex;
+    align-items: center;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+ul li[data-enabled="false"] {
+    background-color: #c2c2c2;
+}
+
+ul li:hover {
+    outline-color: #4d90fe;
+    outline-style: auto;
+    outline-width: 1px;
+}
+
+.message.hidden,
+ul li.hidden {
+    display: none;
+}
+
+img {
+    flex: 0 0 auto;
+    margin: auto 4px auto 8px;
+    width: 16px;
+    height: 16px;
+}
+
+span,
+.message p {
+    flex: 1 1 100%;
+    margin: auto 4px auto 4px;
+}
+
+span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+a,
+input {
+    flex: 0 0 auto;
+    margin: auto 8px auto 4px;
+}
+
+li > a {
+    cursor: pointer;
+}
+
+a:hover {
+    color: #e60000;
+}
+
+.updatefailure,
+.updatefailure:hover {
+    background-color: #ffcccb;
+}
+
+.updatefailure[data-enabled="false"] {
+    background-color: #e7b9b8;
+}
+
+#removedStatus {
+    box-shadow: 0 0 0 1px #e60000, 0 0 2px 0 #e60000;
+}
+
+.removedext,
+.removedext:hover,
+.updatefailure,
+.updatefailure:hover {
+    cursor: auto;
+    outline-style: none;
+}
+
+svg {
+    fill: rgb(95, 99, 104);
+    width: 20px;
+    height: 20px;
+}
+
+.removedext svg,
+.updatefailure svg {
+    width: 16px;
+    height: 16px;
+}
+
+a:hover > svg {
+    transform: scale(1.15);
+}
+
+@media (prefers-color-scheme: dark) {
+    body,
+    #app {
+        background-color: #313131;
+        color: #bfbfbf;
+    }
+
+    ul li[data-enabled="false"] {
+        background-color: initial;
+        color: #717171;
+        box-shadow: 0 0 0 1px #6d6d6d, 0 0 2px 0 rgba(89, 111, 144, 0.3);
+    }
+
+    ul li:hover {
+        outline: none;
+        filter: brightness(1.8);
+    }
+
+    ul li:hover img {
+        filter: brightness(.55555);
+    }
+
+    .removedext,
+    .removedext:hover,
+    .updatefailure,
+    .updatefailure:hover,
+    .removedext img,
+    .removedext:hover img,
+    .updatefailure img,
+    .updatefailure:hover img {
+        filter: none;
+    }
+
+    .updatefailure,
+    .updatefailure:hover {
+        color: #313131;
+    }
+}

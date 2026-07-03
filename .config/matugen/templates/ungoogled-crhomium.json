@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "version": "1.0",
+  "name": "Matugen Auto Theme",
+  "theme": {
+    "colors": {
+      "frame": [ {{colors.surface_container.default.red  | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.green  | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.blue  | lighten:11 | set_saturation:7}} ],
+      "toolbar": [ {{colors.surface_container.default.red  | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.green | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.blue | lighten:11 | set_saturation:7}} ],
+      "omnibox_background": [ {{colors.surface_container.default.red  | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.green | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.blue | lighten:11 | set_saturation:7}} ],
+      "omnibox_text": [255, 255, 255],
+      "tab_text": [ {{colors.on_surface.default.red}}, {{colors.on_surface.default.green}}, {{colors.on_surface.default.blue}} ],
+      "ntp_background": [ {{colors.surface_container.default.red | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.green | lighten:11 | set_saturation:7}}, {{colors.surface_container.default.blue | lighten:11 | set_saturation:7}} ]
+    }
+  }
+}

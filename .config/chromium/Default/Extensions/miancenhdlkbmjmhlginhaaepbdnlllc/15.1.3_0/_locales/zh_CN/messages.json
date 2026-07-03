@@ -1,0 +1,434 @@
+{
+   "commandCopyAsciiDoc": {
+      "message": "复制链接为 AsciiDoc"
+   },
+   "commandCopyBBCode": {
+      "message": "复制链接为 BBCode"
+   },
+   "commandCopyCSV": {
+      "message": "复制链接为 CSV"
+   },
+   "commandCopyDokuWiki": {
+      "message": "复制链接为 DokuWiki"
+   },
+   "commandCopyHTMLHyper": {
+      "message": "复制链接为 HTML (text/html)"
+   },
+   "commandCopyHTMLPlain": {
+      "message": "复制链接为 HTML (text/plain)"
+   },
+   "commandCopyJira": {
+      "message": "复制链接为 Jira"
+   },
+   "commandCopyLaTeX": {
+      "message": "复制链接为 LaTeX"
+   },
+   "commandCopyMarkdown": {
+      "message": "复制链接为 Markdown"
+   },
+   "commandCopyMediaWiki": {
+      "message": "复制链接为 MediaWiki"
+   },
+   "commandCopyOrgMode": {
+      "message": "复制链接为 Org Mode"
+   },
+   "commandCopyTextOnly": {
+      "message": "复制链接为文本"
+   },
+   "commandCopyTextURL": {
+      "message": "复制链接为文本 & URL"
+   },
+   "commandCopyTextile": {
+      "message": "复制链接为 Textile"
+   },
+   "commandCopyURLOnly": {
+      "message": "复制链接为 URL"
+   },
+   "commandCopyreStructuredText": {
+      "message": "复制链接为 reStructuredText"
+   },
+   "copyAllTabsURL": {
+      "message": "复制所有标签页 URL"
+   },
+   "copyAllTabsURL_format": {
+      "message": "复制所有标签页 URL 为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyAllTabsURL_format_key": {
+      "message": "复制所有标签页 URL 为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyAllTabsURL_key": {
+      "message": "复制所有标签页 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyLinkURL": {
+      "message": "复制链接 URL"
+   },
+   "copyLinkURL_format": {
+      "message": "复制链接为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyLinkURL_format_key": {
+      "message": "复制链接为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyLinkURL_key": {
+      "message": "复制链接 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyOtherTabsURL": {
+      "message": "复制其他标签页 URL"
+   },
+   "copyOtherTabsURL_format": {
+      "message": "复制其他标签页 URL 为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyOtherTabsURL_format_key": {
+      "message": "复制其他标签页 URL 为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyOtherTabsURL_key": {
+      "message": "复制其他标签页 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyPageURL": {
+      "message": "复制页面 URL"
+   },
+   "copyPageURL_format": {
+      "message": "复制页面 URL 为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyPageURL_format_key": {
+      "message": "复制页面 URL 为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyPageURL_key": {
+      "message": "复制页面 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyTabURL": {
+      "message": "复制标签页 URL"
+   },
+   "copyTabURL_format": {
+      "message": "复制标签页 URL 为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabURL_format_key": {
+      "message": "复制标签页 URL 为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabURL_key": {
+      "message": "复制标签页 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabsURL": {
+      "message": "复制选定的标签页 URL"
+   },
+   "copyTabsURL_format": {
+      "message": "复制选定的标签页 URL 为 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabsURL_format_key": {
+      "message": "复制选定的标签页 URL 为 $FORMAT$ $KEY$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&S)"
+         }
+      }
+   },
+   "copyTabsURL_key": {
+      "message": "复制选定的标签页 URL $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&S)"
+         }
+      }
+   },
+   "extensionDescription": {
+      "message": "复制 URL 到剪贴板，支持 HTML, Markdown, 纯文本等多种格式。"
+   },
+   "extensionLocale": {
+      "message": "zh-CN"
+   },
+   "extensionName": {
+      "message": "复制链接到剪贴板"
+   },
+   "extensionShortName": {
+      "message": "url2clipboard"
+   },
+   "formats": {
+      "message": "格式"
+   },
+   "notifyOnCopyMsg": {
+      "message": "已复制"
+   },
+   "notifyOnCopyMsg_format": {
+      "message": "已复制 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "onCopySettings": {
+      "message": "复制时"
+   },
+   "openOptions_key": {
+      "message": "设置 $KEY$",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "optionsAttributesDetail": {
+      "message": "`onxxx` 属性将被忽略。"
+   },
+   "optionsContribute": {
+      "message": "捐助:"
+   },
+   "optionsCreateTextFragments": {
+      "message": "直接链接到文本的特定部分"
+   },
+   "optionsEnableFormatDetail": {
+      "message": "在右键菜单中显示 $FORMAT$。",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "optionsIconBlack": {
+      "message": ""
+   },
+   "optionsIconBlackLabel": {
+      "message": ""
+   },
+   "optionsIconBlackLabel_ariaLabel": {
+      "message": "黑色图标"
+   },
+   "optionsIconBlack_alt": {
+      "message": "黑色"
+   },
+   "optionsIconColor": {
+      "message": ""
+   },
+   "optionsIconColorLabel": {
+      "message": ""
+   },
+   "optionsIconColorLabel_ariaLabel": {
+      "message": "彩色图标"
+   },
+   "optionsIconColor_alt": {
+      "message": "彩色"
+   },
+   "optionsIconDark": {
+      "message": ""
+   },
+   "optionsIconDarkLabel": {
+      "message": ""
+   },
+   "optionsIconDarkLabel_ariaLabel": {
+      "message": "深色图标"
+   },
+   "optionsIconDark_alt": {
+      "message": "深色"
+   },
+   "optionsIconDetail": {
+      "message": "选择图标。"
+   },
+   "optionsIconLight": {
+      "message": ""
+   },
+   "optionsIconLightLabel": {
+      "message": ""
+   },
+   "optionsIconLightLabel_ariaLabel": {
+      "message": "浅色图标"
+   },
+   "optionsIconLight_alt": {
+      "message": "浅色"
+   },
+   "optionsIconWhite": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel_ariaLabel": {
+      "message": "白色图标"
+   },
+   "optionsIconWhite_alt": {
+      "message": "白色"
+   },
+   "optionsIncludeAttr": {
+      "message": "添加其他属性"
+   },
+   "optionsIncludeTitle": {
+      "message": "添加标题属性"
+   },
+   "optionsLabel": {
+      "message": "设置"
+   },
+   "optionsNotifyOnCopy": {
+      "message": "复制后通知"
+   },
+   "optionsNotifyOnCopyDetail": {
+      "message": "成功复制后发送通知。需要额外权限。"
+   },
+   "optionsPreferCanonicalUrl": {
+      "message": "使用规范 URL"
+   },
+   "optionsPreferCanonicalUrlDetail": {
+      "message": "如果网页上存在规范 URL，请使用该 URL。"
+   },
+   "optionsPromptContent": {
+      "message": "编辑链接标题"
+   },
+   "optionsPromptContentDetail": {
+      "message": "从右键菜单复制链接时提示修改链接信息。请注意，在特权 URL 中，提示窗口可能不会出现，因此您可能无法进行编辑。"
+   },
+   "optionsSave": {
+      "message": "保存"
+   },
+   "optionsSeparateTextURL": {
+      "message": "分行复制文本和链接"
+   },
+   "optionsTextOutputOnlyTextLabel": {
+      "message": "只复制文本"
+   },
+   "optionsTextOutputOnlyUrlLabel": {
+      "message": "只复制 URL"
+   },
+   "optionsTextOutputTextUrlLabel": {
+      "message": "复制文本和 URL"
+   },
+   "optionsTitle": {
+      "message": "复制链接到剪切板 - 设置"
+   },
+   "optionsToolbarIcon": {
+      "message": "工具栏图标"
+   },
+   "optionsWebsite": {
+      "message": "用户支持网站:"
+   },
+   "userInput": {
+      "message": "编辑链接标题 $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   }
+}

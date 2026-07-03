@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     height="128" width="128" viewBox="0 0 128 128">
+  <metadata>
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>url2clipboard icon</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <style>
+    g:not(#color):not(:target),
+    g:target ~ #color {
+      display: none;
+    }
+    #current {
+      fill: context-fill rgb(91,91,102);
+    }
+    @media (prefers-color-scheme: dark) {
+      #color > use[href="#background"] {
+        fill: transparent;
+      }
+      #color > use[href="#board"],
+      #color > use[href="#clip"],
+      #current {
+        fill: context-fill rgb(251,251,254);
+      }
+    }
+  </style>
+  <symbol id="outline">
+    <path d="m64 4c-6.6274 0-12 5.3726-12 12h-10v4h-10c-8.864 0-16 7.136-16 16v72c0 8.864 7.136 16 16 16h64c8.864 0 16-7.136 16-16v-72c0-8.864-7.136-16-16-16h-10v-4h-10c0-6.6274-5.3726-12-12-12zm0 10c1.1046 0 2 0.89543 2 2v10h10v8h-24v-8h10v-10c0-1.1046 0.89543-2 2-2zm-33.2 16h11.2v14h44v-14h11.2l4.8 4.8v74.4l-4.8 4.8h-66.4l-4.8-4.8v-74.4z"/>
+  </symbol>
+  <symbol id="background">
+    <path d="m31 35h66v74h-66z"/>
+  </symbol>
+  <symbol id="board">
+    <path d="m32 20c-8.864 0-16 7.136-16 16v72c0 8.864 7.136 16 16 16h64c8.864 0 16-7.136 16-16v-72c0-8.864-7.136-16-16-16zm0 16h64v72h-64z"/>
+  </symbol>
+  <symbol id="clip">
+    <path d="m64 4a12 12 0 0 0-12 12h-10v28h44v-28h-10a12 12 0 0 0-12-12z"/>
+  </symbol>
+  <g id="current">
+    <use href="#outline"/>
+  </g>
+  <g id="black" fill="#000">
+    <use href="#outline"/>
+  </g>
+  <g id="white" fill="#fff">
+    <use href="#outline"/>
+  </g>
+  <g id="dark" fill="rgb(91,91,102)">
+    <use href="#outline"/>
+  </g>
+  <g id="light" fill="rgb(251,251,254)">
+    <use href="#outline"/>
+  </g>
+  <g id="color">
+    <use href="#background" fill="#fff"/>
+    <use href="#board" fill="#002147"/>
+    <use href="#clip" fill="#e66000"/>
+  </g>
+</svg>

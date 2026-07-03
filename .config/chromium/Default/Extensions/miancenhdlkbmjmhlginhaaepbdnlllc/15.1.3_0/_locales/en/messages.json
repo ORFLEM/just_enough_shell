@@ -1,0 +1,434 @@
+{
+   "commandCopyAsciiDoc": {
+      "message": "Copy as AsciiDoc"
+   },
+   "commandCopyBBCode": {
+      "message": "Copy as BBCode"
+   },
+   "commandCopyCSV": {
+      "message": "Copy as CSV"
+   },
+   "commandCopyDokuWiki": {
+      "message": "Copy as DokuWiki"
+   },
+   "commandCopyHTMLHyper": {
+      "message": "Copy as HTML (text/html)"
+   },
+   "commandCopyHTMLPlain": {
+      "message": "Copy as HTML (text/plain)"
+   },
+   "commandCopyJira": {
+      "message": "Copy as Jira"
+   },
+   "commandCopyLaTeX": {
+      "message": "Copy as LaTeX"
+   },
+   "commandCopyMarkdown": {
+      "message": "Copy as Markdown"
+   },
+   "commandCopyMediaWiki": {
+      "message": "Copy as MediaWiki"
+   },
+   "commandCopyOrgMode": {
+      "message": "Copy as Org Mode"
+   },
+   "commandCopyTextOnly": {
+      "message": "Copy Text"
+   },
+   "commandCopyTextURL": {
+      "message": "Copy Text & URL"
+   },
+   "commandCopyTextile": {
+      "message": "Copy as Textile"
+   },
+   "commandCopyURLOnly": {
+      "message": "Copy URL"
+   },
+   "commandCopyreStructuredText": {
+      "message": "Copy as reStructuredText"
+   },
+   "copyAllTabsURL": {
+      "message": "Copy All Tabs URLs"
+   },
+   "copyAllTabsURL_format": {
+      "message": "Copy All Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyAllTabsURL_format_key": {
+      "message": "Copy &All Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyAllTabsURL_key": {
+      "message": "Copy &All Tabs URLs",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&A)"
+         }
+      }
+   },
+   "copyLinkURL": {
+      "message": "Copy Link URL"
+   },
+   "copyLinkURL_format": {
+      "message": "Copy Link URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyLinkURL_format_key": {
+      "message": "&Copy Link URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyLinkURL_key": {
+      "message": "&Copy Link URL",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyOtherTabsURL": {
+      "message": "Copy Other Tabs URLs"
+   },
+   "copyOtherTabsURL_format": {
+      "message": "Copy Other Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyOtherTabsURL_format_key": {
+      "message": "Copy &Other Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyOtherTabsURL_key": {
+      "message": "Copy &Other Tabs URLs",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&O)"
+         }
+      }
+   },
+   "copyPageURL": {
+      "message": "Copy Page URL"
+   },
+   "copyPageURL_format": {
+      "message": "Copy Page URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyPageURL_format_key": {
+      "message": "&Copy Page URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyPageURL_key": {
+      "message": "&Copy Page URL",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&C)"
+         }
+      }
+   },
+   "copyTabURL": {
+      "message": "Copy Tab URL"
+   },
+   "copyTabURL_format": {
+      "message": "Copy Tab URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabURL_format_key": {
+      "message": "Copy &Tab URL as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabURL_key": {
+      "message": "Copy &Tab URL",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "copyTabsURL": {
+      "message": "Copy Selected Tabs URLs"
+   },
+   "copyTabsURL_format": {
+      "message": "Copy Selected Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "copyTabsURL_format_key": {
+      "message": "Copy &Selected Tabs URLs as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         },
+         "key": {
+            "content": "$2",
+            "example": "(&S)"
+         }
+      }
+   },
+   "copyTabsURL_key": {
+      "message": "Copy &Selected Tabs URLs",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&S)"
+         }
+      }
+   },
+   "extensionDescription": {
+      "message": "Copy document URL / link URL to clipboard as HTML, Markdown, Text etc."
+   },
+   "extensionLocale": {
+      "message": "en"
+   },
+   "extensionName": {
+      "message": "Copy URL To Clipboard"
+   },
+   "extensionShortName": {
+      "message": "url2clipboard"
+   },
+   "formats": {
+      "message": "Formats"
+   },
+   "notifyOnCopyMsg": {
+      "message": "Copied"
+   },
+   "notifyOnCopyMsg_format": {
+      "message": "Copied as $FORMAT$",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "onCopySettings": {
+      "message": "Settings On Copy"
+   },
+   "openOptions_key": {
+      "message": "Op&tions",
+      "placeholders": {
+         "key": {
+            "content": "$1",
+            "example": "(&T)"
+         }
+      }
+   },
+   "optionsAttributesDetail": {
+      "message": "`onxxx` attributes will be ignored."
+   },
+   "optionsContribute": {
+      "message": "Contribute:"
+   },
+   "optionsCreateTextFragments": {
+      "message": "Link directly to a specific portion of text"
+   },
+   "optionsEnableFormatDetail": {
+      "message": "Show $FORMAT$ menu item in the context menu.",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   },
+   "optionsIconBlack": {
+      "message": ""
+   },
+   "optionsIconBlackLabel": {
+      "message": ""
+   },
+   "optionsIconBlackLabel_ariaLabel": {
+      "message": "Black Icon"
+   },
+   "optionsIconBlack_alt": {
+      "message": "Black"
+   },
+   "optionsIconColor": {
+      "message": ""
+   },
+   "optionsIconColorLabel": {
+      "message": ""
+   },
+   "optionsIconColorLabel_ariaLabel": {
+      "message": "Color Icon"
+   },
+   "optionsIconColor_alt": {
+      "message": "Color"
+   },
+   "optionsIconDark": {
+      "message": ""
+   },
+   "optionsIconDarkLabel": {
+      "message": ""
+   },
+   "optionsIconDarkLabel_ariaLabel": {
+      "message": "Dark Icon"
+   },
+   "optionsIconDark_alt": {
+      "message": "Dark"
+   },
+   "optionsIconDetail": {
+      "message": "Choose the icon."
+   },
+   "optionsIconLight": {
+      "message": ""
+   },
+   "optionsIconLightLabel": {
+      "message": ""
+   },
+   "optionsIconLightLabel_ariaLabel": {
+      "message": "Light Icon"
+   },
+   "optionsIconLight_alt": {
+      "message": "Light"
+   },
+   "optionsIconWhite": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel": {
+      "message": ""
+   },
+   "optionsIconWhiteLabel_ariaLabel": {
+      "message": "White Icon"
+   },
+   "optionsIconWhite_alt": {
+      "message": "White"
+   },
+   "optionsIncludeAttr": {
+      "message": "Add other attributes"
+   },
+   "optionsIncludeTitle": {
+      "message": "Add title attribute"
+   },
+   "optionsLabel": {
+      "message": "Options"
+   },
+   "optionsNotifyOnCopy": {
+      "message": "Notify when copied"
+   },
+   "optionsNotifyOnCopyDetail": {
+      "message": "It will notify when successfully copied. Requires additional permission."
+   },
+   "optionsPreferCanonicalUrl": {
+      "message": "Prefer canonical URL if present"
+   },
+   "optionsPreferCanonicalUrlDetail": {
+      "message": "Use the canonical URL if it exists on the web page."
+   },
+   "optionsPromptContent": {
+      "message": "Edit contents when copying"
+   },
+   "optionsPromptContentDetail": {
+      "message": "If enabled, prompt window will appear when copying and you can edit content text of the link. Note that in privileged URLs, the prompt window may not appear so that you may not be able to edit."
+   },
+   "optionsSave": {
+      "message": "Save"
+   },
+   "optionsSeparateTextURL": {
+      "message": "Copy text and URL on separate lines"
+   },
+   "optionsTextOutputOnlyTextLabel": {
+      "message": "Copy only text"
+   },
+   "optionsTextOutputOnlyUrlLabel": {
+      "message": "Copy only URL"
+   },
+   "optionsTextOutputTextUrlLabel": {
+      "message": "Copy text and URL"
+   },
+   "optionsTitle": {
+      "message": "Copy URL To Clipboard - Options"
+   },
+   "optionsToolbarIcon": {
+      "message": "Toolbar Button Icon"
+   },
+   "optionsWebsite": {
+      "message": "Support site:"
+   },
+   "userInput": {
+      "message": "Edit content text of the $FORMAT$ link",
+      "placeholders": {
+         "format": {
+            "content": "$1",
+            "example": "Markdown"
+         }
+      }
+   }
+}
