@@ -121,30 +121,34 @@
 	<p>
 	Спасибо <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> и его автору</b> за помощь с изучиением Quickshell, хостингом сайта.<br>
 	Спасибо <b><a href="https://github.com/f026/">f026</a></b> за <a href="https://github.com/f026/activate-linux-plugin">первый плагин</a> для JES.<br>
-	Спасибо <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> за помощь с IPC DriftWM, добавлением новых функций в WM для JES и в принципе лояльности к проекту.<br>
+	Спасибо <b><a href="https://github.com/malbiruk/driftwm">автору DriftWM (malbiruk)</a></b> за помощь с IPC DriftWM, добавлением новых функций в WM для JES и в принципе лояльности к проекту.<br>
+    Спасибо <b><a href="https://github.com/frosti-4">frosti-4</a></b> за скрипт для Arch linux.<br>
 	</p>
 	<h3>-- Дальнейший вектор -- :</h3>
 	<p>
 	<b>[c]</b> Добавление поддержки <b>Hyprland</b><br>
-  <b>[c]</b> Добавление поддержки <b>Niri</b><br>
+    <b>[c]</b> Добавление поддержки <b>Niri</b><br>
 	<b>[c]</b> Добавление поддержки <b>DriftWM</b><br>
 	<b>[c]</b> Поддержка base16 тем в JES<br>
-  <b>[c]</b> Мягкий material you<br>
+    <b>[c]</b> Мягкий material you<br>
 	<b>[c]</b> Вывод информации об уст-ве, подключённое через kdeconnect<br>
 	<b>[c]</b> Красивый screen picker<br>
 	<b>[c]</b> Анимированная обложка в плеере, когда нету обложки<br>
 	<b>[c]</b> Защита от статических обоев с неверным форматом в wallpaper picker<br>
 	<b>[c]</b> Создание виджета календаря<br>
 	<b>[c]</b> Поддержка нескольких мониторов<br>
-  <b>[c]</b> Создание установщика настроек<br>
+    <b>[c]</b> Создание установщика настроек<br>
 	<b>[c]</b> Выбор стиля нейтральный/яркий<br>
 	<b>[c]</b> Popup миникарта для <b>driftwm</b><br>
 	<b>[с]</b> Добавить путевые точки на карту<br>
 	<b>[c]</b> Добавить полноценную карту<br>
 	<b>[c]</b> Сделать нормальный ui в полноценной карте<br>
+    <b>[i]</b> Разработка api для работы с launcher<br>
 	<b>[i]</b> Перевод <b>Hyprland</b> на lua конфиги<br>
 	<b>[i]</b> Фикс <b>Niri</b><br>
 	<b>[p]</b> Создание виджета погоды<br>
+    <b>[p]</b> Разработка api для работы с plugin center<br>
+    <b>[p]</b> Разработка api для работы с bar<br>
 	<b>[n]</b> Выбор темы тёмная/светлая<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
@@ -291,23 +295,20 @@
 
 - Установите NixOS
 - запустите установщик:
-  ```bash
-  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
-  ```
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
 - перезапуститесь `reboot`
 
 ### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
 
-1. Установите Arch Linux (для простоты советую EndeavourOS)
-2. Запустите установщик:
+- Установите Arch Linux (для простоты советую EndeavourOS)
+- Запустите установщик:
 ```bash
-```
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh"
-```
 ```
 
 - В случае ошибок устанавливайсте вручную
-```
 ```
 1. Установите Arch Linux (для простоты советую EndeavourOS)
 2. Установите yay или paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
@@ -319,7 +320,6 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. введите reboot
 ```
-> Скрипт для Arch linux сделал frosti-4
 
 ## -- Лицензия --:
 Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия **GNU GPL v3**

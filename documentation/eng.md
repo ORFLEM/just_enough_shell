@@ -122,6 +122,7 @@
 	Thanks to <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> and its author</b> for help with learning Quickshell and hosting the website.<br>
 	Thanks to <b><a href="https://github.com/f026/">f026</a></b> for the <a href="https://github.com/f026/activate-linux-plugin">first plugin</a> for JES.<br>
 	Thanks to <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> for help with DriftWM IPC, adding new features to the WM for JES, and in general for being supportive of the project.<br>
+    Thanks to <b><a href="https://github.com/frosti-4">frosti-4</a></b> for the script for Arch Linux.<br>
 	</p>
 	<h3>-- Roadmap -- :</h3>
 	<p>
@@ -142,9 +143,12 @@
 	<b>[c]</b> Add waypoints to map<br>
 	<b>[c]</b> Add full map<br>
 	<b>[c]</b> Add normal ui in full map<br>
+    <b>[i]</b> Development of API for working with launcher<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>
+    <b>[p]</b> Development of API for working with plugin center<br>
+    <b>[p]</b> Development of API for working with bar<br>
 	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
@@ -291,17 +295,19 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 ### NixOS
 - install NixOS
 - start JES installer:
-  ```bash
-  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
-  ```
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
 - reboot
 
 ### Arch Linux or Arch-based (may be incorrect; if so, please open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
-1. Install Arch Linux (EndeavourOS is recommended for simplicity)
-2. Start JES installer:
+
+- Install Arch Linux (EndeavourOS is recommended for simplicity)
+- Start JES installer:
 ```bash
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh"
 ```
+
 - In case of errors, install manually:
 ```
 1. Install Arch Linux (EndeavourOS is recommended for simplicity)
@@ -314,8 +320,6 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 8. Copy files from ".config/" to "~/.config" and from ".local/" to "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. reboot
 ```
-
-> The script for arch made by frosti-4.
 
 ## -- License -- :
 Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. License: **GNU GPL v3**.

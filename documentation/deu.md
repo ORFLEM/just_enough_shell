@@ -119,9 +119,10 @@
 	</p>
 	<h3>-- Danksagungen -- :</h3>
 	<p>
-	Dank an <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> und seinen Autor</b> für die Hilfe beim Erlernen von Quickshell und das Hosting der Website.<br>
-	Dank an <b><a href="https://github.com/f026/">f026</a></b> für das <a href="https://github.com/f026/activate-linux-plugin">erste Plugin</a> für JES.<br>
-	Dank an <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> für die Hilfe bei DriftWM IPC, das Hinzufügen neuer Funktionen zum WM für JES und allgemein für die Unterstützung des Projekts.<br>
+	Danke an <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> und seinen Autor</b> für die Hilfe beim Erlernen von Quickshell und das Hosting der Website.<br>
+	Danke an <b><a href="https://github.com/f026/">f026</a></b> für das <a href="https://github.com/f026/activate-linux-plugin">erste Plugin</a> für JES.<br>
+	Danke an <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> für die Hilfe bei DriftWM IPC, das Hinzufügen neuer Funktionen zum WM für JES und allgemein für die Unterstützung des Projekts.<br>
+    Danke an <b><a href="https://github.com/frosti-4">frosti-4</a></b> für das Skript für Arch Linux.<br>
 	</p>
 	<h3>-- Weiterer Fahrplan --:</h3>
 	<p>
@@ -142,9 +143,12 @@
 	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
 	<b>[c]</b> Vollwertige Karte hinzufügen<br>
 	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
+    <b>[i]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
+    <b>[p]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
+    <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
 	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>
@@ -295,15 +299,15 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 - Starten Sie mit `reboot` neu
 
 ### Arch Linux oder Arch-basiert (kann fehlerhaft sein, bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
-```
-Hier ist die Übersetzung ins Deutsche:
-1. Installieren Sie Arch Linux (einfachheitshalber empfehle ich EndeavourOS)
-2. Starten Sie das Installationsprogramm:
+
+- Installieren Sie Arch Linux (einfachheitshalber empfehle ich EndeavourOS)
+- Starten Sie das Installationsprogramm:
 ```bash
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
 ```
 
 - Im Falle von Fehlern installieren Sie bitte manuell:
+```
 1. Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
 2. Installieren Sie yay oder paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
 3. Installieren Sie die offizielle Software (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
@@ -314,7 +318,6 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 8. Kopieren Sie die Dateien aus ".config/" nach "~/.config" und aus ".local/" nach "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. Geben Sie reboot ein
 ```
-Das Skript für Arch Linux wurde von frosti-4 erstellt.
 
 ## -- Lizenz --:
 Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert, Lizenz **GNU GPL v3**
