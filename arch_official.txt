@@ -47,12 +47,11 @@ gwenview
 okular
 dolphin
 ffmpegthumbs
-golang
-bastet
-moon-buggy
-nsnake
+go
 terminus-font
 ttf-liberation
 adobe-source-han-sans-otc-fonts
 xdg-desktop-portal-gtk
 xdg-desktop-portal-wlr
+matugen
+
