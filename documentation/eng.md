@@ -297,6 +297,12 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 - reboot
 
 ### Arch Linux or Arch-based (may be incorrect; if so, please open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
+1. Install Arch Linux (EndeavourOS is recommended for simplicity)
+2. Start JES installer:
+```bash
+git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh"
+```
+- In case of errors, install manually:
 ```
 1. Install Arch Linux (EndeavourOS is recommended for simplicity)
 2. Install yay or paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
@@ -309,7 +315,7 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 9. reboot
 ```
 
-> The script will work only on NixOS. If you want a script for Arch, please provide a ready-made script, the author will include it in the project.
+> The script for arch made by frosti-4.
 
 ## -- License -- :
 Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. License: **GNU GPL v3**.

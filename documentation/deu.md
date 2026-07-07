@@ -296,6 +296,14 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 
 ### Arch Linux oder Arch-basiert (kann fehlerhaft sein, bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
 ```
+Hier ist die Übersetzung ins Deutsche:
+1. Installieren Sie Arch Linux (einfachheitshalber empfehle ich EndeavourOS)
+2. Starten Sie das Installationsprogramm:
+```bash
+git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
+```
+
+- Im Falle von Fehlern installieren Sie bitte manuell:
 1. Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
 2. Installieren Sie yay oder paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
 3. Installieren Sie die offizielle Software (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
@@ -306,8 +314,7 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 8. Kopieren Sie die Dateien aus ".config/" nach "~/.config" und aus ".local/" nach "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. Geben Sie reboot ein
 ```
-
-> Das Skript funktioniert nur unter NixOS. Wenn Sie ein Skript für Arch wünschen, geben Sie bitte ein fertiges Skript an, der Autor wird es in das Projekt aufnehmen.
+Das Skript für Arch Linux wurde von frosti-4 erstellt.
 
 ## -- Lizenz --:
 Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert, Lizenz **GNU GPL v3**

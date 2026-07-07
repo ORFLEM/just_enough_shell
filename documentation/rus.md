@@ -297,6 +297,17 @@
 - перезапуститесь `reboot`
 
 ### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
+
+1. Установите Arch Linux (для простоты советую EndeavourOS)
+2. Запустите установщик:
+```bash
+```
+git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh"
+```
+```
+
+- В случае ошибок устанавливайсте вручную
+```
 ```
 1. Установите Arch Linux (для простоты советую EndeavourOS)
 2. Установите yay или paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
@@ -308,7 +319,7 @@
 8. из ".config/" перекинуть файлы в "~/.config", а из ".local/" в "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
 9. введите reboot
 ```
-> Скрипт будет только под NixOS, если хочется скрипт под arch, просьба дать готовый скрипт, автор его вложит в проект
+> Скрипт для Arch linux сделал frosti-4
 
 ## -- Лицензия --:
 Уведомления были взяты из проекта [blxshell](https://github.com/binarylinuxx/dots) и модернизированы как визуально, так и частично технически, лицензия **GNU GPL v3**
