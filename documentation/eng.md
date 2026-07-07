@@ -305,7 +305,7 @@ nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.gi
 - Install Arch Linux (EndeavourOS is recommended for simplicity)
 - Start JES installer:
 ```bash
-git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh"
+git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
 ```
 
 - In case of errors, install manually:
