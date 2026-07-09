@@ -88,5 +88,47 @@ Item {
 ## Datenübertragung an die Oberfläche
 - Für einen kontinuierlichen Datenstrom (aus Performance-Gründen empfohlen) `JsonListen` verwenden, für eine einmalige Abfrage in festgelegten Zeitabständen `JsonPoll`
 - Die Daten werden im JSON-Format übertragen; bei visuellen Programmen ohne Funktionen genügt einfach ein String (zum Beispiel cava in der Leiste)
+- Fensterverwaltungsdaten werden über den Parameter `bar` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen – rufen Sie `bar` auf. Welche Daten verfügbar sind, entnehmen Sie der `BaseBar.qml`.
 
-## Falls etwas unklar ist, schauen Sie sich die Datei BaseBar.qml im Ordner bar an, das ist der visuelle Maßstab für die gesamte UI
+## Falls etwas unklar ist, schauen Sie sich die Datei `BaseBar.qml` im Ordner bar an, das ist der visuelle Maßstab für die gesamte UI
+
+## Anbindung an den JES-Launcher
+- Um eine Verbindung zum Launcher herzustellen, rufen wir folgende Funktion auf:
+```qml
+property var api: launchLoader ? launchLoader.item : null
+
+function ensureTab() {
+    if (!api) return
+
+    var exists = false
+    for (var i = 0; i < api.tabModel.length; i++) {
+        if (api.tabModel[i].name === "Name des Tabs") {
+            exists = true
+            break
+        }
+    }
+    if (!exists) {
+        api.tabModel.push({
+            name: "Name des Tabs",
+            icon: "Symbol für die Suche, nur aus Nerd Font verwenden",
+            placeholder: "Text eingeben...",
+            info: []
+        })
+    }
+}
+
+onApiChanged: {
+    if (api && launchLoader && launchLoader.active) {
+        ensureTab()
+        firstOpen = false
+    }
+}
+```
+- In `info` können wir eine beliebige Liste übergeben, die folgende Elemente enthält: `{"id", "name", "icon", "exec"}` – das ist ein Pseudo‑JSON, nur Namen für Objekte.
+
+- In `id` übergeben wir die fortlaufende Nummer.
+- In `name` der Text, der im Block angezeigt wird.
+- In `icon` das Symbol, falls vorhanden.
+- In `exec` der auszuführende Befehl.
+
+### `id` ist optional, wenn Sie vollständige Befehle für das Objekt angeben. Es ist erforderlich, wenn Sie ein Skript erstellt haben, das verschiedene Objekte starten soll.

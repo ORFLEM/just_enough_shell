@@ -88,5 +88,48 @@ Item {
 ## Passing data to the interface
 - Use `JsonListen` for a continuous stream (recommended for performance), and `JsonPoll` for a one-time request on a fixed interval.
 - Data is passed as JSON. For visual-only programs with no logic (e.g. cava in the bar), a plain string is sufficient.
+- Window Manager data is passed via the `bar` parameter. If you need data about coordinates/workspaces/active program/layout – call `bar`. For a list of available data, see `BaseBar.qml`.
 
-## If anything is unclear, refer to BaseBar.qml in the bar/ folder — it is the visual reference for all UI.
+## If anything is unclear, refer to `BaseBar.qml` in the bar/ folder — it is the visual reference for all UI.
+
+## Connecting to the JES launcher
+- To connect to the launcher, we call the following function:
+```qml
+property var api: launchLoader ? launchLoader.item : null
+
+function ensureTab() {
+    if (!api) return
+
+    var exists = false
+    for (var i = 0; i < api.tabModel.length; i++) {
+        if (api.tabModel[i].name === "Tab Name") {
+            exists = true
+            break
+        }
+    }
+    if (!exists) {
+        api.tabModel.push({
+            name: "Tab Name",
+            icon: "Icon for search, use only from Nerd Font",
+            placeholder: "Enter text...",
+            info: []
+        })
+    }
+}
+
+onApiChanged: {
+    if (api && launchLoader && launchLoader.active) {
+        ensureTab()
+        firstOpen = false
+    }
+}
+```
+
+- In `info` we can pass any list containing the following items: `{"id", "name", "icon", "exec"}` – this is a pseudo‑JSON, just names for objects.
+
+- In `id` we pass the serial number.
+- In `name` the text that will be displayed in the block.
+- In `icon` the icon, if any.
+- In `exec` the command to be executed.
+
+### `id` is optional if you specify full commands for the object. It is required if you created a script that should run different objects.

@@ -24,7 +24,7 @@ WlrLayershell {
     property bool showimage: false
     
     implicitHeight: isOpen ? (barOnTop && !minibar && screen.width <= 3480 ? (showimage ? 530 + barHeight : 230 + barHeight) : (showimage ? 530 : 230)) : 0
-    implicitWidth: showimage ? 689 : 389
+    implicitWidth: artBox.width + 171
     color: "transparent"
 
     Behavior on implicitHeight {
@@ -42,7 +42,6 @@ WlrLayershell {
         Rectangle {
             id: popupRect
             anchors.fill: parent
-            anchors.leftMargin: 6
             anchors.rightMargin: isOpen ? 6 : 16
             anchors.topMargin: isOpen ? 6 : -6
             color: "transparent"
@@ -103,7 +102,10 @@ WlrLayershell {
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.margins: 3
-                width: height  // квадрат
+
+                // --- ВЫЧИСЛЯЕМАЯ ШИРИНА ---
+                width: coverImage.width
+
                 radius: mainRad - 3
                 color: base.base02
 
@@ -131,12 +133,17 @@ WlrLayershell {
                 }
                 
                 Image {
+                    id: coverImage
                     asynchronous: true
                     smooth: true
                     mipmap: true
                     visible: vars.plr.art !== Quickshell.env("HOME") + "/.config/quickshell/bar/images/music.png"
                     anchors.centerIn: parent
-                    sourceSize.width: showimage ? 512 : 212
+                    sourceSize.width: {
+                        let sw = sourceSize.width
+                        let sh = sourceSize.height
+                        return (sw > 0 && sh > 0) ? height * sw / sh : 0
+                    }
                     sourceSize.height: showimage ? 512 : 212
                     fillMode: Image.PreserveAspectCrop
                     source: vars.plr.art !== "" ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
@@ -147,7 +154,6 @@ WlrLayershell {
                             animatedPlayer.play()
                         }
                     }
-
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -198,7 +204,6 @@ WlrLayershell {
                                 color: col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                font.weight: Font.Bold
                             }
                         }
 

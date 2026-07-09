@@ -9,13 +9,22 @@ import (
 	"strings"
 )
 
-type App struct {
-	Name     string `json:"name"`
-	Exec     string `json:"exec"`
-	Icon     string `json:"icon"`
-	Comment  string `json:"comment"`
-	Terminal bool   `json:"terminal"`
-	File     string `json:"file"`
+// Унифицированный формат вывода
+type UnifiedApp struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Icon string `json:"icon"`
+	Exec string `json:"exec"`
+}
+
+// Внутреннее представление .desktop
+type desktopApp struct {
+	Name     string
+	Exec     string
+	Icon     string
+	Terminal bool
+	Comment  string // добавлено
+	File     string
 }
 
 type FreqDB map[string]int
@@ -41,14 +50,14 @@ func saveFreq(db FreqDB) {
 	os.WriteFile(freqPath(), data, 0644)
 }
 
-func parseDesktop(path string) (App, bool) {
+func parseDesktop(path string) (desktopApp, bool) {
 	f, err := os.Open(path)
 	if err != nil {
-		return App{}, false
+		return desktopApp{}, false
 	}
 	defer f.Close()
 
-	var app App
+	var app desktopApp
 	app.File = path
 	inEntry := false
 
@@ -74,28 +83,33 @@ func parseDesktop(path string) (App, bool) {
 		}
 
 		switch k {
-		case "Name":     app.Name = v
-		case "Exec":     app.Exec = cleanExec(v)
-		case "Icon":     app.Icon = v
-		case "Comment":  app.Comment = v
-		case "Terminal": app.Terminal = v == "true"
+		case "Name":
+			app.Name = v
+		case "Exec":
+			app.Exec = cleanExec(v)
+		case "Icon":
+			app.Icon = v
+		case "Comment":
+			app.Comment = v
+		case "Terminal":
+			app.Terminal = v == "true"
 		case "NoDisplay":
 			if v == "true" {
-				return App{}, false
+				return desktopApp{}, false
 			}
 		case "Hidden":
 			if v == "true" {
-				return App{}, false
+				return desktopApp{}, false
 			}
 		case "Type":
 			if v != "Application" {
-				return App{}, false
+				return desktopApp{}, false
 			}
 		}
 	}
 
 	if app.Name == "" || app.Exec == "" {
-		return App{}, false
+		return desktopApp{}, false
 	}
 	return app, true
 }
@@ -120,9 +134,9 @@ func getDesktopDirs() []string {
 	}
 }
 
-func listApps(search string) []App {
+func listApps(search string) []desktopApp {
 	seen := map[string]bool{}
-	apps := []App{}
+	apps := []desktopApp{}
 	search = strings.ToLower(search)
 
 	for _, dir := range getDesktopDirs() {
@@ -134,7 +148,6 @@ func listApps(search string) []App {
 			if !strings.HasSuffix(e.Name(), ".desktop") {
 				continue
 			}
-			// дедупликация по имени файла, не по полному пути
 			if seen[e.Name()] {
 				continue
 			}
@@ -147,6 +160,7 @@ func listApps(search string) []App {
 
 			if search != "" {
 				if !strings.Contains(strings.ToLower(app.Name), search) &&
+					!strings.Contains(strings.ToLower(app.Exec), search) &&
 					!strings.Contains(strings.ToLower(app.Comment), search) {
 					continue
 				}
@@ -158,7 +172,7 @@ func listApps(search string) []App {
 }
 
 func main() {
-	// launch --launched <name>  — записать запуск
+	// Запись факта запуска
 	if len(os.Args) > 1 && os.Args[1] == "--launched" {
 		if len(os.Args) > 2 {
 			db := loadFreq()
@@ -176,6 +190,7 @@ func main() {
 	freq := loadFreq()
 	apps := listApps(search)
 
+	// Сортировка по частоте использования
 	sort.Slice(apps, func(i, j int) bool {
 		fi, fj := freq[apps[i].Name], freq[apps[j].Name]
 		if fi != fj {
@@ -184,5 +199,26 @@ func main() {
 		return strings.ToLower(apps[i].Name) < strings.ToLower(apps[j].Name)
 	})
 
-	json.NewEncoder(os.Stdout).Encode(apps)
+	// Преобразование в унифицированный формат
+	unified := make([]UnifiedApp, 0, len(apps))
+	for _, app := range apps {
+		exec := app.Exec
+		if app.Terminal {
+			term := os.Getenv("TERMINAL")
+			if term == "" {
+				term = "xterm"
+			}
+			// Экранирование одинарных кавычек для безопасной передачи в sh -c
+			escaped := strings.ReplaceAll(exec, "'", "'\\''")
+			exec = term + " -e sh -c '" + escaped + "'"
+		}
+		unified = append(unified, UnifiedApp{
+			ID:   app.File, // уникальный идентификатор – путь к .desktop
+			Name: app.Name,
+			Icon: app.Icon,
+			Exec: exec,
+		})
+	}
+
+	json.NewEncoder(os.Stdout).Encode(unified)
 }

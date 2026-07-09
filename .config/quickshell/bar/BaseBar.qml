@@ -134,7 +134,6 @@ WlrLayershell {
                                 color: launcherItem.hovered ? col.fontDark : col.accent
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                font.weight: Font.Bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
                         }
@@ -155,6 +154,7 @@ WlrLayershell {
                     property bool hovered: false
                     width: wallRow.width + 12
                     height: panel.height - 12
+                    visible: show_wallpaper
                     
                     Rectangle {
                         anchors.fill: parent
@@ -189,7 +189,6 @@ WlrLayershell {
                             color: wallItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -368,7 +367,6 @@ WlrLayershell {
                             text: vars.wthr.icon
                             color: weatherItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
-                            font.weight: Font.bold
                             font.pixelSize: fontSize
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -377,7 +375,6 @@ WlrLayershell {
                             text: vars.wthr.temp + "°C"
                             color: weatherItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
-                            font.weight: Font.bold
                             font.pixelSize: fontSize
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -441,7 +438,6 @@ WlrLayershell {
                             color: timeItem.hovered ? col.fontDark : col.accent
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -451,7 +447,6 @@ WlrLayershell {
                             color: timeItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                             text: timeItem.dateInfo ? Qt.formatDateTime(clock.date, "yyyy-MM-dd") : Qt.formatDateTime(clock.date, "hh:mm:ss")
                             Behavior on color { ColorAnimation { duration: 200 } }
@@ -570,7 +565,8 @@ WlrLayershell {
                             anchors.verticalCenter: parent.verticalCenter
                             text: vars.plr.status
                             color: playerItem.hovered ? col.fontDark : col.accent
-                            font.family: "Eurostile Extended"
+                            font.family: fontFamily
+                            font.weight: Font.Black
                             font.pixelSize: fontSize - 2
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -580,8 +576,9 @@ WlrLayershell {
                             anchors.left: plrText1.right
                             anchors.verticalCenter: parent.verticalCenter
                             text: ' '
-                            font.family: "Eurostile Extended"
-                            font.pixelSize: fontSize
+                            font.family: fontFamily
+                            font.weight: Font.Black
+                            font.pixelSize: fontSize - 1
                             color: playerItem.hovered ? col.fontDark : col.font
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -592,8 +589,9 @@ WlrLayershell {
                             anchors.verticalCenter: parent.verticalCenter
                             text: vars.plr.artist.length > 15 ? vars.plr.artist.substring(0, 15) + "…" : vars.plr.artist
                             color: playerItem.hovered ? col.fontDark : col.font
-                            font.family: "Eurostile Extended"
-                            font.pixelSize: fontSize
+                            font.family: fontFamily
+                            font.weight: Font.Black
+                            font.pixelSize: fontSize - 1
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
 
@@ -602,8 +600,9 @@ WlrLayershell {
                             anchors.left: plrText2.right
                             anchors.verticalCenter: parent.verticalCenter
                             text: '      '
-                            font.family: "Eurostile Extended"
-                            font.pixelSize: fontSize
+                            font.family: fontFamily
+                            font.weight: Font.Black
+                            font.pixelSize: fontSize - 1
                             color: playerItem.hovered ? col.fontDark : col.font
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -626,8 +625,9 @@ WlrLayershell {
                                     anchors.verticalCenter: parent.verticalCenter
                                     text: vars.plr.title
                                     color: playerItem.hovered ? col.fontDark : col.font
-                                    font.family: "Eurostile Extended"
-                                    font.pixelSize: fontSize
+                                    font.family: fontFamily
+                                    font.weight: Font.Black
+                                    font.pixelSize: fontSize -1
                                     Behavior on color { ColorAnimation { duration: 200 } }
                                 }
                             }
@@ -641,8 +641,9 @@ WlrLayershell {
                                     height: parent.height
                                     text: vars.plr.title
                                     color: playerItem.hovered ? col.fontDark : col.font
-                                    font.family: "Eurostile Extended"
-                                    font.pixelSize: fontSize
+                                    font.family: fontFamily
+                                    font.weight: Font.Black
+                                    font.pixelSize: fontSize -1
                                 }
                             }
                         }
@@ -718,7 +719,6 @@ WlrLayershell {
                                 color: audioButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
                             MouseArea {
@@ -730,7 +730,7 @@ WlrLayershell {
                                 // Но здесь тоже нужно убрать присвоение цвета тексту,
                                 // текст уже привязан к settingsItem.hovered
                                 onClicked: {
-                                    Quickshell.execDetached(["sh", "-c", "pavucontrol"])
+                                    Quickshell.execDetached(["sh", "-c", "pavucontrol-qt"])
                                 }
                             }
                         }
@@ -756,7 +756,6 @@ WlrLayershell {
                                 color: networkButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
                             MouseArea {
@@ -793,7 +792,6 @@ WlrLayershell {
                                 color: bluetoothButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                font.weight: Font.bold
                                 Behavior on color { ColorAnimation { duration: 200 } }
                             }
                             MouseArea {
@@ -816,7 +814,6 @@ WlrLayershell {
                         text: "  "
                         font.family: fontFamily
                         font.pixelSize: fontSize
-                        font.weight: Font.bold
                         color: col.font
                     }
                     HoverHandler {
@@ -859,7 +856,6 @@ WlrLayershell {
                             color: col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            font.weight: Font.bold
                         }
                     }
 
@@ -914,7 +910,6 @@ WlrLayershell {
                             color: col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            font.weight: Font.Bold
                             anchors.verticalCenter: parent.verticalCenter
                         }
                     }

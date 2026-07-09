@@ -11,36 +11,71 @@ WlrLayershell {
     id: launcher
     layer: WlrLayer.Overlay
     namespace: "launcher"
-    width: 1000
-    height: 513
+    implicitWidth: 1000
+    implicitHeight: 513
     color: "transparent"
 
     property int currentTab: 0
-    property var apps: []
-    property var clips: []
+
+    // Исходные данные для вкладок (полные списки)
+    property var tabModel: ([
+        {
+            name: "Applications",
+            icon: "",
+            placeholder: "Search...",
+            info: []
+        },
+        {
+            name: "Clipboard",
+            icon: "󰅍",
+            placeholder: "Clipboard...",
+            info: []
+        }
+    ])
+
+    // Модель для отображения (фильтрованная)
+    ListModel {
+        id: fInfo
+    }
 
     keyboardFocus: WlrKeyboardFocus.Exclusive
+
+    // Функция фильтрации
+    function filterInfo() {
+        var fullList = tabModel[currentTab].info || []
+        var searchText = searchInput.text.trim().toLowerCase()
+        var filtered = []
+
+        if (searchText === "") {
+            filtered = fullList
+        } else {
+            for (var i = 0; i < fullList.length; i++) {
+                var item = fullList[i]
+                // поиск по имени (можно добавить comment при необходимости)
+                if (item.name && item.name.toLowerCase().includes(searchText)) {
+                    filtered.push(item)
+                }
+            }
+        }
+
+        fInfo.clear()
+        for (var j = 0; j < filtered.length; j++) {
+            fInfo.append(filtered[j])
+        }
+    }
 
     function closeLauncher() {
         searchInput.text = ""
         Quickshell.execDetached(["sh", "-c", "quickshell ipc call root toggleLaunch"])
     }
 
-    function launchApp(app) {
-        Quickshell.execDetached(["sh", "-c",
-            Quickshell.env("HOME") + "/.config/quickshell/launcher/launch --launched '" + app.name + "'"])
-        if (app.terminal) {
-            Quickshell.execDetached(["sh", "-c", Quickshell.env("TERMINAL") + " -e " + app.exec])
-        } else {
-            Quickshell.execDetached(["sh", "-c", app.exec])
-        }
-        closeLauncher()
-    }
-
-    function pasteClip(clip) {
-        Quickshell.execDetached(["sh", "-c",
-            Quickshell.env("HOME") + "/.config/quickshell/launcher/cliphist-json " + clip.id])
-        closeLauncher()
+    function runProgram() {
+        var idx = list.currentIndex;
+        if (idx < 0 || idx >= fInfo.count) return;
+        var item = fInfo.get(idx);
+        console.log("Executing:", item.exec + " " + item.id);
+        Quickshell.execDetached(["sh", "-c", item.exec, item.id]);
+        closeLauncher();
     }
 
     // Проги
@@ -50,7 +85,11 @@ WlrLayershell {
         command: ["sh", "-c", Quickshell.env("HOME") + "/.config/quickshell/launcher/launch " + searchInput.text]
         stdout: SplitParser {
             onRead: data => {
-                try { launcher.apps = JSON.parse(data) } catch(e) {}
+                try {
+                    tabModel[0].info = JSON.parse(data)
+                    tabModel = [...tabModel] 
+                    filterInfo()
+                } catch(e) {}
             }
         }
     }
@@ -62,24 +101,38 @@ WlrLayershell {
         command: [Quickshell.env("HOME") + "/.config/quickshell/launcher/cliphist-json"]
         stdout: SplitParser {
             onRead: data => {
-                try { launcher.clips = JSON.parse(data) } catch(e) {}
+                try {
+                    tabModel[1].info = JSON.parse(data)
+                    tabModel = [...tabModel] 
+                    filterInfo()
+                } catch(e) {}
             }
         }
     }
 
     onCurrentTabChanged: {
+        fInfo.clear()
         if (currentTab === 0) {
             clipProc.running = false
             appProc.running = false
+            appProc.command = ["sh", "-c", Quickshell.env("HOME") + "/.config/quickshell/launcher/launch " + searchInput.text]
             appProc.running = true
         } else if (currentTab === 1) {
             appProc.running = false
             clipProc.running = false
             clipProc.running = true
         }
-        activeList.currentIndex = -1
+        list.currentIndex = -1
+        filterInfo()
+    
+        // Прокрутка к активной вкладке с задержкой
+        if (tabListView) {
+            Qt.callLater(function() {
+                tabListView.positionViewAtIndex(currentTab, ListView.Center)
+            })
+        }
     }
-
+        
     Component.onCompleted: {
         appProc.running = true
         searchInput.forceActiveFocus()
@@ -165,7 +218,7 @@ WlrLayershell {
                             spacing: 10
 
                             Text {
-                                text: currentTab === 1 ? "󰅍" : ""
+                                text: tabModel[currentTab].icon
                                 color: col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize - 3
@@ -177,29 +230,32 @@ WlrLayershell {
                                 color: col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize - 2
-                                placeholderText: currentTab === 1 ? "Clipboard..." : "Search..."
+                                placeholderText: tabModel[currentTab].placeholder
                                 placeholderTextColor: col.font
                                 background: Item {}
 
                                 Keys.onEscapePressed: closeLauncher()
-                                Keys.onUpPressed: activeList.decrementCurrentIndex()
-                                Keys.onDownPressed: activeList.incrementCurrentIndex()
+                                Keys.onUpPressed: list.decrementCurrentIndex()
+                                Keys.onDownPressed: list.incrementCurrentIndex()
+                                
                                 Keys.onPressed: event => {
                                     if (event.modifiers & Qt.ShiftModifier) {
                                         if (event.key === Qt.Key_Left) currentTab = Math.max(0, currentTab - 1)
-                                        else if (event.key === Qt.Key_Right) currentTab = Math.min(1, currentTab + 1)
+                                        else if (event.key === Qt.Key_Right) currentTab = Math.min(tabModel.length  - 1, currentTab + 1)
                                     }
                                 }
-                                Keys.onReturnPressed: {
-                                    if (currentTab === 0 && activeList.currentIndex >= 0 && apps.length > 0)
-                                        launchApp(apps[activeList.currentIndex])
-                                    else if (currentTab === 1 && activeList.currentIndex >= 0 && clips.length > 0)
-                                        pasteClip(clips[activeList.currentIndex])
-                                }
 
+                                Keys.onReturnPressed: {
+                                    runProgram()
+                                }      
+                                    
                                 onTextChanged: {
-                                    activeList.currentIndex = -1
+                                    list.currentIndex = -1
+                                    // фильтруем при каждом вводе
+                                    filterInfo()
+                                    // перезапускаем процесс только для вкладки приложений при изменении текста
                                     if (currentTab === 0) {
+                                        appProc.command = ["sh", "-c", Quickshell.env("HOME") + "/.config/quickshell/launcher/launch " + searchInput.text]
                                         appProc.running = false
                                         appProc.running = true
                                     }
@@ -226,33 +282,64 @@ WlrLayershell {
                             GradientStop { position: 1.0; color: col.background3 }
                         }
 
-                        RowLayout {
+                        ClippingRectangle {
                             anchors.fill: parent
                             anchors.margins: 3
-                            spacing: 3
-
-                            Repeater {
-                                model: ["Applications","Clipboard"]
+                            radius: mainRad - 5
+                            color: "transparent"
+                            
+                            ListView {
+                                id: tabListView
+                                anchors.fill: parent
+                                orientation: ListView.Horizontal
+                                spacing: 3
+                                clip: true
+                            
+                                model: ScriptModel {
+                                    values: tabModel
+                                }
+                            
                                 delegate: Rectangle {
-                                    Layout.fillWidth: true
+                                    width: {
+                                        var totalWidth = tabListView.width - (tabListView.count - 1) * tabListView.spacing - 2 * tabListView.anchors.margins;
+                                        var neededWidth = text.implicitWidth + 16;
+                                        if (totalWidth / tabListView.count >= neededWidth)
+                                            return totalWidth / tabListView.count;
+                                        else
+                                            return neededWidth;
+                                    }
                                     height: 30
                                     radius: mainRad - 5
                                     color: currentTab === index ? col.accent : col.backgroundAlt1
                                     Behavior on color { ColorAnimation { duration: 150 } }
-
+                            
                                     Text {
+                                        id: text
                                         anchors.centerIn: parent
-                                        text: modelData
+                                        text: modelData.name
                                         color: currentTab === index ? col.fontDark : col.font
                                         font.family: fontFamily
                                         font.pixelSize: fontSize - 4
-                                        font.bold: true
                                     }
-
+                            
                                     MouseArea {
                                         anchors.fill: parent
                                         onClicked: currentTab = index
                                         cursorShape: Qt.PointingHandCursor
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    acceptedButtons: Qt.NoButton  // не перехватываем клики, только колёсико
+                                    onWheel: {
+                                        var delta = wheel.angleDelta.x || wheel.angleDelta.y
+                                        // Превращаем дельту в скорость (пикселей в секунду)
+                                        // Множитель 2 — подбери под свой вкус
+                                        var velocity = -delta * 2
+                                        // Имитируем жест с заданной скоростью — ListView сам обработает границы и инерцию
+                                        tabListView.flick(velocity, 0)
+                                        wheel.accepted = true
                                     }
                                 }
                             }
@@ -267,127 +354,58 @@ WlrLayershell {
                 Layout.fillHeight: true
                 color: "transparent"
 
-                // Проги (tab 0)
+                // Используем fInfo как модель
                 ListView {
-                    id: appList
+                    id: list
                     anchors.fill: parent
                     anchors.margins: 3
                     spacing: 3
                     clip: true
-                    visible: currentTab === 0
-                    model: apps
+                    model: fInfo
                     currentIndex: -1
 
                     delegate: Rectangle {
-                        width: appList.width
+                        width: list.width
                         height: 48
                         radius: mainRad - 3
                         opacity: 0.95
                         property bool isCurrent: ListView.isCurrentItem
                         color: isCurrent ? col.accent : col.backgroundAlt1
                         Behavior on color { ColorAnimation { duration: 150 } }
-
+                    
                         RowLayout {
                             anchors.fill: parent
                             anchors.margins: 8
                             spacing: 15
-
+                    
                             IconImage {
+                                id: iconImg
                                 width: 32
                                 height: 32
-                                source: Quickshell.iconPath(modelData.icon ?? "", true)
                                 smooth: true
+                                source: Quickshell.iconPath(model.icon, true)
+                                visible: source !== ""
                             }
-
+                    
                             Text {
                                 Layout.fillWidth: true
-                                text: modelData.name ?? ""
+                                text: model.name ?? ""
                                 color: parent.parent.isCurrent ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize - 2
                                 elide: Text.ElideRight
                             }
                         }
-
+                    
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                if (appList.currentIndex === index) launchApp(apps[index])
-                                else appList.currentIndex = index
-                            }
-                        }
-                    }
-                }
-
-                // Буфер (tab 1)
-                ListView {
-                    id: clipList
-                    anchors.fill: parent
-                    anchors.margins: 3
-                    spacing: 3
-                    clip: true
-                    visible: currentTab === 1
-                    currentIndex: -1
-
-                    // фильтр по поиску на стороне QML
-                    model: {
-                        if (searchInput.text === "") return clips
-                        return clips.filter(c =>
-                            c.text.toLowerCase().includes(searchInput.text.toLowerCase()))
-                    }
-
-                    delegate: Rectangle {
-                        width: clipList.width
-                        height: modelData.type === "image" ? 80 : 48
-                        radius: mainRad - 3
-                        property bool isCurrent: ListView.isCurrentItem
-                        color: isCurrent ? col.accent : col.backgroundAlt1
-                        Behavior on color { ColorAnimation { duration: 150 } }
-
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            spacing: 15
-
-                            // картинка или иконка текста
-                            Image {
-                                visible: modelData.type === "image"
-                                width: 64
-                                height: 64
-                                sourceSize.width: 64
-                                sourceSize.height: 64
-                                source: modelData.type === "image" ? "file://" + modelData.icon : ""
-                                fillMode: Image.PreserveAspectFit
-                                smooth: true
-                            }
-
-                            Text {
-                                visible: modelData.type === "text"
-                                text: "󰅍"
-                                color: isCurrent ? col.fontDark : col.accent
-                                font.family: fontFamily
-                                font.pixelSize: 24
-                            }
-
-                            Text {
-                                Layout.fillWidth: true
-                                text: modelData.text ?? ""
-                                color: parent.parent.isCurrent ? col.fontDark : col.font
-                                font.family: fontFamily
-                                font.pixelSize: fontSize - 3
-                                elide: Text.ElideRight
-                                maximumLineCount: modelData.type === "image" ? 1 : 2
-                                wrapMode: Text.WordWrap
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (clipList.currentIndex === index) pasteClip(clipList.model[index])
-                                else clipList.currentIndex = index
+                                if (list.currentIndex === index) {
+                                    runProgram()
+                                } else {
+                                    list.currentIndex = index
+                                }
                             }
                         }
                     }
@@ -395,7 +413,4 @@ WlrLayershell {
             }
         }
     }
-
-    // activeList — для навигации стрелками независимо от таба
-    property var activeList: currentTab === 0 ? appList : clipList
 }

@@ -31,9 +31,6 @@ for line in lines:
     entry_id = m.group(1)
     content  = m.group(2)
 
-    # exec – команда для вставки этого элемента в буфер
-    exec_cmd = f"cliphist decode {entry_id} | wl-copy"
-
     if re.search(r'binary.*(jpg|jpeg|png|bmp|webp)', content, re.IGNORECASE):
         ext = re.search(r'(jpg|jpeg|png|bmp|webp)', content, re.IGNORECASE).group(1).lower()
         icon_file = f"{tmp_dir}/{entry_id}.{ext}"
@@ -45,10 +42,12 @@ for line in lines:
             ).stdout
             with open(icon_file, "wb") as f:
                 f.write(decoded)
+        # Унифицированное поле name (вместо text)
         name = f"Image {entry_id}"
-        entries.append({"id": entry_id, "name": name, "icon": icon_file, "exec": exec_cmd})
+        entries.append({"id": entry_id, "name": name, "type": "image", "icon": icon_file})
     else:
         name = content[:120].replace("\n", " ").replace("\r", "")
-        entries.append({"id": entry_id, "name": name, "icon": "", "exec": exec_cmd})
+        # Для текста icon остаётся пустым (можно задать стандартную иконку при желании)
+        entries.append({"id": entry_id, "name": name, "type": "text", "icon": ""})
 
 print(json.dumps(entries, ensure_ascii=False))

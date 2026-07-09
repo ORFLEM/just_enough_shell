@@ -143,12 +143,12 @@
 	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
 	<b>[c]</b> Vollwertige Karte hinzufügen<br>
 	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
-    <b>[i]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
+  <b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
+  <b>[i]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
-    <b>[p]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
-    <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
+  <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
 	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
 	</p>

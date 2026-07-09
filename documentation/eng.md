@@ -143,12 +143,12 @@
 	<b>[c]</b> Add waypoints to map<br>
 	<b>[c]</b> Add full map<br>
 	<b>[c]</b> Add normal ui in full map<br>
-    <b>[i]</b> Development of API for working with launcher<br>
+  <b>[c]</b> Development of API for working with launcher<br>
+  <b>[i]</b> Development of API for working with plugin center<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>
-    <b>[p]</b> Development of API for working with plugin center<br>
-    <b>[p]</b> Development of API for working with bar<br>
+  <b>[p]</b> Development of API for working with bar<br>
 	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
