@@ -41,6 +41,9 @@
 | `alt + F11` | lauter |
 | `alt + F12` | Player öffnen \| schließen |
 
+- Um das Plugin-Center zu öffnen, klicken Sie mit der rechten Maustaste auf den Netzschalter.
+- Um den Kalender zu öffnen, klicken Sie mit der rechten Maustaste auf die Uhrzeit; ein Linksklick tauscht Uhrzeit und Datum.
+
 ### Minimap‑Steuerung:
 - `Mittelklick` – die Minikarte zu einer vollwertigen Karte erweitern
 - `Rechte Maustaste gedrückt halten und Maus bewegen` – in der Minikarte verschieben

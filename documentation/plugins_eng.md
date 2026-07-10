@@ -90,7 +90,7 @@ Item {
 - Data is passed as JSON. For visual-only programs with no logic (e.g. cava in the bar), a plain string is sufficient.
 - Window Manager data is passed via the `bar` parameter. If you need data about coordinates/workspaces/active program/layout – call `bar`. For a list of available data, see `BaseBar.qml`.
 
-## If anything is unclear, refer to `BaseBar.qml` in the bar/ folder — it is the visual reference for all UI.
+### If anything is unclear, refer to `BaseBar.qml` in the bar/ folder — it is the visual reference for all UI.
 
 ## Connecting to the JES launcher
 - To connect to the launcher, we call the following function:
@@ -133,3 +133,38 @@ onApiChanged: {
 - In `exec` the command to be executed.
 
 ### `id` is optional if you specify full commands for the object. It is required if you created a script that should run different objects.
+
+## Connecting to the JES plugin center
+- To connect to the plugin center, we call the following function:
+```qml
+property var api: pluginPopupLoader ? pluginPopupLoader.item : null
+
+function ensurePlugins() {
+    if (!api) return
+
+    var modules = [
+        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
+    ]
+
+    for (var i = 0; i < modules.length; i++) {
+        var mod = modules[i]
+        var exists = false
+        for (var j = 0; j < api.pluginInfo.length; j++) {
+            if (api.pluginInfo[j].source === mod.source) {
+                exists = true
+                break
+            }
+        }
+        if (!exists) {
+            api.pluginInfo.push(mod)
+            console.log("[ExamplePlugin] Added module:", mod.source)
+        }
+    }
+}
+
+onApiChanged: {
+    ensurePlugins()
+}
+```
+- Maximum dimensions: `colSpan: 3, rowSpan: 7`
+- Any module can be passed in `source`.

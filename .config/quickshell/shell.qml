@@ -19,7 +19,6 @@ ShellRoot {
     id: root
 
     // ── Colors ──────────────────────────────────────────────────────────────
-        // ── Colors ──────────────────────────────────────────────────────────────
     FileView {
         id: colorsFile
         path: Qt.resolvedUrl("./colors.json")
@@ -67,20 +66,21 @@ ShellRoot {
     // Унифицированный доступ к цветам
     QtObject {
         id: col
-        readonly property string background1:  disableGenerate ? base.base05 : colorsJson.background1
-        readonly property string background2:  disableGenerate ? base.base04 : colorsJson.background2
-        readonly property string background3:  disableGenerate ? base.base03 : colorsJson.background3
+        readonly property string background1:    disableGenerate ? base.base05 : colorsJson.background1
+        readonly property string background2:    disableGenerate ? base.base04 : colorsJson.background2
+        readonly property string background3:    disableGenerate ? base.base03 : colorsJson.background3
         readonly property string backgroundAlt1: disableGenerate ? base.base01 : colorsJson.backgroundAlt1
         readonly property string backgroundAlt2: disableGenerate ? base.base02 : colorsJson.backgroundAlt2
-        readonly property string font:         disableGenerate ? base.base06 : colorsJson.font
-        readonly property string fontDark:     disableGenerate ? base.base01 : colorsJson.fontDark
-        readonly property string accent:       disableGenerate ? base.base08 : colorsJson.accent
-        readonly property string accent2:      disableGenerate ? base.base05 : colorsJson.accent2
+        readonly property string font:           disableGenerate ? base.base06 : colorsJson.font
+        readonly property string fontDark:       disableGenerate ? base.base01 : colorsJson.fontDark
+        readonly property string accent:         disableGenerate ? base.base08 : colorsJson.accent
+        readonly property string accent2:        disableGenerate ? base.base05 : colorsJson.accent2
     }
 
 
     // ── UI states ───────────────────────────────────────────────────────
     property bool playerOpen:     false
+    property bool pluginOpen:     false
     property bool calOpen:        false
     property bool scrpicOpen:     false
     property bool powerOpen:      false
@@ -259,6 +259,8 @@ ShellRoot {
         Notifications {}
     }
 
+    // Pip {}
+
     LazyLoader {
         id: wallPickerLoader
         active: wallPickerOpen
@@ -274,6 +276,11 @@ ShellRoot {
     LazyLoader {
         active: minimapOpen
         MiniMap {}
+    }
+    LazyLoader {
+        id: pluginPopupLoader
+        active: pluginOpen
+        PluginPopup {}
     }
 
     Btime {}

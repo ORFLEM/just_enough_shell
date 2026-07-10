@@ -957,9 +957,17 @@ WlrLayershell {
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
+                        acceptedButtons: Qt.AllButtons
                         onEntered: powerItem.hovered = true
                         onExited: powerItem.hovered = false
-                        onClicked: powerOpen = !powerOpen
+                        onClicked: function(mouse) {
+                            if (mouse.button === Qt.LeftButton) {
+                                powerOpen = !powerOpen
+                            }
+                            if (mouse.button === Qt.RightButton) {
+                                pluginOpen = !pluginOpen
+                            }
+                        }
                     }
                 }
             }

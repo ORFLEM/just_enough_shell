@@ -144,7 +144,7 @@
 	<b>[c]</b> Vollwertige Karte hinzufügen<br>
 	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
   <b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
-  <b>[i]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
+  <b>[c]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
 	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
@@ -230,6 +230,9 @@ Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 | `alt + F10` | leiser |
 | `alt + F11` | lauter |
 | `alt + F12` | Player öffnen \| schließen |
+
+- Um das Plugin-Center zu öffnen, klicken Sie mit der rechten Maustaste auf den Netzschalter.
+- Um den Kalender zu öffnen, klicken Sie mit der rechten Maustaste auf die Uhrzeit; ein Linksklick tauscht Uhrzeit und Datum.
 
 ### Die Wahl der Taste für Screenshots wurde nach oben verlegt, da nicht jedem `home` zusagt oder die Taste fehlen kann – wie beim Autor, dessen Tastatur keine print-screen-Taste hat
 

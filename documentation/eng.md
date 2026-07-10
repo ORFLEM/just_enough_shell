@@ -144,7 +144,7 @@
 	<b>[c]</b> Add full map<br>
 	<b>[c]</b> Add normal ui in full map<br>
   <b>[c]</b> Development of API for working with launcher<br>
-  <b>[i]</b> Development of API for working with plugin center<br>
+  <b>[c]</b> Development of API for working with plugin center<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
 	<b>[p]</b> Weather widget<br>
@@ -231,6 +231,9 @@ The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
 | `alt + F10` | volume down |
 | `alt + F11` | volume up |
 | `alt + F12` | open \| close player |
+
+- To open the plugin center, right-click on the power button.
+- To open the calendar, right-click on the time; left-click swaps the time and date.
 
 ### The screenshot key is configurable since not everyone has a convenient `Home` key — the author's keyboard doesn't have Print Screen either.
 

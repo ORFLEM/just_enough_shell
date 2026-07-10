@@ -90,7 +90,7 @@ Item {
 - Данные передаются в json виде, для визуальных программ без функций - просто строка (например, cava в баре)
 - Данные о WM передаются через параметр `bar`, если вам нужны данные о координатах/воркспейсах/активной программе/раскладке - вызываем `bar`, а какие данные можно из него взять - см. `BaseBar.qml`.
 
-## Если что-то непонятно, то смотрите файл `baseBar.qml` в папке bar, это визуальный эталон для всего ui
+### Если что-то непонятно, то смотрите файл `baseBar.qml` в папке bar, это визуальный эталон для всего ui
 
 
 ## Подключение к лаунчеру JES
@@ -134,3 +134,39 @@ onApiChanged: {
 - В `exec` команда, которая будет выполняться 
 
 ### `id` не обязателен, если вы указываете полные команды для объекта. Он требуется, если вы создали скрипт, что должен запускать разные объекты.
+
+## Подключение к центру плагинов JES
+- Для подключения к центру плагинов мы вызываем такую функцию:
+```qml
+property var api: pluginPopupLoader ? pluginPopupLoader.item : null
+
+function ensurePlugins() {
+    if (!api) return
+
+    var modules = [
+        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
+    ]
+
+    for (var i = 0; i < modules.length; i++) {
+        var mod = modules[i]
+        var exists = false
+        for (var j = 0; j < api.pluginInfo.length; j++) {
+            if (api.pluginInfo[j].source === mod.source) {
+                exists = true
+                break
+            }
+        }
+        if (!exists) {
+            api.pluginInfo.push(mod)
+            console.log("[ExamplePlugin] Added module:", mod.source)
+        }
+    }
+}
+
+onApiChanged: {
+    ensurePlugins()
+}
+```
+
+- максимальные размеры - `colSpan: 3, rowSpan: 7`
+- в source можно передавать любой модуль

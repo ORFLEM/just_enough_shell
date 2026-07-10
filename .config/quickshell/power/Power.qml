@@ -3,11 +3,11 @@ import Quickshell.Wayland
 import QtQuick
 
 WlrLayershell {
-    id: root
+    id: power
     namespace: "power"
     layer: WlrLayer.Overlay
-    implicitHeight: 300
-    implicitWidth: 1488
+    implicitHeight: 260
+    implicitWidth: powerRow.width + 6
     color: "transparent"
     keyboardFocus: WlrKeyboardFocus.Exclusive
 
@@ -49,6 +49,7 @@ WlrLayershell {
             }
 
             Row {
+                id: powerRow
                 anchors.centerIn: parent
                 spacing: 3
 
@@ -63,7 +64,7 @@ WlrLayershell {
 
                     delegate: Item {
                         width: height
-                        height: 294
+                        height: power.height - 6
 
                         Rectangle {
                             anchors.fill: parent

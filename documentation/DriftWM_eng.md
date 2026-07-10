@@ -41,6 +41,9 @@
 | `alt + F11` | volume up |
 | `alt + F12` | open \| close player |
 
+- To open the plugin center, right-click on the power button.
+- To open the calendar, right-click on the time; left-click swaps the time and date.
+
 ### minimap controls:
 - `Middle-click` – expand the minimap to a full-size map
 - `Hold right mouse button and move the mouse` – pan around the minimap

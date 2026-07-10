@@ -90,7 +90,7 @@ Item {
 - Die Daten werden im JSON-Format übertragen; bei visuellen Programmen ohne Funktionen genügt einfach ein String (zum Beispiel cava in der Leiste)
 - Fensterverwaltungsdaten werden über den Parameter `bar` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen – rufen Sie `bar` auf. Welche Daten verfügbar sind, entnehmen Sie der `BaseBar.qml`.
 
-## Falls etwas unklar ist, schauen Sie sich die Datei `BaseBar.qml` im Ordner bar an, das ist der visuelle Maßstab für die gesamte UI
+### Falls etwas unklar ist, schauen Sie sich die Datei `BaseBar.qml` im Ordner bar an, das ist der visuelle Maßstab für die gesamte UI
 
 ## Anbindung an den JES-Launcher
 - Um eine Verbindung zum Launcher herzustellen, rufen wir folgende Funktion auf:
@@ -132,3 +132,38 @@ onApiChanged: {
 - In `exec` der auszuführende Befehl.
 
 ### `id` ist optional, wenn Sie vollständige Befehle für das Objekt angeben. Es ist erforderlich, wenn Sie ein Skript erstellt haben, das verschiedene Objekte starten soll.
+
+## Anbindung an das JES-Plugin-Center
+- Um eine Verbindung zum Plugin-Center herzustellen, rufen wir folgende Funktion auf:
+```qml
+property var api: pluginPopupLoader ? pluginPopupLoader.item : null
+
+function ensurePlugins() {
+    if (!api) return
+
+    var modules = [
+        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
+    ]
+
+    for (var i = 0; i < modules.length; i++) {
+        var mod = modules[i]
+        var exists = false
+        for (var j = 0; j < api.pluginInfo.length; j++) {
+            if (api.pluginInfo[j].source === mod.source) {
+                exists = true
+                break
+            }
+        }
+        if (!exists) {
+            api.pluginInfo.push(mod)
+            console.log("[ExamplePlugin] Modul hinzugefügt:", mod.source)
+        }
+    }
+}
+
+onApiChanged: {
+    ensurePlugins()
+}
+```
+- Maximale Größen: `colSpan: 3, rowSpan: 7`
+- In `source` kann ein beliebiges Modul übergeben werden.
