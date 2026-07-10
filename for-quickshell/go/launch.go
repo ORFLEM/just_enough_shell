@@ -131,6 +131,7 @@ func getDesktopDirs() []string {
 		filepath.Join(home, ".local/share/applications"),
 		"/run/current-system/sw/share/applications",
 		"/var/lib/flatpak/exports/share/applications",
+		"/usr/share/applications/",
 	}
 }
 
