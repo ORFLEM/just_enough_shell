@@ -312,7 +312,13 @@ nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.gi
 nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
 ```
 - выберите установку только JES
-- добавьте в imports `./JES.nix` и в конфиге `services.jes.enable = true`
+- добавьте в imports `./JES.nix` и в конфиге
+```nix
+services.jes = {
+  enable = true;
+  users = [ " your user" ];
+};
+```
 - собирите систему c нужными параметрами
 - перезапуститесь `reboot`
 
@@ -341,7 +347,13 @@ nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.gi
 }
 ```
 - пересобeрите flake
-- в `configuration.nix` укажите `services.jes.enable = true;`
+- в `configuration.nix` укажите
+```nix
+services.jes = {
+  enable = true;
+  users = [ " your user" ];
+};
+```
 - пересоберите NixOS
 
 ### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
