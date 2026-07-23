@@ -44,7 +44,7 @@
                 cur="''${COMP_WORDS[COMP_CWORD]}"
                 prev="''${COMP_WORDS[COMP_CWORD-1]}"
                 
-                opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap screenpicker getPlugin getLog editConf --help -h"
+                opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap screenpicker getPlugin getLog --help -h"
 
                 if [[ ''${COMP_CWORD} -eq 1 ]]; then
                     COMPREPLY=( $(compgen -W "''${opts}" -- "''${cur}") )
@@ -55,24 +55,27 @@
             EOF
           '';
         };
-
-        normalUsers = lib.attrNames (lib.filterAttrs (name: u: u.isNormalUser) config.users.users);
       in {
         options.services.jes = {
           enable = lib.mkEnableOption "Just Enough Shell";
+          
+          users = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Список пользователей, для которых устанавливается Just Enough Shell";
+          };
         };
 
         config = lib.mkIf cfg.enable {
           hardware.i2c.enable = true;
           
-          users.users = lib.genAttrs normalUsers (name: {
+          users.users = lib.genAttrs cfg.users (name: {
             extraGroups = [ "i2c" "networkmanager" ];
           });
 
           environment.systemPackages =
           # STABLE
           (with pkgs; [
-            # libs
             qt6.qtbase
             qt6.qtdeclarative
             qt6.qtmultimedia
@@ -126,7 +129,7 @@
               SRC_LOCAL="${jes-assets}/local-folder"
               SRC_CONFIG="${jes-assets}/config-jes"
 
-              for USER_NAME in ${lib.concatStringsSep " " normalUsers}; do
+              for USER_NAME in ${lib.concatStringsSep " " cfg.users}; do
                 USER_HOME="/home/$USER_NAME"
                 
                 if [ -d "$USER_HOME" ]; then
@@ -134,6 +137,7 @@
                   DST_STATE="$USER_HOME/.local/state"
                   DST_CONFIG="$USER_HOME/.config/JES"
                   DST_CACHE="$USER_HOME/.cache/JES"
+
                   mkdir -p "$DST_CACHE/walls"
                   mkdir -p "$DST_CACHE/wall_prevs"
                   mkdir -p "$DST_CACHE/jes_music_art"
@@ -175,7 +179,6 @@
 EOF
                     chown "$USER_NAME":users "$DST_STATE/JES_colors.json"
                     chmod u+rw "$DST_STATE/JES_colors.json"
-                    echo "JES: Generated initial B&W theme in $DST_STATE/JES_colors.json based on base16 fields."
                   fi
                 fi
               done

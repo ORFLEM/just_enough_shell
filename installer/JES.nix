@@ -2,24 +2,26 @@
 
 let
   cfg = config.services.jes;
-  
-  # Автоматически находим имена всех реальных пользователей, зарегистрированных в NixOS
-  normalUsers = lib.attrNames (lib.filterAttrs (name: u: u.isNormalUser) config.users.users);
 in
 {
-  options.services.jes.enable = pkgs.lib.mkEnableOption "Install dependencies for Just Enough Shell";
+  options.services.jes = {
+    enable = lib.mkEnableOption "Install dependencies for Just Enough Shell";
+    
+    users = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Список пользователей, для которых настраиваются группы и окружение JES";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     
-    # 1. ПАРАМЕТРЫ ДЛЯ ЯДРА: Активируем доступ к шине i2c (для ddcutil и управления монитором)
     hardware.i2c.enable = true;
 
-    # 2. ПАРАМЕТРЫ НА ЮЗЕРА: Автоматически добавляем всех реальных пользователей в нужные группы
-    users.users = lib.genAttrs normalUsers (name: {
+    users.users = lib.genAttrs cfg.users (name: {
       extraGroups = [ "i2c" "networkmanager" ];
     });
 
-    # 3. ОБНОВЛЕННЫЕ СИСТЕМНЫЕ ЗАВИСИМОСТИ (Строго по категориям, как вам нравится)
     environment.systemPackages = with pkgs; [
       # libs & system tools
       qt6.qtbase
@@ -59,7 +61,6 @@ in
       matugen
     ];
 
-    # Проброс путей для бинарников
     environment.shellInit = ''
       export PATH="$HOME/.local/bin:$PATH"
     '';
