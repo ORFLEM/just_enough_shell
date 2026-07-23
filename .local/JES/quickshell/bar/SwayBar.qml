@@ -5,7 +5,7 @@ import "../helpers"
 BaseBar {
     JsonListen {
         id: workspacesStream
-        command: localPath(Qt.resolvedurl("../scripts/workspace-sway.sh stream-ws-json"))
+        command: localPath(Qt.resolvedUrl("../scripts/workspace-sway.sh stream-ws-json"))
         debug: false
         
         onDataChanged: {
@@ -15,7 +15,7 @@ BaseBar {
     
     JsonListen {
         id: activeWindowStream
-        command: localPath(Qt.resolvedurl("../scripts/active_window-sway.sh"))
+        command: localPath(Qt.resolvedUrl("../scripts/active_window-sway.sh"))
         debug: false       
         onDataChanged: {
             activeWindow = typeof data === 'string' ? data : ""
@@ -24,7 +24,7 @@ BaseBar {
     
     JsonListen {
         id: kbLayoutStream
-        command: localPath(Qt.resolvedurl("../scripts/kb_layout-sway.sh"))
+        command: localPath(Qt.resolvedUrl("../scripts/kb_layout-sway.sh"))
         debug: false
         
         onDataChanged: {
