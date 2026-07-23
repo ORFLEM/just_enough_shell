@@ -87,7 +87,7 @@
             pamixer
             i2c-tools
             cava
-            libinotify
+            libnotify
             inotify-tools
             dbus
             ffmpeg
