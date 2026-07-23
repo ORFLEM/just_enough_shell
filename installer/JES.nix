@@ -47,7 +47,6 @@ in
       python314
 
       # gui & tui
-      nmtui
       foot
       lxqt.pavucontrol-qt
       kdePackages.kdeconnect-kde
