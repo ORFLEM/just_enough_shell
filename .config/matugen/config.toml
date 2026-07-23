@@ -34,7 +34,7 @@ block_postfix = "*>"
 
 [templates.colors]
 input_path = "./templates/colors.json.template"
-output_path = "~/.config/quickshell/colors.json"
+output_path = "~/.local/JES/quickshell/colors.json"
 
 [templates.sway]
 input_path = "./templates/sway.template"
@@ -54,6 +54,11 @@ post_hook = '~/.config/matugen/post-hook-scripts/foot-reload.sh'
 input_path = './templates/helix.toml'
 output_path = '~/.config/helix/themes/matugen.toml'
 post_hook = "pkill -USR1 hx"
+
+[templates.neovim]
+input_path = './templates/template.lua'
+output_path = '~/.config/nvim/generated.lua'
+post_hook = 'pkill -SIGUSR1 nvim'
 
 [templates.ungoogled-chromium]
 input_path = './templates/ungoogled-crhomium.json'

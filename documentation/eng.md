@@ -145,9 +145,12 @@
 	<b>[c]</b> Add normal ui in full map<br>
   <b>[c]</b> Development of API for working with launcher<br>
   <b>[c]</b> Development of API for working with plugin center<br>
+	<b>[c]</b> Weather widget<br>
+	<b>[c]</b> Creating a full-fledged API<br>
+	<b>[c]</b> Installing JES via flake<br>
+	<b>[c]</b> Refactoring the underlying architecture<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> Fix <b>Niri</b><br>
-	<b>[p]</b> Weather widget<br>
   <b>[p]</b> Development of API for working with bar<br>
 	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
@@ -284,8 +287,8 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 2. drop the plugin folder there
 3. open config.toml
 4. add the following lines:
-   [plugin.plugin-name]
-   source = "plugin folder/Main plugin file.qml"
+   [[plugin]]
+   name = "plugin name" # data in property name from manifest.json
    active = true
 ```
 
@@ -295,18 +298,57 @@ command number, time, user, directory, git status (when inside a git-tracked pro
 ### Important: the repository is only available in English, as this part is heavily influenced by the project community, and translating all short descriptions into multiple languages is extremely difficult.
 
 ## -- Installing JES -- :
-### NixOS
-- install NixOS
-- start JES installer:
+### NixOS clear
+- Install NixOS
+- run the installer:
 ```bash
 nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
 ```
-- reboot
+- select full installation
+- reboot with `reboot`
+
+### NixOS develop
+- Install NixOS
+- run the installer:
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
+- select installation of JES only
+- add to imports `./JES.nix` and in the config `services.jes.enable = true`
+- rebuild the system with the desired parameters
+- reboot with `reboot`
+
+### NixOS flake
+- in `flake` specify the following:
+```nix
+{
+	inputs = {
+    jes.url = "github:ORFLEM/just_enough_shell";
+	}
+	outputs = { your inputs, jes, ... }@inputs:
+  let
+    system = "x86_64-linux";
+    hostname = "nixos";
+
+    specialArgs = { inherit inputs system hostname; };
+
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      inherit system specialArgs;
+      modules = [
+				jes.nixosModules.default
+			];
+		};
+	};
+}
+```
+- rebuild the flake
+- in `configuration.nix` specify `services.jes.enable = true;`
+- rebuild NixOS
 
 ### Arch Linux or Arch-based (may be incorrect; if so, please open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
-
 - Install Arch Linux (EndeavourOS is recommended for simplicity)
-- Start JES installer:
+- Start the installer:
 ```bash
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
 ```
@@ -315,8 +357,8 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 ```
 1. Install Arch Linux (EndeavourOS is recommended for simplicity)
 2. Install yay or paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
-3. Install official packages (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
-4. Install AUR packages (yay -S $(cat ./arch_aur.txt))
+3. Install official packages (sudo pacman -Syu && pacman -S $(cat ./installer/arch_official.txt))
+4. Install AUR packages (yay -S $(cat ./installer/arch_aur.txt))
 5. Install the zenburn theme for Qt and GTK
 6. Optionally configure system themes (GTK/Qt) to zenburn and install the ter-v32n font
 7. Back up user configs (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)

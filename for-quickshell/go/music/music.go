@@ -14,7 +14,7 @@ import (
 var (
 	homeDir    = os.Getenv("HOME")
 	defaultArt = filepath.Join(homeDir, ".config/quickshell/bar/images/music.png")
-	cacheDir   = filepath.Join(homeDir, ".cache/qs_music_art")
+	cacheDir   = filepath.Join(homeDir, ".cache/JES/jes_music_art")
 	currentArt = filepath.Join(cacheDir, "current_art.jpg")
 
 	lastOutput  string

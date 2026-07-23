@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+# Базовый путь к сокету/конфигурации Quickshell
+QS_CMD="qs -c $HOME/.local/JES/quickshell ipc call root"
+
+# Функция для безопасного экранирования аргументов (если потребуется)
+quote() {
+    printf '%s' "$1" | sed "s/'/'\\\\''/g; 1s/^/'/; \$s/\$/'/"
+}
+
+# Вызов метода без аргументов
+call_method() {
+    $QS_CMD "$1"
+}
+
+# Вызов метода с одним строковым аргументом
+call_method_str() {
+    local arg=$(quote "$2")
+    $QS_CMD "$1" "$arg"
+}
+
+# Вызов метода с одним целочисленным аргументом
+call_method_int() {
+    $QS_CMD "$1" "$2"
+}
+
+# Обёртки для каждого метода
+wallShader() {
+    call_method_str "wallShader" "$1"
+}
+
+toggleWallPicker() {
+    call_method "toggleWallPicker"
+}
+
+wallType() {
+    call_method_int "wallType" "$1"
+}
+
+togglePlayer() {
+    call_method "togglePlayer"
+}
+
+toggleCal() {
+    call_method "toggleCal"
+}
+
+togglePower() {
+    call_method "togglePower"
+}
+
+toggleLaunch() {
+    call_method "toggleLaunch"
+}
+
+toggleMap() {
+    call_method "toggleMap"
+}
+
+screenpicker() {
+    call_method "screenpicker"
+}
+
+getPlugin() {
+    echo "It's reserved function, but it's not working, my bad..."
+}
+
+getLog() {
+    qs -c $HOME/.local/JES/quickshell log
+}
+
+start_daemon() {
+    if pgrep -f "qs -d -c $HOME/.local/JES/quickshell" > /dev/null; then
+        echo "JES daemon is already running."
+    else
+        echo "Starting Just Enough Shell daemon..."
+        qs -d -c "$HOME/.local/JES/quickshell"
+    fi
+}
+
+reload_daemon() {
+    echo "Reloading Just Enough Shell..."
+    # Убиваем только процесс нашего шелла, не затрагивая чужие инстансы quickshell, если они есть
+    pkill -f JES 2>/dev/null
+    sleep 0.2
+    qs -d -c "$HOME/.local/JES/quickshell"
+}
+
+stop_daemon() {
+    echo "Stopping Just Enough Shell daemon..."
+    pkill -f JES 2>/dev/null
+}
+
+edit_config() {
+    micro ~/.config/JES/config.toml
+}
+
+show_help() {
+    cat << 'EOF'
+Usage: jes-cli <command> [attribute]
+
+Available commands:
+  start-daemon      - Start the background Just Enough Shell daemon
+  reload-daemon     - Restart the daemon (apply UI code changes)
+  stop-daemon       - Fully stop the shell execution
+  wallShader <name> - Set the specified shader for live wallpapers
+  toggleWallPicker  - Open/close the wallpaper picker menu
+  wallType <number> - Switch the wallpaper type (static, live, etc.)
+  togglePlayer      - Toggle the rmpc media player widget visibility
+  toggleCal         - Toggle the calendar widget visibility
+  togglePower       - Toggle the power menu overlay visibility
+  toggleLaunch      - Toggle the application launcher menu visibility
+  toggleMap         - Toggle the mini-map overlay visibility
+  screenpicker      - Trigger the screenshot utility tool
+  getPlugin         - Request the status or list of active plugins (not worked)
+  getLog            - Print the JES logs
+  editConf          - edit Config JES
+  -h, --help        - Show this help manual
+EOF
+}
+
+# Если скрипт вызван с аргументами, обрабатываем как команду
+# Формат: ./script.sh wallShader "my_shader"
+if [ $# -gt 0 ]; then
+    cmd="$1"
+    shift
+    case "$cmd" in
+        start-daemon)     start_daemon ;;
+        reload-daemon)    reload_daemon ;;
+        stop-daemon)      stop_daemon ;;
+        wallShader)       wallShader "$1" ;;
+        toggleWallPicker) toggleWallPicker ;;
+        wallType)         wallType "$1" ;;
+        togglePlayer)     togglePlayer ;;
+        toggleCal)        toggleCal ;;
+        togglePower)      togglePower ;;
+        toggleLaunch)     toggleLaunch ;;
+        toggleMap)        toggleMap ;;
+        screenpicker)     screenpicker ;;
+        getPlugin)        getPlugin ;;
+        getLog)           getLog ;;
+        editConf)           edit_config ;;
+        "--help"|"-h")    show_help ;;
+        *) echo "Unknown command: $cmd"; show_help; exit 1 ;;
+    esac
+fi

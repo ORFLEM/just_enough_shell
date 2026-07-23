@@ -1,0 +1,26 @@
+# It's Micro, for exit use Ctrl+Q, for save - Ctrl+S
+[settings]
+# wm
+wm = "auto" # or your WM but with a capital letter
+wm_type = "auto" # auto (don't work with unregistred WM) | workspaces | coordinates
+
+# visual
+mainRad = 10 # 0-25
+fontSize = 17
+fontFamily = "Mononoki Nerd Font Propo"
+enable_base16 = false
+
+# bar
+barOnTop = true
+minibar = false
+barHeight = 30
+
+# other
+custom_wallpaper_engine = false
+user_matugen = false
+doNotDisturb = false
+openweather_key = ""
+
+# plugins
+directory = "~/.config/JES/plugins/"
+

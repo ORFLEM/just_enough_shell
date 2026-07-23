@@ -10,18 +10,18 @@
 ## -- Verzeichnisbaum des Projekts und Aufgaben der Module --:
 ```
 .
-├── shell.qml                 # Einstiegspunkt von Quickshell. Registriert und positioniert die Module.
-├── colors.json               # Haupttheme der Oberfläche.
-├── base16.json               # Zusätzliches Theme der Oberfläche.
+├── shell.qml                 # Quickshell-Einstiegspunkt. Registriert und positioniert Module.
 ├── bar/                      # Leiste.
+│   ├── components/           # Leisten-Popups + Workspace-Buttons.
+│   └── images/               # Statische Icons, Assets.
 ├── launcher/                 # App-Launcher: Suche, Kategorien, Hintergrund-Shader, Go-Backend.
-├── wallpaper/                # Auswahl und Rendering von Hintergründen: Vorschau, Anwendung, TOML-Konfiguration, Hintergrund-Rendering.
+├── wallpaper/                # Hintergrundbild-Auswahl und -Renderer: Vorschauen, Anwendung, TOML-Konfiguration, Hintergrundbild-Rendering.
 ├── notifications/            # Benachrichtigungs-Daemon.
-├── popSysInf/                # Popup für Systeminformationen (Helligkeit, Lautstärke).
-├── power/                    # Sitzungsmenü: Herunterfahren, Neustart, Ruhezustand, Abmelden, Sperren.
-├── helpers/                  # QML-Hilfsfunktionen.
-├── scripts/                  # Kernlogik: kompilierte Go-Binärdateien + bash-Skripte.
-└── images/                   # Statische Icons, Assets. (derzeit im Verzeichnis bar/ verschachtelt, wird später korrigiert)
+├── popSysInf/                # Systeminfo-Popup (Helligkeit, Lautstärke).
+├── power/                    # Sitzungsmenü: Ausschalten, Neustart, Ruhezustand, Abmelden, Sperren.
+├── helpers/                  # QML-Helper.
+├── screenpicker/             # Screenshot-Tool.
+└── scripts/                  # Logik-Kern: Kompilierte Go-Binärdateien + Bash-Skripte.
 ```
 
 ## -- Datenfluss und IPC --:
@@ -35,13 +35,13 @@
 ## -- Stack und Optimierung --:
 | Schicht | Technologie | Rolle |
 |------|------------|------|
-| WM | swayfx (primary), Hyprland, Niri (WIP) | Tiling, Effekte, IPC |
+| WM | swayfx (primary), DriftWM (primary), Hyprland, Niri (WIP) | Tiling, Effekte, IPC |
 | UI | Quickshell (Qt Quick / QML) | Rendering, Animationen, Eingabe |
 | Backend | Go 1.21+ | Logik zur Verarbeitung großer Datenmengen |
 | Shell | Bash 5.x / POSIX sh | Kernlogik |
 | Theme | base16 + matugen | Statische Palette + dynamisches Theme |
 | Lock | Hyprlock | Sperrbildschirm |
-| Audio | PipeWire + wpctl/pavucontrol | Mixing, MPRIS, Cava |
+| Audio | PipeWire + pavucontrol-qt | Mixing, MPRIS, Cava |
 
 **Metriken**: CPU im Leerlauf ~5–11% (Go subscribe) gegenüber 35–45% (bash polling). Die Binärdateien sind statisch gebaut, das Gewicht der Logik beträgt ~8-8.5 MB.
 
@@ -73,9 +73,9 @@ Quickshell ermittelt den aktuellen WM über `$XDG_CURRENT_DESKTOP` und leitet di
 2. Legen Sie den Plugin-Ordner dort ab
 3. Öffnen Sie config.toml
 4. Tragen Sie folgende Zeilen ein:
-   [plugin.name-plugin]
-   source = "Plugin-Ordner/Hauptdatei-des-Plugins.qml"
-   active = true
+	 [[plugin]]
+	 name = "plugin name" # Daten aus der Eigenschaft name in manifest.json
+	 active = true
 ```
 
 ### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)

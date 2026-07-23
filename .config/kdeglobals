@@ -3,23 +3,23 @@ update_info=style_widgetstyle_default_breeze.upd:StyleWidgetStyleDefaultBreeze
 
 [ColorEffects:Disabled]
 ChangeSelectionColor=
-Color=
+Color=56,56,56
 ColorAmount=0
 ColorEffect=0
-ContrastAmount=0.500000
+ContrastAmount=0.65
 ContrastEffect=1
 Enable=
-IntensityAmount=0
-IntensityEffect=0
+IntensityAmount=0.1
+IntensityEffect=2
 
 [ColorEffects:Inactive]
-ChangeSelectionColor=
-Color=
-ColorAmount=0
-ColorEffect=0
-ContrastAmount=0.500000
-ContrastEffect=1
-Enable=
+ChangeSelectionColor=true
+Color=112,111,110
+ColorAmount=0.025
+ColorEffect=2
+ContrastAmount=0.1
+ContrastEffect=2
+Enable=false
 IntensityAmount=0
 IntensityEffect=0
 
@@ -29,100 +29,140 @@ BackgroundNormal=76,86,106
 ForegroundNormal=236,239,244
 
 [Colors:Button]
-BackgroundAlternate=70,77,91
-BackgroundNormal=56,56,56
+BackgroundAlternate=128,135,149
+BackgroundNormal=252,252,252
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=220,220,204
-ForegroundLink=187,194,210
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=220,220,204
-ForegroundPositive=95,127,95
-ForegroundVisited=220,220,204
+ForegroundInactive=112,125,138
+ForegroundLink=76,86,106
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
 
 [Colors:Complementary]
-BackgroundAlternate=64,64,64
-BackgroundNormal=56,56,56
+BackgroundAlternate=27,30,32
+BackgroundNormal=42,46,50
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=220,220,204
+ForegroundInactive=161,169,177
 ForegroundLink=187,194,210
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=220,220,204
-ForegroundPositive=95,127,95
-ForegroundVisited=220,220,204
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=252,252,252
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Header]
+BackgroundAlternate=239,240,241
+BackgroundNormal=222,224,226
+DecorationFocus=76,86,106
+DecorationHover=76,86,106
+ForegroundActive=76,86,106
+ForegroundInactive=112,125,138
+ForegroundLink=76,86,106
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
+
+[Colors:Header][Inactive]
+BackgroundAlternate=227,229,231
+BackgroundNormal=239,240,241
+DecorationFocus=61,174,233
+DecorationHover=61,174,233
+ForegroundActive=61,174,233
+ForegroundInactive=112,125,138
+ForegroundLink=41,128,185
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
 
 [Colors:Selection]
-BackgroundAlternate=70,77,91
-BackgroundNormal=70,77,91
+BackgroundAlternate=129,136,150
+BackgroundNormal=129,136,150
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=255,255,255
+ForegroundInactive=0,0,0
 ForegroundLink=55,63,77
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=255,255,255
-ForegroundPositive=95,127,95
-ForegroundVisited=56,56,56
+ForegroundNegative=176,55,69
+ForegroundNeutral=198,92,0
+ForegroundNormal=0,0,0
+ForegroundPositive=23,104,57
+ForegroundVisited=155,89,182
 
 [Colors:Tooltip]
-BackgroundAlternate=64,64,64
-BackgroundNormal=56,56,56
+BackgroundAlternate=239,240,241
+BackgroundNormal=247,247,247
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=220,220,204
-ForegroundLink=187,194,210
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=220,220,204
-ForegroundPositive=95,127,95
-ForegroundVisited=220,220,204
+ForegroundInactive=112,125,138
+ForegroundLink=76,86,106
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
 
 [Colors:View]
-BackgroundAlternate=64,64,64
-BackgroundNormal=56,56,56
+BackgroundAlternate=247,247,247
+BackgroundNormal=255,255,255
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=220,220,204
-ForegroundLink=187,194,210
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=220,220,204
-ForegroundPositive=95,127,95
-ForegroundVisited=220,220,204
+ForegroundInactive=112,125,138
+ForegroundLink=76,86,106
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
 
 [Colors:Window]
-BackgroundAlternate=64,64,64
-BackgroundNormal=56,56,56
+BackgroundAlternate=227,229,231
+BackgroundNormal=239,240,241
 DecorationFocus=76,86,106
 DecorationHover=76,86,106
 ForegroundActive=76,86,106
-ForegroundInactive=220,220,204
-ForegroundLink=187,194,210
-ForegroundNegative=220,163,163
-ForegroundNeutral=124,184,187
-ForegroundNormal=220,220,204
-ForegroundPositive=95,127,95
-ForegroundVisited=220,220,204
+ForegroundInactive=112,125,138
+ForegroundLink=76,86,106
+ForegroundNegative=218,68,83
+ForegroundNeutral=246,116,0
+ForegroundNormal=35,38,41
+ForegroundPositive=39,174,96
+ForegroundVisited=155,89,182
 
 [General]
 AccentColor=76,86,106
-ColorSchemeHash=20dc1c1161ae46fb36d1fcdd525e56310724e6a6
+ColorSchemeHash=9f63c7711a13123582e720791ea0f8c0172977d2
 LastUsedCustomAccentColor=76,86,106
+TerminalApplication=foot
+activeFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+desktopFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+fixed=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+font=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+menuFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+smallestReadableFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+taskbarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+toolBarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
 
 [Icons]
 Theme=Tela-grey-dark
 
 [KDE]
-LookAndFeelPackage=stylix
+LookAndFeelPackage=kvantum
 ShowDeleteCommand=false
+contrast=4
+frameContrast=0.2
+widgetStyle=kvantum
 
 [KShortcutsDialog Settings]
 Dialog Size=725,480
@@ -132,12 +172,9 @@ EnableRemoteFolderThumbnail=false
 MaximumRemoteSize=0
 
 [WM]
-activeBackground=56,56,56
-activeBlend=224,207,159
-activeForeground=220,220,204
-inactiveBackground=56,56,56
-inactiveBlend=111,111,111
-inactiveForeground=220,220,204
-
-[UiSettings]
-ColorScheme=qt6ct
+activeBackground=227,229,231
+activeBlend=227,229,231
+activeForeground=35,38,41
+inactiveBackground=239,240,241
+inactiveBlend=239,240,241
+inactiveForeground=112,125,138

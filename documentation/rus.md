@@ -145,9 +145,12 @@
 	<b>[c]</b> Сделать нормальный ui в полноценной карте<br>
   <b>[c]</b> Разработка api для работы с launcher<br>
   <b>[c]</b> Разработка api для работы с plugin center<br>
+	<b>[c]</b> Создание виджета погоды<br>
+	<b>[c]</b> Создание полноценного api<br>
+	<b>[c]</b> Установка JES через flake<br>
+	<b>[c]</b> Переработка подкпатоной части<br>
 	<b>[i]</b> Перевод <b>Hyprland</b> на lua конфиги<br>
 	<b>[i]</b> Фикс <b>Niri</b><br>
-	<b>[p]</b> Создание виджета погоды<br>
   <b>[p]</b> Разработка api для работы с bar<br>
 	<b>[n]</b> Выбор темы тёмная/светлая<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
@@ -191,10 +194,9 @@
 - `timezone` - город виджета погоды, изначально не присутствует, берётся данные из `user-config.toml` конфигурации NixOS
 
 ```
-Важно, config.toml лежит в папке Quickshell (~/.config/quickshell/)
-в .bashrc автор оставил alias, если лень прописывать, достаточно вписать в консоль:
-	edit-JES
-в alias используется micro, для выхода используйте Ctrl+Q, а для сохранения - Ctrl+s
+Важно, config.toml лежит в папке JES (~/.config/JES/)
+	также его можно изменять, вызвав jes-cli editConf
+в jes-cli для редакции конфига используется micro, для выхода используйте Ctrl+Q, а для сохранения - Ctrl+S
 ```
 
 ## [JES для DriftWM](./DriftWM_rus.md)
@@ -283,8 +285,8 @@
 2. закиньте папку с плагином
 3. откройте config.toml
 4. впишите данные строки:
-   [plugin.plugin-name]
-   source = "папка плагина/Главный файл плагина.qml"
+   [[plugin]]
+   name = "plugin name" # data in property name from manifest.json
    active = true
 ```
 
@@ -294,29 +296,67 @@
 ### Важно: репозиторий только на английском, ввиду того, что на эту часть сильно влияет комьюнити проекта, и переводить все краткие описания на разные языки - невыносимо трудно
 
 ## -- Установка JES --:
-### NixOS
-
+### NixOS clear
 - Установите NixOS
 - запустите установщик:
 ```bash
 nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
 ```
+- выберите полную установку
 - перезапуститесь `reboot`
 
-### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
+### NixOS develop
+- Установите NixOS
+- запустите установщик:
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
+- выберите установку только JES
+- добавьте в imports `./JES.nix` и в конфиге `services.jes.enable = true`
+- собирите систему c нужными параметрами
+- перезапуститесь `reboot`
 
+### NixOS flake
+- в `flake` укажите следующее:
+```nix
+{
+	inputs = {
+    jes.url = "github:ORFLEM/just_enough_shell";
+	}
+	outputs = { your inputs, jes, ... }@inputs:
+  let
+    system = "x86_64-linux";
+    hostname = "nixos";
+
+    specialArgs = { inherit inputs system hostname; };
+
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      inherit system specialArgs;
+      modules = [
+				jes.nixosModules.default
+			];
+		};
+	};
+}
+```
+- пересобeрите flake
+- в `configuration.nix` укажите `services.jes.enable = true;`
+- пересоберите NixOS
+
+### Arch Linux или Arch based (может быть неккоректной, в случае проблем, писать в [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new))
 - Установите Arch Linux (для простоты советую EndeavourOS)
 - Запустите установщик:
 ```bash
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
 ```
 
-- В случае ошибок устанавливайсте вручную
+- В случае ошибок устанавливайсте вручную:
 ```
 1. Установите Arch Linux (для простоты советую EndeavourOS)
 2. Установите yay или paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
-3. Установите официальный софт (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
-4. Установите юзер софт (yay -S $(cat ./arch_aur.txt))
+3. Установите официальный софт (sudo pacman -Syu && pacman -S $(cat ./installer/arch_official.txt))
+4. Установите юзер софт (yay -S $(cat ./installer/arch_aur.txt))
 5. Установите тему zenburn для qt и gtk
 6. При желании можно настроить системные темы (GTK/Qt) под zenburn и установить шрифт ter-v32n
 7. создайте бекап конфигов юзера (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)

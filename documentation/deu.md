@@ -145,9 +145,12 @@
 	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
   <b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
   <b>[c]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
+	<b>[c]</b> Erstellung eines Wetter-Widgets<br>
+	<b>[c]</b> Erstellung einer vollwertigen API<br>
+	<b>[c]</b> Installation von JES über Flake<br>
+	<b>[c]</b> Überarbeitung der zugrundeliegenden Architektur<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Fix für <b>Niri</b><br>
-	<b>[p]</b> Erstellung eines Wetter-Widgets<br>
   <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
 	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br> 
@@ -283,9 +286,9 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 2. Legen Sie den Plugin-Ordner dort ab
 3. Öffnen Sie config.toml
 4. Tragen Sie folgende Zeilen ein:
-   [plugin.plugin-name]
-   source = "Plugin-Ordner/Hauptdatei-des-Plugins.qml"
-   active = true
+	 [[plugin]]
+	 name = "plugin name" # Daten aus der Eigenschaft name in manifest.json
+	 active = true
 ```
 
 ### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)
@@ -294,27 +297,68 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 ### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
 
 ## -- Installation von JES --:
-### NixOS- Installieren Sie NixOS
+### NixOS clear
+- Installieren Sie NixOS
 - Führen Sie das Installationsprogramm aus:
-  ```bash
-  nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
-	```
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
+- Wählen Sie die vollständige Installation
 - Starten Sie mit `reboot` neu
 
-### Arch Linux oder Arch-basiert (kann fehlerhaft sein, bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
+### NixOS develop
+- Installieren Sie NixOS
+- Führen Sie das Installationsprogramm aus:
+```bash
+nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
+```
+- Wählen Sie die Installation nur von JES
+- Fügen Sie in imports `./JES.nix` und in der Konfiguration `services.jes.enable = true` hinzu
+- Bauen Sie das System mit den gewünschten Parametern neu
+- Starten Sie mit `reboot` neu
 
-- Installieren Sie Arch Linux (einfachheitshalber empfehle ich EndeavourOS)
+### NixOS flake
+- Geben Sie in `flake` Folgendes an:
+```nix
+{
+	inputs = {
+    jes.url = "github:ORFLEM/just_enough_shell";
+	}
+	outputs = { your inputs, jes, ... }@inputs:
+  let
+    system = "x86_64-linux";
+    hostname = "nixos";
+
+    specialArgs = { inherit inputs system hostname; };
+
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+      inherit system specialArgs;
+      modules = [
+				jes.nixosModules.default
+			];
+		};
+	};
+}
+```
+- Bauen Sie den Flake neu
+- Geben Sie in `configuration.nix` `services.jes.enable = true;` an
+- Bauen Sie NixOS neu
+
+### Arch Linux oder Arch-basiert (kann fehlerhaft sein; bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
+
+- Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
 - Starten Sie das Installationsprogramm:
 ```bash
 git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
 ```
 
-- Im Falle von Fehlern installieren Sie bitte manuell:
+- Im Falle von Fehlern installieren Sie manuell:
 ```
 1. Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
 2. Installieren Sie yay oder paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
-3. Installieren Sie die offizielle Software (sudo pacman -Syu && pacman -S $(cat ./arch_official.txt))
-4. Installieren Sie Benutzer-Software (yay -S $(cat ./arch_aur.txt))
+3. Installieren Sie die offizielle Software (sudo pacman -Syu && pacman -S $(cat ./installer/arch_official.txt))
+4. Installieren Sie Benutzer-Software (yay -S $(cat ./installer/arch_aur.txt))
 5. Installieren Sie das zenburn-Theme für qt und gtk
 6. Bei Bedarf können Sie die Systemthemes (GTK/Qt) auf zenburn anpassen und die Schriftart ter-v32n installieren
 7. Erstellen Sie ein Backup der Benutzerkonfigurationen (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)

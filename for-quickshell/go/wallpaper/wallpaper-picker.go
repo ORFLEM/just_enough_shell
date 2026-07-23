@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"bytes"
+	"strconv" // добавлен
 
 	"github.com/BurntSushi/toml"
 )
@@ -33,7 +34,7 @@ type StateConfig struct {
 	ColorScheme string `toml:"colorscheme"`
 }
 
-var configPath = homeDir(".config/quickshell/wallpaper/wallpaper.toml")
+var configPath = homeDir(".config/JES/wallpaper.toml")
 
 // Глобальная переменная для текущей цветовой схемы
 var currentColorScheme string
@@ -96,8 +97,8 @@ func saveState(mode, wallpaper, shader, colorscheme string) {
 // ─── Кэш ────────────────────────────────────────────────────────────────────
 
 var (
-	cacheDir    = homeDir(".cache/walls")
-	previewDir  = homeDir(".cache/wall_prevs")
+	cacheDir    = homeDir(".cache/JES/walls")
+	previewDir  = homeDir(".cache/JES/wall_prevs")
 	staticCache = filepath.Join(cacheDir, "no-live-bg.jpg")
 	videoCache  = filepath.Join(cacheDir, "live-bg.mp4")
 	videoFrame  = filepath.Join(cacheDir, "video-frame.jpg")
@@ -444,7 +445,33 @@ func cmdCleanCache() {
 	fmt.Println("done")
 }
 
-func cmdSet(path string) {
+// applyMatugen применяет цветовую схему к imagePath.
+// double == false: только один вызов с -c ~/.local/JES/matugen/config.toml
+// double == true:  сначала с -c, затем без -c (как было раньше)
+func applyMatugen(imagePath string, double bool) {
+	if imagePath == "" {
+		return
+	}
+	configPath := homeDir(".local/JES/matugen/config.toml")
+	baseArgs := []string{"image", imagePath, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0"}
+
+	// Первый вызов — всегда с конфигом
+	argsWithConfig := append(baseArgs, "-c", configPath)
+	cmd1 := exec.Command("matugen", argsWithConfig...)
+	if err := cmd1.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "[wp] matugen with config failed: %v\n", err)
+	}
+
+	if double {
+		// Второй вызов — без конфига
+		cmd2 := exec.Command("matugen", baseArgs...)
+		if err := cmd2.Run(); err != nil {
+			fmt.Fprintf(os.Stderr, "[wp] matugen without config failed: %v\n", err)
+		}
+	}
+}
+
+func cmdSet(path string, double bool) {
 	if _, err := os.Stat(path); err != nil {
 		fmt.Fprintln(os.Stderr, "file not found:", path)
 		os.Exit(1)
@@ -464,10 +491,10 @@ func cmdSet(path string) {
 			"-ss", "00:00:02", "-i", videoCache,
 			"-vframes", "1", "-vf", "scale=1920:-1", "-q:v", "2",
 			videoFrame, "-y").Run()
-		exec.Command("qs", "ipc", "call", "root", "wallType", "4").Run()
-		exec.Command("qs", "ipc", "call", "root", "wallType", "3").Run()
+		exec.Command("jes-cli", "wallType", "4").Run()
+		exec.Command("jes-cli", "wallType", "3").Run()
 		if _, err := os.Stat(videoFrame); err == nil {
-			exec.Command("matugen", "image", videoFrame, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0").Run()
+			applyMatugen(videoFrame, double)
 		}
 		saveState("video", path, cfg.State.Shader, currentColorScheme)
 	} else {
@@ -490,16 +517,30 @@ func cmdSet(path string) {
 		} else {
 			copyFile(fixedPath, staticCache)
 		}
-		exec.Command("qs", "ipc", "call", "root", "wallType", "1").Run()
-		exec.Command("matugen", "image", staticCache, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0").Run()
+		exec.Command("jes-cli", "wallType", "1").Run()
+		applyMatugen(staticCache, double)
 		saveState("image", path, cfg.State.Shader, currentColorScheme)
 	}
 }
 
-func cmdSetShader(name string) {
+func cmdSetShader(name string, double bool) {
 	cfg := loadConfig()
-	exec.Command("qs", "ipc", "call", "root", "wallType", "2").Run()
-	exec.Command("qs", "ipc", "call", "root", "wallShader", name).Run()
+	exec.Command("jes-cli", "wallType", "2").Run()
+	exec.Command("jes-cli", "wallShader", name).Run()
+
+	// Для шейдера применяем matugen на основе текущего кэшированного изображения (если есть)
+	var imagePath string
+	if _, err := os.Stat(staticCache); err == nil {
+		imagePath = staticCache
+	} else if _, err := os.Stat(videoFrame); err == nil {
+		imagePath = videoFrame
+	}
+	if imagePath != "" {
+		applyMatugen(imagePath, double)
+	} else {
+		fmt.Fprintln(os.Stderr, "[wp] no cached wallpaper found for color scheme generation")
+	}
+
 	saveState("shader", cfg.State.Wallpaper, name, currentColorScheme)
 }
 
@@ -553,7 +594,7 @@ func copyFile(src, dst string) error {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: wallpaper-picker <list-tab <tab> [search]|get-state|cache-all|clean-cache|set <path>|set-shader <name>|set-scheme <vibrant/classic>>")
+		fmt.Fprintln(os.Stderr, "usage: wallpaper-picker <list-tab <tab> [search]|get-state|cache-all|clean-cache|set <path> <bool>|set-shader <name> <bool>|set-scheme <vibrant/classic>>")
 		os.Exit(1)
 	}
 
@@ -583,18 +624,28 @@ func main() {
 		cmdFixWalls()
 
 	case "set":
-		if len(os.Args) < 3 {
-			fmt.Fprintln(os.Stderr, "set requires <path>")
+		if len(os.Args) < 4 {
+			fmt.Fprintln(os.Stderr, "set requires <path> and <bool>")
 			os.Exit(1)
 		}
-		cmdSet(os.Args[2])
+		double, err := strconv.ParseBool(os.Args[3])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "invalid bool value:", os.Args[3])
+			os.Exit(1)
+		}
+		cmdSet(os.Args[2], double)
 
 	case "set-shader":
-		if len(os.Args) < 3 {
-			fmt.Fprintln(os.Stderr, "set-shader requires <name>")
+		if len(os.Args) < 4 {
+			fmt.Fprintln(os.Stderr, "set-shader requires <name> and <bool>")
 			os.Exit(1)
 		}
-		cmdSetShader(os.Args[2])
+		double, err := strconv.ParseBool(os.Args[3])
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "invalid bool value:", os.Args[3])
+			os.Exit(1)
+		}
+		cmdSetShader(os.Args[2], double)
 
 	case "set-scheme":
 		if len(os.Args) < 3 {

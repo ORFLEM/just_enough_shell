@@ -104,7 +104,6 @@ PROMPT_COMMAND="fancy_prompt"
     # micro
     alias mic='micro'
     alias mic-nix='micro /etc/nixos/configuration.nix'
-    alias edit-JES='micro ~/.config/quickshell/config.toml'
 
     # helix
     alias hx-hypr='hx ~/.config/hypr/hyprland.conf'

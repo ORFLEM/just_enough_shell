@@ -11,17 +11,17 @@
 ```
 .
 ├── shell.qml                 # Quickshell entry point. Registers and positions modules.
-├── colors.json               # Main interface theme.
-├── base16.json               # Secondary interface theme.
-├── bar/                      # The bar panel.
+├── bar/                      # Top/bottom bar.
+│   ├── components/           # Bar popups + workspace buttons.
+│   └── images/               # Static icons, assets.
 ├── launcher/                 # App launcher: search, categories, background shader, Go backend.
-├── wallpaper/                # Wallpaper selection and rendering: preview, apply, TOML config, rendering.
+├── wallpaper/                # Wallpaper picker and renderer: previews, applying, TOML config, wallpaper rendering.
 ├── notifications/            # Notification daemon.
 ├── popSysInf/                # System info popup (Brightness, Volume).
-├── power/                    # Session menu: shutdown, reboot, sleep, logout, lock.
+├── power/                    # Session menu: power off, reboot, sleep, logout, lock.
 ├── helpers/                  # QML helpers.
-├── scripts/                  # Logic core: compiled Go binaries + bash scripts.
-└── images/                   # Static icons and assets. (currently nested inside bar/; will be fixed later)
+├── screenpicker/             # Screenshot tool.
+└── scripts/                  # Logic core: compiled Go binaries + bash scripts.
 ```
 
 ## -- Data flow and IPC -- :
@@ -35,13 +35,13 @@
 ## -- Stack and optimization -- :
 | Layer | Technology | Role |
 |-------|------------|------|
-| WM | swayfx (primary), Hyprland, Niri (WIP) | Tiling, effects, IPC |
+| WM | swayfx (primary), DriftWM (primary), Hyprland, Niri (WIP) | Tiling, effects, IPC |
 | UI | Quickshell (Qt Quick / QML) | Rendering, animations, input |
 | Backend | Go 1.21+ | Logic for processing large data volumes |
 | Shell | Bash 5.x / POSIX sh | Main logic |
 | Theme | base16 + matugen | Static palette + dynamic theming |
 | Lock | Hyprlock | Lock screen |
-| Audio | PipeWire + wpctl/pavucontrol | Mixing, MPRIS, Cava |
+| Audio | PipeWire + pavucontrol-qt | Mixing, MPRIS, Cava |
 
 **Metrics**: CPU idle ~5–10% (Go subscribe) vs 35–45% (bash polling). Binaries are statically compiled; total logic weight ~3.5-4.5 MB.
 
@@ -73,8 +73,8 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP` and routes calls to
 2. Drop the plugin folder there
 3. Open config.toml
 4. Add the following lines:
-   [plugin.plugin-name]
-   source = "plugin folder/Main plugin file.qml"
+   [[plugin]]
+   name = "plugin name" # data in property name from manifest.json
    active = true
 ```
 

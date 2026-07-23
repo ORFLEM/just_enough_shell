@@ -1,0 +1,31 @@
+MenuBar=Disabled
+
+[General]
+RememberOpenedTabs=false
+Version=202
+ViewPropsTimestamp=2026,6,2,16,1,35.634
+activeFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+desktopFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+fixed=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+font=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+menuFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+smallestReadableFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+taskbarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+toolBarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
+
+[IconsMode]
+IconSize=48
+PreviewSize=48
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[MainWindow]
+MenuBar=Disabled
+
+[PreviewSettings]
+Plugins=appimagethumbnail,audiothumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mltpreview,opendocumentthumbnail,svgthumbnail,ffmpegthumbs
+
+[UiSettings]
+ColorScheme=qt6ct

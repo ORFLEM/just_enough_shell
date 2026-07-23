@@ -1,0 +1,11 @@
+{
+  "background1": "{{ colors.surface_container_high.default.hex | lighten:11 | set_saturation:7 }}",
+  "background2": "{{ colors.surface_container.default.hex | lighten:13 | set_saturation:7 }}",
+  "background3": "{{ colors.surface_container_low.default.hex | lighten:15 | set_saturation:7 }}",
+  "backgroundAlt1": "{{ colors.surface_dim.default.hex | lighten:9 | set_saturation:7 }}",
+  "backgroundAlt2": "{{ colors.surface.default.hex | lighten:9 | set_saturation:7 }}",
+  "font": "{{ colors.secondary.default.hex }}",
+  "fontDark": "{{ colors.on_secondary.default.hex }}",
+  "accent": "{{ colors.primary.default.hex }}",
+  "accent2": "{{ colors.secondary_container.default.hex | lighten:9 }}"
+}

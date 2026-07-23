@@ -3,22 +3,9 @@
 // Используем стандартные бинды для твоих приложений.
 
 // --- АВТОСТАРТ ------------------------------------------------------------------------
-spawn-at-startup "/run/wrappers/bin/gnome-keyring-daemon" "--start" "--components=secrets,ssh"
-spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
-// systemctl import-environment обычно происходит автоматически в NixOS, но можно оставить
-spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+spawn-at-startup "kwalletd6"
 
-spawn-at-startup "openrgb" "--profile" "orflem"
-spawn-at-startup "fcitx5" "-d" "--replace"
-spawn-at-startup "mpd-mpris"
-
-spawn-at-startup "zen-beta"
-spawn-at-startup "telegram-desktop"
-spawn-at-startup "qbittorrent-nox"
-spawn-at-startup "foot" "rmpc"
-
-spawn-at-startup "qs" "-d"
-spawn-at-startup "sh" "-c" "~/.config/sway/opacity-changer.sh" // проверь совместимость скрипта с niri
+spawn-at-startup "jes-cli" "start-daemon"
 
 spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
@@ -88,9 +75,9 @@ cursor {
 }
 
 // --- МОНИТОРЫ -------------------------------------------------------------------------
-output "DP-2" { // Проверь имя через niri --msg outputs
-    mode "3440x1440@144.000"
-}
+// output "DP-2" { // Проверь имя через niri --msg outputs
+    // mode "3440x1440@144.000"
+// }
 
 // --- ВВОД -----------------------------------------------------------------------------
 input {
@@ -120,7 +107,7 @@ binds {
     // Приложения
     Mod+Q { spawn "foot"; }
     Mod+Return { spawn "foot"; }
-    Mod+D { spawn "qs" "ipc" "call" "root" "toggleLaunch"; }
+    Mod+D { spawn "jes-cli" "toggleLaunch"; }
     Mod+E { spawn "dolphin"; }
 
     // Управление окнами
@@ -171,22 +158,22 @@ binds {
     Mod+Shift+R { set-column-width "-10%"; }
 
     // Скриншоты (адаптировано под niri-screenshot или grim)
-    Home { spawn "sh" "-c" "FILE=~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S).png; grim -g \"$(slurp)\" - | wl-copy"; }
+    Home { spawn "jes-cli screenpikcer"; }
     Shift+Home { spawn-sh "grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy"; }
     // Медиа ( pamixer / playerctl )
     Alt+F10 { spawn "pamixer" "-d" "5"; }
-    Alt+F12 { spawn "qs" "ipc" "call" "root" "togglePlayer"; }
+    Alt+F12 { spawn "jes-cli" "togglePlayer"; }
     Alt+F11 { spawn "pamixer" "-i" "5"; }
     Alt+F9 { spawn "pamixer" "-t"; }
     Control+Slash { spawn "playerctl" "play-pause"; }
     Control+period { spawn "playerctl" "next"; }
     Control+comma { spawn "playerctl" "previous"; }
-    Alt+Prior { spawn-sh "ddcutil --bus 11 setvcp 10 + 5"; }
-    Alt+Next { spawn-sh "ddcutil --bus 11 setvcp 10 - 5"; }
+    Alt+Prior { spawn-sh "/.config/quickshell/scripts/birghtness.sh change-up"; }
+    Alt+Next { spawn-sh "~/.config/quickshell/scripts/birghtness.sh change-down"; }
 
     // Выход и управление
     Mod+Shift+E { quit; }
-    Mod+P { spawn "qs" "ipc" "call" "root" "togglePower"; }
+    Mod+P { spawn "jes-cli" "togglePower"; }
 }
 
 // --- ПРАВИЛА ОКОН ---------------------------------------------------------------------

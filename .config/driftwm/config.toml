@@ -1,20 +1,20 @@
 # driftwm configuration
+
 window_placement = "cursor"
 
 autostart = [
-  "qs -d",
-  "Telegram",
-  "zen-beta",
+  "jes-cli start-daemon",
   "wl-paste --type text --watch cliphist store",
   "wl-paste --type image --watch cliphist store",
   "mkdir -p ~/Screenshots",
-  "openrgb --profile orflem",
-  "mpd-mpris",
   "kwalletd6",
-  "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-  "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-  "systemctl --user restart espanso"
 ]
+
+[env]
+term = "foot"
+file_manager = "dolphin"
+launcher = "jes-cli toggleLaunch"
+screenshoot= "Home"
 
 [input.keyboard]
 layout = "us,ru"              # XKB layout (e.g., "us,ru" for multi-layout)
@@ -114,10 +114,10 @@ transparent_shader = true
 
 [keybindings]
 # --- Приложения (ваши старые, оставляю) ---
-"mod+q" = "exec foot"
-"mod+Return" = "exec foot"
-"mod+d" = "exec qs ipc call root toggleLaunch"
-"mod+e" = "exec dolphin"
+"mod+q" = "exec $term"
+"mod+Return" = "exec $term"
+"mod+d" = "spawn $launcher"
+"mod+e" = "exec $file_manager"
 
 # --- Закрыть окно ---
 "mod+c" = "close-window"
@@ -134,25 +134,25 @@ transparent_shader = true
 "mod+Shift+m" = "spawn swaynag -t warning -m 'Exit driftwm?' -B 'Yes' 'pkill driftwm'"
 
 # --- Power menu / дашборд ---
-"mod+p" = "spawn qs ipc call root togglePower"
-"mod+m" = "spawn qs ipc call root toggleMap"
-"mod+w" = "spawn ~/.config/quickshell/scripts/qs_restart.sh"
+"mod+p" = "spawn jes-cli togglePower"
+"mod+m" = "spawn jes-cli toggleMap"
+"mod+w" = "spawn ~/.local/bin/qs_restart.sh"
 
 # --- Медиа (используем spawn, т.к. не нужно снимать fullscreen) ---
 "Alt+F9"  = "spawn pamixer -t"
 "Alt+F10" = "spawn pamixer -d 5"
 "Alt+F11" = "spawn pamixer -i 5"
-"Alt+F12" = "spawn qs ipc call root togglePlayer"
+"Alt+F12" = "spawn jes-cli togglePlayer"
 "Alt+F4"  = "spawn playerctl play-pause"
 "Alt+F3" = "spawn playerctl next"
 "Alt+F2"  = "spawn playerctl previous"
 
 # --- Яркость (монитор через ddcutil) ---
-"Alt+Prior" = "spawn ~/.config/quickshell/scripts/birghtness.sh change-up"
-"Alt+Next"= "spawn ~/.config/quickshell/scripts/birghtness.sh change-down"
+"Alt+Prior" = "spawn ~/.local/JES/quickshell/scripts/birghtness.sh change-up"
+"Alt+Next"= "spawn ~/.local/JES/quickshell/scripts/birghtness.sh change-down"
 
 # --- Скриншоты ---
-"Home" = "spawn sh -c 'qs ipc call root screenpicker'"
+"Home" = "spawn sh -c 'jes-cli screenpicker'"
 "Shift+Home" = "spawn sh -c 'grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy'"
 # "Ctrl+Home" = "spawn driftwm msg screenshot window -o | wl-copy"  # альтернатива – скриншот окна
 
@@ -173,15 +173,6 @@ transparent_shader = true
 "mod+Shift+Right" = "nudge-window right"
 
 # --- Эмуляция рабочих столов (workspaces) через go-to ---
-# "mod+1" = "go-to -1750 1750"
-# "mod+2" = "go-to 0 1750"
-# "mod+3" = "go-to 1750 1750"
-# "mod+4" = "go-to -1750 0"
-# "mod+5" = "go-to 0 0"
-# "mod+6" = "go-to 1750 0"
-# "mod+7" = "go-to -1750 -1750"
-# "mod+8" = "go-to 0 -1750"
-# "mod+9" = "go-to 1750 -1750"
 "mod+0" = "go-to 0 0"   # сброс в центр
 
 # Переключение между текущей позицией и домом (home-toggle)
@@ -202,11 +193,11 @@ transparent_shader = true
 # decoration_resize_snapped = false
 
 [mouse.on-window]
-"alt+left" = "move-window"
+"alt+left" = "none"
 "mod+shift+left" = "move-snapped-windows"
 "mod+right" = "resize-window"
 "mod+shift+right" = "resize-window-snapped"
-"mod+middle" = "fit-window"
+"mod+middle" = "move-window"
 "mod+shift+middle" = "fit-window-snapped"
 # "mod+middle" = "toggle-fullscreen"
 
@@ -226,7 +217,7 @@ enabled = true                  # default: true
 path    = "xwayland-satellite"  # path to xwayland-satellite binary ($PATH lookup works)
 
 [[outputs]]
-name = "DP-2"           # connector name (required)
+name = "DP-3"           # connector name (required)
 scale = 1                # fractional scale (default: 1.0)
 transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
 position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords

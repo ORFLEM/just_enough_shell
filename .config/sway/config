@@ -6,25 +6,14 @@ set $screenPicker Home
 #--- ПЕРЕМЕННЫЕ -----------------------------------------------------------------------
 set $term foot
 set $filemanager dolphin
-set $menu qs ipc call root toggleLaunch
+set $menu jes-cli toggleLaunch
 
 #--- АВТОСТАРТ ------------------------------------------------------------------------
 exec --no-startup-id kwalletd6
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
-exec openrgb --profile orflem
-# exec_always fcitx5 -d --replace
-exec mpd-mpris
-
-exec zen-beta
-exec Telegram
-# exec boxflat
-# exec steam
-exec qbittorrent-nox
-exec foot rmpc
-
-exec qs -d
+exec jes-cli start-daemon
 exec ~/.config/sway/opacity-changer.sh
 
 exec wl-paste --type text --watch cliphist store
@@ -34,7 +23,7 @@ exec mkdir -p ~/Screenshots
 exec_always ~/.config/sway/persway_start.sh
 
 #--- ДЕКОРАЦИИ ------------------------------------------------------------------------
-corner_radius 25
+corner_radius 10
 smart_corner_radius enable
 
 blur enable
@@ -61,6 +50,12 @@ default_floating_border pixel 2
 for_window [tiling]   border pixel 2
 for_window [floating] border pixel 2
 smart_borders off
+
+client.focused           #cccccc #cccccc #2b2b2b #cccccc
+client.focused_inactive  #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.unfocused         #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.urgent            #8c8c94 #8c8c94 #2b2b2b #8c8c94
+client.placeholder       #8c8c94 #8c8c94 #2b2b2b #8c8c94
 
 for_window [class=".*"]   opacity 0.85
 for_window [app_id=".*"]  opacity 0.85
@@ -91,7 +86,6 @@ exec_always {
     gsettings set org.gnome.desktop.wm.preferences button-layout ''
 }
 
-include colors.conf
 
 layer_effects "gtk-layer-shell" {
     blur enable;
@@ -110,7 +104,7 @@ layer_effects "power" {
 }
 
 #--- МОНИТОРЫ -------------------------------------------------------------------------
-output * mode 3440x1440@144Hz
+# output * mode 3440x1440@144Hz
 
 #--- ВВОД -----------------------------------------------------------------------------
 input type:keyboard {
@@ -171,26 +165,25 @@ bindsym --to-code $mod+Shift+r reload
 bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaymsg exit'
 
 # Power menu / дашборд
-bindsym --to-code $mod+p exec qs ipc call root togglePower
-# bindsym --to-code $mod+l exec eww open --toggle dashboard
-bindsym --to-code $mod+w exec ~/.config/quickshell/scripts/qs_restart.sh
+bindsym --to-code $mod+p exec jes-cli togglePower
+bindsym --to-code $mod+w exec jes-cli restart-daemon
 
 # Медиа
 bindsym Alt+F9  exec pamixer -t
 bindsym Alt+F10 exec pamixer -d 5
 bindsym Alt+F11 exec pamixer -i 5
-bindsym Alt+F12 exec qs ipc call root togglePlayer
+bindsym Alt+F12 exec jes-cli togglePlayer
 bindsym --to-code --locked Control+slash  exec playerctl play-pause
 bindsym --to-code --locked Control+period exec playerctl next
 bindsym --to-code --locked Control+comma  exec playerctl previous
 
 # Яркость
-bindsym --locked Mod1+Prior exec sh -c "~/.config/quickshell/scripts/birghtness.sh change-up"
-bindsym --locked Mod1+Next exec sh -c "~/.config/quickshell/scripts/birghtness.sh change-down"
+bindsym --locked Mod1+Prior exec sh -c "~/.local/JES/quickshell/scripts/birghtness.sh change-up"
+bindsym --locked Mod1+Next exec sh -c "~/.local/JES/quickshell/scripts/birghtness.sh change-down"
 
 
 # Скриншоты (оригинальный рабочий вариант)
-bindsym $screenPicker exec sh -c 'pkill -f ~/.config/sway/opacity-changer.sh && qs ipc call root screenpicker && ~/.config/sway/opacity-changer.sh'
+bindsym $screenPicker exec sh -c 'pkill -f ~/.config/sway/opacity-changer.sh && jes-cli screenpicker && ~/.config/sway/opacity-changer.sh'
 bindsym --locked Shift+$screenPicker exec sh -c "grim - | tee ~/Screenshots/$(date +%Y-%m-%d_%H-%M-%S)_fullscreen.png | wl-copy"
 
 # Colorpicker
@@ -243,17 +236,6 @@ bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 bindsym $mod+Ctrl+Shift+Left  exec ~/.config/sway/workspace-nav.sh move-prev
 bindsym $mod+Ctrl+Shift+Right exec ~/.config/sway/workspace-nav.sh move-next
-
-# Режим ресайза (оставил для точного контроля)
-# bindsym --to-code $mod+r mode "resize"
-# mode "resize" {
-#     bindsym Left  resize shrink width  10px
-#     bindsym Down  resize grow   height 10px
-#     bindsym Up    resize shrink height 10px
-#     bindsym Right resize grow   width  10px
-#     bindsym Return mode "default"
-#     bindsym Escape mode "default"
-# }
 
 # Режим мыши
 bindsym $mod+Shift+backslash mode "mouse"

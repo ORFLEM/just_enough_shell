@@ -92,81 +92,89 @@ Item {
 
 ### Если что-то непонятно, то смотрите файл `baseBar.qml` в папке bar, это визуальный эталон для всего ui
 
+## Подключения плагина к JES
 
-## Подключение к лаунчеру JES
-- Для подключения к лаунчеру мы вызываем такую функцию:
-```qml
-property var api: launchLoader ? launchLoader.item : null
-
-function ensureTab() {
-    if (!api) return
-
-    var exists = false
-    for (var i = 0; i < api.tabModel.length; i++) {
-        if (api.tabModel[i].name === "Название вкладки") {
-            exists = true
-            break
-        }
-    }
-    if (!exists) {
-        api.tabModel.push({
-            name: "Название Вкладки",
-            icon: "Значёк для поиска, использовать только из nerd font",
-            placeholder: "Введите текст...",
-            info: []
-        })
-    }
-}
-
-onApiChanged: {
-    if (api && launchLoader && launchLoader.active) {
-        ensureTab()
-        firstOpen = false
-    }
+для подключения к JES у плагина должен быть `manifest.json`, ниже приведён максимальный базовый вариант для JES без сторонних расширений:
+```json
+{
+  "api_version": "0.1.0",
+  "plugin_version": "1.0",
+  "name": "plugin name",
+  "api_request": [
+    "launcher",
+    "plugin_center"
+  ],
+  "main_source": "Main.qml",
+  "json_files": {
+    "launcher": "launch_list.json",
+    "plugin_center": "load_list.json"
+  }
 }
 ```
 
-- В `info` мы можем передавать любой список, содержащий следующие моменты: `{"id", "name", "icon", "exec"}` - это пвсевдоjson, просто названия для объектовю.
+Для активации плагина в `config.toml` в `~/.config/JES/` надо указать следующие моменты:
+```toml
+[[plugin]]
+name = "plugin name" # data in property name from manifest.json
+active = true
+```
 
-- В `id` мы передаём порядковый номер
+
+## Подключение к лаунчеру JES
+- Для подключения к лаунчеру мы используем json файл с такой структурой:
+```json
+{
+  "name": "tab",
+  "icon": "",
+  "placeholder": "Search in tab...",
+  "info": [
+    {
+      "id": "app_1",
+      "name": "app 1",
+      "exec": "script launch $id"
+    },
+    {
+      "id": "2",
+      "name": "take screenshot",
+      "exec": "grim ~/screenshots"
+    }
+  ]
+}
+```
+
+- В `info` мы можем передавать любой список, содержащий следующие моменты: `{"id", "name", "icon", "exec"}` - это названия параметров json.
+
+- В `id` мы передаём нужный параметр для скрипта или порядковый номер, обязательно string версия
 - В `name` текст, что будет отображаться в блоке
 - В `icon` значёк при его наличии
-- В `exec` команда, которая будет выполняться 
+- В `exec` команда, которая будет выполняться, если используется id, то вызвать его в команде можно, как `$id`, который берётся из id, указанного в json
 
 ### `id` не обязателен, если вы указываете полные команды для объекта. Он требуется, если вы создали скрипт, что должен запускать разные объекты.
 
 ## Подключение к центру плагинов JES
-- Для подключения к центру плагинов мы вызываем такую функцию:
-```qml
-property var api: pluginPopupLoader ? pluginPopupLoader.item : null
-
-function ensurePlugins() {
-    if (!api) return
-
-    var modules = [
-        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
-    ]
-
-    for (var i = 0; i < modules.length; i++) {
-        var mod = modules[i]
-        var exists = false
-        for (var j = 0; j < api.pluginInfo.length; j++) {
-            if (api.pluginInfo[j].source === mod.source) {
-                exists = true
-                break
-            }
-        }
-        if (!exists) {
-            api.pluginInfo.push(mod)
-            console.log("[ExamplePlugin] Added module:", mod.source)
-        }
-    }
-}
-
-onApiChanged: {
-    ensurePlugins()
-}
+- Для подключения к центру плагинов мы используем json файл с такой структурой:
+```json
+[
+    {"source": "Content.qml", "colSpan": 1, "rowSpan": 1}
+]
 ```
 
 - максимальные размеры - `colSpan: 3, rowSpan: 7`
 - в source можно передавать любой модуль
+
+## Расширение API JES
+- для расширения API, ваш плагин должен подписаться на главный кэш всей плагин системы:
+```qml
+FileView {
+    id: pluginView
+    path: Quickshell.env("HOME") + "/.cache/JES_plugin_list.json"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: {
+        yourFunction(text())
+    }
+}
+```
+ и после в функции мы прописываем нужные задачи для проверки, включая проверку флага api_reqest на требуемый запрос
+
+### если вы интегрируете новый функционал для api, то ваш плагин должен вызывать notify-send с предупреждением или warning плашку показать, что API был расширен таким-то плагином

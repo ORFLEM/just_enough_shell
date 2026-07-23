@@ -6458,7 +6458,7 @@
        id="path416" />
     <path
        d="m172 921.5h-2l1e-4 -6h2z"
-       fill="#333"
+       fill="{{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }}"
        id="path417" />
   </g>
   <use

@@ -1,7 +1,7 @@
 <div align="center">
 	<img src="./documentation/images/preview.webp" width="900px">
 	<h1>Just Enough Shell</h1>
-	<p>Created for every day, not for show.</p>
+	<p>Built for everyday use, not for screenshots.</p>
 </div>
 
 ***

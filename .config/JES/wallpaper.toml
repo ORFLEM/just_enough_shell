@@ -1,0 +1,25 @@
+# ~/.config/quickshell/wallpaper/wallpaper.toml
+# Читается go-скриптом при старте и при каждом set/set-shader
+# Пути поддерживают ~ и абсолютные пути
+
+# ── Директории с обоями ────────────────────────────────────────────────────
+# image_dirs  — папки с картинками (jpg/jpeg/png/webp)
+# video_dirs  — папки с видео (mp4/webm/mkv)
+# shader_dir  — папка с шейдерами (.frag / .qsb)
+
+[dirs]
+image_dirs = [
+    "~/.config/JES/wallpapers/static",
+]
+
+video_dirs = [
+    "~/.config/JES/wallpapers/video",
+]
+
+shader_dir = "~/.config/JES/wallpapers/shaders"
+
+# ── Текущее состояние ──────────────────────────────────────────────────────
+# mode: "image" | "video" | "shader"
+# Этот блок перезаписывается go-скриптом при каждом set/set-shader
+# shell.qml читает его при старте через JsonPoll и применяет wallType
+[state]
