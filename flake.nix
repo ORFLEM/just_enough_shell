@@ -44,7 +44,7 @@
                 cur="''${COMP_WORDS[COMP_CWORD]}"
                 prev="''${COMP_WORDS[COMP_CWORD-1]}"
                 
-                opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap screenpicker getPlugin getLog --help -h"
+                opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap screenpicker getPlugin getLog editConf --help -h"
 
                 if [[ ''${COMP_CWORD} -eq 1 ]]; then
                     COMPREPLY=( $(compgen -W "''${opts}" -- "''${cur}") )

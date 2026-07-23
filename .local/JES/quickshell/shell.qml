@@ -97,6 +97,7 @@ ShellRoot {
                 launchOpen =     states_c.launchOpen ?? false;
                 wallPickerOpen = states_c.wallPickerOpen ?? false;
                 minimapOpen =    states_c.minimapOpen ?? false;
+                weatherOpen =    states_c.weatherOpen ?? false;
                 wallpaperType =  states_c.wallpaperType ?? 1;
                 wallpaperType =  states_c.user_matugen ?? 1;
                 wallShaderName = states_c.wallShaderName ?? "";
