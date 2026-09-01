@@ -121,9 +121,9 @@ WlrLayershell {
         anchors.top: barOnTop ? parent.top : false
         anchors.bottom: !barOnTop ? parent.bottom : false
         anchors.left: parent.left
-        anchors.topMargin: 6
-        anchors.leftMargin: 6
-        anchors.bottomMargin: 6
+        anchors.topMargin: root.wtw
+        anchors.leftMargin: root.wtw
+        anchors.bottomMargin: root.wtw
         radius: mainRad
         color: "transparent"
 
@@ -146,7 +146,7 @@ WlrLayershell {
 
         Item {
             anchors.fill: parent
-            anchors.margins: 3
+            anchors.margins: root.margins
 
             // header
             Item {
@@ -158,7 +158,7 @@ WlrLayershell {
 
                 Rectangle {
                     anchors.fill: parent
-                    radius: mainRad - 3
+                    radius: mainRad - root.margins
                     opacity: 0.65
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
@@ -206,7 +206,7 @@ WlrLayershell {
                             id: cacheBg
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -249,7 +249,7 @@ WlrLayershell {
                             id: closeBg
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -285,7 +285,7 @@ WlrLayershell {
             Item {
                 id: tabRow
                 anchors.top: headerRow.bottom
-                anchors.topMargin: 3
+                anchors.topMargin: root.margins
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: 30
@@ -293,7 +293,7 @@ WlrLayershell {
                 Row {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 3
+                    spacing: root.spacing
 
                     Repeater {
                         model: [ { tab: "image",  label: "Static" }, { tab: "video",  label: "Video"  }, { tab: "shader", label: "Shader" }, ]
@@ -312,7 +312,7 @@ WlrLayershell {
 
                             Rectangle {
                                 anchors.fill: parent
-                                radius: mainRad - 3
+                                radius: mainRad - root.margins
                                 opacity: 0.65
                                 gradient: Gradient {
                                     orientation: Gradient.Horizontal
@@ -327,7 +327,7 @@ WlrLayershell {
                                 id: tabBg
                                 anchors.fill: parent
                                 anchors.margins: 2
-                                radius: mainRad - 5
+                                radius: mainRad - root.margins - 2
 
                                 states: [
                                     State {
@@ -385,7 +385,7 @@ WlrLayershell {
                 Row {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 3
+                    spacing: root.spacing
 
                     Item {
                         width: schemeLabel.width + 24
@@ -395,7 +395,7 @@ WlrLayershell {
 
                         Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.65
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -409,7 +409,7 @@ WlrLayershell {
                             id: classicBg
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: parent.isActive ? col.accent : "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -438,7 +438,7 @@ WlrLayershell {
 
                         Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.65
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -452,7 +452,7 @@ WlrLayershell {
                             id: vibrantBg
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: parent.isActive ? col.accent : "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -481,7 +481,7 @@ WlrLayershell {
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -495,7 +495,7 @@ WlrLayershell {
                         id: searchBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - root.marings - 2
                         color: "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
                     }
@@ -566,11 +566,11 @@ WlrLayershell {
             ClippingRectangle {
                 id: contentArea
                 anchors.top: tabRow.bottom
-                anchors.topMargin: 3
+                anchors.topMargin: root.margins
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                radius: mainRad - 5
+                radius: mainRad - root.margins - 2
                 color: "transparent"
 
                 Text {
@@ -632,7 +632,7 @@ WlrLayershell {
     
                         background: Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.45
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -659,7 +659,7 @@ WlrLayershell {
             model: wallpaperPicker.items
 
             cellWidth: Math.floor(width / 3)
-            cellHeight: Math.floor(cellWidth * Screen.height / Screen.width) + 28
+            cellHeight: Math.floor(cellWidth * Screen.height / Screen.width) + 28 + root.margins - 1
 
             delegate: Item {
                 width: GridView.view.cellWidth
@@ -667,13 +667,13 @@ WlrLayershell {
 
                 Item {
                     anchors.fill: parent
-                    anchors.bottomMargin: 4
-                    anchors.leftMargin: (index % 3 === 0) ? 0 : 2
-                    anchors.rightMargin: (index % 3 === 2) ? 0 : 2
+                    anchors.bottomMargin: root.margins
+                    anchors.leftMargin: (index % 3 === 0) ? 0 : (root.spacing % 2 == 0 ? root.spacing : root.spacing - 1) / 2
+                    anchors.rightMargin: (index % 3 === 2) ? 0 : (root.spacing % 2 == 0 ? root.spacing : root.spacing - 1) / 2
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -688,7 +688,7 @@ WlrLayershell {
                         id: cardBg
                         anchors.fill: parent
                         anchors.margins: 3
-                        radius: mainRad - 6
+                        radius: mainRad - root.margins - 3
                         color: "transparent"
                         Behavior on color { ColorAnimation { duration: 200 } }
 
@@ -697,7 +697,7 @@ WlrLayershell {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: Math.floor(parent.width * Screen.height / Screen.width)
-                            radius: mainRad - 6
+                            radius: mainRad - root.margins - 3
 
                             Image {
                                 anchors.fill: parent

@@ -240,8 +240,10 @@
   programs.driftwm.enable = true;
 
   # installing module JES
-  services.jes.enable = true;
-
+  services.jes = {
+    enable = true;
+    users = [ "${userConfig.username}" ];
+  };
 
   # ============================================================
   # THEMING (stylix)

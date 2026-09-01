@@ -22,7 +22,6 @@ WlrLayershell {
     property string kbLayout: ""
     property string cava: ""
     property string timed: ""
-    property real coeff: mainRad > 16 ? 1.06363636 + 0.005 * mainRad : 1.1
 
     anchors {
         top: barOnTop
@@ -30,16 +29,30 @@ WlrLayershell {
     }
     
     implicitHeight: barHeight
-    implicitWidth: Screen.width <= 3840 ? (minibar ? 1920 : (mainRad > (height-6)/2 ? Screen.width + (height - 6)/2 - mainRad * coeff : Screen.width)) : (minibar ? 1920 : 3440)                                                                                                                                                        // ebat, a suda nahua?
-    Behavior on implicitWidth { NumberAnimation { duration: 100 } }
+    
+    readonly property real cornerCutout: {
+        if (minibar || disableCorners || mainRad <= (barHeight - root.wtw) / 2) return 0;
+        var r = mainRad;
+        var w = root.wtw;
+        var val = 2 * r * w + w * w;
+        var c = r + w - Math.sqrt(val);
+        return Math.max(0, c);
+    }
+    
+    implicitWidth: Screen.width <= 3840 
+        ? ((Screen.width > 1920 ? minibar : false) ? 1920
+        : (disableCorners ? Screen.width : Screen.width - (cornerCutout))) 
+        : (minibar ? 1920 : 3440)
+        
+    Behavior on implicitWidth { NumberAnimation { duration: 100 * root.animations } }
     color: "transparent"
     
     Rectangle {
         anchors.fill: parent
-        anchors.topMargin: barOnTop ? 6 : 0
-        anchors.bottomMargin: !barOnTop ? 6 : 0
-        anchors.leftMargin: 6
-        anchors.rightMargin: 6
+        anchors.topMargin: barOnTop ? root.wtw : 0
+        anchors.bottomMargin: !barOnTop ? root.wtw : 0
+        anchors.leftMargin: root.wtw
+        anchors.rightMargin: root.wtw
         radius: mainRad
         color: "transparent"
         
@@ -60,25 +73,26 @@ WlrLayershell {
         
         Item {
             anchors.fill: parent
-            anchors.margins: 3
+            anchors.margins: root.margins
             
             // Left section
             Row {
                 id: leftSection
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 3
+                spacing: root.spacing
                 
                 // Launcher
                 Item {
                     id: launcherItem
+                    anchors.verticalCenter: parent.verticalCenter
                     property bool hovered: false
                     width: launcherContent.width + 4
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -93,9 +107,9 @@ WlrLayershell {
                         id: launcherBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - 2 - root.margins
                         color: launcherItem.hovered ? col.accent : "transparent"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     Row {
@@ -103,30 +117,28 @@ WlrLayershell {
                         anchors.centerIn: parent
 
                         ClippingRectangle {
-                            radius: mainRad - 6
-                            height: panel.height - 16
+                            radius: mainRad - 3 - root.margins
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: panel.height - 4 - root.wtw - root.margins * 2
                             width: height
                             color: "transparent"
                             Image {
-                                sourceSize.width: parent.height * 2
-                                sourceSize.height: parent.height * 2
-                                source: Qt.resolvedUrl("images/hui.jpg") 
-                                height: parent.height
-                                width: height
-                            }
-                            Image {
-                                sourceSize.width: parent.height * 2
-                                sourceSize.height: parent.height * 2
-                                id: launcherIcon
+                                id: userAvatar
                                 source: "file:///var/lib/AccountsService/icons/" + Quickshell.env("USER")
+                                sourceSize.width: parent.height * 2
+                                sourceSize.height: parent.height * 2
                                 height: parent.height
                                 width: height
+                                onStatusChanged: {
+                                    if (status === Image.Error) {
+                                        source = Qt.resolvedUrl("images/hui.webp")
+                                    }
+                                }
                             }
                         }
-                        Rectangle {
+                        Item {
                             width: launchertext.width + 8
-                            height: panel.height - 16
-                            color: "transparent"
+                            height: panel.height - 10 - root.margins * 2
                             Text {
                                 id: launchertext
                                 anchors.centerIn: parent
@@ -134,7 +146,7 @@ WlrLayershell {
                                 color: launcherItem.hovered ? col.fontDark : col.accent
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                Behavior on color { ColorAnimation { duration: 200 } }
+                                Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                             }
                         }
                     }
@@ -151,14 +163,15 @@ WlrLayershell {
                 // wallpaper picker
                 Item {
                     id: wallItem
+                    anchors.verticalCenter: parent.verticalCenter
                     property bool hovered: false
                     width: wallRow.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     visible: show_wallpaper
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius:  mainRad - 3
+                        radius:  mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -173,9 +186,9 @@ WlrLayershell {
                         id: wallBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         color: wallItem.hovered ? col.accent : "transparent"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     Row {
@@ -190,7 +203,7 @@ WlrLayershell {
                             font.family: fontFamily
                             font.pixelSize: fontSize
                             anchors.verticalCenter: parent.verticalCenter
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                     }
                     
@@ -206,13 +219,14 @@ WlrLayershell {
                 // Workspaces
                 Item {
                     id: workspacesItem
+                    anchors.verticalCenter: parent.verticalCenter
                     width: workspacesRow.width + 4
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     visible: wm_type == "workspaces"
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -225,7 +239,7 @@ WlrLayershell {
 
                     ClippingRectangle {
                         anchors.fill: parent
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         anchors.margins: 2
                         color: "transparent"
                         Row {
@@ -271,13 +285,14 @@ WlrLayershell {
                 // Camera
                 Item {
                     id: cameraItem
+                    anchors.verticalCenter: parent.verticalCenter
                     width: cameraRow.width + 8
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     visible: wm_type == "coordinates"
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -300,15 +315,22 @@ WlrLayershell {
                 
                 // Active Window
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: awText.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     visible: activeWindow !== ""
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
-                        color: col.backgroundAlt1
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                        }
                     }
                     
                     Text {
@@ -326,20 +348,22 @@ WlrLayershell {
 
             // center second
             Row {
+                anchors.verticalCenter: parent.verticalCenter
                 anchors.centerIn: parent
-                spacing: 3
+                spacing: root.spacing
 
                 //weather
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     visible: root.owm_key != ""
                     id: weatherItem
                     property bool hovered: false
                     width: weatherRow.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -354,9 +378,9 @@ WlrLayershell {
                         id: weatherBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         color: weatherItem.hovered ? col.accent : "transparent"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     Row {
                         id: weatherRow
@@ -365,19 +389,19 @@ WlrLayershell {
 
                         Text {
                             id: weatherIcon
-                            text: vars.wthr.icon
+                            text: vars.wthr.icon ?? ""
                             color: weatherItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                         Text {
                             id: weatherText
-                            text: vars.wthr.temp + "°C"
+                            text: vars.wthr.temp ? vars.wthr.temp + "°C" : ""
                             color: weatherItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                     }
                     MouseArea {
@@ -393,11 +417,12 @@ WlrLayershell {
                 
                 // Time
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     id: timeItem
                     property bool hovered: false
                     property bool dateInfo: false
                     width: timeRow.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
 
                     SystemClock {
                       id: clock
@@ -406,7 +431,7 @@ WlrLayershell {
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -421,9 +446,9 @@ WlrLayershell {
                         id: timeBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         color: timeItem.hovered ? col.accent : "transparent"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     Row {
@@ -438,7 +463,7 @@ WlrLayershell {
                             font.family: fontFamily
                             font.pixelSize: fontSize
                             anchors.verticalCenter: parent.verticalCenter
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                         
                         Text {
@@ -448,7 +473,7 @@ WlrLayershell {
                             font.pixelSize: fontSize
                             anchors.verticalCenter: parent.verticalCenter
                             text: timeItem.dateInfo ? Qt.formatDateTime(clock.date, "yyyy-MM-dd") : Qt.formatDateTime(clock.date, "hh:mm:ss")
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                     }
                    
@@ -477,12 +502,13 @@ WlrLayershell {
             Row {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 3
+                spacing: root.spacing
 
                 // cava
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: cavaText.width + 4
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     visible: panel.width >= 2560
 
                     JsonListen {
@@ -495,7 +521,7 @@ WlrLayershell {
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -507,7 +533,7 @@ WlrLayershell {
                     }
                     ClippingRectangle {
                         anchors.fill: parent
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         anchors.margins: 2
                         color: "transparent"
                         Text {
@@ -523,31 +549,32 @@ WlrLayershell {
 
                 // player
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     id: playerItem
                     property bool hovered: false
                     width: plrRow.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                  
                     ClippingRectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         
                         Image {
                             anchors.fill: parent
                             fillMode: Image.PreserveAspectCrop
-                            source: vars.plr.art !== "" ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
+                            source: vars.plr.art ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
                         }
                     }
                     
                     Rectangle {
                         id: plrBg
                         anchors.fill: parent
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         anchors.margins: 2
                         opacity: 0.65
                         color: playerItem.hovered ? col.accent : col.backgroundAlt1
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     Item {
@@ -562,12 +589,12 @@ WlrLayershell {
                             id: plrText1
                             anchors.left: parent.left
                             anchors.verticalCenter: parent.verticalCenter
-                            text: vars.plr.status
+                            text: vars.plr.status ?? ""
                             color: playerItem.hovered ? col.fontDark : col.accent
                             font.family: fontFamily
                             font.weight: Font.Black
                             font.pixelSize: fontSize - 2
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
 
                         Text {
@@ -579,7 +606,7 @@ WlrLayershell {
                             font.weight: Font.Black
                             font.pixelSize: fontSize - 1
                             color: playerItem.hovered ? col.fontDark : col.font
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
                         
                         // v etom bloke dohuia teksta, ia hz pochemu tak
@@ -587,12 +614,12 @@ WlrLayershell {
                             id: plrText2
                             anchors.left: sep1.right
                             anchors.verticalCenter: parent.verticalCenter
-                            text: vars.plr.artist.length > 15 ? vars.plr.artist.substring(0, 15) + "…" : vars.plr.artist
+                            text: vars.plr.artist?.length ? (vars.plr.artist.length > 15 ? vars.plr.artist.substring(0, 15) + "…" : vars.plr.artist) : ""
                             color: playerItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.weight: Font.Black
                             font.pixelSize: fontSize - 1
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
 
                         Text {
@@ -604,7 +631,7 @@ WlrLayershell {
                             font.weight: Font.Black
                             font.pixelSize: fontSize - 1
                             color: playerItem.hovered ? col.fontDark : col.font
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
 
                         Loader {
@@ -612,23 +639,23 @@ WlrLayershell {
                             anchors.left: sep2.right
                             anchors.verticalCenter: parent.verticalCenter
                             height: parent.height
-                            width: vars.plr.title.length > (panel.width >= 2560 ? 35 : 25)
+                            width: vars.plr.title?.length > (panel.width >= 2560 ? 35 : 25)
                                    ? (panel.width >= 2560 ? 380 : 220)
                                    : (item ? item.implicitWidth : 0)
 
-                            sourceComponent: vars.plr.title.length > 35 ? marqueeComp : textComp
+                            sourceComponent: vars.plr.title?.length > 35 ? marqueeComp : textComp
 
                             Component {
                                 id: textComp
                                 Text {
                                     id: plrText3
                                     anchors.verticalCenter: parent.verticalCenter
-                                    text: vars.plr.title
+                                    text: vars.plr.title ?? ""
                                     color: playerItem.hovered ? col.fontDark : col.font
                                     font.family: fontFamily
                                     font.weight: Font.Black
                                     font.pixelSize: fontSize -1
-                                    Behavior on color { ColorAnimation { duration: 200 } }
+                                    Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                                 }
                             }
 
@@ -677,13 +704,14 @@ WlrLayershell {
                 // settings (audio, network, bluetooth)
                 Item {
                     id: settingsItem
+                    anchors.verticalCenter: parent.verticalCenter
                     property bool hovered: false
                     width: audioButton.width + networkButton.width + bluetoothButton.width + settingsIcon.width
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -701,16 +729,16 @@ WlrLayershell {
                             id: audioButton
                             color: audioButton.hovered ? col.accent : "transparent" 
                             implicitWidth: settingsItem.hovered ? audioText.width + 12 : 0
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             implicitHeight: parent.height
                             opacity: settingsItem.hovered ? 1 : 0
                             clip: true
                             
                             property bool hovered: false
                             
-                            Behavior on color { ColorAnimation { duration: 200 } }
-                            Behavior on implicitWidth { NumberAnimation { duration: 200 } }
-                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                            Behavior on implicitWidth { NumberAnimation { duration: 200 * root.animations } }
+                            Behavior on opacity { NumberAnimation { duration: 200 * root.animations } }
 
                             Text {
                                 text: "󰗅"
@@ -719,7 +747,7 @@ WlrLayershell {
                                 color: audioButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                Behavior on color { ColorAnimation { duration: 200 } }
+                                Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                             }
                             MouseArea {
                                 anchors.fill: parent
@@ -738,13 +766,13 @@ WlrLayershell {
                             id: networkButton
                             color: networkButton.hovered ? col.accent : "transparent"
                             implicitWidth: settingsItem.hovered ? networkText.width + 12 : 0
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             implicitHeight: parent.height
                             opacity: settingsItem.hovered ? 1 : 0
                             
-                            Behavior on color { ColorAnimation { duration: 200 } }
-                            Behavior on implicitWidth { NumberAnimation { duration: 200 } }
-                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                            Behavior on implicitWidth { NumberAnimation { duration: 200 * root.animations } }
+                            Behavior on opacity { NumberAnimation { duration: 200 * root.animations } }
                             
                             property bool hovered: false
 
@@ -755,7 +783,7 @@ WlrLayershell {
                                 color: networkButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                Behavior on color { ColorAnimation { duration: 200 } }
+                                Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                             }
                             MouseArea {
                                 anchors.fill: parent
@@ -774,13 +802,13 @@ WlrLayershell {
                             id: bluetoothButton
                             color: bluetoothButton.hovered ? col.accent : "transparent"
                             implicitWidth: settingsItem.hovered ? bluetoothText.width + 12 : 0
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             implicitHeight: parent.height
                             opacity: settingsItem.hovered ? 1 : 0
                             
-                            Behavior on color { ColorAnimation { duration: 200 } }
-                            Behavior on implicitWidth { NumberAnimation { duration: 200 } }
-                            Behavior on opacity { NumberAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                            Behavior on implicitWidth { NumberAnimation { duration: 200 * root.animations } }
+                            Behavior on opacity { NumberAnimation { duration: 200 * root.animations } }
                             
                             property bool hovered: false
 
@@ -791,7 +819,7 @@ WlrLayershell {
                                 color: bluetoothButton.hovered ? col.fontDark : col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
-                                Behavior on color { ColorAnimation { duration: 200 } }
+                                Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                             }
                             MouseArea {
                                 anchors.fill: parent
@@ -822,12 +850,13 @@ WlrLayershell {
 
                 // volume
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: volText.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
 
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -844,7 +873,7 @@ WlrLayershell {
                         spacing: 4
                         
                         Text {
-                            text: vars.vol.sign
+                            text: vars.vol.sign ?? ""
                             color: col.accent
                             font.family: "Mononoki Nerd font Propo"
                             font.pixelSize: fontSize
@@ -875,12 +904,13 @@ WlrLayershell {
                 
                 // Keyboard Layout
                 Item {
+                    anchors.verticalCenter: parent.verticalCenter
                     width: kbRow.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                    
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -917,13 +947,14 @@ WlrLayershell {
                 // Power
                 Item {
                     id: powerItem
+                    anchors.verticalCenter: parent.verticalCenter
                     property bool hovered: false
                     width: powerText.width + 12
-                    height: panel.height - 12
+                    height: panel.height - root.margins * 2 - root.wtw
                     
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -938,9 +969,9 @@ WlrLayershell {
                         id: powerBg
                         anchors.fill: parent
                         anchors.margins: 2
-                        radius: mainRad - 5
+                        radius: mainRad - root.margins - 2
                         color: powerItem.hovered ? col.accent : "transparent"
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     Text {
@@ -950,7 +981,7 @@ WlrLayershell {
                         color: powerItem.hovered ? col.fontDark : col.font
                         font.family: fontFamily
                         font.pixelSize: fontSize
-                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                     }
                     
                     MouseArea {

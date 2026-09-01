@@ -23,7 +23,7 @@ while IFS= read -r plugin; do
     source_dir=$(echo "$plugin" | jq -r '.source // empty')
     center_file=$(echo "$plugin" | jq -r '.json_files.plugin_center // empty')
 
-    echo "DEBUG: plugin=$plugin_name, has_center=$has_center, active=$active, source=$source_dir, launch_file=$launch_file" >&2
+    echo "DEBUG: plugin=$plugin_name, has_center=$has_center, active=$active, source=$source_dir, center_file=$center_file" >&2
 
     if [[ "$has_center" != "true" || "$active" != "true" || -z "$plugin_name" ]]; then
         echo "DEBUG: Пропускаем из-за условий" >&2

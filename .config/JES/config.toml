@@ -5,10 +5,15 @@ wm = "auto" # or your WM but with a capital letter
 wm_type = "auto" # auto (don't work with unregistred WM) | workspaces | coordinates
 
 # visual
+animation = 1.0
+spacing = 3
+margins = 3 
+wtw = 6 # spacing for widget to widget
 mainRad = 10 # 0-25
 fontSize = 17
 fontFamily = "Mononoki Nerd Font Propo"
 enable_base16 = false
+disableCorners = false # disable roundings your monitors
 
 # bar
 barOnTop = true

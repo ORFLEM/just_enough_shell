@@ -40,26 +40,52 @@ WlrLayershell {
 
     keyboardFocus: WlrKeyboardFocus.Exclusive
 
-    // --- filter ---
-    function filterInfo() {
-        var fullList = tabModel[currentTab].info || []
-        var searchText = searchInput.text.trim().toLowerCase()
-        var filtered = []
+    // --- Рекурсивный универсальный поиск ---
+    function itemMatchesSearch(obj, term) {
+        if (obj === null || obj === undefined) return false;
 
-        if (searchText === "") {
-            filtered = fullList
-        } else {
-            for (var i = 0; i < fullList.length; i++) {
-                var item = fullList[i]
-                if (item.name && item.name.toLowerCase().includes(searchText)) {
-                    filtered.push(item)
+        if (typeof obj === "string" || typeof obj === "number" || typeof obj === "boolean") {
+            return obj.toString().toLowerCase().indexOf(term) !== -1;
+        }
+
+        if (Array.isArray(obj)) {
+            for (var i = 0; i < obj.length; i++) {
+                if (itemMatchesSearch(obj[i], term)) return true;
+            }
+            return false;
+        }
+
+        if (typeof obj === "object") {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    if (key.startsWith("_") || key === "objectName") continue;
+                    if (itemMatchesSearch(obj[key], term)) return true;
                 }
             }
         }
 
+        return false;
+    }
+
+    // --- filter ---
+    function filterInfo() {
+        var fullList = tabModel[currentTab].info || []
+        var searchText = searchInput.text.trim().toLowerCase()
+
         fInfo.clear()
-        for (var j = 0; j < filtered.length; j++) {
-            fInfo.append(filtered[j])
+
+        if (searchText === "") {
+            for (var i = 0; i < fullList.length; i++) {
+                fInfo.append(fullList[i])
+            }
+            return
+        }
+
+        for (var j = 0; j < fullList.length; j++) {
+            var item = fullList[j]
+            if (itemMatchesSearch(item, searchText)) {
+                fInfo.append(item)
+            }
         }
     }
 
@@ -84,7 +110,7 @@ WlrLayershell {
         watchChanges: true
         onFileChanged: reload()
         onLoaded: {
-            loadPluginsApps(text()) // tut ono stradaet huinoi
+            loadPluginsApps(text())
         }
     }
 
@@ -99,14 +125,15 @@ WlrLayershell {
             tabModel = baseTabs.concat(newTabs)
             filterInfo()
         } catch(e) {
-            console.warn("Ошибка загрузки плагинов:", e) // ta idi ti nahui, ya ebal sistemu plaginov... poidu bash ebanu suda i spat, tak ono tochno srabotaet
+            console.warn("Ошибка загрузки плагинов:", e)
         }
     }               
+
     // --- Applications ---
     Process {
         id: appProc
         running: false
-        command: ["sh", "-c", localPath(Qt.resolvedUrl("launch")), searchInput.text]
+        command: ["sh", "-c", localPath(Qt.resolvedUrl("launch"))]
         stdout: SplitParser {
             onRead: data => {
                 try {
@@ -148,7 +175,7 @@ WlrLayershell {
         if (currentTab === 0) {
             clipProc.running = false
             if (!appProc.running) {
-                appProc.command = ["sh", "-c", localPath(Qt.resolvedUrl("launch")), searchInput.text]
+                appProc.command = ["sh", "-c", localPath(Qt.resolvedUrl("launch"))]
                 appProc.running = true
             }
         } else if (currentTab === 1) {
@@ -199,7 +226,9 @@ WlrLayershell {
                 Layout.fillHeight: true
                 radius: mainRad
                 color: "transparent"
+                
                 ShaderEffect {
+                    id: shaderEffect
                     anchors.fill: parent
                     property color accent: col.accent
                     property color dark: col.backgroundAlt1
@@ -208,24 +237,29 @@ WlrLayershell {
                     property real time: 0.0
                     property real patternScale: 3.2
                     property real evolutionSpeed: 0.004
-                    NumberAnimation on time {
-                        from: 0; to: 1000
-                        duration: 1000000
-                        loops: Animation.Infinite
-                        running: launcher.visible
+
+                    Timer {
+                        interval: 16
+                        running: launcher.visible && root.animations > 0.0
+                        repeat: true
+                        onTriggered: {
+                            var speedMult = Math.max(root.animations, 0.3)
+                            shaderEffect.time = shaderEffect.time + (0.016 * speedMult)
+                        }
                     }
+
                     fragmentShader: Qt.resolvedUrl("bg.frag.qsb")
                 }
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 3
+                    anchors.margins: root.margins
                     spacing: 0
 
                     Rectangle {
                         Layout.fillWidth: true
                         height: 52
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.85
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -271,11 +305,6 @@ WlrLayershell {
 
                                 onTextChanged: {
                                     list.currentIndex = -1
-                                    if (currentTab === 0) {
-                                        appProc.command = ["sh", "-c", localPath(Qt.resolvedUrl("launch")), searchInput.text]
-                                        appProc.running = false
-                                        appProc.running = true
-                                    }
                                     filterInfo()
                                 }
                             }
@@ -287,7 +316,7 @@ WlrLayershell {
                     Rectangle {
                         Layout.fillWidth: true
                         height: 36
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.85
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -302,7 +331,7 @@ WlrLayershell {
                         ClippingRectangle {
                             anchors.fill: parent
                             anchors.margins: 3
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 3
                             color: "transparent"
                             ListView {
                                 id: tabListView
@@ -321,9 +350,9 @@ WlrLayershell {
                                             return neededWidth;
                                     }
                                     height: 30
-                                    radius: mainRad - 5
+                                    radius: mainRad - root.margins - 2
                                     color: currentTab === index ? col.accent : col.backgroundAlt1
-                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                    Behavior on color { ColorAnimation { duration: 150 * root.animations } }
                                     Text {
                                         id: text
                                         anchors.centerIn: parent
@@ -354,26 +383,27 @@ WlrLayershell {
                 }
             }
 
-            Rectangle {
+            ClippingRectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 color: "transparent"
+                Layout.margins: root.margins
+                radius: mainRad - root.margins
                 ListView {
                     id: list
                     anchors.fill: parent
-                    anchors.margins: 3
-                    spacing: 3
+                    spacing: root.spacing
                     clip: true
                     model: fInfo
                     currentIndex: -1
                     delegate: Rectangle {
                         width: list.width
                         height: 48
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.95
                         property bool isCurrent: ListView.isCurrentItem
                         color: isCurrent ? col.accent : col.backgroundAlt1
-                        Behavior on color { ColorAnimation { duration: 150 } }
+                        Behavior on color { ColorAnimation { duration: 150 * root.animations } }
                         RowLayout {
                             anchors.fill: parent
                             anchors.margins: 8

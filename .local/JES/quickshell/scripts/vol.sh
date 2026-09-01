@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+pkill -f pactl
+
 # --- Функции получения текущих значений ---
 get_volume() {
-    pamixer --get-volume
+    pamixer --get-volume 2>/dev/null
 }
 
 get_mute() {
-    pamixer --get-mute
+    pamixer --get-mute 2>/dev/null
 }
 
 # --- Формирование JSON с иконкой ---
@@ -43,13 +45,10 @@ if [[ -n "$vol" ]]; then
     old_out="$output"
 fi
 
-# --- Основной цикл с подпиской на события PulseAudio ---
-# Используем process substitution, чтобы все переменные сохранялись в текущей оболочке
-while read -r event; do
-    # Фильтруем события: нас интересуют изменения громкости (sink) или переключение сервера
+# --- Основной цикл ---
+# Запускаем pactl subscribe в фоновом пайпе и сохраняем его PID
+pactl subscribe 2>/dev/null | while read -r event; do
     if [[ "$event" =~ (sink|server) ]]; then
-        # Небольшая задержка, чтобы изменение точно успело примениться
-        sleep 0.1
         vol=$(get_volume)
         mute=$(get_mute)
         if [[ -n "$vol" ]]; then
@@ -60,4 +59,7 @@ while read -r event; do
             fi
         fi
     fi
-done < <(pactl subscribe 2>/dev/null)
+done &
+
+PA_PID=$!
+wait "$PA_PID"

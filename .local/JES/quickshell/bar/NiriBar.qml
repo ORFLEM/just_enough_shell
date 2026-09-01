@@ -6,7 +6,7 @@ BaseBar {
     
     JsonListen {
         id: workspacesStream
-        command: localPath(Qt.resolvedUrl("./scripts/workspace-niri.sh stream-ws-json"))
+        command: localPath(Qt.resolvedUrl("../scripts/workspace-niri.sh stream-ws-json"))
         debug: true
         
         onDataChanged: {
@@ -16,7 +16,7 @@ BaseBar {
     
     JsonListen {
         id: activeWindowStream
-        command: localPath(Qt.resolvedUrl("./scripts/active_window-niri.sh"))
+        command: localPath(Qt.resolvedUrl("../scripts/active_window-niri.sh"))
         debug: true       
         onDataChanged: {
             activeWindow = typeof data === 'string' ? data : ""
@@ -25,7 +25,7 @@ BaseBar {
     
     JsonListen {
         id: kbLayoutStream
-        command: localPath(Qt.resolvedUrl("./scripts/kb_layout-niri.sh"))
+        command: localPath(Qt.resolvedUrl("../scripts/kb_layout-niri.sh"))
         debug: true
         
         onDataChanged: {

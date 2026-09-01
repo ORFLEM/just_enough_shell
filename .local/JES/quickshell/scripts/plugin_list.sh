@@ -147,3 +147,5 @@ echo "Готово! Список плагинов записан в $OUTPUT_FILE
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 $SCRIPT_DIR/plugin_list_launcher.sh
 $SCRIPT_DIR/plugin_list_center.sh
+$SCRIPT_DIR/plugin_list_osd.sh
+$SCRIPT_DIR/plugin_list_Jwindow.sh

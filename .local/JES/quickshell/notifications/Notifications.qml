@@ -1,515 +1,413 @@
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
+import "../helpers"
 
 PanelWindow {
-	// esli ono rabotaet krivo - ya ne vinovat, uvedomlalka bila spizjena is blxshell
-	id: notificationsWindow
-	property int xwidth: 350
-	property int ywidth: 600
-	property int defaultTimeout: 5000
-	property var knownNotifications: ({})
-	property var notificationOrder: []
-	exclusiveZone: 0
+    id: notificationsWindow
+    
+    // Сквозной проход кликов в местах, где нет карточек
+    mask: Region {
+        item: notifsListView
+    }
 
-	visible: notificationServer.trackedNotifications.values.length > 0
+    exclusiveZone: 0
+    visible: notificationServer.trackedNotifications.values.length > 0
 
-	anchors {
-		top: true
-		right: true
-	}
-	margins {
-		right: 0
-		top: 0
-	}
+    anchors {
+        top: true
+        right: true
+    }
 
-	width: xwidth
-	height: ywidth
-	color: "transparent"
+    // Внешние отступы от краев экрана через root.wtw
+    margins {
+        right: root.wtw
+        top: root.wtw
+    }
 
-	Component.onCompleted: {
-		markAllAsKnown()
-	}
+    // Проверяем, есть ли хоть одно уведомление с картинкой
+    property bool hasImages: {
+        let notifs = notificationServer.trackedNotifications.values
+        for (let i = 0; i < notifs.length; i++) {
+            if (notifs[i] && (notifs[i].image || notifs[i].appIcon)) return true
+        }
+        return false
+    }
 
-	function markAllAsKnown() {
-		notificationOrder = []
-		for (let i = 0; i < notificationServer.trackedNotifications.values.length; i++) {
-			let notification = notificationServer.trackedNotifications.values[i]
-			if (notification && notification.id) {
-				let id = notification.id.toString()
-				knownNotifications[id] = Date.now()
-				notificationOrder.push(id)
-			}
-		}
-	}
+    // Ширина окна подстраивается так, чтобы ничего не обрезалось
+    implicitWidth: (hasImages ? 380 : 360) + root.wtw
+    implicitHeight: notifsListView.contentHeight + root.margins * 2
 
-	function cleanupNotificationTracking(notificationId) {
-		if (notificationId) {
-			let id = notificationId.toString()
-			delete knownNotifications[id]
-			let index = notificationOrder.indexOf(id)
-			if (index > -1) notificationOrder.splice(index, 1)
-		}
-	}
+    color: "transparent"
 
-	NotificationServer {
-		id: notificationServer
-		keepOnReload: true
-		bodySupported: true
-		actionsSupported: true
-		inlineReplySupported: false
-		imageSupported: true
-		actionIconsSupported: true
-		persistenceSupported: false
+    property int defaultTimeout: 5000
+    property var knownNotifications: ({})
+    property var notificationOrder: []
 
-		onNotification: function(notification) {
-			try {
-				notification.tracked = true
-				if (notification.id) {
-					let id = notification.id.toString()
-					// Префикс NEW_ — сигнал делегату что надо анимировать
-					knownNotifications[id] = "NEW_" + Date.now()
-					notificationOrder.unshift(id)
-				}
-			} catch (error) {
-				console.error("Error in onNotification handler: " + error)
-			}
-		}
-	}
+    Component.onCompleted: markAllAsKnown()
 
-	ClippingRectangle {
-		width: xwidth
-		height: ywidth
-		radius: mainRad + 5
-		color: "transparent"
+    function markAllAsKnown() {
+        notificationOrder = []
+        let notifs = notificationServer.trackedNotifications.values
+        for (let i = 0; i < notifs.length; i++) {
+            let notification = notifs[i]
+            if (notification && notification.id) {
+                let id = notification.id.toString()
+                knownNotifications[id] = Date.now()
+                notificationOrder.push(id)
+            }
+        }
+    }
 
-		ColumnLayout {
-			anchors.fill: parent
-			anchors.margins: 5
+    function cleanupNotificationTracking(notificationId) {
+        if (notificationId) {
+            let id = notificationId.toString()
+            delete knownNotifications[id]
+            let index = notificationOrder.indexOf(id)
+            if (index > -1) notificationOrder.splice(index, 1)
+        }
+    }
 
-			ListView {
-				id: notifsBG
-				width: xwidth - 10
-				height: ywidth - 10
-				clip: true
-				model: notificationServer.trackedNotifications.values
-				spacing: 5
+    NotificationServer {
+        id: notificationServer
+        keepOnReload: true
+        bodySupported: true
+        actionsSupported: true
+        inlineReplySupported: false
+        imageSupported: true
+        actionIconsSupported: true
+        persistenceSupported: false
 
-				// Убраны add/remove/displaced Transition — они конфликтовали
-				// с анимациями внутри делегата (оба двигали x одновременно).
-				// Вся логика анимации теперь только в делегате.
+        onNotification: function(notification) {
+            try {
+                notification.tracked = true
+                if (notification.id) {
+                    let id = notification.id.toString()
+                    knownNotifications[id] = "NEW_" + Date.now()
+                    notificationOrder.unshift(id)
+                }
+            } catch (error) {
+                console.error("Error in onNotification handler: " + error)
+            }
+        }
+    }
 
-				displaced: Transition {
-					NumberAnimation {
-						properties: "y"
-						duration: 250
-						easing.type: Easing.OutQuart
-					}
-				}
+    ListView {
+        id: notifsListView
+        anchors.fill: parent
+        spacing: root.spacing
+        clip: false
+        model: notificationServer.trackedNotifications.values
 
-				delegate: Rectangle {
-					id: notificationRect
-					width: notifsBG.width
-					height: 80
-					radius: mainRad
-					opacity: 0.85
-					color: "transparent"
-					gradient: Gradient {
-						orientation: Gradient.Horizontal
-						GradientStop { position: 0.0; color: col.background3 }
-						GradientStop { position: 0.05; color: col.background2 }
-						GradientStop { position: 0.3; color: col.background1 }
-						GradientStop { position: 0.7; color: col.background1 }
-						GradientStop { position: 0.95; color: col.background2 }
-						GradientStop { position: 1.0; color: col.background3 }
-					}
+        displaced: Transition {
+            NumberAnimation {
+                properties: "y"
+                duration: 250 * root.animations
+                easing.type: Easing.OutQuart
+            }
+        }
 
-					property var parentWindow: notificationsWindow
-					property string notificationId: (modelData && modelData.id) ? modelData.id.toString() : ""
-					property bool isExpiring: false
-					property real timeProgress: 0.0
-					property int totalDuration: modelData && modelData.expireTimeout > 0 ?
-						(modelData.expireTimeout * 1000) : notificationsWindow.defaultTimeout
-					property int elapsedTime: 0
+        delegate: Rectangle {
+            id: notificationRect
+            
+            // Карточка строго по ширине списка
+            width: notifsListView.width
+            implicitHeight: contentRow.implicitHeight + (root.margins * 2)
+            height: implicitHeight
+            radius: mainRad
+            opacity: 0.85
+            color: "transparent"
 
-					// Стартуем за правым краем — позиция до анимации въезда
-					x: notifsBG.width
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: col.background3 }
+                GradientStop { position: 0.05; color: col.background2 }
+                GradientStop { position: 0.3; color: col.background1 }
+                GradientStop { position: 0.7; color: col.background1 }
+                GradientStop { position: 0.95; color: col.background2 }
+                GradientStop { position: 1.0; color: col.background3 }
+            }
 
-					Component.onCompleted: {
-						if (notificationId) {
-							let trackingValue = parentWindow.knownNotifications[notificationId]
-							let isNew = trackingValue && trackingValue.toString().startsWith("NEW_")
+            property var parentWindow: notificationsWindow
+            property string notificationId: (modelData && modelData.id) ? modelData.id.toString() : ""
+            property bool isExpiring: false
+            property int totalDuration: modelData && modelData.expireTimeout > 0 ?
+                (modelData.expireTimeout * 1000) : notificationsWindow.defaultTimeout
 
-							if (isNew) {
-								parentWindow.knownNotifications[notificationId] = Date.now()
-								slideInAnimation.start()
-								Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.ogg"])
-							} else {
-								// Уже известное — сразу показываем на месте и запускаем таймеры
-								x = 0
-								progressTimer.start()
-								autoExpireTimer.start()
-							}
-						} else {
-							x = 0
-							progressTimer.start()
-							autoExpireTimer.start()
-						}
-					}
+            x: notifsListView.width
 
-					// Въезд справа → запуск таймеров по окончании
-					SequentialAnimation {
-						id: slideInAnimation
-						running: false
+            Component.onCompleted: {
+                if (notificationId) {
+                    let trackingValue = parentWindow.knownNotifications[notificationId]
+                    let isNew = trackingValue && trackingValue.toString().startsWith("NEW_")
 
-						NumberAnimation {
-							target: notificationRect
-							property: "x"
-							from: notifsBG.width
-							to: 0
-							duration: 400
-							easing.type: Easing.OutCubic
-						}
+                    if (isNew) {
+                        parentWindow.knownNotifications[notificationId] = Date.now()
+                        slideInAnimation.start()
+                        Quickshell.execDetached(["sh", "-c", "pw-play ~/.config/quickshell/notifications/mes.ogg"])
+                    } else {
+                        x = 0
+                        autoExpireTimer.start()
+                    }
+                } else {
+                    x = 0
+                    autoExpireTimer.start()
+                }
+            }
 
-						ScriptAction {
-							script: {
-								progressTimer.start()
-								autoExpireTimer.start()
-							}
-						}
-					}
+            // Анимация появления
+            SequentialAnimation {
+                id: slideInAnimation
+                NumberAnimation {
+                    target: notificationRect
+                    property: "x"
+                    from: notifsListView.width
+                    to: 0
+                    duration: 350 * root.animations
+                    easing.type: Easing.OutCubic
+                }
+                ScriptAction { script: autoExpireTimer.start() }
+            }
 
-					// Истечение — уезжает вправо, потом expire()
-					SequentialAnimation {
-						id: expireAnimation
-						running: false
+            // Анимация ухода
+            SequentialAnimation {
+                id: dismissAnimation
+                ScriptAction { script: notificationRect.isExpiring = true }
+                NumberAnimation {
+                    target: notificationRect
+                    property: "x"
+                    to: notifsListView.width
+                    duration: 300 * root.animations
+                    easing.type: Easing.InCubic
+                }
+                ScriptAction {
+                    script: {
+                        try {
+                            notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
+                            if (modelData) modelData.dismiss()
+                        } catch (error) {
+                            console.error("Error dismissing notification:", error)
+                        }
+                    }
+                }
+            }
 
-						ScriptAction {
-							script: { notificationRect.isExpiring = true }
-						}
+            Timer {
+                id: autoExpireTimer
+                interval: notificationRect.totalDuration
+                running: false
+                repeat: false
+                onTriggered: {
+                    if (!notificationRect.isExpiring) dismissAnimation.start()
+                }
+            }
 
-						NumberAnimation {
-							target: notificationRect
-							property: "x"
-							to: notifsBG.width
-							duration: 400
-							easing.type: Easing.InCubic
-						}
+            // Главная кликабельная область
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-						ScriptAction {
-							script: {
-								try {
-									if (modelData) {
-										notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
-										modelData.expire()
-									}
-								} catch (error) {
-									console.error("Error expiring notification:", error)
-								}
-							}
-						}
-					}
+                onEntered: autoExpireTimer.stop()
+                onExited: {
+                    if (!notificationRect.isExpiring) autoExpireTimer.start()
+                }
 
-					// Dismiss (левый клик) — уезжает влево, потом dismiss()
-					SequentialAnimation {
-						id: dismissAnimation
-						running: false
+                onClicked: function(mouse) {
+                    if (notificationRect.isExpiring) return
 
-						ScriptAction {
-							script: { notificationRect.isExpiring = true }
-						}
+                    if (mouse.button === Qt.LeftButton) {
+                        if (modelData) {
+                            if (modelData.hasDefaultAction) {
+                                modelData.invokeDefaultAction()
+                            }
+                            dismissAnimation.start()
+                        }
+                    } else if (mouse.button === Qt.RightButton) {
+                        try {
+                            let notifs = notificationServer.trackedNotifications.values
+                            parentWindow.knownNotifications = {}
+                            parentWindow.notificationOrder = []
+                            for (let i = 0; i < notifs.length; ++i) {
+                                if (notifs[i]) notifs[i].dismiss()
+                            }
+                        } catch (e) {
+                            console.error("Error dismissing all:", e)
+                        }
+                    }
+                }
+            }
 
-						NumberAnimation {
-							target: notificationRect
-							property: "x"
-							to: -notifsBG.width
-							duration: 300
-							easing.type: Easing.InCubic
-						}
+            // Контейнер контента
+            RowLayout {
+                id: contentRow
+                anchors.fill: parent
+                anchors.margins: root.margins
+                spacing: root.spacing
 
-						ScriptAction {
-							script: {
-								try {
-									notificationRect.parentWindow.cleanupNotificationTracking(notificationRect.notificationId)
-									modelData.dismiss()
-								} catch (error) {
-									console.error("Error dismissing notification: " + error)
-								}
-							}
-						}
-					}
+                // 1. Изображение/Аватарка
+                ClippingRectangle {
+                    id: imageContainer
+                    Layout.preferredWidth: visible ? 52 : 0
+                    Layout.preferredHeight: 52
+                    Layout.alignment: Qt.AlignVCenter
+                    radius: mainRad - root.margins
+                    color: "transparent"
+                    visible: modelData && (modelData.image || modelData.appIcon)
 
-					Timer {
-						id: progressTimer
-						interval: 100
-						running: false
-						repeat: true
-						triggeredOnStart: false
-						onTriggered: {
-							if (notificationRect.isExpiring) { stop(); return }
-							notificationRect.elapsedTime += interval
-							notificationRect.timeProgress = notificationRect.elapsedTime / notificationRect.totalDuration
-						}
-					}
+                    Image {
+                        anchors.fill: parent
+                        fillMode: Image.PreserveAspectCrop
+                        smooth: true
+                        source: modelData ? (modelData.image || modelData.appIcon || "") : ""
+                    }
+                }
 
-					Timer {
-						id: autoExpireTimer
-						interval: notificationRect.totalDuration
-						running: false
-						repeat: false
-						triggeredOnStart: false
-						onTriggered: {
-							if (notificationRect.isExpiring) return
-							progressTimer.stop()
-							expireAnimation.start()
-						}
-					}
+                // 2. Основной текстовый и интерактивный блок
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
+                    spacing: root.spacing
 
-					ColumnLayout {
-						id: contentLayout
-						anchors.fill: parent
-						anchors.margins: 3
-						spacing: 3
+                    // Шапка: Имя приложения + Капсула «Время + Закрытие»
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: root.spacing
 
-						RowLayout {
-							Layout.fillWidth: true
-							spacing: 8
+                        Text {
+                            Layout.fillWidth: true
+                            text: (modelData && modelData.appName) || "Notification"
+                            font.pixelSize: fontSize - 1
+                            font.weight: Font.Bold
+                            font.family: fontFamily
+                            color: col.accent
+                            elide: Text.ElideRight
+                        }
 
-							ClippingRectangle {
-								id: iconContainer
-								width: 32
-								height: 32
-								radius: mainRad - 3
-								color: "transparent"
-								visible: modelData && (modelData.image || modelData.appIcon)
+                        Item {
+                            implicitWidth: headerPillContent.implicitWidth + (root.margins * 2)
+                            implicitHeight: headerPillContent.implicitHeight + (root.margins / 2)
 
-								Image {
-									id: notificationIcon
-									anchors.centerIn: parent
-									width: 32
-									height: 32
-									fillMode: Image.PreserveAspectFit
-									smooth: true
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: mainRad - root.margins
+                                opacity: 0.65
+                                gradient: Gradient {
+                                    orientation: Gradient.Horizontal
+                                    GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                                    GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                                    GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                                    GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                                }
+                            }
 
-									source: {
-										if (modelData) {
-											if (modelData.image && modelData.image !== "")
-												return modelData.image
-											else if (modelData.appIcon && modelData.appIcon !== "")
-												return modelData.appIcon
-										}
-										return ""
-									}
+                            RowLayout {
+                                id: headerPillContent
+                                anchors.centerIn: parent
+                                spacing: root.spacing
 
-									Rectangle {
-										anchors.fill: parent
-										radius: 4
-										color: col.accent
-										visible: parent.status === Image.Error || parent.status === Image.Null
+                                Text {
+                                    text: Qt.formatTime(new Date(), "hh:mm:ss")
+                                    font.pixelSize: fontSize - 3
+                                    font.family: fontFamily
+                                    color: base.base05
+                                }
 
-										Text {
-											anchors.centerIn: parent
-											text: {
-												let appName = (modelData && modelData.appName) || "?"
-												return appName.charAt(0).toUpperCase()
-											}
-											font.pixelSize: 12
-											font.weight: Font.Bold
-											font.family: fontFamily
-											color: col.onPrimary
-										}
-									}
-								}
-							}
+                                Item {
+                                    width: 16
+                                    height: 16
 
-							ClippingRectangle {
-								id: appNameBadge
-								width: appNameText.width + 12
-								height: 19
-								radius: mainRad - 3
-								color: "transparent"
-								Rectangle {
-									anchors.fill: parent
-									opacity: 0.65
-									color: "transparent"
-									gradient: Gradient {
-										orientation: Gradient.Horizontal
-										GradientStop { position: 0.0; color: col.backgroundAlt2 }
-										GradientStop { position: 0.275; color: col.backgroundAlt1 }
-										GradientStop { position: 0.725; color: col.backgroundAlt1 }
-										GradientStop { position: 1.0; color: col.backgroundAlt2 }
-									}
-								}
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "✕"
+                                        font.pixelSize: 11
+                                        font.family: fontFamily
+                                        color: closeArea.containsMouse ? col.accent : col.font
+                                    }
 
-								Text {
-									id: appNameText
-									text: (modelData && modelData.appName) || "Unknown"
-									font.pixelSize: 15
-									font.weight: Font.Bold
-									font.family: fontFamily
-									anchors.centerIn: parent
-									color: col.accent
-								}
-							}
+                                    MouseArea {
+                                        id: closeArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: dismissAnimation.start()
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-							Item { Layout.fillWidth: true }
+                    // Текст сообщения
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
 
-							ClippingRectangle {
-								id: timestampBadge
-								width: 56
-								height: 19
-								color: "transparent"
-								radius: mainRad - 3
-								Rectangle {
-									anchors.fill: parent
-									opacity: 0.65
-									color: "transparent"
-									gradient: Gradient {
-										orientation: Gradient.Horizontal
-										GradientStop { position: 0.0; color: col.backgroundAlt2 }
-										GradientStop { position: 0.275; color: col.backgroundAlt1 }
-										GradientStop { position: 0.725; color: col.backgroundAlt1 }
-										GradientStop { position: 1.0; color: col.backgroundAlt2 }
-									}
-								}
+                        Text {
+                            Layout.fillWidth: true
+                            text: (modelData && modelData.summary) || ""
+                            font.pixelSize: fontSize
+                            font.weight: Font.Bold
+                            font.family: fontFamily
+                            color: col.font
+                            elide: Text.ElideRight
+                            visible: text !== ""
+                        }
 
-								Text {
-									text: Qt.formatTime(new Date(), "hh:mm")
-									font.pixelSize: 15
-									font.weight: 700
-									font.family: fontFamily
-									anchors.centerIn: parent
-									color: col.font
-								}
-							}
-						}
+                        Text {
+                            Layout.fillWidth: true
+                            text: (modelData && modelData.body) || ""
+                            font.pixelSize: fontSize - 1
+                            font.family: fontFamily
+                            color: col.font
+                            wrapMode: Text.Wrap
+                            maximumLineCount: 3
+                            elide: Text.ElideRight
+                            visible: text !== ""
+                        }
+                    }
 
-						Text {
-							id: summaryText
-							Layout.fillWidth: true
-							text: (modelData && modelData.summary) || "No Summary"
-							font.pixelSize: 16
-							font.weight: Font.Bold
-							font.family: fontFamily
-							color: col.accent
-							elide: Text.ElideRight
-							maximumLineCount: 1
-						}
+                    // Кнопки с MarqueeText
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: root.spacing
+                        visible: modelData && modelData.actions && modelData.actions.length > 0
 
-						Text {
-							id: bodyText
-							Layout.fillWidth: true
-							Layout.fillHeight: true
-							text: (modelData && modelData.body) || "No content"
-							font.pixelSize: 14
-							font.family: fontFamily
-							color: col.font
-							wrapMode: Text.Wrap
-							maximumLineCount: 3
-							elide: Text.ElideRight
-						}
-					}
+                        Repeater {
+                            model: modelData ? modelData.actions : []
+                            delegate: Rectangle {
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 28
+                                radius: mainRad - root.margins
+                                color: actionArea.containsMouse ? col.accent : col.backgroundAlt1
+                                opacity: 0.9
 
-					MouseArea {
-						id: mouseArea
-						anchors.fill: parent
-						hoverEnabled: true
-						acceptedButtons: Qt.LeftButton | Qt.RightButton
+                                MarqueeText {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.margins: 6
+                                    text: modelData.text
+                                    font.pixelSize: fontSize - 2
+                                    font.bold: true
+                                    color: actionArea.containsMouse ? col.fontDark : col.font
+                                }
 
-						drag.target: notificationRect
-						drag.axis: Drag.XAxis
-						drag.minimumX: 0
-						drag.maximumX: notificationRect.width * 1.5
-						// Порог в пикселях — меньше этого не считается drag'ом
-						drag.threshold: 10
-
-						property real pressX: 0
-						property bool wasDragged: false
-
-						onEntered: {
-							if (!notificationRect.isExpiring) {
-								autoExpireTimer.stop()
-								progressTimer.stop()
-							}
-						}
-
-						onExited: {
-							if (!notificationRect.isExpiring && !drag.active) {
-								let remaining = notificationRect.totalDuration - notificationRect.elapsedTime
-								if (remaining > 0) {
-									autoExpireTimer.interval = remaining
-									autoExpireTimer.start()
-									progressTimer.start()
-								}
-							}
-						}
-
-						onPressed: function(mouse) {
-							wasDragged = false
-							pressX = mouse.x
-						}
-
-						onPositionChanged: {
-							// Считаем drag только после реального смещения > 10px
-							if (drag.active) wasDragged = true
-						}
-
-						onReleased: {
-							if (wasDragged) {
-								if (notificationRect.x > notificationRect.width * 0.4) {
-									autoExpireTimer.stop()
-									progressTimer.stop()
-									expireAnimation.start()
-								} else {
-									snapBackAnimation.start()
-								}
-							}
-						}
-
-						onClicked: function(mouse) {
-							// wasDragged защищает от случайного клика после свайпа
-							if (wasDragged || notificationRect.isExpiring) return
-
-							if (mouse.button === Qt.LeftButton) {
-								autoExpireTimer.stop()
-								progressTimer.stop()
-								dismissAnimation.start()
-							} else if (mouse.button === Qt.RightButton) {
-								// ПКМ — закрыть все
-								try {
-									let notifs = notificationServer.trackedNotifications.values
-									parentWindow.knownNotifications = {}
-									parentWindow.notificationOrder = []
-									for (let i = 0; i < notifs.length; ++i) {
-										if (notifs[i]) notifs[i].dismiss()
-									}
-								} catch (error) {
-									console.error("Error dismissing all notifications: " + error)
-								}
-							}
-						}
-
-						NumberAnimation {
-							id: snapBackAnimation
-							target: notificationRect
-							property: "x"
-							to: 0
-							duration: 200
-							easing.type: Easing.OutBounce
-						}
-					}
-
-					Connections {
-						target: modelData
-						function onClosed(reason) {
-							autoExpireTimer.stop()
-							progressTimer.stop()
-						}
-					}
-				}
-			}
-		}
-	}
+                                MouseArea {
+                                    id: actionArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        modelData.invoke()
+                                        dismissAnimation.start()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

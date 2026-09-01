@@ -15,240 +15,313 @@ WlrLayershell {
     screen: Quickshell.screens.find(s => s.x === 0 && s.y === 0) ?? Quickshell.screens[0]
 
     anchors {
-        top: true
+        top: barOnTop
+        bottom: !barOnTop
         right: true
+    }
+    
+    margins {
+        top: barOnTop ? barHeight : 0
+        bottom: !barOnTop ? barHeight : 0
     }
 
     property bool isOpen: false
     property bool showimage: false
     
-    implicitHeight: isOpen ? (barOnTop && !minibar && screen.width <= 3480 ? (showimage ? 530 + barHeight : 230 + barHeight) : (showimage ? 530 : 230)) : 0
-    implicitWidth: artBox.width + 171
+    // Выделяем максимальный запас по высоте под раскрытую обложку
+    implicitHeight: 524 + root.wtw
+    implicitWidth: artBox.width + 172 + root.wtw - 6
     color: "transparent"
 
-    Behavior on implicitHeight {
-        NumberAnimation {
-            duration: 250
-            easing.type: Easing.OutCubic
-        }
-    }
+    // Передаем клики только в область popupBody
+    mask: Region { item: popupBody }
 
     Item {
         anchors.fill: parent
-        anchors.topMargin: barOnTop && !minibar && screen.width <= 3480 ? barHeight : 0
-        anchors.bottomMargin: isOpen ? 6 : 0
-
-        Rectangle {
-            id: popupRect
-            anchors.fill: parent
-            anchors.rightMargin: isOpen ? 6 : 16
-            anchors.topMargin: isOpen ? 6 : -6
-            color: "transparent"
-            radius: mainRad
-            clip: true
+        clip: true
+        
+        Item {
+            id: popupBody
+            implicitHeight: showimage ? 518 : 218 
+            implicitWidth: artBox.width + 172 + root.wtw - 6
             
-            Behavior on anchors.rightMargin {
+            // Динамический выезд из-за панели
+            y: isOpen 
+               ? (barOnTop ? root.wtw : parent.height - height - root.wtw)
+               : (barOnTop ? -height : parent.height)
+
+            Behavior on y {
                 NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.OutCubic
-                }
-            }
-            Behavior on anchors.topMargin {
-                NumberAnimation {
-                    duration: 350
+                    duration: 250 * root.animations
                     easing.type: Easing.OutCubic
                 }
             }
 
-            // Обложка как фон + тёмный оверлей
-            ClippingRectangle {
+            Behavior on implicitHeight {
+                NumberAnimation {
+                    duration: 250 * root.animations
+                    easing.type: Easing.OutCubic
+                }
+            }
+            
+            Rectangle {
+                id: popupRect
                 anchors.fill: parent
+                anchors.rightMargin: isOpen ? root.wtw : mainRad + root.wtw
+                color: "transparent"
                 radius: mainRad
-                opacity: 0.85
-                color: base.base02
+                clip: true
                 
-                Image {
-                    asynchronous: true
-                    smooth: true
-                    mipmap: true
-                    anchors.centerIn: parent
-                    sourceSize.width: showimage ? 700 : 400
-                    sourceSize.height: showimage ? 700 : 400
-                    fillMode: Image.PreserveAspectCrop
-                    source: vars.plr.art !== "" ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
+                Behavior on anchors.rightMargin {
+                    NumberAnimation {
+                        duration: 250 * root.animations
+                        easing.type: Easing.Linear
+                    }
                 }
                 
-                Rectangle {
+                ClippingRectangle {
                     anchors.fill: parent
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: col.background3 }
-                        GradientStop { position: 0.05; color: col.background2 }
-                        GradientStop { position: 0.3; color: col.background1 }
-                        GradientStop { position: 0.7; color: col.background1 }
-                        GradientStop { position: 0.95; color: col.background2 }
-                        GradientStop { position: 1.0; color: col.background3 }
+                    radius: mainRad
+                    opacity: 0.85
+                    color: base.base02
+                    
+                    Image {
+                        asynchronous: true
+                        smooth: true
+                        mipmap: true
+                        anchors.centerIn: parent
+                        sourceSize.width: showimage ? 700 : 400
+                        sourceSize.height: showimage ? 700 : 400
+                        fillMode: Image.PreserveAspectCrop
+                        source: vars.plr.art ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
                     }
+                    
+                    Rectangle {
+                        anchors.fill: parent
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.background3 }
+                            GradientStop { position: 0.05; color: col.background2 }
+                            GradientStop { position: 0.3; color: col.background1 }
+                            GradientStop { position: 0.7; color: col.background1 }
+                            GradientStop { position: 0.95; color: col.background2 }
+                            GradientStop { position: 1.0; color: col.background3 }
+                        }
 
-                    opacity: 0.75
-                }
-            }
-
-            // Обложка слева — абсолютный якорь
-            ClippingRectangle {
-                id: artBox
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.margins: 3
-
-                // --- ВЫЧИСЛЯЕМАЯ ШИРИНА ---
-                width: coverImage.width
-
-                radius: mainRad - 3
-                color: base.base02
-
-                Image {
-                    id: coverImage
-                    asynchronous: true
-                    smooth: true
-                    mipmap: true
-                    anchors.centerIn: parent
-                    sourceSize.width: {
-                        let sw = sourceSize.width
-                        let sh = sourceSize.height
-                        return (sw > 0 && sh > 0) ? height * sw / sh : 0
+                        opacity: 0.75
                     }
-                    sourceSize.height: showimage ? 512 : 212
-                    fillMode: Image.PreserveAspectCrop
-                    source: vars.plr.art !== "" ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: showimage = !showimage
-                }          
-            }
 
-            // Правая часть — заполняет всё что осталось
-            Item {
-                anchors.top: parent.top
-                anchors.left: artBox.right
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: 3
-                anchors.leftMargin: 3
-
-                // Инфо блок — от верха до кнопок
-                Rectangle {
+                // Обложка слева
+                ClippingRectangle {
+                    id: artBox
                     anchors.top: parent.top
                     anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: navBox.top
-                    anchors.bottomMargin: 3
-                    radius: mainRad - 3
-                    opacity: 0.8
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: col.backgroundAlt2 }
-                        GradientStop { position: 0.275; color: col.backgroundAlt1 }
-                        GradientStop { position: 0.725; color: col.backgroundAlt1 }
-                        GradientStop { position: 1.0; color: col.backgroundAlt2 }
-                    }
+                    anchors.bottom: parent.bottom
+                    anchors.margins: root.margins
 
-                    Column {
-                        anchors.verticalCenter: parent.verticalCenter
+                    width: coverImage.width
+
+                    radius: mainRad - root.margins
+                    color: base.base02
+
+                    Image {
+                        id: coverImage
+                        asynchronous: true
+                        smooth: true
+                        mipmap: true
+                        anchors.centerIn: parent
+                        sourceSize.width: {
+                            let sw = sourceSize.width
+                            let sh = sourceSize.height
+                            return (sw > 0 && sh > 0) ? height * sw / sh : 0
+                        }
+                        sourceSize.height: showimage ? 512 : 212
+                        fillMode: Image.PreserveAspectCrop
+                        source: vars.plr.art ? "file://" + vars.plr.art + "?v=" + vars.plr.ver : ""
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: showimage = !showimage
+                    }          
+                }
+
+                // Правая часть
+                Item {
+                    anchors.top: parent.top
+                    anchors.left: artBox.right
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: root.margins
+                    anchors.leftMargin: root.margins
+                
+                    // Инфо блок
+                    Rectangle {
+                        anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.leftMargin: 3
-                        anchors.rightMargin: 3
-                        spacing: 35
-
-                        Item {
-                            width: parent.width
-                            height: fontSize
-                            MarqueeText {
+                        anchors.bottom: navBox.top
+                        anchors.bottomMargin: root.margins
+                        radius: mainRad - root.margins
+                        opacity: 0.8
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                        }
+                
+                        Column {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: root.margins
+                            anchors.rightMargin: root.margins
+                            spacing: 30
+                
+                            Item {
                                 width: parent.width
-                                text: vars.plr.title
+                                height: fontSize
+                                MarqueeText {
+                                    width: parent.width
+                                    text: vars.plr.title ?? ""
+                                    color: col.font
+                                    font.family: fontFamily
+                                    font.pixelSize: fontSize
+                                }
+                            }
+                
+                            Text {
+                                width: parent.width
+                                text: vars.plr.artist ?? ""
                                 color: col.font
                                 font.family: fontFamily
                                 font.pixelSize: fontSize
+                                elide: Text.ElideRight
+                                horizontalAlignment: Text.AlignHCenter
                             }
                         }
+                        
+                        RowLayout {
+                            width: parent.width - root.margins * 2
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottom: parent.bottom
+                            anchors.margins: root.margins
+                            spacing: root.spacing - 2
 
-                        Text {
-                            width: parent.width
-                            text: vars.plr.artist
-                            color: col.font
-                            font.family: fontFamily
-                            font.pixelSize: fontSize
-                            elide: Text.ElideRight
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                    }
-                }
-
-                // Кнопки — прижаты к низу
-                Rectangle {
-                    id: navBox
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: 40
-                    radius: mainRad - 3
-                    color: col.accent
-                    opacity: 0.85
-
-                    Row {
-                        anchors.centerIn: parent
-                        spacing: 3
-
-                        Repeater {
-                            model: [
-                                { icon: "󰒮", cmd: "playerctl previous" },
-                                { icon: vars.plr.status, cmd: "playerctl play-pause" },
-                                { icon: "󰒭", cmd: "playerctl next" }
-                            ]
-
-                            delegate: Item {
-                                id: playerButton
-                                width: 48
-                                height: 34
-                                property bool hovered: false
-
-                                Rectangle {
-                                    id: btnBg
-                                    anchors.fill: parent
-                                    anchors.margins: 0
-                                    radius: mainRad - 5
-                                    color: playerButton.hovered ? col.fontDark : "transparent"
-                                    Behavior on color { ColorAnimation { duration: 150 } }
-                                }
+                            Rectangle {
+                                Layout.preferredWidth: 24
+                                Layout.preferredHeight: 24
+                                radius: mainRad - root.margins - 2
+                                color: prevPlrArea.containsMouse ? col.accent : "transparent"
 
                                 Text {
-                                    id: btnIcon
                                     anchors.centerIn: parent
-                                    text: modelData.icon
-                                    color: playerButton.hovered ? col.font : col.fontDark
+                                    text: "<"
+                                    color: prevPlrArea.containsMouse ? col.fontDark : col.font
                                     font.family: fontFamily
-                                    font.pixelSize: 25
-                                    Behavior on color { ColorAnimation { duration: 150 } }
+                                    font.pixelSize: 14
                                 }
 
                                 MouseArea {
+                                    id: prevPlrArea
                                     anchors.fill: parent
                                     hoverEnabled: true
-                                    onEntered: {
-                                        playerButton.hovered = true
-                                    }
-                                    onExited: {
-                                        playerButton.hovered = false
-                                    }
-                                    onClicked: Quickshell.execDetached(["sh", "-c", modelData.cmd])
+                                    onClicked: Quickshell.execDetached([localPath(Qt.resolvedUrl("../../scripts/music")), "prev-player"])
+                                }
+                            }
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: vars.plr.player ?? "No Player"
+                                color: col.font
+                                font.family: fontFamily
+                                font.pixelSize: fontSize - 4
+                                elide: Text.ElideRight
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+
+                            Rectangle {
+                                Layout.preferredWidth: 24
+                                Layout.preferredHeight: 24
+                                radius: mainRad - root.margins - 2
+                                color: nextPlrArea.containsMouse ? col.accent : "transparent"
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: ">"
+                                    color: nextPlrArea.containsMouse ? col.fontDark : col.font
+                                    font.family: fontFamily
+                                    font.pixelSize: 14
+                                }
+
+                                MouseArea {
+                                    id: nextPlrArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: Quickshell.execDetached([localPath(Qt.resolvedUrl("../../scripts/music")), "next-player"])
                                 }
                             }
                         }
                     }
-                }
+                
+                    // Кнопки управления
+                    Rectangle {
+                        id: navBox
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 40
+                        radius: mainRad - root.margins
+                        color: col.accent
+                        opacity: 0.85
+                
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: root.spacing
+                
+                            Repeater {
+                                model: [
+                                    { icon: "󰒮", cmd: "previous" },
+                                    { icon: vars.plr.status, cmd: "play-pause" },
+                                    { icon: "󰒭", cmd: "next" }
+                                ]
+                
+                                delegate: Item {
+                                    id: playerButton
+                                    width: (navBox.width - root.margins * 2 - root.spacing * 2) / 3
+                                    height: 34 - root.margins * 2 + 6
+                                    property bool hovered: false
+                
+                                    Rectangle {
+                                        id: btnBg
+                                        anchors.fill: parent
+                                        radius: mainRad - root.margins - 2
+                                        color: playerButton.hovered ? col.fontDark : "transparent"
+                                        Behavior on color { ColorAnimation { duration: 150 * root.animations } }
+                                    }
+                                    Text {
+                                        id: btnIcon
+                                        anchors.centerIn: parent
+                                        text: modelData.icon ?? ""
+                                        color: playerButton.hovered ? col.font : col.fontDark
+                                        font.family: fontFamily
+                                        font.pixelSize: 25
+                                        Behavior on color { ColorAnimation { duration: 150 * root.animations } }
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: playerButton.hovered = true
+                                        onExited: playerButton.hovered = false
+                                        onClicked: Quickshell.execDetached([localPath(Qt.resolvedUrl("../../scripts/music")), modelData.cmd])
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }         
             }
         }
     }

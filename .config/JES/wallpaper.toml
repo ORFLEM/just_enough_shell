@@ -6,6 +6,8 @@
 # image_dirs  — папки с картинками (jpg/jpeg/png/webp)
 # video_dirs  — папки с видео (mp4/webm/mkv)
 # shader_dir  — папка с шейдерами (.frag / .qsb)
+[settings]
+static_type = "jpg"
 
 [dirs]
 image_dirs = [
@@ -23,3 +25,7 @@ shader_dir = "~/.config/JES/wallpapers/shaders"
 # Этот блок перезаписывается go-скриптом при каждом set/set-shader
 # shell.qml читает его при старте через JsonPoll и применяет wallType
 [state]
+mode      = "image"
+wallpaper = "~/.config/JES/wallpapers/static/JES.webp"
+shader    = "aurora_drift"
+colorscheme = "scheme-tonal-spot"

@@ -2,6 +2,10 @@
 
 # Базовый путь к сокету/конфигурации Quickshell
 QS_CMD="qs -c $HOME/.local/JES/quickshell ipc call root"
+# Путь к твоему скрипту яркости (измени путь, если он лежит в другом месте)
+BRIGHTNESS_SCRIPT="$HOME/.local/JES/quickshell/scripts/brightness.sh"
+MUSIC_SCRIPT="$HOME/.local/JES/quickshell/scripts/music"
+WALLS_SCRIPT="$HOME/.local/JES/quickshell/wallpaper/wallpaper-picker"
 
 # Функция для безопасного экранирования аргументов (если потребуется)
 quote() {
@@ -53,6 +57,10 @@ toggleLaunch() {
     call_method "toggleLaunch"
 }
 
+toggleJwindow() {
+    call_method "toggleJwindow"
+}
+
 toggleMap() {
     call_method "toggleMap"
 }
@@ -80,7 +88,6 @@ start_daemon() {
 
 reload_daemon() {
     echo "Reloading Just Enough Shell..."
-    # Убиваем только процесс нашего шелла, не затрагивая чужие инстансы quickshell, если они есть
     pkill -f JES 2>/dev/null
     sleep 0.2
     qs -d -c "$HOME/.local/JES/quickshell"
@@ -97,30 +104,49 @@ edit_config() {
 
 show_help() {
     cat << 'EOF'
-Usage: jes-cli <command> [attribute]
+Usage: jes-cli <command> [attributes]
 
 Available commands:
-  start-daemon      - Start the background Just Enough Shell daemon
-  reload-daemon     - Restart the daemon (apply UI code changes)
-  stop-daemon       - Fully stop the shell execution
-  wallShader <name> - Set the specified shader for live wallpapers
-  toggleWallPicker  - Open/close the wallpaper picker menu
-  wallType <number> - Switch the wallpaper type (static, live, etc.)
-  togglePlayer      - Toggle the rmpc media player widget visibility
-  toggleCal         - Toggle the calendar widget visibility
-  togglePower       - Toggle the power menu overlay visibility
-  toggleLaunch      - Toggle the application launcher menu visibility
-  toggleMap         - Toggle the mini-map overlay visibility
-  screenpicker      - Trigger the screenshot utility tool
-  getPlugin         - Request the status or list of active plugins (not worked)
-  getLog            - Print the JES logs
-  editConf          - edit Config JES
-  -h, --help        - Show this help manual
+  start-daemon                 - Start the background Just Enough Shell daemon
+  reload-daemon                - Restart the daemon (apply UI code changes)
+  stop-daemon                  - Fully stop the shell execution
+  
+  wallShader <name>            - Set the specified shader for live wallpapers
+  toggleWallPicker             - Open/close the wallpaper picker menu
+  wallType <number>            - Switch the wallpaper type (static, live, etc.)
+  fixWalls                     - Fix wallpaper's format (static only)
+  
+  togglePlayer                 - Toggle the rmpc media player widget visibility
+  toggleCal                    - Toggle the calendar widget visibility
+  togglePower                  - Toggle the power menu overlay visibility
+  toggleLaunch                 - Toggle the application launcher menu visibility
+  toggleMap                    - Toggle the mini-map overlay visibility
+  toggleJwindow                - Toggle the adaptive for content JES window visibility
+  
+  screenpicker                 - Trigger the screenshot utility tool
+  
+  getPlugin                    - Request the status or list of active plugins (not worked)
+  
+  getLog                       - Print the JES logs
+  
+  editConf                     - Edit Config JES
+
+  brightness-up [monitor]      - Increase brightness by 5% (default: all)
+  brightness-down [monitor]    - Decrease brightness by 5% (default: all)
+  brightness-set <v> [monitor] - Set brightness 0-100 (default: all)
+  brightness-get [monitor]     - Get current brightness values
+
+  play-pause                   - play-pause current player
+  next                         - take next music in current player
+  prev                         - take prev music in current player
+  next-player                  - take next player
+  prev-player                  - take prev player
+  
+  -h, --help                   - Show this help manual
 EOF
 }
 
 # Если скрипт вызван с аргументами, обрабатываем как команду
-# Формат: ./script.sh wallShader "my_shader"
 if [ $# -gt 0 ]; then
     cmd="$1"
     shift
@@ -131,15 +157,51 @@ if [ $# -gt 0 ]; then
         wallShader)       wallShader "$1" ;;
         toggleWallPicker) toggleWallPicker ;;
         wallType)         wallType "$1" ;;
+        fixWalls)         exec "$WALLS_SCRIPT" fix-walls ;;
         togglePlayer)     togglePlayer ;;
         toggleCal)        toggleCal ;;
         togglePower)      togglePower ;;
         toggleLaunch)     toggleLaunch ;;
+        toggleJwindow)    toggleJwindow ;;
         toggleMap)        toggleMap ;;
         screenpicker)     screenpicker ;;
         getPlugin)        getPlugin ;;
         getLog)           getLog ;;
-        editConf)           edit_config ;;
+        editConf)         edit_config ;;
+        play-pause)
+            exec "$MUSIC_SCRIPT" play-pause
+            ;;
+        next)
+            exec "$MUSIC_SCRIPT" next
+            ;;   
+        prev)
+            exec "$MUSIC_SCRIPT" previous
+            ;;   
+        next-player)
+            exec "$MUSIC_SCRIPT" next-player
+            ;;   
+        prev-player)
+            exec "$MUSIC_SCRIPT" prev-player
+            ;;   
+        
+        # --- Проксирование команд яркости во внешний утилитарный скрипт ---
+        brightness-up)
+            exec "$BRIGHTNESS_SCRIPT" brightness-up "${1:-}"
+            ;;
+        brightness-down)
+            exec "$BRIGHTNESS_SCRIPT" brightness-down "${1:-}"
+            ;;
+        brightness-set)
+            if [[ -z "${1:-}" ]]; then
+                echo "Использование: jes-cli brightness-set <0-100> [monitor]" >&2
+                exit 1
+            fi
+            exec "$BRIGHTNESS_SCRIPT" brightness-set "$1" "${2:-}"
+            ;;
+        brightness-get)
+            exec "$BRIGHTNESS_SCRIPT" brightness-get "${1:-}"
+            ;;
+            
         "--help"|"-h")    show_help ;;
         *) echo "Unknown command: $cmd"; show_help; exit 1 ;;
     esac

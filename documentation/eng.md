@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Project%20size&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
   <img src="https://img.shields.io/github/stars/ORFLEM/just_enough_shell?color=bbbbbb&label=Project%20stars&logo=andela&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
 	<img src="./images/preview.webp" width="900px">
-	<h1>Just Enough Shell</h1>
+	<h1>> Just Enough Shell _</h1>
 	<p>Built for everyday use, not for screenshots.</p>
 </div>
 
@@ -94,17 +94,17 @@
   	<li>Hyprland</li>
   	<li>Niri</li>
 		<li>DriftWM</li>
-		<li>Any other WM via 3 scripts and one QML file</li>
+		<!-- <li>Any other WM via plugin system</li> -->
 	</ul>
-	<b>Niri</b> has no transparency support and has a bug with workspaces on the bar due to its architecture.<br>
 	<br>
 	The project has some optimization, but it hasn't been tested on weak hardware.<br>
-	Go binaries are used for scripts where fast processing of large data streams matters — this keeps CPU usage at 5–10% (only <i>JES</i> - 1-2% CPU and ~400 MB RAM) idle instead of 35–45%.<br>
+	Go binaries are used for scripts where fast processing of large data streams matters <i>JES</i> - 1-2% CPU and ~400 MB RAM idle instead of 35–45%.<br>
+	In project has referenses configs, it's used ~5-10% CPU on one monitor setups and ~7-13% on multi-monitor setups.<br>
   <br>
 	The project has a simple plugin system, making it extensible.<br>
 	<br>
 	<i>JES</i> was designed for desktop PCs, allowing it to be better tailored to those machines.<br>
-	The author's monitor is UWQHD (3440×1440); tested resolutions: FHD (1920×1080) and above. (FHD is supported natively, <b>but</b> with minibar enabled there may be bugs, since the size doesn't change but the display model does.)<br>
+	The author's monitor is UWQHD (3440×1440); tested resolutions: FHD (1920×1080) and above.<br>
 	On those resolutions the bar has no issues with module placement.<br>
 	Project supports multi-monitor setups.<br>
 	<br>
@@ -113,8 +113,6 @@
 	<br>
 	For faster loading, the author chose not to bundle live wallpapers from the screenshots, leaving a link to them instead.<br>
 	<br>
-	The <i>zenburn</i> theme does <b>not</b> apply to <i>JES</i> itself — only to external apps, tty (NixOS only), and similar. <i>JES</i> has a built-in generated theme + base16 theme support via base16.json.<br>
-	<br>
   <i>JES is oriented not toward trends, but toward practicality and convenience in everyday use.</i><br>
 	</p>
 	<h3>-- acknowledgements -- :</h3>
@@ -122,40 +120,28 @@
 	Thanks to <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> and its author</b> for help with learning Quickshell and hosting the website.<br>
 	Thanks to <b><a href="https://github.com/f026/">f026</a></b> for the <a href="https://github.com/f026/activate-linux-plugin">first plugin</a> for JES.<br>
 	Thanks to <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> for help with DriftWM IPC, adding new features to the WM for JES, and in general for being supportive of the project.<br>
-    Thanks to <b><a href="https://github.com/frosti-4">frosti-4</a></b> for the script for Arch Linux.<br>
+  Thanks to <b><a href="https://github.com/frosti-4">frosti-4</a></b> for the script for Arch Linux.<br>
+  Thanks to <b><a href="https://github.com/Gegs8">Gegs8</a></b> for find bugs in installer.<br>
 	</p>
 	<h3>-- Roadmap -- :</h3>
 	<p>
-	<b>[c]</b> Add <b>Hyprland</b> support<br>
-  <b>[c]</b> Add <b>Niri</b> support<br>
-	<b>[c]</b> Add <b>DriftWM</b> support<br>
-	<b>[c]</b> base16 theme support in JES<br>
-  <b>[c]</b> Soft Material You<br>
-	<b>[c]</b> Display info for devices connected via KDE Connect<br>
-	<b>[c]</b> Nice screen picker<br>
-	<b>[c]</b> Animated album art in the player when no cover is available<br>
-	<b>[c]</b> Protection against static wallpapers with wrong format in the wallpaper picker<br>
-	<b>[c]</b> Calendar widget<br>
-	<b>[c]</b> Multi-monitor support<br>
-  <b>[c]</b> Settings installer<br>
-	<b>[c]</b> Neutral / vibrant style toggle<br>
-	<b>[c]</b> Popup minimap for <b>driftwm</b><br>
-	<b>[c]</b> Add waypoints to map<br>
-	<b>[c]</b> Add full map<br>
-	<b>[c]</b> Add normal ui in full map<br>
-  <b>[c]</b> Development of API for working with launcher<br>
+	<b>[c]</b> Development of API for working with launcher<br>
   <b>[c]</b> Development of API for working with plugin center<br>
 	<b>[c]</b> Weather widget<br>
 	<b>[c]</b> Creating a full-fledged API<br>
 	<b>[c]</b> Installing JES via flake<br>
 	<b>[c]</b> Refactoring the underlying architecture<br>
+	<b>[c]</b> Fix <b>Niri</b><br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
-	<b>[i]</b> Fix <b>Niri</b><br>
+	<b>[i]</b> New plugin's format<br>
+	<b>[i]</b> New type of adding custom wm<br>
   <b>[p]</b> Development of API for working with bar<br>
 	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
+
+See old completed tasks - [complited.md (eng only)](./complited.md)
 
 > **Who is *JES* for?**
 > - Desktop PCs with FHD+ resolution (the author uses UWQHD)
@@ -171,39 +157,46 @@
 - The author has no experience with Arch Linux; installation on Arch may be incorrect. If that's the case, please describe the issue in an Issue and, if possible, suggest a fix.
 - Installation instructions are at the very bottom.
 - The author is open to suggestions and helps with onboarding; for issues, open an [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new).
+- The author will be thanks who do pull request with adding new distro, author added it and will add name pr author. Author waiting void linux, alt linux and debian.
 
 ```
 If you want live video wallpapers, there are both video wallpapers and shaders available
 (the latter may work poorly with JES's auto theme generation)
 ```
-#### **Wallpapers from screenshots**: [click](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
+#### **Wallpapers from screenshots**: [click](https://moewalls.com/vehicle/nissan-silvia-s13-gloomy-rain-live-wallpaper/)
 
 ## [*JES* structure](./structure_eng.md)
 
 ## -- What you can configure in *JES* -- :
-- `wm` — auto, but for WMs not in the supported list you need to specify the name with a capital letter
-- `wm_type` — auto, but for unsupported WMs choose between `workspaces` or `coordinates`
-- `mainRad` — corner radius, default 10, works best in the range 0–25
-- `barOnTop` — control bar on top along with adjacent widgets, enabled by default
-- `minibar` — constrains the bar width to 1920px, disabled by default
-- `BarHeight` — bar height, default 30
-- `fontSize` — font size, default 17
-- `fontFamily` — font, default Mononoki Nerd Font Propo
+- `wm` —                      auto, but for WMs not in the supported list you need to specify the name with a capital letter
+- `wm_type` —                 auto, but for unsupported WMs choose between `workspaces` or `coordinates`
+- `mainRad` —                 corner radius, default 10, works best in the range 0–25
+- `barOnTop` —                control bar on top along with adjacent widgets, enabled by default
+- `minibar` —                 constrains the bar width to 1920px, disabled by default
+- `BarHeight` —               bar height, default 30
+- `fontSize` —                font size, default 17
+- `fontFamily` —              font, default Mononoki Nerd Font Propo
 - `custom_wallpaper_engine` — disable the built-in wallpaper engine, default false
-- `disableGenerate` - replace JES matugen theme on base16, default false
-- `doNotDisturb` — silent mode, default false
-- `timezone` — the city for the weather widget; it is not present by default, the value is taken from the `user-config.toml` file of the NixOS configuration.
+- `disableGenerate` -         replace JES matugen theme on base16, default false
+- `doNotDisturb` —            silent mode, default false
+- `timezone` —                the city for the weather widget; it is not present by default, the value is taken from the `user-config.toml` file of the NixOS configuration.
+- `animation` -               animation speed, float number, default 1.0
+- `wtw` -                     spacing widget to widget, default 6
+- `spacing` -                 spacings blocks in widget, default 3
+- `margins` -                 margins in widget, default 3
+- `disableCorners` -          disable roundings of monitors, default false
+- `openweather_key` -         openWeather api key, default is empty
 
 ```
-Note: config.toml lives in the Quickshell folder (~/.config/quickshell/)
-The author left an alias in .bashrc — if you don't want to type the path, just run:
-    edit-JES
+Note: config.toml lives in the JES folder (~/.config/JES/)
+you also can change it used:
+    jes-cli editConf
 The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
 ```
 
 ## [JES for DriftWM](./DriftWM_eng.md)
 
-## -- Keybindings for SwayFX, Hyprland and Niri -- :
+## -- Keybindings for SwayFX, Hyprland and Niri in ref. configs -- :
 | keybinding | action |
 | :--- | :---: |
 | `super + e` | file manager |
@@ -243,7 +236,7 @@ The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
 ### [Keybindings for DriftWM](./DriftWM_eng.md)
 
 ## -- How *JES* looks -- :
-### Desktop
+### Desktop (swayfx screenshots)
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
@@ -260,7 +253,7 @@ The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
 ### Power buttons
 ![alt_image](./images/7.webp)
 
-### fastfetch
+### Jwindow
 ![alt_image](./images/8.webp)
 
 ### Volume / audio popup
@@ -276,9 +269,10 @@ The alias uses micro; to quit press Ctrl+Q, to save press Ctrl+S
 ### bash prompt
 ```
 1 [02:00 - orflem:~]$  cd gits/just_enough_shell/
-2 [02:00 - orflem:~/gits/just_enough_shell main]$  
+2 [02:00 - orflem:~/gits/just_enough_shell main]$  hi ^C
+3 [02:00 - orflem:~ {ec: 130}]$  
 ```
-command number, time, user, directory, git status (when inside a git-tracked project)
+command number, time, user, directory, git status (when inside a git-tracked project), exit code
 
 ## -- Plugins -- :
 ### Installation
@@ -394,4 +388,5 @@ Full license text: [LICENSE](./LICENSE).
 
 [![boosty](https://img.shields.io/badge/Support_on_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
 
-##### Created by \_ORFLEM\_
+##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
+##### Translated By [\_ORFLEM\_](https://github.com/ORFLEM) x [DeepSeek](https://chat.deepseek.com/)

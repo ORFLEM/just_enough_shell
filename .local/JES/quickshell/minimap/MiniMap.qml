@@ -23,15 +23,15 @@ WlrLayershell {
         left: true
     }
 
-    implicitHeight: openMap ? Screen.height - barHeight - 6 : 306
-    implicitWidth: openMap ? Screen.width - 6 : 300 * Screen.width / Screen.height + 6
+    implicitHeight: openMap ? Screen.height - barHeight - root.wtw : 300 + root.wtw
+    implicitWidth: openMap ? Screen.width - root.wtw : 300 * Screen.width / Screen.height + root.wtw
     color: "transparent"
 
     Rectangle {
         id: background
         anchors.fill: parent
-        anchors.bottomMargin: 6
-        anchors.leftMargin: 6
+        anchors.bottomMargin: root.wtw
+        anchors.leftMargin: root.wtw
         color: "transparent"
         radius: mainRad
 
@@ -54,8 +54,8 @@ WlrLayershell {
         ClippingRectangle {
             id: windowsContainer
             anchors.fill: parent
-            radius: mainRad - 3
-            anchors.margins: 3
+            radius: mainRad - root.margins
+            anchors.margins: root.margins
             color: "transparent"
             clip: true
 
@@ -183,7 +183,7 @@ WlrLayershell {
                     height: textMap.height + 4
                     Rectangle {
                         anchors.fill: parent
-                        radius: mainRad - 3
+                        radius: mainRad - root.margins
                         opacity: 0.65
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -205,17 +205,17 @@ WlrLayershell {
 
                 ClippingRectangle {
                     width: 200
-                    radius: mainRad - 3
+                    radius: mainRad - root.margins
                     color: "transparent"
                     anchors {
                         top: parent.top
                         bottom: parent.bottom
                         right: parent.right
-                        bottomMargin: btnAdd.height + 3
+                        bottomMargin: btnAdd.height + root.margins
                     }
                     ListView {
                         anchors.fill: parent
-                        spacing: 3
+                        spacing: root.spacing
                         clip: true
                         model: waypointModel
                         delegate: Rectangle {
@@ -223,12 +223,12 @@ WlrLayershell {
                             property bool hovered: false
                             width: parent.width
                             height: waypointbtnText.implicitHeight + 4
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             color: "transparent"
 
                             Rectangle {
                                 anchors.fill: parent
-                                radius: mainRad - 3
+                                radius: mainRad - root.margins
                                 opacity: 0.65
                                 gradient: Gradient {
                                     orientation: Gradient.Horizontal
@@ -277,7 +277,7 @@ WlrLayershell {
                 }
 
                 Row {
-                    spacing: 3
+                    spacing: root.spacing
                     anchors.bottom: parent.bottom
                     anchors.right: parent.right
 
@@ -288,7 +288,7 @@ WlrLayershell {
                         height: btnAddText.height + 4
                         Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.65
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -301,7 +301,7 @@ WlrLayershell {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: btnAdd.hovered ? col.accent : "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }
@@ -332,7 +332,7 @@ WlrLayershell {
                         height: btnDeleteText.height + 4
                         Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.65
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -345,7 +345,7 @@ WlrLayershell {
                         Rectangle {
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: btnDelete.hovered ? col.accent : "transparent"
                             Behavior on color { ColorAnimation { duration: 200 } }
                         }

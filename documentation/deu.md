@@ -3,7 +3,7 @@
   <img src="https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Projektgr%C3%B6%C3%9Fe&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Projektgröße">
   <img src="https://img.shields.io/github/stars/ORFLEM/just_enough_shell?color=bbbbbb&label=Projektsterne&logo=andela&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Projektsterne">
 	<img src="./images/preview.webp" width="900px">
-	<h1>Just Enough Shell</h1>
+	<h1>> Just Enough Shell _</h1>
 	<p>Gemacht für den Alltag, nicht für Bilder.</p>
 </div>
 
@@ -84,7 +84,7 @@
 </table>
 
 <div align="left">
-	<h3>-- Über das Projekt --:</h3>
+	<h3>-- Über das Projekt -- :</h3>
 	<p>
   <i>JES</i> verwendet <b>QuickShell</b> zur Darstellung der Oberfläche.<br>
   <br>
@@ -94,26 +94,24 @@
   	<li>Hyprland</li>
   	<li>Niri</li>
 		<li>DriftWM</li>
-		<li>Jeden anderen über 3 Skripte und eine qml-Datei</li>
+		<!-- <li>Jeden anderen WM über das Plugin-System</li> -->
 	</ul>
-	<b>Niri</b> hat keine Transparenz und aufgrund seiner Architektur einen Bug bei den Workspaces in der Leiste.<br>
 	<br>
-	Das Projekt ist optimiert, wurde aber nicht auf schwachen PCs getestet.<br>
-	Go-Binärdateien werden für Skripte verwendet, bei denen eine schnelle Verarbeitung großer Datenmengen wichtig ist – dadurch liegt die CPU-Auslastung im Leerlauf bei 5–10&nbsp;% (nur <i>JES</i> - 1-2&nbsp;% CPU und ~400 MB RAM) statt bei 35–45&nbsp;%.<br>
+	Das Projekt ist optimiert, wurde aber nicht auf schwacher Hardware getestet.<br>
+	Go-Binärdateien werden für Skripte verwendet, bei denen eine schnelle Verarbeitung großer Datenmengen wichtig ist – dadurch liegt die CPU-Auslastung im Leerlauf bei <i>JES</i> bei 1–2&nbsp;% CPU und ~400 MB RAM statt bei 35–45&nbsp;%.<br>
+	Die Referenzkonfigurationen verbrauchen etwa 5–10&nbsp;% CPU bei einem Monitor und 7–13&nbsp;% bei mehreren Monitoren.<br>
   <br>
 	Das Projekt hat ein einfaches Plugin-System, das es erweiterbar macht.<br>
 	<br>
 	<i>JES</i> wurde für Desktop-PCs konzipiert, was es ermöglicht, es besser auf solch großartige Maschinen abzustimmen.<br>
-	Der Monitor des Autors ist UWQHD (3440x1440), getestete Auflösungen: FHD (1920x1080) und höher. (FHD (1920x1080) wird nativ unterstützt, <b>aber</b> bei aktiviertem minibar kann es zu Bugs kommen, da sich die Größe nicht ändert, das Anzeigemodell jedoch schon)<br>
+	Der Monitor des Autors ist UWQHD (3440×1440), getestete Auflösungen: FHD (1920×1080) und höher.<br>
 	Bei diesen hat die Leiste keine Probleme mit der Anordnung der Module.<br>
-	Mehrere Monitore werden nativ unterstützt.<br>
+	Das Projekt unterstützt mehrere Monitore nativ.<br>
 	<br>
 	Das Projekt verwendet bash mit angepasster Ausgabe und wird für SwayFX und DriftWM schneller aktualisiert, da es auf den Autor und seinen Alltagsgebrauch ausgerichtet ist.<br>
 	Genau das verleiht dem Projekt Beständigkeit, denn während der Autor seinen alltäglichen Aufgaben nachgeht, entwickelt sich das Projekt weiter und wird stetig verbessert.<br>
 	<br>
 	Für eine schnellere Ladezeit hat der Autor entschieden, keine Videohintergründe von den Bildern hier einzubinden, sondern nur einen Link dazu bereitzustellen.<br>
-	<br>
-	Das <i>zenburn</i>-Theme gilt <b>nicht</b> für <i>JES</i> selbst, sondern nur für Programme, das tty (nur NixOS) und Ähnliches – <i>JES</i> hat ein eigenes, generiertes Theme + Unterstützung für base16-Themes über base16.json<br>
 	<br>
   <i>JES orientiert sich nicht an Trends, sondern an Praktikabilität im Alltag und Komfort.</i><br>
 	</p>
@@ -123,39 +121,27 @@
 	Danke an <b><a href="https://github.com/f026/">f026</a></b> für das <a href="https://github.com/f026/activate-linux-plugin">erste Plugin</a> für JES.<br>
 	Danke an <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> für die Hilfe bei DriftWM IPC, das Hinzufügen neuer Funktionen zum WM für JES und allgemein für die Unterstützung des Projekts.<br>
     Danke an <b><a href="https://github.com/frosti-4">frosti-4</a></b> für das Skript für Arch Linux.<br>
+    Danke an <b><a href="https://github.com/Gegs8">Gegs8</a></b> für das Finden von Fehlern im Installationsprogramm.<br>
 	</p>
-	<h3>-- Weiterer Fahrplan --:</h3>
+	<h3>-- Weiterer Fahrplan -- :</h3>
 	<p>
-	<b>[c]</b> Hinzufügen der Unterstützung für <b>Hyprland</b><br>
-  <b>[c]</b> Hinzufügen der Unterstützung für <b>Niri</b><br>
-	<b>[c]</b> Hinzufügen der Unterstützung für <b>DriftWM</b><br>
-	<b>[c]</b> Unterstützung für base16-Themes in JES<br>
-  <b>[c]</b> Sanftes material you<br>
-	<b>[c]</b> Anzeige von Informationen über ein über kdeconnect verbundenes Gerät<br>
-	<b>[c]</b> Hübscher screen picker<br>
-	<b>[c]</b> Animiertes Cover im Player, wenn kein Cover vorhanden ist<br>
-	<b>[c]</b> Schutz vor statischen Hintergründen mit falschem Format im wallpaper picker<br>
-	<b>[c]</b> Erstellung eines Kalender-Widgets<br>
-	<b>[c]</b> Unterstützung mehrerer Monitore<br>
-  <b>[c]</b> Erstellung eines Konfigurations-Installers<br>
-	<b>[c]</b> Auswahl des Stils neutral/auffällig<br>
-	<b>[c]</b> Popup-Minimap für <b>driftwm</b><br>
-	<b>[c]</b> Wegpunkte zur Karte hinzufügen<br>
-	<b>[c]</b> Vollwertige Karte hinzufügen<br>
-	<b>[c]</b> Normales UI in der Vollkarte hinzufügen<br>
-  <b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
+	<b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
   <b>[c]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
 	<b>[c]</b> Erstellung eines Wetter-Widgets<br>
 	<b>[c]</b> Erstellung einer vollwertigen API<br>
 	<b>[c]</b> Installation von JES über Flake<br>
 	<b>[c]</b> Überarbeitung der zugrundeliegenden Architektur<br>
+	<b>[c]</b> Fix für <b>Niri</b><br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
-	<b>[i]</b> Fix für <b>Niri</b><br>
+	<b>[i]</b> Neues Plugin-Format<br>
+	<b>[i]</b> Neue Art des Hinzufügens benutzerdefinierter WM<br>
   <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
 	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
-	c = completed; n = not completed; i = in progress; p = planned.<br> 
+	c = completed; n = not completed; i = in progress; p = planned.<br>
 	</p>
 </div>
+
+Siehe alte abgeschlossene Aufgaben - [complited.md (nur englisch)](./complited.md)
 
 > **Für wen ist *JES*?** 
 > - Desktop-PCs mit FHD+-Auflösung (der Autor verwendet UWQHD)
@@ -171,38 +157,45 @@
 - Der Autor hat keine Erfahrung mit Arch Linux, die Installation unter Arch kann daher fehlerhaft sein. Sollte das der Fall sein, beschreiben Sie das Problem bitte in einem Issue und schlagen Sie nach Möglichkeit einen Fix vor
 - Die Installationsanleitung befindet sich ganz unten
 - Der Autor ist offen für Vorschläge und hilft beim Einstieg in das Projekt; bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen
+- Der Autor wird sich bei Pull-Requests für neue Distributionen bedanken; er fügt sie hinzu und nennt den Namen des PR-Autors. Erwartet werden Void Linux, ALT Linux und Debian.
 
 ```
 Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und Shadern wählen (Letzteres funktioniert möglicherweise nicht gut mit der automatischen Theme-Generierung von JES)
 ```
-#### **Hintergründe aus den Screenshots**: [hier](https://moewalls.com/lifestyle/touch-grass-live-wallpaper/)
+#### **Hintergründe aus den Screenshots**: [hier](https://moewalls.com/vehicle/nissan-silvia-s13-gloomy-rain-live-wallpaper/)
 
 ## [Struktur von *JES*](./structure_deu.md)
 
-## -- Was sich in *JES* anpassen lässt --:
-- `wm` - auto, aber für die Anbindung eines WM, das nicht in der Liste der verfügbaren steht, muss der Name großgeschrieben angegeben werden
-- `wm_type` - auto, aber für ein WM außerhalb der Liste stehen workspaces oder coordinates zur Auswahl
-- `mainRad` - Eckenradius, standardmäßig 10, funktioniert einwandfrei mit Werten von 0-25
-- `barOnTop` - Steuerleiste oben sowie die zugehörigen Widgets, standardmäßig aktiviert
-- `minibar` - macht die Leiste 1920px breit, standardmäßig deaktiviert
-- `BarHeight` - Höhe der Leiste, standardmäßig 30
-- `fontSize` - Schriftgröße, standardmäßig 17
-- `fontFamily` - Schriftart, standardmäßig Mononoki Nerd Font Propo
-- `custom_wallpaper_engine` - integrierte Hintergründe deaktivieren, standardmäßig false
-- `disableGenerate` — Umschaltung des JES-matugen-Themas auf base16, standardmäßig false
-- `doNotDisturb` - stiller Modus, standardmäßig false
-- `timezone` — die Stadt für das Wetter-Widget; standardmäßig nicht vorhanden, der Wert wird aus der `user-config.toml`-Datei der NixOS-Konfiguration übernommen.
+## -- Was sich in *JES* anpassen lässt -- :
+- `wm` —                      auto, aber für die Anbindung eines WM, das nicht in der Liste der verfügbaren steht, muss der Name großgeschrieben angegeben werden
+- `wm_type` —                 auto, aber für ein WM außerhalb der Liste stehen workspaces oder coordinates zur Auswahl
+- `mainRad` —                 Eckenradius, standardmäßig 10, funktioniert einwandfrei mit Werten von 0-25
+- `barOnTop` —                Steuerleiste oben sowie die zugehörigen Widgets, standardmäßig aktiviert
+- `minibar` —                 macht die Leiste 1920px breit, standardmäßig deaktiviert
+- `BarHeight` —               Höhe der Leiste, standardmäßig 30
+- `fontSize` —                Schriftgröße, standardmäßig 17
+- `fontFamily` —              Schriftart, standardmäßig Mononoki Nerd Font Propo
+- `custom_wallpaper_engine` — integrierte Hintergründe deaktivieren, standardmäßig false
+- `disableGenerate` —         Umschaltung des JES-matugen-Themas auf base16, standardmäßig false
+- `doNotDisturb` —            stiller Modus, standardmäßig false
+- `timezone` —                die Stadt für das Wetter-Widget; standardmäßig nicht vorhanden, der Wert wird aus der `user-config.toml`-Datei der NixOS-Konfiguration übernommen.
+- `animation` —               Animationsgeschwindigkeit, Gleitkommazahl, Standard 1.0
+- `wtw` —                     Abstand Widget zu Widget, Standard 6
+- `spacing` —                 Abstandsblöcke im Widget, Standard 3
+- `margins` —                 Ränder im Widget, Standard 3
+- `disableCorners` —          Rundungen der Monitore deaktivieren, Standard false
+- `openweather_key` —         OpenWeather API-Schlüssel, Standard leer
 
 ```
-Wichtig: config.toml liegt im Quickshell-Ordner (~/.config/quickshell/)
-In der .bashrc hat der Autor einen Alias hinterlegt – wer es sich sparen möchte, alles einzutippen, gibt einfach in der Konsole ein:
-	edit-JES
-Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
+Wichtig: config.toml liegt im JES-Ordner (~/.config/JES/)
+Sie können ihn auch mit folgendem Befehl ändern:
+    jes-cli editConf
+Im Alias wird micro verwendet; zum Beenden Strg+Q, zum Speichern Strg+S
 ```
 
 ## [JES für DriftWM](./DriftWM_deu.md)
 
-## -- Tastenkombinationen für SwayFX, Hyprland und Niri -- :
+## -- Tastenkombinationen für SwayFX, Hyprland und Niri (in den Referenzkonfigurationen) -- :
 | Kombination | Was es tut |
 | :--- | :---: |
 | `super + e` | Dateimanager |
@@ -237,12 +230,12 @@ Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 - Um das Plugin-Center zu öffnen, klicken Sie mit der rechten Maustaste auf den Netzschalter.
 - Um den Kalender zu öffnen, klicken Sie mit der rechten Maustaste auf die Uhrzeit; ein Linksklick tauscht Uhrzeit und Datum.
 
-### Die Wahl der Taste für Screenshots wurde nach oben verlegt, da nicht jedem `home` zusagt oder die Taste fehlen kann – wie beim Autor, dessen Tastatur keine print-screen-Taste hat
+### Die Wahl der Taste für Screenshots ist konfigurierbar, da nicht jedem `home` zusagt oder die Taste fehlen kann – wie beim Autor, dessen Tastatur keine print-screen-Taste hat.
 
 ### [Tastenkombinationen für DriftWM](./DriftWM_deu.md)
 
-## -- So sieht *JES* aus --:
-### Desktop
+## -- So sieht *JES* aus -- :
+### Desktop (SwayFX-Screenshots)
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
@@ -259,7 +252,7 @@ Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 ### Energie-Buttons
 ![alt_image](./images/7.webp)
 
-### fastfetch
+### Jwindow
 ![alt_image](./images/8.webp)
 
 ### Lautstärke- und Ton-Popup
@@ -275,20 +268,21 @@ Im Alias wird micro verwendet, zum Beenden Strg+Q, zum Speichern Strg+s
 ### bash-Zeile
 ```
 1 [02:00 - orflem:~]$  cd gits/just_enough_shell/
-2 [02:00 - orflem:~/gits/just_enough_shell main]$  
+2 [02:00 - orflem:~/gits/just_enough_shell main]$  hi ^C
+3 [02:00 - orflem:~ {ec: 130}]$  
 ```
-Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit Git verknüpften Projekts)
+Befehlsnummer, Uhrzeit, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit Git verknüpften Projekts), Exit-Code
 
-## -- Plugins --:
+## -- Plugins -- :
 ### Installation
 ```
 1. Öffnen Sie ~/.config/quickshell/
 2. Legen Sie den Plugin-Ordner dort ab
 3. Öffnen Sie config.toml
 4. Tragen Sie folgende Zeilen ein:
-	 [[plugin]]
-	 name = "plugin name" # Daten aus der Eigenschaft name in manifest.json
-	 active = true
+   [[plugin]]
+   name = "plugin name" # Daten aus der Eigenschaft name in manifest.json
+   active = true
 ```
 
 ### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)
@@ -296,7 +290,7 @@ Befehlsnummer, Datum, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit 
 ### [Plugin-Repository](./plugin_repo.md)
 ### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
 
-## -- Installation von JES --:
+## -- Installation von JES -- :
 ### NixOS clear
 - Installieren Sie NixOS
 - Führen Sie das Installationsprogramm aus:
@@ -309,7 +303,7 @@ nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.gi
 ### NixOS develop
 - Installieren Sie NixOS
 - Führen Sie das Installationsprogramm aus:
-```bash
+```
 nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
 ```
 - Wählen Sie die Installation nur von JES
@@ -380,7 +374,7 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 9. Geben Sie reboot ein
 ```
 
-## -- Lizenz --:
+## -- Lizenz -- :
 Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert, Lizenz **GNU GPL v3**
 Ein Blick darauf lohnt sich
 
@@ -396,4 +390,5 @@ Den vollständigen Lizenztext finden Sie in der Datei [LICENSE](./LICENSE).
 
 [![boosty](https://img.shields.io/badge/Unterst%C3%BCtze_auf_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
 
-##### Created by \_ORFLEM\_
+##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
+##### Translated by [DeepSeek](https://chat.deepseek.com/)

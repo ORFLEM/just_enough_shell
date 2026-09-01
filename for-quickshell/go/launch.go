@@ -9,12 +9,14 @@ import (
 	"strings"
 )
 
-// Унифицированный формат вывода
+// Унифицированный формат вывода для QML
 type UnifiedApp struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
-	Exec string `json:"exec"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Icon     string `json:"icon"`
+	Exec     string `json:"exec"`
+	Comment  string `json:"comment"`
+	Keywords string `json:"keywords"`
 }
 
 // Внутреннее представление .desktop
@@ -23,14 +25,15 @@ type desktopApp struct {
 	Exec     string
 	Icon     string
 	Terminal bool
-	Comment  string // добавлено
+	Comment  string
+	Keywords string
 	File     string
 }
 
 type FreqDB map[string]int
 
 func freqPath() string {
-	return filepath.Join(os.Getenv("HOME"), ".local/share/quickshell/launch-freq.json")
+	return filepath.Join(os.Getenv("HOME"), ".local/state/JES-launch-freq.json")
 }
 
 func loadFreq() FreqDB {
@@ -47,7 +50,27 @@ func saveFreq(db FreqDB) {
 	dir := filepath.Dir(freqPath())
 	os.MkdirAll(dir, 0755)
 	data, _ := json.Marshal(db)
-	os.WriteFile(freqPath(), data, 0644)
+
+	tmpFile := freqPath() + ".tmp"
+	if err := os.WriteFile(tmpFile, data, 0644); err == nil {
+		os.Rename(tmpFile, freqPath())
+	}
+}
+
+// Чистка кеша от софта, которого больше нет в системе
+func cleanFreq(db FreqDB, apps []desktopApp) FreqDB {
+	validApps := make(map[string]bool, len(apps))
+	for _, app := range apps {
+		validApps[app.Name] = true
+	}
+
+	cleaned := FreqDB{}
+	for name, count := range db {
+		if validApps[name] {
+			cleaned[name] = count
+		}
+	}
+	return cleaned
 }
 
 func parseDesktop(path string) (desktopApp, bool) {
@@ -91,6 +114,8 @@ func parseDesktop(path string) (desktopApp, bool) {
 			app.Icon = v
 		case "Comment":
 			app.Comment = v
+		case "Keywords":
+			app.Keywords = strings.ReplaceAll(v, ";", " ")
 		case "Terminal":
 			app.Terminal = v == "true"
 		case "NoDisplay":
@@ -125,6 +150,10 @@ func cleanExec(exec string) string {
 	return strings.Join(result, " ")
 }
 
+func quoteArg(s string) string {
+	return "'" + strings.ReplaceAll(s, "'", "'\\''") + "'"
+}
+
 func getDesktopDirs() []string {
 	home := os.Getenv("HOME")
 	return []string{
@@ -135,10 +164,9 @@ func getDesktopDirs() []string {
 	}
 }
 
-func listApps(search string) []desktopApp {
+func listApps() []desktopApp {
 	seen := map[string]bool{}
 	apps := []desktopApp{}
-	search = strings.ToLower(search)
 
 	for _, dir := range getDesktopDirs() {
 		entries, err := os.ReadDir(dir)
@@ -159,13 +187,6 @@ func listApps(search string) []desktopApp {
 				continue
 			}
 
-			if search != "" {
-				if !strings.Contains(strings.ToLower(app.Name), search) &&
-					!strings.Contains(strings.ToLower(app.Exec), search) &&
-					!strings.Contains(strings.ToLower(app.Comment), search) {
-					continue
-				}
-			}
 			apps = append(apps, app)
 		}
 	}
@@ -183,13 +204,12 @@ func main() {
 		return
 	}
 
-	search := ""
-	if len(os.Args) > 1 {
-		search = os.Args[1]
-	}
-
 	freq := loadFreq()
-	apps := listApps(search)
+	apps := listApps()
+
+	// Очищаем кеш от удаленного софта и сохраняем обновленный JSON
+	freq = cleanFreq(freq, apps)
+	saveFreq(freq)
 
 	// Сортировка по частоте использования
 	sort.Slice(apps, func(i, j int) bool {
@@ -200,6 +220,12 @@ func main() {
 		return strings.ToLower(apps[i].Name) < strings.ToLower(apps[j].Name)
 	})
 
+	// Путь к собственному бинарнику
+	selfExec, err := os.Executable()
+	if err != nil {
+		selfExec = os.Args[0]
+	}
+
 	// Преобразование в унифицированный формат
 	unified := make([]UnifiedApp, 0, len(apps))
 	for _, app := range apps {
@@ -209,17 +235,20 @@ func main() {
 			if term == "" {
 				term = "xterm"
 			}
-			// Экранирование одинарных кавычек для безопасной передачи в sh -c
 			escaped := strings.ReplaceAll(exec, "'", "'\\''")
 			exec = term + " -e sh -c '" + escaped + "'"
 		}
+
+		launchCmd := selfExec + " --launched " + quoteArg(app.Name) + " && " + exec
+
 		unified = append(unified, UnifiedApp{
-			ID:   app.File, // уникальный идентификатор – путь к .desktop
-			Name: app.Name,
-			Icon: app.Icon,
-			Exec: exec,
+			ID:       app.File,
+			Name:     app.Name,
+			Icon:     app.Icon,
+			Exec:     launchCmd,
+			Comment:  app.Comment,
+			Keywords: app.Keywords,
 		})
 	}
-
 	json.NewEncoder(os.Stdout).Encode(unified)
 }

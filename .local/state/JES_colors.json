@@ -1,11 +1,11 @@
 {
-  "background1": "#42464c",
-  "background2": "#3d4146",
-  "background3": "#3e4247",
-  "backgroundAlt1": "#282b2e",
-  "backgroundAlt2": "#282b2e",
-  "font": "#bac8db",
-  "fontDark": "#243140",
-  "accent": "#9ecafc",
-  "accent2": "#4e5f72"
+  "background1": "#3f4944",
+  "background2": "#3b443f",
+  "background3": "#3c4540",
+  "backgroundAlt1": "#262c29",
+  "backgroundAlt2": "#262c29",
+  "font": "#b3ccbe",
+  "fontDark": "#1f352b",
+  "accent": "#8cd5b3",
+  "accent2": "#486657"
 }

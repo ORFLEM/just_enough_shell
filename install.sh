@@ -234,7 +234,7 @@ ru_install() {
     animate_text "Установка JES:"
     animate_text " проверка наличия файлов"
     echo -ne "\033[F"
-    for item in ".local" ".config" ".bashrc" ".bash_profile" "flake.nix" "configuration.nix"; do
+    for item in ".local" ".config" ".bashrc" ".bash_profile" "installer/flake.nix" "installer/configuration.nix"; do
         echo -ne "\r  проверка наличия файлов.  "
         sleep 0.15
         echo -ne "\r  проверка наличия файлов.. "
@@ -448,7 +448,7 @@ en_install() {
     animate_text "Installing JES:"
     animate_text " checking files"
     echo -ne "\033[F"
-    for item in ".local" ".config" ".bashrc" ".bash_profile" "flake.nix" "configuration.nix"; do
+    for item in ".local" ".config" ".bashrc" ".bash_profile" "installer/flake.nix" "installer/configuration.nix"; do
         echo -ne "\r  checking files.  "
         sleep 0.15
         echo -ne "\r  checking files.. "
@@ -503,7 +503,7 @@ en_install() {
         echo -ne "\033[F"
         echo -ne "                        \r"
         animate_text "  installing NixOS configuration"
-        sudo cp ./flake.nix /etc/nixos/
+        sudo cp ./installer/flake.nix /etc/nixos/
         sleep 1
         echo -en "  [#######--------]\r"
         USERNAME=$(grep 'users.users.' /etc/nixos/configuration.nix | awk -F '.' '{print $3}' | awk -F ' ' '{print $1}')
@@ -613,7 +613,7 @@ EOF
         echo
         echo -ne "\r  generating flake.lock\n  [#############--]"
         sleep 1
-        sudo cp ./configuration.nix /etc/nixos/
+        sudo cp ./installer/configuration.nix /etc/nixos/
         cd /etc/nixos || { animate_text "  [ERROR] can't cd to /etc/nixos"; exit 1; }
         if ! sudo nix flake update --extra-experimental-features "nix-command flakes"; then
             animate_text "  [ERROR] updating flake.lock: installation stopped, check /etc/nixos/flake.nix & other files in /etc/nixos and re-run generating flake.lock yourself then rebuild NixOS and restart PC."

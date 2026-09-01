@@ -15,15 +15,15 @@ WlrLayershell {
         right: true
         bottom: !barOnTop
     }
-    implicitHeight: 506
-    implicitWidth: 706
+    implicitHeight: 500 + root.wtw
+    implicitWidth: 700 + root.wtw
     color: "transparent"
 
     property var pluginInfo: []   // плоский массив блоков { source, qmlFile, colSpan, rowSpan }
 
     FileView {
         id: pluginLoader
-        path: Quickshell.env("HOME") + "/.cache/JES_center_loaders.json"
+        path: Quickshell.env("HOME") + "/.cache/JES/JES_center_loaders.json"
         watchChanges: true
         onFileChanged: reload()
         onLoaded: {
@@ -44,26 +44,28 @@ WlrLayershell {
                 pluginInfo = []
                 return
             }
-
+    
             var flatItems = []
             for (var i = 0; i < newTabs.length; i++) {
                 var plugin = newTabs[i]
-                var pluginSource = plugin.source
-                if (!pluginSource) {
-                    console.warn("Плагин без source, пропускаем")
-                    continue
-                }
+                var pluginSource = plugin.source || ""
+                
                 var items = plugin.info
                 if (!Array.isArray(items)) continue
+    
                 for (var j = 0; j < items.length; j++) {
                     var item = items[j]
-                    if (!item.source) {
-                        console.warn("Блок без source, пропускаем")
+                    
+                    // Извлекаем имя файла (учитываем как item.source, так и item.qmlFile)
+                    var file = item.qmlFile || item.source || ""
+                    if (!file) {
+                        console.warn("Блок без QML-файла, пропускаем")
                         continue
                     }
+    
                     flatItems.push({
                         source: pluginSource,
-                        qmlFile: item.source,
+                        qmlFile: file,
                         colSpan: item.colSpan || 1,
                         rowSpan: item.rowSpan || 1
                     })
@@ -75,7 +77,7 @@ WlrLayershell {
             pluginInfo = []
         }
     }
-
+    
     property int currentPage: 0
     readonly property int pageCells: 21   // 3*7 ячеек
 
@@ -195,9 +197,9 @@ WlrLayershell {
     // ------------------- Внешний вид -------------------
     Item {
         anchors.fill: parent
-        anchors.topMargin: barOnTop ? 6 : 0
-        anchors.bottomMargin: !barOnTop? 6 : 0
-        anchors.rightMargin: 6
+        anchors.topMargin: barOnTop ? root.wtw : 0
+        anchors.bottomMargin: !barOnTop? root.wtw : 0
+        anchors.rightMargin: root.wtw
 
         Rectangle {
             anchors.fill: parent
@@ -221,19 +223,19 @@ WlrLayershell {
 
             Column {
                 anchors.fill: parent
-                anchors.margins: 3
-                spacing: 3
+                anchors.margins: root.margins
+                spacing: root.margins
 
                 ClippingRectangle {
                     id: gridContainer
                     width: parent.width
                     height: parent.height - tabsRow.height - parent.spacing
-                    radius: mainRad - 3
+                    radius: mainRad - root.margins
                     color: "transparent"
                 
                     readonly property int cols: 3
                     readonly property int rows: 7
-                    readonly property real spacing: 3
+                    readonly property real spacing: root.spacing
                 
                     readonly property real cellWidth: (gridContainer.width - spacing * (cols - 1)) / cols
                     readonly property real cellHeight: (gridContainer.height - spacing * (rows - 1)) / rows
@@ -253,8 +255,15 @@ WlrLayershell {
                 
                                 Loader {
                                     anchors.fill: parent
-                                    source: modelData && modelData.source && modelData.qmlFile ? "file://" + modelData.source + "/" + modelData.qmlFile : ""
+                                    source: Qt.resolvedUrl("file://" + modelData.source + "/" + modelData.qmlFile) 
                                     asynchronous: true
+                                    
+                                    // Выведет ошибку в консоль, если QML-виджет не сможет загрузиться (например, из-за синтаксиса или импортов)
+                                    onStatusChanged: {
+                                        if (status === Loader.Error) {
+                                            console.warn("Ошибка загрузки плагина:", source, errorString())
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -268,7 +277,7 @@ WlrLayershell {
                     width: parent.width
                     visible: pages.length > 1
                     Row {
-                        spacing: 3
+                        spacing: root.spacing
                         anchors.horizontalCenter: parent.horizontalCenter
 
                         Repeater {

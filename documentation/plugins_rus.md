@@ -46,7 +46,7 @@ Item {
     property bool hovered: false
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - 3
+        radius: mainRad - root.margins
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -59,7 +59,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 5 // складываем все margins
+        radius: mainRad - 2 - root.margins // складываем все margins
         color: button.hovered ? col.accent : "transparent" 
         Behavior on color { ColorAnimation { duration: 200 } }
     }
@@ -97,17 +97,21 @@ Item {
 для подключения к JES у плагина должен быть `manifest.json`, ниже приведён максимальный базовый вариант для JES без сторонних расширений:
 ```json
 {
-  "api_version": "0.1.0",
+  "api_version": "0.1.1",
   "plugin_version": "1.0",
   "name": "plugin name",
   "api_request": [
     "launcher",
-    "plugin_center"
+    "plugin_center",
+    "osd",
+    "Jwindow"
   ],
   "main_source": "Main.qml",
   "json_files": {
     "launcher": "launch_list.json",
-    "plugin_center": "load_list.json"
+    "plugin_center": "load_list.json",
+    "osd": "osd_list.json",
+    "Jwindow": "Jwindow.json"
   }
 }
 ```
@@ -161,6 +165,49 @@ active = true
 
 - максимальные размеры - `colSpan: 3, rowSpan: 7`
 - в source можно передавать любой модуль
+
+## Подключение к osd JES
+- Для подключения к osd мы используем json файл с следующей структурой:
+```json
+[
+  {
+    "id": "mic_volume",
+    "type": "percent",
+    "command": "./mic.sh"
+  },
+  {
+    "id": "media_status",
+    "type": "text",
+    "command": "./media.sh"
+  }
+]
+```
+- type отвечает за формат отображения: `text` - отображение текстовой информации, `precent` - отображение полосы и процентной информации, в начале можно поставить иконку
+- в command мы передаём скрипты, которые выводят для `text` - текстовое сообщение:
+  ```json
+  {
+      "text": "hi"
+  }
+  ```
+  а для `precent` мы передаём:
+  ```json
+  {
+      "value": 55,
+      "sign": "󱄅"
+  }
+  ```
+
+## Подключение к Jwindow JES
+- Для подключения у Jwindow мы также используем Jsonw, с следующей информацией:
+```json
+[
+ {
+      "name": "API Test",
+      "source": "JwindowTabTester.qml"
+  }
+]
+```
+- в source, как и в плагин центре, можно указать любой модуль, но максимальные размеры ограничены fhd
 
 ## Расширение API JES
 - для расширения API, ваш плагин должен подписаться на главный кэш всей плагин системы:

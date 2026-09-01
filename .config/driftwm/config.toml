@@ -136,7 +136,8 @@ transparent_shader = true
 # --- Power menu / дашборд ---
 "mod+p" = "spawn jes-cli togglePower"
 "mod+m" = "spawn jes-cli toggleMap"
-"mod+w" = "spawn ~/.local/bin/qs_restart.sh"
+"mod+Alt+f" = "spawn jes-cli toggleJwindow"
+"mod+w" = "spawn jes-cli restart-daemon"
 
 # --- Медиа (используем spawn, т.к. не нужно снимать fullscreen) ---
 "Alt+F9"  = "spawn pamixer -t"
@@ -216,18 +217,10 @@ transparent_shader = true
 enabled = true                  # default: true
 path    = "xwayland-satellite"  # path to xwayland-satellite binary ($PATH lookup works)
 
-[[outputs]]
-name = "DP-3"           # connector name (required)
-scale = 1                # fractional scale (default: 1.0)
-transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
-position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
-mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
+# [[outputs]]
+# name = "DP-3"           # connector name (required)
+# scale = 1                # fractional scale (default: 1.0)
+# transform = "normal"     # normal, 90, 180, 270, flipped, flipped-90, flipped-180, flipped-270
+# position = "auto"        # "auto" (left-to-right) or [x, y] in layout coords
+# mode = "3440x1440@144"       # "preferred", "1920x1080", or "2560x1440@144"
 
-[[window_rules]]
-title            = "Картинка в картинке"
-pinned_to_screen = true
-position         = [1264, 424]   # output-relative: 300px below center
-# # Game: pass ALL keys to the app (mod+q, ctrl+q etc. reach the game)
-# [[window_rules]]
-# app_id    = "steam_app_*"
-# pass_keys = true

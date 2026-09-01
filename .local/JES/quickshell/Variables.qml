@@ -27,10 +27,6 @@ Item {
 
     JsonListen {
         id: calStream
-        // Если нужно передать аргумент "listen" – используем массив, если JsonListen поддерживает
-        // Если нет – передаём строку с аргументом через обёртку sh -c:
-        // command: ["sh", "-c", localPath(Qt.resolvedUrl("scripts/cal")) + " listen"]
-        // или command: localPath(Qt.resolvedUrl("scripts/cal")) + " listen" (но тогда это должен быть скрипт, который умеет принимать аргумент)
         command: localPath(Qt.resolvedUrl("scripts/cal")) + " listen"
         onDataChanged: {
             cal = data

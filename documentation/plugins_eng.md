@@ -14,7 +14,7 @@
 - For the main background of a plugin, use:
 ```qml
 Rectangle {
-opacity: 0.85
+    opacity: 0.85
     gradient: Gradient {
         orientation: Gradient.Horizontal
         GradientStop { position: 0.0; color: col.background3 }
@@ -46,7 +46,7 @@ Item {
     property bool hovered: false
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - 3
+        radius: mainRad - root.margins
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -59,7 +59,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 5 // sum up all margins
+        radius: mainRad - 2 - root.margins // sum up all margins
         color: button.hovered ? col.accent : "transparent"
         Behavior on color { ColorAnimation { duration: 200 } }
     }
@@ -92,79 +92,135 @@ Item {
 
 ### If anything is unclear, refer to `BaseBar.qml` in the bar/ folder — it is the visual reference for all UI.
 
-## Connecting to the JES launcher
-- To connect to the launcher, we call the following function:
-```qml
-property var api: launchLoader ? launchLoader.item : null
+## Connecting the plugin to JES
 
-function ensureTab() {
-    if (!api) return
-
-    var exists = false
-    for (var i = 0; i < api.tabModel.length; i++) {
-        if (api.tabModel[i].name === "Tab Name") {
-            exists = true
-            break
-        }
-    }
-    if (!exists) {
-        api.tabModel.push({
-            name: "Tab Name",
-            icon: "Icon for search, use only from Nerd Font",
-            placeholder: "Enter text...",
-            info: []
-        })
-    }
-}
-
-onApiChanged: {
-    if (api && launchLoader && launchLoader.active) {
-        ensureTab()
-        firstOpen = false
-    }
+To connect to JES, the plugin must have a `manifest.json`. Below is the maximum basic variant for JES without third‑party extensions:
+```json
+{
+  "api_version": "0.1.1",
+  "plugin_version": "1.0",
+  "name": "plugin name",
+  "api_request": [
+    "launcher",
+    "plugin_center",
+    "osd",
+    "Jwindow"
+  ],
+  "main_source": "Main.qml",
+  "json_files": {
+    "launcher": "launch_list.json",
+    "plugin_center": "load_list.json",
+    "osd": "osd_list.json",
+    "Jwindow": "Jwindow.json"
+  }
 }
 ```
 
-- In `info` we can pass any list containing the following items: `{"id", "name", "icon", "exec"}` – this is a pseudo‑JSON, just names for objects.
+To activate the plugin in `config.toml` located in `~/.config/JES/`, you need to specify the following:
+```toml
+[[plugin]]
+name = "plugin name" # data in property name from manifest.json
+active = true
+```
 
-- In `id` we pass the serial number.
+## Connecting to the JES launcher
+- To connect to the launcher, we use a JSON file with the following structure:
+```json
+{
+  "name": "tab",
+  "icon": "",
+  "placeholder": "Search in tab...",
+  "info": [
+    {
+      "id": "app_1",
+      "name": "app 1",
+      "exec": "script launch $id"
+    },
+    {
+      "id": "2",
+      "name": "take screenshot",
+      "exec": "grim ~/screenshots"
+    }
+  ]
+}
+```
+
+- In `info` we can pass any list containing the following items: `{"id", "name", "icon", "exec"}` – these are the JSON parameter names.
+
+- In `id` we pass the required parameter for a script or a serial number; it must be a string version.
 - In `name` the text that will be displayed in the block.
 - In `icon` the icon, if any.
-- In `exec` the command to be executed.
+- In `exec` the command to be executed. If an `id` is used, you can call it in the command as `$id`, which takes the `id` specified in the JSON.
 
 ### `id` is optional if you specify full commands for the object. It is required if you created a script that should run different objects.
 
 ## Connecting to the JES plugin center
-- To connect to the plugin center, we call the following function:
-```qml
-property var api: pluginPopupLoader ? pluginPopupLoader.item : null
-
-function ensurePlugins() {
-    if (!api) return
-
-    var modules = [
-        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
-    ]
-
-    for (var i = 0; i < modules.length; i++) {
-        var mod = modules[i]
-        var exists = false
-        for (var j = 0; j < api.pluginInfo.length; j++) {
-            if (api.pluginInfo[j].source === mod.source) {
-                exists = true
-                break
-            }
-        }
-        if (!exists) {
-            api.pluginInfo.push(mod)
-            console.log("[ExamplePlugin] Added module:", mod.source)
-        }
-    }
-}
-
-onApiChanged: {
-    ensurePlugins()
-}
+- To connect to the plugin center, we use a JSON file with the following structure:
+```json
+[
+    {"source": "Content.qml", "colSpan": 1, "rowSpan": 1}
+]
 ```
+
 - Maximum dimensions: `colSpan: 3, rowSpan: 7`
 - Any module can be passed in `source`.
+
+## Connecting to JES OSD
+- To connect to OSD, we use a JSON file with the following structure:
+```json
+[
+  {
+    "id": "mic_volume",
+    "type": "percent",
+    "command": "./mic.sh"
+  },
+  {
+    "id": "media_status",
+    "type": "text",
+    "command": "./media.sh"
+  }
+]
+```
+- `type` determines the display format: `text` – displays text information, `percent` – displays a bar and percentage information; you can prefix with an icon.
+- In `command` we pass scripts that output for `text` – a text message:
+  ```json
+  {
+      "text": "hi"
+  }
+  ```
+  and for `percent` we output:
+  ```json
+  {
+      "value": 55,
+      "sign": "󱄅"
+  }
+  ```
+
+## Connecting to JES Jwindow
+- To connect to Jwindow, we also use JSON with the following information:
+```json
+[
+ {
+      "name": "API Test",
+      "source": "JwindowTabTester.qml"
+  }
+]
+```
+- In `source`, as in the plugin center, you can specify any module, but the maximum dimensions are limited to FHD.
+
+## Extending the JES API
+- To extend the API, your plugin must subscribe to the main cache of the entire plugin system:
+```qml
+FileView {
+    id: pluginView
+    path: Quickshell.env("HOME") + "/.cache/JES_plugin_list.json"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: {
+        yourFunction(text())
+    }
+}
+```
+and then in the function we define the required tasks for checking, including checking the `api_request` flag for the required request.
+
+### If you integrate new functionality for the API, your plugin must call `notify-send` with a warning or display a warning panel indicating that the API has been extended by such‑and‑such a plugin.

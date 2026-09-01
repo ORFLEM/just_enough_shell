@@ -44,7 +44,32 @@
                 cur="''${COMP_WORDS[COMP_CWORD]}"
                 prev="''${COMP_WORDS[COMP_CWORD-1]}"
                 
-                opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap screenpicker getPlugin getLog editConf --help -h"
+                opts="start-daemon
+                reload-daemon
+                stop-daemon
+                wallShader
+                toggleWallPicker
+                wallType
+                togglePlayer
+                toggleCal
+                togglePower
+                toggleLaunch
+                toggleMap
+                toggleJwindow
+                screenpicker
+                getPlugin
+                getLog
+                editConf
+                brightness-up
+                brightness-down
+                brightness-set
+                brightness-get
+                play-pause
+                next
+                prev
+                next-player
+                prev-player
+                --help -h"
 
                 if [[ ''${COMP_CWORD} -eq 1 ]]; then
                     COMPREPLY=( $(compgen -W "''${opts}" -- "''${cur}") )
@@ -72,24 +97,34 @@
           users.users = lib.genAttrs cfg.users (name: {
             extraGroups = [ "i2c" "networkmanager" ];
           });
+          
+          fonts = {
+            packages = with pkgs; [
+              nerd-fonts.mononoki
+            ];
+          };
 
           environment.systemPackages =
           # STABLE
           (with pkgs; [
+            # Libs
             qt6.qtbase
             qt6.qtdeclarative
             qt6.qtmultimedia
             qt6.qtshadertools
-            pkgs.qt6.qtwayland
+            qt6.qtwayland
+            qt6.qtimageformats
             jq
             playerctl
             ddcutil
+            brightnessctl
             pamixer
             i2c-tools
             cava
             libnotify
             inotify-tools
             dbus
+            pciutils
             ffmpeg
             cliphist
             wl-clipboard
@@ -105,6 +140,7 @@
             quickshell
             tela-icon-theme
             hyprlock
+            micro
 
             # logic
             bash

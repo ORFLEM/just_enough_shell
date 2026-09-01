@@ -1,3 +1,5 @@
+// @pragma AppId JES
+
 import Quickshell
 import Quickshell.Io
 import QtQuick
@@ -14,11 +16,14 @@ import "launcher"
 import "wallpaper"
 import "screenpicker"
 import "minimap"
+import "jwindow"
+import "CoreAura"
 
 ShellRoot {
     id: root
 
     readonly property string projectId: "Just Enough Shell"
+    readonly property string apiVersion: "0.1.1"
 
     // ── Colors ──────────────────────────────────────────────────────────────
     FileView {
@@ -92,14 +97,13 @@ ShellRoot {
                 playerOpen =     states_c.playerOpen ?? false;
                 pluginOpen =     states_c.pluginOpen ?? false;
                 calOpen =        states_c.calOpen ?? false;
+                jwindowOpen =        states_c.jwindowOpen ?? false;
                 scrpicOpen =     states_c.scrpicOpen ?? false;
-                powerOpen =      states_c.powerOpen ?? false;
                 launchOpen =     states_c.launchOpen ?? false;
                 wallPickerOpen = states_c.wallPickerOpen ?? false;
                 minimapOpen =    states_c.minimapOpen ?? false;
                 weatherOpen =    states_c.weatherOpen ?? false;
                 wallpaperType =  states_c.wallpaperType ?? 1;
-                wallpaperType =  states_c.user_matugen ?? 1;
                 wallShaderName = states_c.wallShaderName ?? "";
             } catch (e) {
                 console.log("JES Error parsing states_cached.json at boot:", e);
@@ -110,6 +114,7 @@ ShellRoot {
     property bool   playerOpen:     false
     property bool   pluginOpen:     false
     property bool   calOpen:        false
+    property bool   jwindowOpen:        false
     property bool   scrpicOpen:     false
     property bool   powerOpen:      false
     property bool   launchOpen:     false
@@ -124,8 +129,8 @@ ShellRoot {
             "playerOpen":     playerOpen,
             "pluginOpen":     pluginOpen,
             "calOpen":        calOpen,
+            "jwindowOpen":        jwindowOpen,
             "scrpicOpen":     scrpicOpen,
-            "powerOpen":      powerOpen,
             "launchOpen":     launchOpen,
             "wallPickerOpen": wallPickerOpen,
             "minimapOpen":    minimapOpen,
@@ -143,6 +148,11 @@ ShellRoot {
 
     function toggleLaunch() {
         launchOpen = !launchOpen;
+        saveStatesToDisk();
+    }
+        
+    function togglejwindow() {
+        jwindowOpen = !jwindowOpen;
         saveStatesToDisk();
     }
 
@@ -164,7 +174,6 @@ ShellRoot {
 
     function togglePower() {
         powerOpen = !powerOpen;
-        saveStatesToDisk();
     }
 
     function togglePlugin() {
@@ -201,12 +210,12 @@ ShellRoot {
         watchChanges: true
         onFileChanged: {
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
-            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh 0.1.0"))])
+            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
         }
         Component.onCompleted: {
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
-            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh 0.1.0"))])
+            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
         }
     }
@@ -259,7 +268,13 @@ ShellRoot {
             root._cfg_enable_base16   = s.enable_base16           ?? false
             root._cfg_doNotDisturb    = s.doNotDisturb            ?? false
             root._cfg_customWallpaper = s.custom_wallpaper_engine ?? false
-            root._cfg_user_matugen = s.user_matugen ?? false
+            root._cfg_disableCorners  = s.disableCorners          ?? false
+            root._cfg_user_matugen    = s.user_matugen            ?? false
+            root._cfg_wtw             = s.wtw                     ?? 6
+            root._cfg_spacing         = s.spacing                 ?? 3
+            root._cfg_margins         = s.margins                 ?? 3
+            root._cfg_animations      = s.animation               ?? 1.0
+            root._cfg_bg_type         = s.bg_type                 ?? "mono"
             root._cfg_API_key         = s.openweather_key         ?? ""
 
         } catch(e) {
@@ -317,7 +332,13 @@ ShellRoot {
     property bool   _cfg_enable_base16:   false
     property bool   _cfg_doNotDisturb:    false
     property bool   _cfg_customWallpaper: false
-    property bool   _cfg_user_matugen: false
+    property bool   _cfg_user_matugen:    false
+    property bool   _cfg_disableCorners:  false
+    property int    _cfg_wtw:             6
+    property real   _cfg_animations:      1.0
+    property int    _cfg_spacing:         3
+    property int    _cfg_margins:         3
+    property string _cfg_bg_type:         "mono"
     property string _cfg_pluginDir:       ""
     property string _cfg_API_key:         ""
     property var    _pluginConfigList:    []   // penis { name, active } from config
@@ -327,17 +348,26 @@ ShellRoot {
     property bool   barOnTop:        _cfg_barOnTop
     property bool   minibar:         _cfg_minibar
     property int    fontSize:        _cfg_fontSize
-    property int    barHeight:       _cfg_barHeight + 6
+    property int    barHeight:       _cfg_barHeight + wtw
     property string fontFamily:      _cfg_fontFamily
     property bool   enable_base16:   _cfg_enable_base16
     property bool   show_wallpaper:  !_cfg_customWallpaper
     property bool   doNotDisturb:    _cfg_doNotDisturb
     property bool   user_matugen:    _cfg_user_matugen
-    property string owm_key:        _cfg_API_key
+    property bool   disableCorners:  _cfg_disableCorners
+    property int    wtw:             _cfg_wtw
+    property real   animations:      _cfg_animations
+    property int    spacing:         _cfg_spacing
+    property int    margins:         _cfg_margins
+    property string bg_type:         _cfg_bg_type
+    property string owm_key:         _cfg_API_key
     property string wm:              _cfg_wm      == "auto" ? (Quickshell.env("XDG_CURRENT_DESKTOP") ?? "sway") : _cfg_wm
     property string wm_type:         _cfg_wm_type == "auto" ? (wm == "driftwm" ? "coordinates" : "workspaces") : _cfg_wm_type
 
-    Behavior on mainRad { NumberAnimation { duration: 200 } }
+    Behavior on mainRad { NumberAnimation { duration: 200 * root.animations } }
+    Behavior on margins { NumberAnimation { duration: 200 * root.animations } }
+    Behavior on spacing { NumberAnimation { duration: 200 * root.animations } }
+    Behavior on wtw { NumberAnimation { duration: 200 * root.animations } }
 
     // ── Plugins ────────────────────────────────────────────────────────────
     ListModel {
@@ -406,7 +436,8 @@ ShellRoot {
         PluginPopup {}
     }
 
-        
+    // CoreAura {}
+    
 
     Btime {}
 
@@ -419,6 +450,12 @@ ShellRoot {
         id: powerLoader
         active: powerOpen
         Power {}
+    }
+    
+    LazyLoader {
+        id: jwindowLoader
+        active: jwindowOpen
+        Jwindow {}
     }
 
     Variables  { id: vars }
@@ -452,6 +489,9 @@ ShellRoot {
         function toggleLaunch() {
             root.toggleLaunch();
         }
+        function toggleJwindow() {
+            root.togglejwindow();
+        }
         function toggleMap() {
             root.toggleMap();
         }
@@ -468,9 +508,9 @@ ShellRoot {
     property var bar: barLoader.item
 
     // ── Rounded corners ───────────────────────────────────────────────────
-    property int size: mainRad > 0 ? mainRad + 6 : 0
+    property int size: mainRad > 0 ? mainRad + wtw : 0
     Variants {
-        model: Quickshell.screens
+        model: disableCorners ? [] : Quickshell.screens
 
         Item {
             required property ShellScreen modelData

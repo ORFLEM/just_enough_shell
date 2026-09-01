@@ -21,7 +21,7 @@ WlrLayershell {
                         { current: 2, icon: "", cmd: "systemctl reboot" },
                         { current: 3, icon: "󰗽", cmd: localPath(Qt.resolvedUrl("../scripts/exit.sh")) },
                         { current: 4, icon: "󰤄", cmd: "systemctl suspend" },
-                        { current: 5, icon: "", cmd: "hyprlock" }]
+                        { current: 5, icon: "", cmd: "hyprlock -c ~/.local/JES/hyprlock/hyprlock.conf" }]
 
     function closePower() {
         root.togglePower()
@@ -48,7 +48,7 @@ WlrLayershell {
             id: powerBtn
             anchors.centerIn: parent
             height: 260
-            width: powerRow.width + 6
+            width: powerRow.width + root.margins * 2
             radius: mainRad
             color: "transparent"
 
@@ -70,7 +70,7 @@ WlrLayershell {
             Row {
                 id: powerRow
                 anchors.centerIn: parent
-                spacing: 3
+                spacing: root.spacing
 
                 Repeater {
                     id: pwrRepeater
@@ -78,11 +78,11 @@ WlrLayershell {
 
                     delegate: Item {
                         width: height
-                        height: powerBtn.height - 6
+                        height: powerBtn.height - root.margins * 2
 
                         Rectangle {
                             anchors.fill: parent
-                            radius: mainRad - 3
+                            radius: mainRad - root.margins
                             opacity: 0.65
                             gradient: Gradient {
                                 orientation: Gradient.Horizontal
@@ -97,9 +97,9 @@ WlrLayershell {
                             id: btnBg
                             anchors.fill: parent
                             anchors.margins: 2
-                            radius: mainRad - 5
+                            radius: mainRad - root.margins - 2
                             color: modelData.current == power.current ? col.accent : "transparent"
-                            Behavior on color { ColorAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
 
                         Text {
@@ -111,8 +111,8 @@ WlrLayershell {
                             renderType: Text.NativeRendering
                             font.pixelSize: modelData.current == power.current ? 250 : 225
                             font.weight: Font.Bold
-                            Behavior on color { ColorAnimation { duration: 200 } }
-                            Behavior on font.pixelSize { NumberAnimation { duration: 200 } }
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                            Behavior on font.pixelSize { NumberAnimation { duration: 200 * root.animations } }
                         }
 
                         MouseArea {

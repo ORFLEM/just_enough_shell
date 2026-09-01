@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 	"bytes"
-	"strconv" // добавлен
+	"strconv"
 
 	"github.com/BurntSushi/toml"
 )
@@ -17,8 +17,13 @@ import (
 // ─── Конфиг ─────────────────────────────────────────────────────────────────
 
 type Config struct {
-	Dirs  DirsConfig  `toml:"dirs"`
-	State StateConfig `toml:"state"`
+	Settings SettingsConfig `toml:"settings"`
+	Dirs     DirsConfig     `toml:"dirs"`
+	State    StateConfig    `toml:"state"`
+}
+
+type SettingsConfig struct {
+	StaticType string `toml:"static_type"` // "jpg", "png", "webp" и т.д.
 }
 
 type DirsConfig struct {
@@ -28,7 +33,7 @@ type DirsConfig struct {
 }
 
 type StateConfig struct {
-	Mode        string `toml:"mode"`        // "image" | "video" | "shader"
+	Mode        string `toml:"mode"`
 	Wallpaper   string `toml:"wallpaper"`
 	Shader      string `toml:"shader"`
 	ColorScheme string `toml:"colorscheme"`
@@ -36,7 +41,6 @@ type StateConfig struct {
 
 var configPath = homeDir(".config/JES/wallpaper.toml")
 
-// Глобальная переменная для текущей цветовой схемы
 var currentColorScheme string
 
 func homeDir(rel string) string {
@@ -56,6 +60,10 @@ func loadConfig() Config {
 	if _, err := toml.DecodeFile(configPath, &cfg); err != nil {
 		fmt.Fprintf(os.Stderr, "[wp] config error: %v\n", err)
 		return cfg
+	}
+	// Значение по умолчанию для static_type
+	if cfg.Settings.StaticType == "" {
+		cfg.Settings.StaticType = "jpg"
 	}
 	for i, d := range cfg.Dirs.ImageDirs {
 		cfg.Dirs.ImageDirs[i] = expandHome(d)
@@ -109,7 +117,7 @@ var (
 type WallEntry struct {
 	Path  string `json:"path"`
 	Name  string `json:"name"`
-	Type  string `json:"type"` // "image" | "video" | "shader"
+	Type  string `json:"type"`
 	Thumb string `json:"thumb"`
 }
 
@@ -118,7 +126,7 @@ type StateJSON struct {
 	Wallpaper   string `json:"wallpaper"`
 	Shader      string `json:"shader"`
 	WallType    int    `json:"wallType"`
-	ColorScheme string `json:"colorscheme"` // добавлено
+	ColorScheme string `json:"colorscheme"`
 }
 
 func modeToWallType(mode string) int {
@@ -240,26 +248,48 @@ func detectImageType(path string) (realType string, isJPEG bool) {
 	return "unknown", false
 }
 
-func ensureJPEG(path string, overwriteOriginal bool) (string, error) {
-	_, isJPEG := detectImageType(path)
-	if isJPEG && overwriteOriginal {
+// ensureJPEG конвертирует изображение в целевой формат (targetExt) и возвращает путь к новому файлу.
+// Если overwriteOriginal == true, исходник заменяется новым файлом (с расширением targetExt).
+// Если false, создаётся файл с суффиксом .fixed.targetExt.
+func ensureJPEG(path string, overwriteOriginal bool, targetExt string) (string, error) {
+	// Проверяем, является ли файл уже нужного формата (по сигнатуре)
+	realType, isJPEG := detectImageType(path)
+	// Если формат уже соответствует targetExt? Упростим: если реальный формат совпадает с targetExt (и расширение соответствует), то возвращаем как есть.
+	// Но мы не знаем, соответствует ли расширение targetExt. Проверим расширение.
+	currentExt := strings.ToLower(filepath.Ext(path))
+	targetExtWithDot := "." + strings.ToLower(targetExt)
+	if currentExt == targetExtWithDot && isJPEG && targetExt == "jpg" { // для jpeg особый случай
+		// уже нужный формат
 		return path, nil
 	}
-	if isJPEG && !overwriteOriginal {
-		return path, nil
+	// Для других форматов (png, webp) проверка сложнее, но можно пропустить и всегда конвертировать.
+	// Однако, чтобы не переконвертировать без нужды, проверяем, что реальный тип соответствует targetExt.
+	// Для простоты будем конвертировать всегда, если расширение не совпадает с targetExt.
+	if currentExt == targetExtWithDot {
+		// Расширение совпадает, но возможно внутри другой формат (например, .png с jpeg данными).
+		// Проверим сигнатуру. Если сигнатура соответствует targetExt, возвращаем как есть.
+		if (targetExt == "jpg" || targetExt == "jpeg") && isJPEG {
+			return path, nil
+		}
+		if targetExt == "png" && realType == "png" {
+			return path, nil
+		}
+		if targetExt == "webp" && realType == "webp" {
+			return path, nil
+		}
+		// Иначе конвертируем
 	}
 
 	dir := filepath.Dir(path)
 	base := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 	var outputPath string
-
 	if overwriteOriginal {
-		outputPath = filepath.Join(dir, base+".jpg")
+		outputPath = filepath.Join(dir, base+"."+targetExt)
 	} else {
-		outputPath = filepath.Join(dir, base+".fixed.jpg")
+		outputPath = filepath.Join(dir, base+".fixed."+targetExt)
 	}
 
-	tmpFile, err := os.CreateTemp(dir, "tmp_fix_*.jpg")
+	tmpFile, err := os.CreateTemp(dir, "tmp_fix_*."+targetExt)
 	if err != nil {
 		return "", fmt.Errorf("failed to create temp file: %w", err)
 	}
@@ -306,8 +336,7 @@ func ensureJPEG(path string, overwriteOriginal bool) (string, error) {
 
 func cmdListTab(tab, search string) {
 	cfg := loadConfig()
-	search = strings.ToLower(strings.TrimSpace(search))
-
+	search = strings.TrimSpace(search)
 	var entries []WallEntry
 
 	switch tab {
@@ -325,9 +354,25 @@ func cmdListTab(tab, search string) {
 
 	if search != "" {
 		filtered := entries[:0]
-		for _, e := range entries {
-			if strings.Contains(strings.ToLower(e.Name), search) {
-				filtered = append(filtered, e)
+		lowerSearch := strings.ToLower(search)
+
+		// Проверяем префикс /d (поиск по пути)
+		if strings.HasPrefix(lowerSearch, "/d") {
+			// Убираем "/d" и обрезаем пробелы
+			rest := search[2:] // сохраняем оригинальный регистр? но для сравнения приводим к нижнему
+			pathSearch := strings.ToLower(strings.TrimSpace(rest))
+			for _, e := range entries {
+				if strings.Contains(strings.ToLower(e.Path), pathSearch) {
+					filtered = append(filtered, e)
+				}
+			}
+		} else {
+			// Обычный поиск по имени файла
+			nameSearch := lowerSearch
+			for _, e := range entries {
+				if strings.Contains(strings.ToLower(e.Name), nameSearch) {
+					filtered = append(filtered, e)
+				}
 			}
 		}
 		entries = filtered
@@ -341,12 +386,37 @@ func cmdListTab(tab, search string) {
 	fmt.Println(string(out))
 }
 
+// cleanFixedFiles удаляет все временные файлы с суффиксом .fixed.* в указанных директориях
+func cleanFixedFiles(dirs []string) {
+	for _, dir := range dirs {
+		files, err := os.ReadDir(dir)
+		if err != nil {
+			continue
+		}
+		for _, f := range files {
+			if !f.IsDir() && strings.Contains(f.Name(), ".fixed.") {
+				path := filepath.Join(dir, f.Name())
+				if err := os.Remove(path); err != nil {
+					fmt.Fprintf(os.Stderr, "[wp] failed to remove %s: %v\n", path, err)
+				} else {
+					fmt.Printf("[wp] removed fixed file: %s\n", path)
+				}
+			}
+		}
+	}
+}
+
 func cmdFixWalls() {
 	cfg := loadConfig()
+	// Очищаем старые временные файлы
+	cleanFixedFiles(cfg.Dirs.ImageDirs)
+
 	allExts := map[string]bool{
 		".jpg": true, ".jpeg": true, ".png": true, ".webp": true,
 	}
 	entries := collectByDirs(cfg.Dirs.ImageDirs, allExts, "image")
+
+	targetExt := cfg.Settings.StaticType // берём из конфига
 
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, 4)
@@ -361,20 +431,30 @@ func cmdFixWalls() {
 			realType, isJPEG := detectImageType(path)
 			ext := strings.ToLower(filepath.Ext(path))
 
-			needFix := !isJPEG || (ext != ".jpg" && ext != ".jpeg")
+			// Проверяем, нужно ли конвертировать: либо формат не совпадает с целевым, либо расширение не соответствует целевому
+			targetExtWithDot := "." + targetExt
+			needFix := !isJPEG || (ext != targetExtWithDot && ext != "."+targetExt) // упрощённо
+			// Более точная проверка: если реальный тип не совпадает с targetExt или расширение не совпадает
+			if (targetExt == "jpg" || targetExt == "jpeg") && isJPEG && (ext == ".jpg" || ext == ".jpeg") {
+				needFix = false
+			} else if targetExt == "png" && realType == "png" && ext == ".png" {
+				needFix = false
+			} else if targetExt == "webp" && realType == "webp" && ext == ".webp" {
+				needFix = false
+			} else {
+				needFix = true
+			}
 
-			if needFix && (realType == "png" || realType == "webp" || realType == "jpeg") {
-				fmt.Printf("Fixing %s (real: %s, ext: %s) -> converting to .jpg\n", path, realType, ext)
-				newPath, err := ensureJPEG(path, true)
+			if needFix && (realType == "png" || realType == "webp" || realType == "jpeg" || realType == "unknown") {
+				fmt.Printf("Fixing %s (real: %s, ext: %s) -> converting to .%s\n", path, realType, ext, targetExt)
+				newPath, err := ensureJPEG(path, true, targetExt)
 				if err != nil {
 					fmt.Fprintf(os.Stderr, "Failed to fix %s: %v\n", path, err)
 				} else {
 					fmt.Printf("Fixed: %s -> %s\n", path, newPath)
 				}
-			} else if isJPEG && (ext == ".jpg" || ext == ".jpeg") {
-				// уже JPEG
 			} else {
-				fmt.Fprintf(os.Stderr, "Skipping %s: unsupported real type %s\n", path, realType)
+				fmt.Printf("Skipping %s (already %s)\n", path, targetExt)
 			}
 		}(e.Path)
 	}
@@ -382,7 +462,6 @@ func cmdFixWalls() {
 	fmt.Println("fix-walls completed")
 }
 
-// get-state — возвращает текущее состояние, включая colorscheme
 func cmdGetState() {
 	cfg := loadConfig()
 	s := StateJSON{
@@ -390,7 +469,7 @@ func cmdGetState() {
 		Wallpaper:   cfg.State.Wallpaper,
 		Shader:      cfg.State.Shader,
 		WallType:    modeToWallType(cfg.State.Mode),
-		ColorScheme: currentColorScheme, // теперь возвращаем
+		ColorScheme: currentColorScheme,
 	}
 	out, _ := json.Marshal(s)
 	fmt.Println(string(out))
@@ -445,9 +524,6 @@ func cmdCleanCache() {
 	fmt.Println("done")
 }
 
-// applyMatugen применяет цветовую схему к imagePath.
-// double == false: только один вызов с -c ~/.local/JES/matugen/config.toml
-// double == true:  сначала с -c, затем без -c (как было раньше)
 func applyMatugen(imagePath string, double bool) {
 	if imagePath == "" {
 		return
@@ -455,7 +531,6 @@ func applyMatugen(imagePath string, double bool) {
 	configPath := homeDir(".local/JES/matugen/config.toml")
 	baseArgs := []string{"image", imagePath, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0"}
 
-	// Первый вызов — всегда с конфигом
 	argsWithConfig := append(baseArgs, "-c", configPath)
 	cmd1 := exec.Command("matugen", argsWithConfig...)
 	if err := cmd1.Run(); err != nil {
@@ -463,7 +538,6 @@ func applyMatugen(imagePath string, double bool) {
 	}
 
 	if double {
-		// Второй вызов — без конфига
 		cmd2 := exec.Command("matugen", baseArgs...)
 		if err := cmd2.Run(); err != nil {
 			fmt.Fprintf(os.Stderr, "[wp] matugen without config failed: %v\n", err)
@@ -498,25 +572,33 @@ func cmdSet(path string, double bool) {
 		}
 		saveState("video", path, cfg.State.Shader, currentColorScheme)
 	} else {
-		fixedPath, err := ensureJPEG(path, false)
+		// Конвертируем исходник в целевой формат (без перезаписи оригинала)
+		targetExt := cfg.Settings.StaticType
+		fixedPath, err := ensureJPEG(path, false, targetExt)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "fixing image failed:", err)
 			os.Exit(1)
 		}
 
+		// Всегда создаём статический кэш в формате JPEG с помощью ffmpeg
+		// Учитываем ширину для масштабирования
 		out, _ := exec.Command("ffprobe",
 			"-v", "error", "-select_streams", "v:0",
 			"-show_entries", "stream=width", "-of", "csv=p=0", fixedPath).Output()
 		width := 0
 		fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &width)
 
+		// Используем ffmpeg для преобразования в JPEG с нужным масштабированием
 		if width > 3840 {
 			exec.Command("ffmpeg",
 				"-i", fixedPath, "-vf", "scale=3440:-1", "-q:v", "2",
 				staticCache, "-y").Run()
 		} else {
-			copyFile(fixedPath, staticCache)
+			exec.Command("ffmpeg",
+				"-i", fixedPath, "-q:v", "2",
+				staticCache, "-y").Run()
 		}
+
 		exec.Command("jes-cli", "wallType", "1").Run()
 		applyMatugen(staticCache, double)
 		saveState("image", path, cfg.State.Shader, currentColorScheme)
@@ -528,7 +610,6 @@ func cmdSetShader(name string, double bool) {
 	exec.Command("jes-cli", "wallType", "2").Run()
 	exec.Command("jes-cli", "wallShader", name).Run()
 
-	// Для шейдера применяем matugen на основе текущего кэшированного изображения (если есть)
 	var imagePath string
 	if _, err := os.Stat(staticCache); err == nil {
 		imagePath = staticCache
@@ -544,7 +625,6 @@ func cmdSetShader(name string, double bool) {
 	saveState("shader", cfg.State.Wallpaper, name, currentColorScheme)
 }
 
-// Переприменение текущих обоев с новой цветовой схемой (горячая перезагрузка)
 func reapplyCurrentWithScheme() {
 	cfg := loadConfig()
 	if cfg.State.Mode == "image" && cfg.State.Wallpaper != "" {
@@ -556,7 +636,6 @@ func reapplyCurrentWithScheme() {
 			exec.Command("matugen", "image", videoFrame, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0").Run()
 		}
 	}
-	// Для шейдера — ничего не делаем (цветовая схема не используется)
 }
 
 func cmdSetScheme(scheme string) {
@@ -570,12 +649,9 @@ func cmdSetScheme(scheme string) {
 		fmt.Fprintln(os.Stderr, "set-scheme: expected 'vibrant' or 'classic'")
 		os.Exit(1)
 	}
-	// Обновляем глобальную переменную
 	currentColorScheme = newScheme
-	// Сохраняем в конфиг
 	cfg := loadConfig()
 	saveState(cfg.State.Mode, cfg.State.Wallpaper, cfg.State.Shader, newScheme)
-	// Горячая перезагрузка цветов
 	reapplyCurrentWithScheme()
 	fmt.Println("Color scheme set to", newScheme)
 }
@@ -594,12 +670,11 @@ func copyFile(src, dst string) error {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: wallpaper-picker <list-tab <tab> [search]|get-state|cache-all|clean-cache|set <path> <bool>|set-shader <name> <bool>|set-scheme <vibrant/classic>>")
+		fmt.Fprintln(os.Stderr, "usage: wallpaper-picker <list-tab <tab> [search]|get-state|cache-all|clean-cache|fix-walls|set <path> <bool>|set-shader <name> <bool>|set-scheme <vibrant/classic>>")
 		os.Exit(1)
 	}
 
 	switch os.Args[1] {
-
 	case "list-tab":
 		tab := ""
 		if len(os.Args) >= 3 {

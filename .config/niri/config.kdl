@@ -35,16 +35,6 @@ layout {
     }
 }
 prefer-no-csd
-workspace "1"
-workspace "2"
-workspace "3"
-workspace "4"
-workspace "5"
-workspace "6"
-workspace "7"
-workspace "8"
-workspace "9"
-workspace "10"
 
 window-rule {
     geometry-corner-radius 10
@@ -114,6 +104,7 @@ binds {
     Mod+C { close-window; }
     Mod+Space { maximize-column; }
     Mod+F { toggle-window-floating; }
+    Mod+Alt+F { spawn "jes-cli" "toggleJwindow"; }
     // Mod+Shift+F { toggle-window-pinned; } // Аналог sticky в niri
 
     // Навигация (Focus)

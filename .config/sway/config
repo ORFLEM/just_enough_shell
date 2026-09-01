@@ -166,6 +166,7 @@ bindsym --to-code $mod+m exec swaynag -t warning -m 'Exit sway?' -B 'Yes' 'swaym
 
 # Power menu / дашборд
 bindsym --to-code $mod+p exec jes-cli togglePower
+bindsym --to-code $mod+Alt+f exec jes-cli toggleJwindow
 bindsym --to-code $mod+w exec jes-cli restart-daemon
 
 # Медиа

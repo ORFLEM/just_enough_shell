@@ -13,16 +13,18 @@ Variants {
         namespace: "wallpaper"
         exclusiveZone: -1
         screen: modelData
+        
         anchors {
-            bottom: true
             top: true
+            bottom: true
             left: true
             right: true
         }
+        
         mask: Region { }
         color: "#1b1b1b"
     
-        property string shaderName: ""
+        property string shaderName: "aurora_drift"
     
         Process {
             id: wallStateProc
@@ -39,18 +41,18 @@ Variants {
                         var s = JSON.parse(raw)
                         wallpaperType = s.wallType
                         if (s.shader && s.shader !== "") wallpaper.shaderName = s.shader
-                        console.log(wallpaper.shaderName)
                     } catch(e) { console.warn("[shell] wallState:", e) }
                 }
             }
         }
+
         Component.onCompleted: {
             wallStateProc.running = false
             wallStateProc.running = true
         }
+
         property int type: wallpaperType
         property string staticBust: ""
-        property string videoBust: ""
         property string videoPath: "file://" + Quickshell.env("HOME") + "/.cache/JES/walls/live-bg.mp4"
     
         onTypeChanged: {
@@ -60,13 +62,6 @@ Variants {
             } else {
                 player.stop()
                 player.source = ""
-            }
-        }
-    
-        // Следим за сменой шейдера
-        onShaderNameChanged: {
-            if (type === 2) {
-                shaderEffect.updateShader()
             }
         }
     
@@ -88,6 +83,17 @@ Variants {
                 }
             }
         }
+
+        // --- Безопасный хот-релоад стейта через TOML ---
+        FileView {
+            path: Quickshell.env("HOME") + "/.config/JES/wallpaper.toml"
+            watchChanges: true
+            onFileChanged: {
+                if (!wallStateProc.running) {
+                    wallStateProc.running = true
+                }
+            }
+        }
     
         // --- Статика ---
         Image {
@@ -95,82 +101,54 @@ Variants {
             visible: type === 1
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            clip: true
             source: "file://" + Quickshell.env("HOME") + "/.cache/JES/walls/no-live-bg.jpg" + staticBust
         }
     
-        // --- Шейдер ---
-        ShaderEffectSource {
-            id: shaderSource
+        // --- Шейдер с фоллбеком и защитой от пустого имени ---
+        Item {
             anchors.fill: parent
-            live: true
-            sourceItem: Rectangle {
-                anchors.fill: parent
-                color: "transparent"
-            }
-        }
-        
-        ShaderEffect {
-            id: shaderEffect
             visible: type === 2
-            anchors.fill: parent
-        
-            property real time: 0.0
-            property var source: shaderSource
-        
-            // Счётчик для гарантированного обновления URL
-            property int reloadCounter: 0
-        
-            // Вычисляем URL с учётом имени и счётчика
-            property url shaderUrl: {
-                var name = wallpaper.shaderName
-                if (name === "") name = "aurora_drift"
-                var base = Qt.resolvedUrl("wallpapers/shaders/" + name + ".qsb")
-                // Добавляем фиктивный параметр, чтобы URL менялся и кэш сбрасывался
-                return base + "?r=" + reloadCounter
-            }
-        
-            fragmentShader: shaderUrl
-        
-            // При изменении имени шейдера инкрементируем счётчик
-            Connections {
-                target: wallpaper
-                function onShaderNameChanged() {
-                    if (wallpaper.type === 2) {
-                        shaderEffect.reloadCounter++
+
+            ShaderEffect {
+                id: shaderEffect
+                anchors.fill: parent
+
+                property real time: 0.0
+                property vector2d resolution: Qt.vector2d(width, height)
+
+                fragmentShader: {
+                    var name = wallpaper.shaderName !== "" ? wallpaper.shaderName : "aurora_drift"
+                    return "file://" + Quickshell.env("HOME") + "/.config/JES/wallpapers/shaders/" + name + ".qsb"
+                }
+
+                Timer {
+                    interval: 16
+                    running: wallpaper.type === 2
+                    repeat: true
+                    onTriggered: {
+                        shaderEffect.time = shaderEffect.time + 0.016
                     }
                 }
-            }
-        
-            NumberAnimation on time {
-                from: 0; to: 1000
-                duration: 1000000
-                loops: Animation.Infinite
-                running: type === 2
             }
         }
         
         // --- Видео ---
         MediaPlayer {
             id: player
-            videoOutput: videoOut
             loops: MediaPlayer.Infinite
+            videoOutput: wallpaper.type === 3 ? videoOut : null
         }
-    
+
         Item {
             anchors.fill: parent
-            clip: true
             visible: type === 3
-    
+
             VideoOutput {
                 id: videoOut
-                anchors.centerIn: parent
-                width: parent.width
-                height: parent.width
+                anchors.fill: parent
+                fillMode: VideoOutput.PreserveAspectCrop
+                antialiasing: false
             }
         }
     }
 }
-
-
-// da da, ia skill issue, po etomu eto nihuia ne krutoi dvijok oboev, a lish kakaia-to huina

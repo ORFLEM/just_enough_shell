@@ -1,17 +1,17 @@
 # Anleitung zur Plugin-Erstellung
 
 ## Regel Nr. 1
-- Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner
+- Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner.
 
 ## Regel Nr. 2
-- Ein Plugin darf **nicht** viele Geräteressourcen verbrauchen; zur Optimierung ist jede Sprache erlaubt, empfohlen wird jedoch **golang**
+- Ein Plugin darf **nicht** viele Geräteressourcen verbrauchen. Zur Optimierung ist jede Sprache erlaubt, empfohlen wird jedoch **Golang**.
 
 ## Regel Nr. 3
-- Die Dateinamen im Plugin erklären kurz, wofür sie sind, und die einzubindende Datei wird **in der Installationsanleitung des Plugins angegeben**
-- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss dieses Fenster im lazyLoader liegen
+- Die Dateinamen im Plugin erklären kurz, wofür sie sind; die einzubindende Datei wird **in der Installationsanleitung des Plugins angegeben**.
+- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss dieses Fenster in einem `lazyLoader` eingebettet werden.
 
-## Visuelle Komponente
-- Für den Haupthintergrund wird im Plugin Folgendes verwendet:
+## Visuelle Gestaltung
+- Für den Haupthintergrund eines Plugins verwenden Sie:
 ```qml
 Rectangle {
     opacity: 0.85
@@ -26,7 +26,7 @@ Rectangle {
     }
 }
 ```
-- Und für den Hintergrund von Buttons und Ähnlichem:
+- Für den Hintergrund von Schaltflächen und ähnlichen Elementen:
 ```qml
 Rectangle {
     opacity: 0.65
@@ -39,14 +39,14 @@ Rectangle {
     }
 }
 ```
-- Für Hover-Effekte wird Folgendes verwendet:
+- Für Hover-Effekte verwenden Sie:
 ```qml
 Item {
     id: button
     property bool hovered: false
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - 3
+        radius: mainRad - root.margins
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -59,8 +59,8 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 5 // Wir addieren alle Margins
-        color: button.hovered ? col.accent : "transparent" 
+        radius: mainRad - 2 - root.margins // Summe aller Ränder
+        color: button.hovered ? col.accent : "transparent"
         Behavior on color { ColorAnimation { duration: 200 } }
     }
     // Code
@@ -77,93 +77,150 @@ Item {
 }
 ```
 
-#### Es kann auch ein anderer Hintergrund verwendet werden, in diesem Beispiel wurde der Button-Hintergrund verwendet
+#### Sie können auch einen anderen Hintergrund verwenden – im obigen Beispiel wurde der Schaltflächenhintergrund verwendet.
 
-- Für Radien wird `radius: mainRad` verwendet; wenn Sie margins setzen, schreiben Sie im nächsten Block `radius: mainRad - <Margin-Wert>`
-- Alle Farben werden aus dem globalen Objekt `col` bezogen (definiert in `colors.json` und über `shell.qml` verfügbar).
-- JES unterstützt außerdem base16-Themes (`base.base<01-16>`)
-- Die Schrift wird mit **fontFamily** und **fontSize** festgelegt
-- JES hat 2 Akzentfarben - dunkel und hell
+- Für Radien verwenden Sie `radius: mainRad`. Wenn Sie Ränder (margins) setzen, schreiben Sie im inneren Block `radius: mainRad - <Randwert>`.
+- Alle Farben müssen aus dem globalen Objekt `col` stammen (definiert in `colors.json` und über `shell.qml` verfügbar).
+- JES unterstützt außerdem base16‑Themen (`base.base<01-16>`).
+- Die Schriftart wird über **fontFamily** und **fontSize** festgelegt.
+- JES hat 2 Akzentfarben – dunkel und hell.
 
-## Datenübertragung an die Oberfläche
-- Für einen kontinuierlichen Datenstrom (aus Performance-Gründen empfohlen) `JsonListen` verwenden, für eine einmalige Abfrage in festgelegten Zeitabständen `JsonPoll`
-- Die Daten werden im JSON-Format übertragen; bei visuellen Programmen ohne Funktionen genügt einfach ein String (zum Beispiel cava in der Leiste)
-- Fensterverwaltungsdaten werden über den Parameter `bar` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen – rufen Sie `bar` auf. Welche Daten verfügbar sind, entnehmen Sie der `BaseBar.qml`.
+## Datenübergabe an die Oberfläche
+- Verwenden Sie `JsonListen` für einen kontinuierlichen Datenstrom (aus Leistungsgründen empfohlen) und `JsonPoll` für eine einmalige Abfrage in festgelegten Intervallen.
+- Die Daten werden im JSON‑Format übergeben. Bei rein visuellen Programmen ohne Logik (z. B. Cava in der Leiste) genügt ein einfacher String.
+- Fenstermanager‑Daten werden über den Parameter `bar` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen, rufen Sie `bar` auf. Eine Liste der verfügbaren Daten finden Sie in `BaseBar.qml`.
 
-### Falls etwas unklar ist, schauen Sie sich die Datei `BaseBar.qml` im Ordner bar an, das ist der visuelle Maßstab für die gesamte UI
+### Falls etwas unklar ist, schauen Sie in die Datei `BaseBar.qml` im Ordner `bar/` – sie ist die visuelle Referenz für die gesamte Benutzeroberfläche.
 
-## Anbindung an den JES-Launcher
-- Um eine Verbindung zum Launcher herzustellen, rufen wir folgende Funktion auf:
-```qml
-property var api: launchLoader ? launchLoader.item : null
+## Anbindung des Plugins an JES
 
-function ensureTab() {
-    if (!api) return
-
-    var exists = false
-    for (var i = 0; i < api.tabModel.length; i++) {
-        if (api.tabModel[i].name === "Name des Tabs") {
-            exists = true
-            break
-        }
-    }
-    if (!exists) {
-        api.tabModel.push({
-            name: "Name des Tabs",
-            icon: "Symbol für die Suche, nur aus Nerd Font verwenden",
-            placeholder: "Text eingeben...",
-            info: []
-        })
-    }
-}
-
-onApiChanged: {
-    if (api && launchLoader && launchLoader.active) {
-        ensureTab()
-        firstOpen = false
-    }
+Um eine Verbindung zu JES herzustellen, muss das Plugin eine `manifest.json` besitzen. Nachfolgend die maximale Basisvariante für JES ohne Drittanbieter‑Erweiterungen:
+```json
+{
+  "api_version": "0.1.1",
+  "plugin_version": "1.0",
+  "name": "Pluginname",
+  "api_request": [
+    "launcher",
+    "plugin_center",
+    "osd",
+    "Jwindow"
+  ],
+  "main_source": "Main.qml",
+  "json_files": {
+    "launcher": "launch_list.json",
+    "plugin_center": "load_list.json",
+    "osd": "osd_list.json",
+    "Jwindow": "Jwindow.json"
+  }
 }
 ```
-- In `info` können wir eine beliebige Liste übergeben, die folgende Elemente enthält: `{"id", "name", "icon", "exec"}` – das ist ein Pseudo‑JSON, nur Namen für Objekte.
 
-- In `id` übergeben wir die fortlaufende Nummer.
-- In `name` der Text, der im Block angezeigt wird.
+Um das Plugin in der `config.toml` (unter `~/.config/JES/`) zu aktivieren, müssen Sie Folgendes angeben:
+```toml
+[[plugin]]
+name = "Pluginname" # entspricht dem name-Eintrag in der manifest.json
+active = true
+```
+
+## Anbindung an den JES‑Launcher
+- Für die Anbindung an den Launcher verwenden wir eine JSON‑Datei mit folgender Struktur:
+```json
+{
+  "name": "Tab",
+  "icon": "",
+  "placeholder": "In Tab suchen...",
+  "info": [
+    {
+      "id": "app_1",
+      "name": "App 1",
+      "exec": "Skript starten $id"
+    },
+    {
+      "id": "2",
+      "name": "Screenshot erstellen",
+      "exec": "grim ~/Screenshots"
+    }
+  ]
+}
+```
+
+- In `info` können wir eine beliebige Liste übergeben, die folgende Elemente enthalten kann: `{"id", "name", "icon", "exec"}` – das sind die JSON‑Parameternamen.
+
+- In `id` übergeben wir den gewünschten Parameter für ein Skript oder eine fortlaufende Nummer (zwingend als Zeichenkette).
+- In `name` steht der Text, der im Block angezeigt wird.
 - In `icon` das Symbol, falls vorhanden.
-- In `exec` der auszuführende Befehl.
+- In `exec` der auszuführende Befehl. Wenn eine `id` verwendet wird, kann diese im Befehl als `$id` aufgerufen werden, wobei der Wert aus der JSON‑Datei übernommen wird.
 
-### `id` ist optional, wenn Sie vollständige Befehle für das Objekt angeben. Es ist erforderlich, wenn Sie ein Skript erstellt haben, das verschiedene Objekte starten soll.
+### `id` ist optional, wenn Sie vollständige Befehle für das Objekt angeben. Sie ist erforderlich, wenn Sie ein Skript erstellt haben, das verschiedene Objekte starten soll.
 
-## Anbindung an das JES-Plugin-Center
-- Um eine Verbindung zum Plugin-Center herzustellen, rufen wir folgende Funktion auf:
+## Anbindung an das JES‑Plugin‑Center
+- Für die Anbindung an das Plugin‑Center verwenden wir eine JSON‑Datei mit folgender Struktur:
+```json
+[
+    {"source": "Content.qml", "colSpan": 1, "rowSpan": 1}
+]
+```
+
+- Maximale Abmessungen: `colSpan: 3, rowSpan: 7`
+- In `source` kann ein beliebiges Modul angegeben werden.
+
+## Anbindung an das JES‑OSD
+- Für die Anbindung an das OSD verwenden wir eine JSON‑Datei mit folgender Struktur:
+```json
+[
+  {
+    "id": "mic_volume",
+    "type": "percent",
+    "command": "./mic.sh"
+  },
+  {
+    "id": "media_status",
+    "type": "text",
+    "command": "./media.sh"
+  }
+]
+```
+- `type` gibt das Anzeigeformat an: `text` – zeigt Textinformationen an, `percent` – zeigt einen Balken und Prozentwert an; Sie können ein Symbol voranstellen.
+- In `command` übergeben wir Skripte, die für `text` eine Textmeldung ausgeben:
+  ```json
+  {
+      "text": "hallo"
+  }
+  ```
+  und für `percent`:
+  ```json
+  {
+      "value": 55,
+      "sign": "󱄅"
+  }
+  ```
+
+## Anbindung an das JES‑Jwindow
+- Für die Anbindung an Jwindow verwenden wir ebenfalls JSON mit folgender Information:
+```json
+[
+ {
+      "name": "API-Test",
+      "source": "JwindowTabTester.qml"
+  }
+]
+```
+- In `source` können Sie, wie im Plugin‑Center, ein beliebiges Modul angeben, aber die maximalen Abmessungen sind auf FHD begrenzt.
+
+## Erweiterung der JES‑API
+- Um die API zu erweitern, muss Ihr Plugin den Hauptcache des gesamten Pluginsystems abonnieren:
 ```qml
-property var api: pluginPopupLoader ? pluginPopupLoader.item : null
-
-function ensurePlugins() {
-    if (!api) return
-
-    var modules = [
-        { source: Qt.resolvedUrl("Content.qml"), colSpan: 1, rowSpan: 1 }
-    ]
-
-    for (var i = 0; i < modules.length; i++) {
-        var mod = modules[i]
-        var exists = false
-        for (var j = 0; j < api.pluginInfo.length; j++) {
-            if (api.pluginInfo[j].source === mod.source) {
-                exists = true
-                break
-            }
-        }
-        if (!exists) {
-            api.pluginInfo.push(mod)
-            console.log("[ExamplePlugin] Modul hinzugefügt:", mod.source)
-        }
+FileView {
+    id: pluginView
+    path: Quickshell.env("HOME") + "/.cache/JES_plugin_list.json"
+    watchChanges: true
+    onFileChanged: reload()
+    onLoaded: {
+        yourFunction(text())
     }
 }
-
-onApiChanged: {
-    ensurePlugins()
-}
 ```
-- Maximale Größen: `colSpan: 3, rowSpan: 7`
-- In `source` kann ein beliebiges Modul übergeben werden.
+und dann definieren wir in der Funktion die erforderlichen Aufgaben für die Prüfung, einschließlich der Überprüfung des `api_request`-Flags auf die gewünschte Anfrage.
+
+### Wenn Sie neue Funktionalität für die API integrieren, muss Ihr Plugin `notify-send` mit einer Warnung aufrufen oder eine Warnmeldung anzeigen, die darauf hinweist, dass die API um dieses bestimmte Plugin erweitert wurde.

@@ -196,7 +196,7 @@ PanelWindow {
             var v = root.verts
             var t = root.tris
             var triCount = t.length / 3
-            ctx.fillStyle = col.accent
+            ctx.fillStyle = col.accent2
 
             var useAlphaAnim = (root.triAlpha && root.triAlpha.length === triCount)
 
@@ -266,8 +266,9 @@ PanelWindow {
         width: Math.abs(root.selW)
         height: Math.abs(root.selH)
         color: "transparent"
-        border.color: Qt.rgba(1,1,1,0.6)
+        border.color: col.accent
         border.width: 2
+        opacity: 0.75
     }
 
     MouseArea {
