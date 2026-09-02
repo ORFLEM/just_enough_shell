@@ -88,7 +88,10 @@ Item {
 ## Passing data to the interface
 - Use `JsonListen` for a continuous stream (recommended for performance), and `JsonPoll` for a one-time request on a fixed interval.
 - Data is passed as JSON. For visual-only programs with no logic (e.g. cava in the bar), a plain string is sufficient.
-- Window Manager data is passed via the `bar` parameter. If you need data about coordinates/workspaces/active program/layout – call `bar`. For a list of available data, see `BaseBar.qml`.
+- Data about the Window Manager is passed via the `wm_connect` parameter. If you need data about coordinates/workspaces/active program/layout – call `wm_connect`. For a list of available data, see `BaseBar.qml`.
+
+## JES Libraries
+- To simplify plugin creation, libraries `JES.Helpers` and `JES.Bar` were created. The first is required for using `JsonListen`, `JsonPoll`, and `MarqueeText`; the second is for integration with `BaseBar.qml`, i.e., for creating plugins that connect WMs to JES (see below).
 
 ### If anything is unclear, refer to `BaseBar.qml` in the bar/ folder — it is the visual reference for all UI.
 
@@ -104,7 +107,8 @@ To connect to JES, the plugin must have a `manifest.json`. Below is the maximum 
     "launcher",
     "plugin_center",
     "osd",
-    "Jwindow"
+    "Jwindow",
+    "wm_connect"
   ],
   "main_source": "Main.qml",
   "json_files": {
@@ -207,6 +211,10 @@ active = true
 ]
 ```
 - In `source`, as in the plugin center, you can specify any module, but the maximum dimensions are limited to FHD.
+
+## Connecting other WMs to JES
+- In `manifest.json` we specify `wm_connect` in `api_request`, so that the system loads not only the plugin itself but also the panel data, allowing access to WM data.
+- For connecting WMs to JES, I have left an example plugin in `for-documentation` that provides a template for connecting other WMs – you just need to add a few commands to the scripts and you are done.
 
 ## Extending the JES API
 - To extend the API, your plugin must subscribe to the main cache of the entire plugin system:

@@ -4,7 +4,7 @@ import QtQuick.Controls
 import Quickshell.Wayland
 import Quickshell.Io
 import Quickshell.Widgets
-import "../helpers"
+import JES.Helpers
 
 WlrLayershell {
     id: minimap
@@ -59,9 +59,9 @@ WlrLayershell {
             color: "transparent"
             clip: true
 
-            property int localCameraX: barLoader.item?.cameraData?.x ?? 0
-            property int localCameraY: barLoader.item?.cameraData?.y ?? 0
-            property real localCameraZoom: barLoader.item?.cameraData?.zoom ?? 1.0
+            property int localCameraX: wm_connect?.cameraData?.x ?? 0
+            property int localCameraY: wm_connect?.cameraData?.y ?? 0
+            property real localCameraZoom: wm_connect?.cameraData?.zoom ?? 1.0
 
             property real resizeZoom: 0
 
@@ -73,12 +73,12 @@ WlrLayershell {
             property bool dragActive: false
 
             Connections {
-                target: barLoader.item
+                target: wm_connect
                 onCameraDataChanged: {
                     if (!windowsContainer.dragActive) {
-                        windowsContainer.localCameraX = barLoader.item.cameraData.x
-                        windowsContainer.localCameraY = barLoader.item.cameraData.y
-                        windowsContainer.localCameraZoom = barLoader.item.cameraData.zoom
+                        windowsContainer.localCameraX = wm_connect.cameraData.x
+                        windowsContainer.localCameraY = wm_connect.cameraData.y
+                        windowsContainer.localCameraZoom = wm_connect.cameraData.zoom
                     }
                 }
             }

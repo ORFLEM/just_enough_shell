@@ -1,0 +1,11 @@
+{
+  "api_version": "0.1.1",
+  "plugin_version": "1.0",
+  "name": "CustomBar",
+  "api_request": [
+    "wm_connect"
+  ],
+  "main_source": "CustomBar.qml",
+  "json_files": {
+  }
+}

@@ -1,16 +1,7 @@
-cliphist
 rose-pine-cursor
 rose-pine-hyprcursor
 quickshell-git
 swayfx
 persway-git
-mpv-mpris
-greetd
-greetd-tuigreet
-pipes.sh
 ttf-mononoki-nerd
-bastet
-nsnake
 tela-icon-theme
-hyprlock-git
-hyprpicker-git

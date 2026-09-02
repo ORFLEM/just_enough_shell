@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
-import "../helpers"
+import JES.Helpers
 
 Variants {
     model: Quickshell.screens

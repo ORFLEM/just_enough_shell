@@ -5,7 +5,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "components"
-import "../helpers"
+import JES.Helpers
 import "../"
 
 WlrLayershell {

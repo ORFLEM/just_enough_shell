@@ -23,12 +23,13 @@ in
     });
 
     environment.systemPackages = with pkgs; [
-      # libs & system tools
+      # базовые библиотеки и системные утилиты
       qt6.qtbase
       qt6.qtdeclarative
       qt6.qtmultimedia
       qt6.qtshadertools
       qt6.qtwayland
+      qt6.qtimageformats   # добавлено для поддержки форматов изображений
       jq
       playerctl
       ddcutil
@@ -46,6 +47,10 @@ in
       taplo
       python314
 
+      # дополнительные утилиты (были в flake.nix)
+      brightnessctl       # управление яркостью
+      pciutils            # информация о PCI-устройствах
+
       # gui & tui
       foot
       lxqt.pavucontrol-qt
@@ -54,7 +59,7 @@ in
       tela-icon-theme
       hyprlock
 
-      # logic & languages
+      # логика и языки
       bash
       go
       matugen
@@ -62,6 +67,9 @@ in
 
     environment.shellInit = ''
       export PATH="$HOME/.local/bin:$PATH"
+      # Пути для QML-импортов (JES использует свои библиотеки в ~/.local/JES/quickshell)
+      export QML_IMPORT_PATH="$HOME/.local/JES/quickshell:/run/current-system/sw/lib/qt-6/qml:$QML_IMPORT_PATH"
+      export QML2_IMPORT_PATH="/run/current-system/sw/lib/qt-6/qml:$HOME/.local/JES/quickshell/:$QML2_IMPORT_PATH"
     '';
   };
 }

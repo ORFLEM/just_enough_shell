@@ -6,7 +6,7 @@ import QtQuick
 import QtQuick.Shapes
 import "roundCorners"
 import "bar"
-import "helpers"
+import JES.Helpers
 import "btime"
 import "bar/components"
 import "popSysInf"
@@ -283,32 +283,35 @@ ShellRoot {
     }
 
     function _parseList(raw) {
-        let trimmed = (raw ?? "").trim()
-        console.log("[shell] _parseList called, length:", trimmed.length)
-        if (!trimmed) {
-            console.error("[shell] list is empty!")
+    let trimmed = (raw ?? "").trim()
+    if (!trimmed) {
+        console.error("[shell] list is empty!")
+        return
+    }
+    try {
+        let entries = JSON.parse(trimmed)
+        if (!Array.isArray(entries)) {
+            console.warn("[shell] plugin list is not an array")
             return
         }
-        try {
-            let entries = JSON.parse(trimmed)
-            if (!Array.isArray(entries)) {
-                console.warn("[shell] plugin list is not an array")
-                return
-            }
-            console.log("[shell] Got", entries.length, "plugin entries")
-    
-            pluginListModel.clear()
-            for (var i = 0; i < entries.length; i++) {
-                var entry = entries[i]
-                // Просто добавляем объект как есть
-                pluginListModel.append(entry)
-                console.log("[shell] Added plugin entry:", JSON.stringify(entry))
-            }
-            console.log("[shell] _parseList finished, pluginListModel count:", pluginListModel.count)
-        } catch(e) {
-            console.error("[shell] Error parsing plugin list:", e)
+        pluginListModel.clear()
+        for (var i = 0; i < entries.length; i++) {
+            var entry = entries[i]
+            // Проверяем, есть ли в api_request строка "wm_connect"
+            var hasWmConnect = entry.api_request && Array.isArray(entry.api_request) &&
+                               entry.api_request.indexOf("wm_connect") !== -1
+            pluginListModel.append({
+                name: entry.name,
+                source: entry.source,
+                main_source: entry.main_source,
+                active: entry.active,
+                wm_connect: hasWmConnect   // <-- новый флаг
+            })
         }
+    } catch(e) {
+        console.error("[shell] Error parsing plugin list:", e)
     }
+}
 
     // ia ne ebu chto eto    
     Component {
@@ -376,32 +379,44 @@ ShellRoot {
     property var pluginRegistry: ({})
 
     Repeater {
-        model: pluginListModel
-        delegate: Loader {
-            id: pluginLoader
-            active: model.active
-            source: model.active ? "file://" + model.source + "/" + model.main_source : ""
-            onLoaded: {
-                root.pluginRegistry[model.name] = item
-                console.log("[plugin] Плагин зарегистрирован:", model.name)
+    model: pluginListModel
+    delegate: Loader {
+        id: pluginLoader
+        active: model.active
+        source: model.active ? (model.main_source ? "file://" + model.source + "/" + model.main_source : "") : ""
+        onLoaded: {
+            root.pluginRegistry[model.name] = item
+            console.log("[plugin] Загружен:", model.name)
+
+            // eto dla custom wm podkluchenia nahui
+            if (model.wm_connect && item) {
+                var bar = pluginLoader.item
+                root.wm_connect = bar
             }
         }
     }
+}
 
     // ── Bar ────────────────────────────────────────────────────────────────
     Loader {
         id: barLoader
-        Component.onCompleted: {
-            if      (wm === "Hyprland") source = Qt.resolvedUrl("bar/HyprBar.qml")
-            else if (wm === "niri")     source = Qt.resolvedUrl("bar/NiriBar.qml")
-            else if (wm === "sway")     source = Qt.resolvedUrl("bar/SwayBar.qml")
-            else if (wm === "zwm")      source = Qt.resolvedUrl("bar/ZwmBar.qml")
-            else if (wm === "mango")    source = Qt.resolvedUrl("bar/MangoBar.qml")
-            else if (wm === "driftwm")  source = Qt.resolvedUrl("bar/DriftBar.qml")
-            else                        source = Qt.resolvedUrl("bar/" + wm + "Bar.qml")
+        source: {
+            if (wm === "Hyprland") return Qt.resolvedUrl("bar/HyprBar.qml");
+            else if (wm === "niri")     return Qt.resolvedUrl("bar/NiriBar.qml");
+            else if (wm === "sway")     return Qt.resolvedUrl("bar/SwayBar.qml");
+            else if (wm === "driftwm")  return Qt.resolvedUrl("bar/DriftBar.qml");
+            else return "";
+        }
+        onLoaded: {
+            var bar = barLoader.item
+            if (source !== "") {
+                root.wm_connect = bar
+            }
         }
     }
 
+    property var wm_connect: ({})
+    
     // ── UI components ─────────────────────────────────────────────────────────
     LazyLoader {
         active: show_wallpaper
@@ -505,7 +520,6 @@ ShellRoot {
             Quickshell.execDetached(["notify-send", pluginModel]);
         }
     }
-    property var bar: barLoader.item
 
     // ── Rounded corners ───────────────────────────────────────────────────
     property int size: mainRad > 0 ? mainRad + wtw : 0

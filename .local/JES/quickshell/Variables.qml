@@ -1,5 +1,5 @@
 import QtQuick
-import "helpers"
+import JES.Helpers
 
 Item {
     property var wthr: ({})

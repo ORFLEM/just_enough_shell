@@ -1,6 +1,5 @@
 import Quickshell
-import "components"
-import "../helpers"
+import JES.Helpers
 
 BaseBar {
     JsonListen {

@@ -94,7 +94,7 @@
   	<li>Hyprland</li>
   	<li>Niri</li>
 		<li>DriftWM</li>
-		<!-- <li>Jeden anderen WM über das Plugin-System</li> -->
+		<li>Jeden anderen WM über das Plugin-System</li>
 	</ul>
 	<br>
 	Das Projekt ist optimiert, wurde aber nicht auf schwacher Hardware getestet.<br>
@@ -132,9 +132,9 @@
 	<b>[c]</b> Installation von JES über Flake<br>
 	<b>[c]</b> Überarbeitung der zugrundeliegenden Architektur<br>
 	<b>[c]</b> Fix für <b>Niri</b><br>
+	<b>[c]</b> Neue Art des Hinzufügens benutzerdefinierter WM<br>
 	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
 	<b>[i]</b> Neues Plugin-Format<br>
-	<b>[i]</b> Neue Art des Hinzufügens benutzerdefinierter WM<br>
   <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
 	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>

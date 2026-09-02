@@ -5,7 +5,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
-import "../helpers"
+import JES.Helpers
 
 WlrLayershell {
     id: launcher

@@ -4,7 +4,7 @@
 - Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner.
 
 ## Regel Nr. 2
-- Ein Plugin darf **nicht** viele Geräteressourcen verbrauchen. Zur Optimierung ist jede Sprache erlaubt, empfohlen wird jedoch **Golang**.
+- Ein Plugin darf **nicht** viele Geräteressourcen verbrauchen. Zur Optimierung ist jede Sprache erlaubt, empfohlen wird jedoch **Go** (Golang).
 
 ## Regel Nr. 3
 - Die Dateinamen im Plugin erklären kurz, wofür sie sind; die einzubindende Datei wird **in der Installationsanleitung des Plugins angegeben**.
@@ -88,7 +88,10 @@ Item {
 ## Datenübergabe an die Oberfläche
 - Verwenden Sie `JsonListen` für einen kontinuierlichen Datenstrom (aus Leistungsgründen empfohlen) und `JsonPoll` für eine einmalige Abfrage in festgelegten Intervallen.
 - Die Daten werden im JSON‑Format übergeben. Bei rein visuellen Programmen ohne Logik (z. B. Cava in der Leiste) genügt ein einfacher String.
-- Fenstermanager‑Daten werden über den Parameter `bar` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen, rufen Sie `bar` auf. Eine Liste der verfügbaren Daten finden Sie in `BaseBar.qml`.
+- Fenstermanager‑Daten werden über den Parameter `wm_connect` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen, rufen Sie `wm_connect` auf. Eine Liste der verfügbaren Daten finden Sie in `BaseBar.qml`.
+
+## JES‑Bibliotheken
+- Um die Plugin‑Erstellung zu vereinfachen, wurden die Bibliotheken `JES.Helpers` und `JES.Bar` geschaffen. Ersteres wird für die Verwendung von `JsonListen`, `JsonPoll` und `MarqueeText` benötigt, letzteres für die Integration mit `BaseBar.qml`, d. h. für die Erstellung von Plugins, die Fenstermanager an JES anbinden (siehe unten).
 
 ### Falls etwas unklar ist, schauen Sie in die Datei `BaseBar.qml` im Ordner `bar/` – sie ist die visuelle Referenz für die gesamte Benutzeroberfläche.
 
@@ -104,7 +107,8 @@ Um eine Verbindung zu JES herzustellen, muss das Plugin eine `manifest.json` bes
     "launcher",
     "plugin_center",
     "osd",
-    "Jwindow"
+    "Jwindow",
+    "wm_connect"
   ],
   "main_source": "Main.qml",
   "json_files": {
@@ -207,6 +211,10 @@ active = true
 ]
 ```
 - In `source` können Sie, wie im Plugin‑Center, ein beliebiges Modul angeben, aber die maximalen Abmessungen sind auf FHD begrenzt.
+
+## Anbindung anderer Fenstermanager an JES
+- In der `manifest.json` geben Sie bei `api_request` den Eintrag `wm_connect` an, damit das System nicht nur das Plugin selbst, sondern auch die Daten aus der Leiste lädt, sodass auf Fenstermanager‑Daten zugegriffen werden kann.
+- Für die Anbindung von Fenstermanagern an JES habe ich im Ordner `for-documentation` ein Beispiel‑Plugin hinterlassen, das eine Vorlage für die Anbindung anderer WM bietet – Sie müssen lediglich ein paar Befehle in den Skripten ergänzen, und schon ist es erledigt.
 
 ## Erweiterung der JES‑API
 - Um die API zu erweitern, muss Ihr Plugin den Hauptcache des gesamten Pluginsystems abonnieren:

@@ -5,7 +5,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Controls
 import "../../"
-import "../../helpers"
+import JES.Helpers
 
 WlrLayershell {
     id: calPopup

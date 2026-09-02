@@ -16,7 +16,8 @@
           system = pkgs.system;
           config.allowUnfree = true;
         };
-        
+
+        # Сборка ассетов JES (уже существовала)
         jes-assets = pkgs.stdenv.mkDerivation {
           pname = "jes-assets";
           version = "1.0.0";
@@ -30,6 +31,19 @@
           '';
         };
 
+        # НОВОЕ: отдельная derivation для установки шрифта
+        jes-fonts = pkgs.stdenv.mkDerivation {
+          pname = "jes-fonts";
+          version = "1.0.0";
+          src = ./.;
+          installPhase = ''
+            mkdir -p $out/share/fonts/truetype
+            # Копируем шрифт из локального каталога
+            cp .local/share/fonts/ttf/FauxHanamin.ttf $out/share/fonts/truetype/
+          '';
+        };
+
+        # bash-автодополнение (было)
         jes-completions = pkgs.stdenv.mkDerivation {
           pname = "jes-completions";
           version = "1.0.0";
@@ -101,6 +115,7 @@
           fonts = {
             packages = with pkgs; [
               nerd-fonts.mononoki
+              jes-fonts   # НОВОЕ: добавляем наш шрифт
             ];
           };
 
@@ -156,6 +171,8 @@
 
           environment.shellInit = ''
             export PATH="$HOME/.local/bin:$PATH"
+            export QML_IMPORT_PATH="$HOME/.local/JES/quickshell:/run/current-system/sw/lib/qt-6/qml:$QML_IMPORT_PATH"
+            export QML2_IMPORT_PATH = "/run/current-system/sw/lib/qt-6/qml:$HOME/.local/JES/quickshell/:$QML2_IMPORT_PATH";
           '';
 
           system.activationScripts.installJesFiles = {
@@ -177,43 +194,40 @@
                   mkdir -p "$DST_CACHE/wall_prevs"
                   mkdir -p "$DST_CACHE/jes_music_art"
                   mkdir -p "$DST_LOCAL/bin"
+                  mkdir -p "$DST_LOCAL/share"
                   mkdir -p "$DST_STATE"
 
                   chown -R "$USER_NAME":users "$DST_CACHE"
 
+                  # Симлинк на каталог JES
                   rm -rf "$DST_LOCAL/JES"
                   ln -sfn "$SRC_LOCAL/JES" "$DST_LOCAL/JES"
                   chown -h "$USER_NAME":users "$DST_LOCAL/JES"
-
+                  
+                  # Симлинк на бинарник
                   rm -f "$DST_LOCAL/bin/jes-cli"
                   if [ -f "$SRC_LOCAL/bin/jes-cli" ]; then
                     ln -sfn "$SRC_LOCAL/bin/jes-cli" "$DST_LOCAL/bin/jes-cli"
                     chown -h "$USER_NAME":users "$DST_LOCAL/bin/jes-cli"
                   fi
 
+                  # НОВОЕ: копируем файл состояния (тему)
+                  if [ -f "$SRC_LOCAL/state/JES_colors.json" ]; then
+                    cp -f "$SRC_LOCAL/state/JES_colors.json" "$DST_STATE/JES_colors.json"
+                  fi
+
+                  # Настройка прав для состояния
+                  if [ -f "$DST_STATE/JES_colors.json" ]; then
+                    chown "$USER_NAME":users "$DST_STATE/JES_colors.json"
+                    chmod u+rw "$DST_STATE/JES_colors.json"
+                  fi
+
+                  # Копирование конфига, если его нет
                   if [ ! -d "$DST_CONFIG" ]; then
                     mkdir -p "$DST_CONFIG"
                     cp -r "$SRC_CONFIG"/* "$DST_CONFIG"/
                     chown -R "$USER_NAME":users "$DST_CONFIG"
                     chmod -R u+rwX "$DST_CONFIG"
-                  fi
-
-                  if [ ! -f "$DST_STATE/JES_colors.json" ]; then
-                    cat << 'EOF' > "$DST_STATE/JES_colors.json"
-{
-  "background1": "#808080",
-  "background2": "#6f6f6f",
-  "background3": "#606060",
-  "backgroundAlt1": "#383838",
-  "backgroundAlt2": "#404040",
-  "font": "#dcdccc",
-  "fontDark": "#383838",
-  "accent": "#ffffff",
-  "accent2": "#808080"
-}
-EOF
-                    chown "$USER_NAME":users "$DST_STATE/JES_colors.json"
-                    chmod u+rw "$DST_STATE/JES_colors.json"
                   fi
                 fi
               done

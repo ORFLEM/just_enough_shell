@@ -94,7 +94,7 @@
   	<li>Hyprland</li>
   	<li>Niri</li>
 		<li>DriftWM</li>
-		<!-- <li>Any other WM via plugin system</li> -->
+		<li>Any other WM via plugin system</li>
 	</ul>
 	<br>
 	The project has some optimization, but it hasn't been tested on weak hardware.<br>
@@ -132,9 +132,9 @@
 	<b>[c]</b> Installing JES via flake<br>
 	<b>[c]</b> Refactoring the underlying architecture<br>
 	<b>[c]</b> Fix <b>Niri</b><br>
+	<b>[c]</b> New type of adding custom wm<br>
 	<b>[i]</b> Migrate <b>Hyprland</b> config to Lua<br>
 	<b>[i]</b> New plugin's format<br>
-	<b>[i]</b> New type of adding custom wm<br>
   <b>[p]</b> Development of API for working with bar<br>
 	<b>[n]</b> Dark / light theme toggle<br>
 	c = completed; n = not completed; i = in progress; p = planned.<br>

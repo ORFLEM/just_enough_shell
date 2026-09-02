@@ -352,6 +352,12 @@ EOF
     if ! grep -q 'export PATH="$HOME/.local/bin:$PATH"' "$HOME/.bashrc"; then
       echo 'export PATH="$HOME/.local/bin:$PATH"' >>"$HOME/.bashrc"
     fi
+    if ! grep -q 'export QML_IMPORT_PATH="$HOME/.local/JES/quickshell:/usr/lib/qt6/qml:$QML_IMPORT_PATH"' "$HOME/.bashrc"; then
+      echo 'export QML_IMPORT_PATH="$HOME/.local/JES/quickshell:/usr/lib/qt6/qml:$QML_IMPORT_PATH"' >>"$HOME/.bashrc"
+    fi
+    if ! grep -q 'export QML2_IMPORT_PATH="/usr/lib/qt6/qml:$HOME/.local/JES/quickshell:$QML2_IMPORT_PATH"' "$HOME/.bashrc"; then
+      echo 'export QML2_IMPORT_PATH="/usr/lib/qt6/qml:$HOME/.local/JES/quickshell:$QML2_IMPORT_PATH"' >>"$HOME/.bashrc"
+    fi
   fi
 
   echo

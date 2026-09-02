@@ -5,7 +5,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "../../"
-import "../../helpers"
+import JES.Helpers
 
 WlrLayershell {
     id: playerPopup
