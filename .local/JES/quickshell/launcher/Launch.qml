@@ -247,8 +247,19 @@ WlrLayershell {
                             shaderEffect.time = shaderEffect.time + (0.016 * speedMult)
                         }
                     }
-
-                    fragmentShader: Qt.resolvedUrl("bg.frag.qsb")
+                    
+                    fragmentShader: {
+                        if (changeShader === "") return Qt.resolvedUrl("bg.frag.qsb");
+                        var path = changeShader;
+                        if (path.startsWith("~/") || path.startsWith("~")) {
+                            path = Quickshell.env("HOME") + path.substring(1);
+                        }
+                        if (!path.startsWith("file://") && !path.startsWith("qrc:")) {
+                            path = "file://" + path;
+                        }
+                        return path;
+                    }
+                    vertexShader: Qt.resolvedUrl("bg.vert.qsb")
                 }
 
                 ColumnLayout {

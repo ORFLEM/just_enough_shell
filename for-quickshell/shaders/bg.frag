@@ -23,9 +23,9 @@ layout(std140, binding = 0) uniform buf {
 #define NOISE_OCTAVES 2
 
 vec2 hash2(vec2 p) {
-    uvec2 q = uvec2(ivec2(p));
-    q *= uvec2(1597334673u, 3812015801u);
-    q = (q.x ^ q.y) * uvec2(1597334673u, 3812015801u);
+    ivec2 q = ivec2(ivec2(p));
+    q *= ivec2(1597334673u, 3812015801u);
+    q = (q.x ^ q.y) * ivec2(1597334673u, 3812015801u);
     return vec2(q) * (1.0/float(0xffffffffu)) * 2.0 - 1.0;
 }
 

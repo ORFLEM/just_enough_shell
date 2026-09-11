@@ -97,7 +97,7 @@ ShellRoot {
                 playerOpen =     states_c.playerOpen ?? false;
                 pluginOpen =     states_c.pluginOpen ?? false;
                 calOpen =        states_c.calOpen ?? false;
-                jwindowOpen =        states_c.jwindowOpen ?? false;
+                jwindowOpen =    states_c.jwindowOpen ?? false;
                 scrpicOpen =     states_c.scrpicOpen ?? false;
                 launchOpen =     states_c.launchOpen ?? false;
                 wallPickerOpen = states_c.wallPickerOpen ?? false;
@@ -114,13 +114,13 @@ ShellRoot {
     property bool   playerOpen:     false
     property bool   pluginOpen:     false
     property bool   calOpen:        false
-    property bool   jwindowOpen:        false
+    property bool   jwindowOpen:    false
     property bool   scrpicOpen:     false
     property bool   powerOpen:      false
     property bool   launchOpen:     false
     property bool   wallPickerOpen: false
     property bool   minimapOpen:    false
-    property bool weatherOpen: false
+    property bool   weatherOpen:    false
     property int    wallpaperType:  1
     property string wallShaderName: ""
 
@@ -129,7 +129,7 @@ ShellRoot {
             "playerOpen":     playerOpen,
             "pluginOpen":     pluginOpen,
             "calOpen":        calOpen,
-            "jwindowOpen":        jwindowOpen,
+            "jwindowOpen":    jwindowOpen,
             "scrpicOpen":     scrpicOpen,
             "launchOpen":     launchOpen,
             "wallPickerOpen": wallPickerOpen,
@@ -209,12 +209,16 @@ ShellRoot {
         path: Quickshell.env("HOME") + "/.config/JES/config.toml"
         watchChanges: true
         onFileChanged: {
+            if (do_not_sync_rad !== true) {
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
+            }
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
         }
         Component.onCompleted: {
+            if (do_not_sync_rad !== true) {
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
+            }
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
         }
@@ -262,6 +266,9 @@ ShellRoot {
             root._cfg_mainRad         = s.mainRad                 ?? 10
             root._cfg_barOnTop        = s.barOnTop                ?? true
             root._cfg_minibar         = s.minibar                 ?? false
+            root._cfg_disableCava     = s.disableCava             ?? false
+            root._cfg_nanoPlayer      = s.nanoPlayer              ?? false
+            root._cfg_nanoPlrSize     = s.nanoPlrSize             ?? 200
             root._cfg_barHeight       = s.barHeight               ?? 30
             root._cfg_fontSize        = s.fontSize                ?? 17
             root._cfg_fontFamily      = s.fontFamily              ?? "Mononoki Nerd Font Propo"
@@ -270,6 +277,8 @@ ShellRoot {
             root._cfg_customWallpaper = s.custom_wallpaper_engine ?? false
             root._cfg_disableCorners  = s.disableCorners          ?? false
             root._cfg_user_matugen    = s.user_matugen            ?? false
+            root._cfg_do_not_sync_rad = s.do_not_sync_rad         ?? false
+            root._cfg_changeShader    = s.changeShader            ?? ""
             root._cfg_wtw             = s.wtw                     ?? 6
             root._cfg_spacing         = s.spacing                 ?? 3
             root._cfg_margins         = s.margins                 ?? 3
@@ -329,13 +338,18 @@ ShellRoot {
     property int    _cfg_mainRad:         10
     property bool   _cfg_barOnTop:        true
     property bool   _cfg_minibar:         false
+    property bool   _cfg_disableCava:     false
+    property bool   _cfg_nanoPlayer:      false
     property int    _cfg_barHeight:       30
+    property int    _cfg_nanoPlrSize:     200
     property int    _cfg_fontSize:        17
     property string _cfg_fontFamily:      "Mononoki Nerd Font Propo"
+    property string _cfg_changeShader:    ""
     property bool   _cfg_enable_base16:   false
     property bool   _cfg_doNotDisturb:    false
     property bool   _cfg_customWallpaper: false
     property bool   _cfg_user_matugen:    false
+    property bool   _cfg_do_not_sync_rad: false
     property bool   _cfg_disableCorners:  false
     property int    _cfg_wtw:             6
     property real   _cfg_animations:      1.0
@@ -350,13 +364,18 @@ ShellRoot {
     property int    mainRad:         _cfg_mainRad
     property bool   barOnTop:        _cfg_barOnTop
     property bool   minibar:         _cfg_minibar
+    property bool   disableCava:     _cfg_disableCava
+    property bool   nanoPlayer:      _cfg_nanoPlayer
+    property int    nanoPlrSize:     _cfg_nanoPlrSize
     property int    fontSize:        _cfg_fontSize
     property int    barHeight:       _cfg_barHeight + wtw
     property string fontFamily:      _cfg_fontFamily
+    property string changeShader:    _cfg_changeShader
     property bool   enable_base16:   _cfg_enable_base16
     property bool   show_wallpaper:  !_cfg_customWallpaper
     property bool   doNotDisturb:    _cfg_doNotDisturb
     property bool   user_matugen:    _cfg_user_matugen
+    property bool   do_not_sync_rad: _cfg_do_not_sync_rad
     property bool   disableCorners:  _cfg_disableCorners
     property int    wtw:             _cfg_wtw
     property real   animations:      _cfg_animations

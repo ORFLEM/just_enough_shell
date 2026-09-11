@@ -1,7 +1,13 @@
 MenuBar=Disabled
 
+[ContentDisplay]
+UseShortRelativeDates=false
+
 [General]
+DoubleClickViewAction=none
 RememberOpenedTabs=false
+ShowFullPath=true
+ShowStatusBar=FullWidth
 Version=202
 ViewPropsTimestamp=2026,6,2,16,1,35.634
 activeFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
@@ -14,8 +20,9 @@ taskbarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
 toolBarFont=Mononoki Nerd Font Propo,17,-1,5,50,0,0,0,0,0
 
 [IconsMode]
-IconSize=48
-PreviewSize=48
+IconSize=80
+MaximumTextLines=4
+TextWidthIndex=0
 
 [KFileDialog Settings]
 Places Icons Auto-resize=false
@@ -26,6 +33,9 @@ MenuBar=Disabled
 
 [PreviewSettings]
 Plugins=appimagethumbnail,audiothumbnail,comicbookthumbnail,cursorthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,mltpreview,opendocumentthumbnail,svgthumbnail,ffmpegthumbs
+
+[Search]
+What=FileContents
 
 [UiSettings]
 ColorScheme=qt6ct

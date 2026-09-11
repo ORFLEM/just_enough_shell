@@ -51,7 +51,7 @@
 	</tr>
 	<tr>
 		<td>Browser</td>
-		<td>Zen browser</td>
+		<td>ungoogled chromium</td>
 	</tr>
 	<tr>
 		<td>File Manager</td>
@@ -63,7 +63,7 @@
 	</tr>
 	<tr>
 		<td>Theme</td>
-		<td>zenburn</td>
+		<td>matugen</td>
 	</tr>
 	<tr>
 		<td>Icons</td>
@@ -373,10 +373,10 @@ git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shel
 ```
 
 ## -- License -- :
-Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. License: **GNU GPL v3**.
+Notifications were taken from the [blxshell](https://github.com/binarylinuxx/dots) project and improved both visually and partially technically. notification License: **GNU GPL v3**.
 Worth checking out.
 
-These configurations are distributed under the **GNU GPL v3** license.
+These configurations are distributed under the **BSD 3-Clause License** license.
 
 In plain terms:
 - You are free to use, study, and modify this code.
@@ -385,8 +385,6 @@ In plain terms:
 This ensures that all improvements and derivative works remain free and open, just like the original.
 
 Full license text: [LICENSE](./LICENSE).
-
-[![boosty](https://img.shields.io/badge/Support_on_boosty-8b3d30?style=for-the-badge&logo=boosty&logoColor=f5f5f5)](https://boosty.to/orflem.ru/)
 
 ##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
 ##### Translated By [\_ORFLEM\_](https://github.com/ORFLEM) x [DeepSeek](https://chat.deepseek.com/)

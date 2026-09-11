@@ -390,6 +390,7 @@ WlrLayershell {
                         Text {
                             id: weatherIcon
                             text: vars.wthr.icon ?? ""
+                            anchors.verticalCenter: parent.verticalCenter
                             color: weatherItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.pixelSize: fontSize
@@ -509,7 +510,7 @@ WlrLayershell {
                     anchors.verticalCenter: parent.verticalCenter
                     width: cavaText.width + 4
                     height: panel.height - root.margins * 2 - root.wtw
-                    visible: panel.width >= 2560
+                    visible: panel.width >= 2560 && !disableCava
 
                     JsonListen {
                         id: cavaStream
@@ -552,7 +553,7 @@ WlrLayershell {
                     anchors.verticalCenter: parent.verticalCenter
                     id: playerItem
                     property bool hovered: false
-                    width: plrRow.width + 12
+                    width: nanoPlayer ? plrRow2.width + 12 : plrRow.width + 12
                     height: panel.height - root.margins * 2 - root.wtw
                  
                     ClippingRectangle {
@@ -578,10 +579,11 @@ WlrLayershell {
                     }
                     
                     Item {
+                        visible: !nanoPlayer
                         id: plrRow
                         anchors.centerIn: parent
                         opacity: 0.55
-                        height: fontSize
+                        height: parent.height - 4
                         clip: true
                         width: plrText1.implicitWidth + sep1.implicitWidth + plrText2.implicitWidth + sep2.implicitWidth + titleLoader.width
 
@@ -592,7 +594,6 @@ WlrLayershell {
                             text: vars.plr.status ?? ""
                             color: playerItem.hovered ? col.fontDark : col.accent
                             font.family: fontFamily
-                            font.weight: Font.Black
                             font.pixelSize: fontSize - 2
                             Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
@@ -604,7 +605,7 @@ WlrLayershell {
                             text: ' '
                             font.family: fontFamily
                             font.weight: Font.Black
-                            font.pixelSize: fontSize - 1
+                            font.pixelSize: fontSize
                             color: playerItem.hovered ? col.fontDark : col.font
                             Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
@@ -618,7 +619,7 @@ WlrLayershell {
                             color: playerItem.hovered ? col.fontDark : col.font
                             font.family: fontFamily
                             font.weight: Font.Black
-                            font.pixelSize: fontSize - 1
+                            font.pixelSize: fontSize
                             Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
 
@@ -629,7 +630,7 @@ WlrLayershell {
                             text: '      '
                             font.family: fontFamily
                             font.weight: Font.Black
-                            font.pixelSize: fontSize - 1
+                            font.pixelSize: fontSize
                             color: playerItem.hovered ? col.fontDark : col.font
                             Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                         }
@@ -638,7 +639,7 @@ WlrLayershell {
                             id: titleLoader
                             anchors.left: sep2.right
                             anchors.verticalCenter: parent.verticalCenter
-                            height: parent.height
+                            height: marqueeComp.height
                             width: vars.plr.title?.length > (panel.width >= 2560 ? 35 : 25)
                                    ? (panel.width >= 2560 ? 380 : 220)
                                    : (item ? item.implicitWidth : 0)
@@ -654,7 +655,7 @@ WlrLayershell {
                                     color: playerItem.hovered ? col.fontDark : col.font
                                     font.family: fontFamily
                                     font.weight: Font.Black
-                                    font.pixelSize: fontSize -1
+                                    font.pixelSize: fontSize
                                     Behavior on color { ColorAnimation { duration: 200 * root.animations } }
                                 }
                             }
@@ -670,9 +671,50 @@ WlrLayershell {
                                     color: playerItem.hovered ? col.fontDark : col.font
                                     font.family: fontFamily
                                     font.weight: Font.Black
-                                    font.pixelSize: fontSize -1
+                                    font.pixelSize: fontSize
                                 }
                             }
+                        }
+                    }
+
+                    Item {
+                        visible: nanoPlayer
+                        id: plrRow2
+                        height: parent.height
+                        anchors.centerIn: parent
+                        width: nanoPlrSize + plrText21.width + sep21.width
+
+                        Text {
+                            id: plrText21
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: vars.plr.status ?? ""
+                            color: playerItem.hovered ? col.fontDark : col.accent
+                            font.family: fontFamily
+                            font.pixelSize: fontSize - 2
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                        }                        
+                        Text {
+                            id: sep21
+                            anchors.left: plrText21.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: ' '
+                            color: playerItem.hovered ? col.fontDark : col.accent
+                            font.family: fontFamily
+                            font.pixelSize: fontSize - 2
+                            Behavior on color { ColorAnimation { duration: 200 * root.animations } }
+                        }                        
+
+                        MarqueeText {
+                            width: nanoPlrSize
+                            anchors.left: sep21.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: parent.height
+                            color: playerItem.hovered ? col.fontDark : col.font
+                            font.family: fontFamily
+                            font.weight: Font.Black
+                            font.pixelSize: fontSize
+                            text: vars.plr.artist + '      ' + vars.plr.title
                         }
                     }
                     
@@ -876,6 +918,7 @@ WlrLayershell {
                             text: vars.vol.sign ?? ""
                             color: col.accent
                             font.family: "Mononoki Nerd font Propo"
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: fontSize
                         }
 
