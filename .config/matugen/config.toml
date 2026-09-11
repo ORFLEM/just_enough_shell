@@ -32,10 +32,6 @@ expr_postfix = "}}"
 block_prefix = "<*"
 block_postfix = "*>"
 
-[templates.colors]
-input_path = "./templates/colors.json.template"
-output_path = "~/.local/JES/quickshell/colors.json"
-
 [templates.sway]
 input_path = "./templates/sway.template"
 output_path = "~/.config/sway/colors.conf"
@@ -61,7 +57,7 @@ output_path = '~/.config/nvim/generated.lua'
 post_hook = 'pkill -SIGUSR1 nvim'
 
 [templates.ungoogled-chromium]
-input_path = './templates/ungoogled-crhomium.json'
+input_path = './templates/ungoogled-chromium.json'
 output_path = '~/.config/chromium/themes/manifest.json'
 post_hook = "rm -f ~/.config/chromium/themes/Cached\\ Theme.pak"
 
@@ -132,3 +128,7 @@ output_path = '~/.cache/firefox-colors.css'
 [templates.firefox-website-colors]
 input_path = './templates/firefox-colors.css'
 output_path = "~/.config/mozilla/firefox/bwjx8sfb.default-1782643691397/chrome/colors.css"
+
+[templates.tg]
+input_path = './templates/telegram.tdesktop-theme'
+output_path = '~/tg-theme/matugen.tdesktop-theme'
