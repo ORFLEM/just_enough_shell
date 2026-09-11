@@ -185,6 +185,11 @@ Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und 
 - `margins` —                 Ränder im Widget, Standard 3
 - `disableCorners` —          Rundungen der Monitore deaktivieren, Standard false
 - `openweather_key` —         OpenWeather API-Schlüssel, Standard leer
+- `do_not_sync_rad` -         die wm-Radien nicht mit dem jes-Radius synchronisieren, standardmäßig false
+- `changeShader` -            den Standard-Shader durch einen anderen ersetzen; standardmäßig leer, aber dort muss der Pfad zur **qsb**-Datei eingegeben werden
+- `nanoPlayer` -              kompakter Player-Modus in der Bar; standardmäßig false
+- `nanoPlrSize` -             Größe des kompakten Players; standardmäßig 200
+- `disableCava` -             Equalizer in der Bar deaktivieren; standardmäßig false
 
 ```
 Wichtig: config.toml liegt im JES-Ordner (~/.config/JES/)

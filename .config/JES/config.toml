@@ -13,19 +13,30 @@ mainRad = 10 # 0-25
 fontSize = 17
 fontFamily = "Mononoki Nerd Font Propo"
 enable_base16 = false
+do_not_sync_rad = false
 disableCorners = false # disable roundings your monitors
 
 # bar
 barOnTop = true
 minibar = false
 barHeight = 30
+disableCava = false
+nanoPlayer = false # do your player more small
+nanoPlrSize = 200
+
+# launcher
+changeShader = ""
 
 # other
 custom_wallpaper_engine = false
-user_matugen = false
+user_matugen = true
 doNotDisturb = false
 openweather_key = ""
 
 # plugins
 directory = "~/.config/JES/plugins/"
+
+# [[plugin]]
+# name = "example plugin"
+# active = false
 

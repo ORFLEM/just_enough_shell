@@ -186,6 +186,11 @@ If you want live video wallpapers, there are both video wallpapers and shaders a
 - `margins` -                 margins in widget, default 3
 - `disableCorners` -          disable roundings of monitors, default false
 - `openweather_key` -         openWeather api key, default is empty
+- `do_not_sync_rad` -         disable syncing WMs radius with JES mainRad, default false
+- `changeShader` -            replace the default shader with another one; it is empty by default, but you need to enter the path to the **qsb** file there
+- `nanoPlayer` -              compact player mode in the bar; false by default
+- `nanoPlrSize` -             size of the compact player; 200 by default
+- `disableCava` -             disable the equalizer in the bar; false by default
 
 ```
 Note: config.toml lives in the JES folder (~/.config/JES/)
