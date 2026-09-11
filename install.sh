@@ -273,11 +273,11 @@ ru_install() {
     echo -ne "\033[F"
     echo -ne "                       \r"
     animate_text "  создание директорий в .cache"
-    mkdir -p ./.cache/JES/walls
-    mkdir -p ./.cache/JES/wall_prevs
+    mkdir -p ~/.cache/JES/walls
+    mkdir -p ~/.cache/JES/wall_prevs
     sleep 1
     echo -en "  [###------------]\r"
-    mkdir -p ./.cache/JES/jes_music_art
+    mkdir -p ~/.cache/JES/jes_music_art
     sleep 1
 
     if [[ "$FULL_INSTALL" == true ]]; then
@@ -484,9 +484,9 @@ en_install() {
     echo -ne "\033[F"
     echo -ne "                       \r"
     animate_text "  creating cache directories"
-    mkdir -p ./.cache/JES/walls
-    mkdir -p ./.cache/JES/wall_prevs
-    mkdir -p ./.cache/JES/jes_music_art
+    mkdir -p ~/.cache/JES/walls
+    mkdir -p ~/.cache/JES/wall_prevs
+    mkdir -p ~/.cache/JES/jes_music_art
     sleep 1
 
     if [[ "$FULL_INSTALL" == true ]]; then
@@ -645,7 +645,7 @@ EOF
         fi
     else
         # only JES
-        sudo cp ./JES.nix /etc/nixos/
+        sudo cp ./installer/JES.nix /etc/nixos/
         animate_text "  Main files installed, please add JES module (JES.nix) to imports and enable via services.jes.enable"
     fi
 }

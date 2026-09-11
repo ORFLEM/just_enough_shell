@@ -212,53 +212,59 @@ WlrLayershell {
                     implicitWidth: 200
                     implicitHeight: rightPanel.implicitHeight
                     radius: mainRad - root.margins
-                    opacity: 0.65
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: col.backgroundAlt2 }
-                        GradientStop { position: 0.275; color: col.backgroundAlt1 }
-                        GradientStop { position: 0.725; color: col.backgroundAlt1 }
-                        GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                    color: "transparent"
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: mainRad - root.margins
+                        opacity: 0.65
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop { position: 0.0; color: col.backgroundAlt2 }
+                            GradientStop { position: 0.275; color: col.backgroundAlt1 }
+                            GradientStop { position: 0.725; color: col.backgroundAlt1 }
+                            GradientStop { position: 1.0; color: col.backgroundAlt2 }
+                        }
                     }
+                    
                     Item {
                         y: 3
                         width: parent.width - root.margins * 2
                         anchors.horizontalCenter: parent.horizontalCenter
                         height: parent.height - root.spacing - root.margins - logoTextLeft.height
-                    ListView {
-                        anchors.fill: parent
-                        id: tabListView
-                        spacing: root.spacing
-                        clip: true
-                        model: tabs
-                        currentIndex: currentTabIndex
+                        ListView {
+                            anchors.fill: parent
+                            id: tabListView
+                            spacing: root.spacing
+                            clip: true
+                            model: tabs
+                            currentIndex: currentTabIndex
 
-                        delegate: Rectangle {
-                            id: delegateItem
-                            implicitWidth: leftPanel.width - root.margins * 2
-                            implicitHeight: fontSize + root.margins * 2
-                            radius: mainRad - root.margins * 2
-                            property bool isCurrent: ListView.isCurrentItem
-                            color: isCurrent ? col.accent : col.background1
-                            Behavior on color { ColorAnimation { duration: 150 } }
+                            delegate: Rectangle {
+                                id: delegateItem
+                                implicitWidth: leftPanel.width - root.margins * 2
+                                implicitHeight: fontSize + root.margins * 2
+                                radius: mainRad - root.margins * 2
+                                property bool isCurrent: ListView.isCurrentItem
+                                color: isCurrent ? col.accent : col.background1
+                                Behavior on color { ColorAnimation { duration: 150 } }
 
-                            Text {
-                                text: modelData.name
-                                color: parent.isCurrent ? col.fontDark : col.font
-                                font.pixelSize: fontSize
-                                font.family: fontFamily
-                                anchors.centerIn: parent
-                            }
+                                Text {
+                                    text: modelData.name
+                                    color: parent.isCurrent ? col.fontDark : col.font
+                                    font.pixelSize: fontSize
+                                    font.family: fontFamily
+                                    anchors.centerIn: parent
+                                }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    tabListView.currentIndex = index
-                                    currentTabIndex = index
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        tabListView.currentIndex = index
+                                        currentTabIndex = index
+                                    }
                                 }
                             }
                         }
-                    }
                     }
                     
                     Text {
@@ -283,39 +289,12 @@ WlrLayershell {
                     Loader {
                         id: loader
                         anchors.centerIn: parent
-                        // width: item ? item.width : 500   // если компонент загружен – берём его ширину
-                        // height: item ? item.height : 250
-                    
-                        // Для внешних плагинов — source (URL)
-                        // Для встроенной вкладки — sourceComponent (Component)
-                        // Оба свойства имеют binding, но только одно из них "активно" в каждый момент
-
-                        // source: {
-                        //     if (currentTabIndex < tabs.length) {
-                        //         var tab = tabs[currentTabIndex]
-                        //         if (tab.source && tab.source !== "") {
-                        //             return ("file://" + tab.source)
-                        //         }
-                        //     }
-                        //     return ""  // пустая строка = выгрузить внешний файл
-                        // }
 
                         source: Qt.resolvedUrl(tabs[currentTabIndex].source)
-                    
-                        // sourceComponent: {
-                        //     if (currentTabIndex < tabs.length) {
-                        //         var tab = tabs[currentTabIndex]
-                        //         if (!tab.source || tab.source === "") {
-                        //             return aboutSystemComponent  // встроенный компонент
-                        //         }
-                        //     }
-                        //     return null  // нет встроенного компонента
-                        // }
                     
                         onStatusChanged: {
                             if (status === Loader.Error) {
                                 console.warn("Ошибка загрузки плагина:", source, errorString())
-                                // При ошибке сбрасываем на встроенную вкладку
                                 source = ""
                                 sourceComponent = aboutSystemComponent
                             }

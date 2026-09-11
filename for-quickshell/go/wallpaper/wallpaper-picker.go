@@ -1,15 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
-	"bytes"
-	"strconv"
 
 	"github.com/BurntSushi/toml"
 )
@@ -252,22 +252,11 @@ func detectImageType(path string) (realType string, isJPEG bool) {
 // Если overwriteOriginal == true, исходник заменяется новым файлом (с расширением targetExt).
 // Если false, создаётся файл с суффиксом .fixed.targetExt.
 func ensureJPEG(path string, overwriteOriginal bool, targetExt string) (string, error) {
-	// Проверяем, является ли файл уже нужного формата (по сигнатуре)
 	realType, isJPEG := detectImageType(path)
-	// Если формат уже соответствует targetExt? Упростим: если реальный формат совпадает с targetExt (и расширение соответствует), то возвращаем как есть.
-	// Но мы не знаем, соответствует ли расширение targetExt. Проверим расширение.
 	currentExt := strings.ToLower(filepath.Ext(path))
 	targetExtWithDot := "." + strings.ToLower(targetExt)
-	if currentExt == targetExtWithDot && isJPEG && targetExt == "jpg" { // для jpeg особый случай
-		// уже нужный формат
-		return path, nil
-	}
-	// Для других форматов (png, webp) проверка сложнее, но можно пропустить и всегда конвертировать.
-	// Однако, чтобы не переконвертировать без нужды, проверяем, что реальный тип соответствует targetExt.
-	// Для простоты будем конвертировать всегда, если расширение не совпадает с targetExt.
+
 	if currentExt == targetExtWithDot {
-		// Расширение совпадает, но возможно внутри другой формат (например, .png с jpeg данными).
-		// Проверим сигнатуру. Если сигнатура соответствует targetExt, возвращаем как есть.
 		if (targetExt == "jpg" || targetExt == "jpeg") && isJPEG {
 			return path, nil
 		}
@@ -318,18 +307,18 @@ func ensureJPEG(path string, overwriteOriginal bool, targetExt string) (string, 
 			}
 		}
 		return outputPath, nil
-	} else {
-		if err := os.Rename(tmpPath, outputPath); err != nil {
-			data, err := os.ReadFile(tmpPath)
-			if err != nil {
-				return "", err
-			}
-			if err := os.WriteFile(outputPath, data, 0644); err != nil {
-				return "", err
-			}
-		}
-		return outputPath, nil
 	}
+
+	if err := os.Rename(tmpPath, outputPath); err != nil {
+		data, err := os.ReadFile(tmpPath)
+		if err != nil {
+			return "", err
+		}
+		if err := os.WriteFile(outputPath, data, 0644); err != nil {
+			return "", err
+		}
+	}
+	return outputPath, nil
 }
 
 // ─── Команды ─────────────────────────────────────────────────────────────────
@@ -356,10 +345,8 @@ func cmdListTab(tab, search string) {
 		filtered := entries[:0]
 		lowerSearch := strings.ToLower(search)
 
-		// Проверяем префикс /d (поиск по пути)
 		if strings.HasPrefix(lowerSearch, "/d") {
-			// Убираем "/d" и обрезаем пробелы
-			rest := search[2:] // сохраняем оригинальный регистр? но для сравнения приводим к нижнему
+			rest := search[2:]
 			pathSearch := strings.ToLower(strings.TrimSpace(rest))
 			for _, e := range entries {
 				if strings.Contains(strings.ToLower(e.Path), pathSearch) {
@@ -367,7 +354,6 @@ func cmdListTab(tab, search string) {
 				}
 			}
 		} else {
-			// Обычный поиск по имени файла
 			nameSearch := lowerSearch
 			for _, e := range entries {
 				if strings.Contains(strings.ToLower(e.Name), nameSearch) {
@@ -408,7 +394,6 @@ func cleanFixedFiles(dirs []string) {
 
 func cmdFixWalls() {
 	cfg := loadConfig()
-	// Очищаем старые временные файлы
 	cleanFixedFiles(cfg.Dirs.ImageDirs)
 
 	allExts := map[string]bool{
@@ -416,7 +401,7 @@ func cmdFixWalls() {
 	}
 	entries := collectByDirs(cfg.Dirs.ImageDirs, allExts, "image")
 
-	targetExt := cfg.Settings.StaticType // берём из конфига
+	targetExt := cfg.Settings.StaticType
 
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, 4)
@@ -431,10 +416,7 @@ func cmdFixWalls() {
 			realType, isJPEG := detectImageType(path)
 			ext := strings.ToLower(filepath.Ext(path))
 
-			// Проверяем, нужно ли конвертировать: либо формат не совпадает с целевым, либо расширение не соответствует целевому
-			targetExtWithDot := "." + targetExt
-			needFix := !isJPEG || (ext != targetExtWithDot && ext != "."+targetExt) // упрощённо
-			// Более точная проверка: если реальный тип не совпадает с targetExt или расширение не совпадает
+			var needFix bool
 			if (targetExt == "jpg" || targetExt == "jpeg") && isJPEG && (ext == ".jpg" || ext == ".jpeg") {
 				needFix = false
 			} else if targetExt == "png" && realType == "png" && ext == ".png" {
@@ -524,22 +506,26 @@ func cmdCleanCache() {
 	fmt.Println("done")
 }
 
+// runMatugen запускает matugen и выводит его stderr, чтобы ошибки не глотались.
+func runMatugen(imagePath, scheme string, useConfig bool) error {
+	args := []string{"image", imagePath, "-m", "dark", "-t", scheme, "--source-color-index", "0"}
+	if useConfig {
+		args = append(args, "-c", homeDir(".local/JES/matugen/config.toml"))
+	}
+	cmd := exec.Command("matugen", args...)
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
 func applyMatugen(imagePath string, double bool) {
 	if imagePath == "" {
 		return
 	}
-	configPath := homeDir(".local/JES/matugen/config.toml")
-	baseArgs := []string{"image", imagePath, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0"}
-
-	argsWithConfig := append(baseArgs, "-c", configPath)
-	cmd1 := exec.Command("matugen", argsWithConfig...)
-	if err := cmd1.Run(); err != nil {
+	if err := runMatugen(imagePath, currentColorScheme, true); err != nil {
 		fmt.Fprintf(os.Stderr, "[wp] matugen with config failed: %v\n", err)
 	}
-
 	if double {
-		cmd2 := exec.Command("matugen", baseArgs...)
-		if err := cmd2.Run(); err != nil {
+		if err := runMatugen(imagePath, currentColorScheme, false); err != nil {
 			fmt.Fprintf(os.Stderr, "[wp] matugen without config failed: %v\n", err)
 		}
 	}
@@ -572,7 +558,6 @@ func cmdSet(path string, double bool) {
 		}
 		saveState("video", path, cfg.State.Shader, currentColorScheme)
 	} else {
-		// Конвертируем исходник в целевой формат (без перезаписи оригинала)
 		targetExt := cfg.Settings.StaticType
 		fixedPath, err := ensureJPEG(path, false, targetExt)
 		if err != nil {
@@ -580,15 +565,12 @@ func cmdSet(path string, double bool) {
 			os.Exit(1)
 		}
 
-		// Всегда создаём статический кэш в формате JPEG с помощью ffmpeg
-		// Учитываем ширину для масштабирования
 		out, _ := exec.Command("ffprobe",
 			"-v", "error", "-select_streams", "v:0",
 			"-show_entries", "stream=width", "-of", "csv=p=0", fixedPath).Output()
 		width := 0
 		fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &width)
 
-		// Используем ffmpeg для преобразования в JPEG с нужным масштабированием
 		if width > 3840 {
 			exec.Command("ffmpeg",
 				"-i", fixedPath, "-vf", "scale=3440:-1", "-q:v", "2",
@@ -625,16 +607,36 @@ func cmdSetShader(name string, double bool) {
 	saveState("shader", cfg.State.Wallpaper, name, currentColorScheme)
 }
 
+// reapplyCurrentWithScheme перекрашивает matugen текущей схемой.
+// Работает для всех режимов, включая shader (берёт кэшированный кадр).
 func reapplyCurrentWithScheme() {
 	cfg := loadConfig()
-	if cfg.State.Mode == "image" && cfg.State.Wallpaper != "" {
+	scheme := currentColorScheme
+
+	var imagePath string
+	switch cfg.State.Mode {
+	case "image":
+		imagePath = staticCache
+	case "video":
+		imagePath = videoFrame
+	case "shader":
 		if _, err := os.Stat(staticCache); err == nil {
-			exec.Command("matugen", "image", staticCache, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0").Run()
+			imagePath = staticCache
+		} else if _, err := os.Stat(videoFrame); err == nil {
+			imagePath = videoFrame
 		}
-	} else if cfg.State.Mode == "video" && cfg.State.Wallpaper != "" {
-		if _, err := os.Stat(videoFrame); err == nil {
-			exec.Command("matugen", "image", videoFrame, "-m", "dark", "-t", currentColorScheme, "--source-color-index", "0").Run()
-		}
+	}
+
+	if imagePath == "" {
+		fmt.Fprintf(os.Stderr, "[wp] reapply: unknown mode %q, nothing to do\n", cfg.State.Mode)
+		return
+	}
+	if _, err := os.Stat(imagePath); err != nil {
+		fmt.Fprintf(os.Stderr, "[wp] reapply: no cached wallpaper found (mode=%s)\n", cfg.State.Mode)
+		return
+	}
+	if err := runMatugen(imagePath, scheme, true); err != nil {
+		fmt.Fprintf(os.Stderr, "[wp] reapply: matugen failed: %v\n", err)
 	}
 }
 
@@ -649,10 +651,10 @@ func cmdSetScheme(scheme string) {
 		fmt.Fprintln(os.Stderr, "set-scheme: expected 'vibrant' or 'classic'")
 		os.Exit(1)
 	}
-	currentColorScheme = newScheme
-	cfg := loadConfig()
+	cfg := loadConfig()              // сначала читаем конфиг (он перезаписывает currentColorScheme)
+	currentColorScheme = newScheme   // потом задаём новую схему
 	saveState(cfg.State.Mode, cfg.State.Wallpaper, cfg.State.Shader, newScheme)
-	reapplyCurrentWithScheme()
+	reapplyCurrentWithScheme()       // matugen получит именно новую схему
 	fmt.Println("Color scheme set to", newScheme)
 }
 

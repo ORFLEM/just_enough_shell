@@ -1,0 +1,736 @@
+Stage: Fragment
+QSB_VERSION: 9
+Has 7 shaders:
+  Shader 0: SPIR-V 100 [Standard]
+  Shader 1: GLSL 100 [Standard]
+  Shader 2: GLSL 120 [Standard]
+  Shader 3: GLSL 150 [Standard]
+  Shader 4: GLSL 440 [Standard]
+  Shader 5: HLSL 50 [Standard]
+  Shader 6: MSL 12 [Standard]
+
+Reflection info: {
+    "inputs": [
+        {
+            "location": 0,
+            "name": "qt_TexCoord0",
+            "type": "vec2"
+        }
+    ],
+    "outputs": [
+        {
+            "location": 0,
+            "name": "fragColor",
+            "type": "vec4"
+        }
+    ],
+    "uniformBlocks": [
+        {
+            "binding": 0,
+            "blockName": "buf",
+            "members": [
+                {
+                    "matrixStride": 16,
+                    "name": "qt_Matrix",
+                    "offset": 0,
+                    "size": 64,
+                    "type": "mat4"
+                },
+                {
+                    "name": "qt_Opacity",
+                    "offset": 64,
+                    "size": 4,
+                    "type": "float"
+                },
+                {
+                    "name": "time",
+                    "offset": 68,
+                    "size": 4,
+                    "type": "float"
+                },
+                {
+                    "name": "patternScale",
+                    "offset": 72,
+                    "size": 4,
+                    "type": "float"
+                },
+                {
+                    "name": "evolutionSpeed",
+                    "offset": 76,
+                    "size": 4,
+                    "type": "float"
+                },
+                {
+                    "name": "resolution",
+                    "offset": 80,
+                    "size": 8,
+                    "type": "vec2"
+                },
+                {
+                    "name": "accent",
+                    "offset": 96,
+                    "size": 16,
+                    "type": "vec4"
+                },
+                {
+                    "name": "dark",
+                    "offset": 112,
+                    "size": 16,
+                    "type": "vec4"
+                },
+                {
+                    "name": "mid",
+                    "offset": 128,
+                    "size": 16,
+                    "type": "vec4"
+                }
+            ],
+            "set": 0,
+            "size": 144,
+            "structName": "_232"
+        }
+    ]
+}
+
+
+Shader 0: SPIR-V 100 [Standard]
+Entry point: main
+Contents:
+Binary of 6496 bytes
+
+
+************************************
+
+Shader 1: GLSL 100 [Standard]
+Entry point: main
+Contents:
+#version 100
+
+struct buf
+{
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    float time;
+    float patternScale;
+    float evolutionSpeed;
+    vec2 resolution;
+    vec4 accent;
+    vec4 dark;
+    vec4 mid;
+};
+
+uniform buf _232;
+
+varying vec2 qt_TexCoord0;
+
+vec2 hash2(vec2 p)
+{
+    ivec2 q = ivec2(p);
+    q *= ivec2(1597334673, -482951495);
+    q = ivec2(q.x ^ q.y) * ivec2(1597334673, -482951495);
+    return ((vec2(q) * 2.3283064365386962890625e-10) * 2.0) - vec2(1.0);
+}
+
+float perlin2D(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = ((f * f) * f) * ((f * ((f * 6.0) - vec2(15.0))) + vec2(10.0));
+    vec2 param = i + vec2(0.0);
+    vec2 ga = hash2(param);
+    vec2 param_1 = i + vec2(1.0, 0.0);
+    vec2 gb = hash2(param_1);
+    vec2 param_2 = i + vec2(0.0, 1.0);
+    vec2 gc = hash2(param_2);
+    vec2 param_3 = i + vec2(1.0);
+    vec2 gd = hash2(param_3);
+    float va = dot(ga, f - vec2(0.0));
+    float vb = dot(gb, f - vec2(1.0, 0.0));
+    float vc = dot(gc, f - vec2(0.0, 1.0));
+    float vd = dot(gd, f - vec2(1.0));
+    return (mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y) * 0.5) + 0.5;
+}
+
+float perlin4D(vec2 p, float w)
+{
+    vec2 param = p + vec2(w * 100.0, w * 73.0);
+    float n1 = perlin2D(param);
+    vec2 param_1 = p + vec2((-w) * 89.0, w * 137.0);
+    float n2 = perlin2D(param_1);
+    float blend = fract(w);
+    blend = (blend * blend) * (3.0 - (2.0 * blend));
+    return mix(n1, n2, blend);
+}
+
+float fbm4D(vec2 p, float w)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 2; i++)
+    {
+        vec2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+    return value;
+}
+
+void main()
+{
+    vec2 uv = qt_TexCoord0;
+    uv.x *= (_232.resolution.x / _232.resolution.y);
+    float w = _232.time * _232.evolutionSpeed;
+    vec2 p = uv * _232.patternScale;
+    vec2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = fract(n * 35.0);
+    float line = step(contour_value, 0.02700000070035457611083984375) + step(0.972999989986419677734375, contour_value);
+    line = clamp(line, 0.0, 1.0);
+    vec3 bg = _232.dark.xyz;
+    vec3 fg = mix(_232.mid.xyz, _232.accent.xyz, vec3(0.60000002384185791015625));
+    vec3 color = mix(bg, fg, vec3(line));
+    gl_FragData[0] = vec4(color, 1.0) * _232.qt_Opacity;
+}
+
+
+
+************************************
+
+Shader 2: GLSL 120 [Standard]
+Entry point: main
+Contents:
+#version 120
+
+struct buf
+{
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    float time;
+    float patternScale;
+    float evolutionSpeed;
+    vec2 resolution;
+    vec4 accent;
+    vec4 dark;
+    vec4 mid;
+};
+
+uniform buf _232;
+
+varying vec2 qt_TexCoord0;
+
+vec2 hash2(vec2 p)
+{
+    ivec2 q = ivec2(p);
+    q *= ivec2(1597334673, -482951495);
+    q = ivec2(q.x ^ q.y) * ivec2(1597334673, -482951495);
+    return ((vec2(q) * 2.3283064365386962890625e-10) * 2.0) - vec2(1.0);
+}
+
+float perlin2D(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = ((f * f) * f) * ((f * ((f * 6.0) - vec2(15.0))) + vec2(10.0));
+    vec2 param = i + vec2(0.0);
+    vec2 ga = hash2(param);
+    vec2 param_1 = i + vec2(1.0, 0.0);
+    vec2 gb = hash2(param_1);
+    vec2 param_2 = i + vec2(0.0, 1.0);
+    vec2 gc = hash2(param_2);
+    vec2 param_3 = i + vec2(1.0);
+    vec2 gd = hash2(param_3);
+    float va = dot(ga, f - vec2(0.0));
+    float vb = dot(gb, f - vec2(1.0, 0.0));
+    float vc = dot(gc, f - vec2(0.0, 1.0));
+    float vd = dot(gd, f - vec2(1.0));
+    return (mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y) * 0.5) + 0.5;
+}
+
+float perlin4D(vec2 p, float w)
+{
+    vec2 param = p + vec2(w * 100.0, w * 73.0);
+    float n1 = perlin2D(param);
+    vec2 param_1 = p + vec2((-w) * 89.0, w * 137.0);
+    float n2 = perlin2D(param_1);
+    float blend = fract(w);
+    blend = (blend * blend) * (3.0 - (2.0 * blend));
+    return mix(n1, n2, blend);
+}
+
+float fbm4D(vec2 p, float w)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 2; i++)
+    {
+        vec2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+    return value;
+}
+
+void main()
+{
+    vec2 uv = qt_TexCoord0;
+    uv.x *= (_232.resolution.x / _232.resolution.y);
+    float w = _232.time * _232.evolutionSpeed;
+    vec2 p = uv * _232.patternScale;
+    vec2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = fract(n * 35.0);
+    float line = step(contour_value, 0.02700000070035457611083984375) + step(0.972999989986419677734375, contour_value);
+    line = clamp(line, 0.0, 1.0);
+    vec3 bg = _232.dark.xyz;
+    vec3 fg = mix(_232.mid.xyz, _232.accent.xyz, vec3(0.60000002384185791015625));
+    vec3 color = mix(bg, fg, vec3(line));
+    gl_FragData[0] = vec4(color, 1.0) * _232.qt_Opacity;
+}
+
+
+
+************************************
+
+Shader 3: GLSL 150 [Standard]
+Entry point: main
+Contents:
+#version 150
+
+struct buf
+{
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    float time;
+    float patternScale;
+    float evolutionSpeed;
+    vec2 resolution;
+    vec4 accent;
+    vec4 dark;
+    vec4 mid;
+};
+
+uniform buf _232;
+
+in vec2 qt_TexCoord0;
+out vec4 fragColor;
+
+vec2 hash2(vec2 p)
+{
+    ivec2 q = ivec2(p);
+    q *= ivec2(1597334673, -482951495);
+    q = ivec2(q.x ^ q.y) * ivec2(1597334673, -482951495);
+    return ((vec2(q) * 2.3283064365386962890625e-10) * 2.0) - vec2(1.0);
+}
+
+float perlin2D(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = ((f * f) * f) * ((f * ((f * 6.0) - vec2(15.0))) + vec2(10.0));
+    vec2 param = i + vec2(0.0);
+    vec2 ga = hash2(param);
+    vec2 param_1 = i + vec2(1.0, 0.0);
+    vec2 gb = hash2(param_1);
+    vec2 param_2 = i + vec2(0.0, 1.0);
+    vec2 gc = hash2(param_2);
+    vec2 param_3 = i + vec2(1.0);
+    vec2 gd = hash2(param_3);
+    float va = dot(ga, f - vec2(0.0));
+    float vb = dot(gb, f - vec2(1.0, 0.0));
+    float vc = dot(gc, f - vec2(0.0, 1.0));
+    float vd = dot(gd, f - vec2(1.0));
+    return (mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y) * 0.5) + 0.5;
+}
+
+float perlin4D(vec2 p, float w)
+{
+    vec2 param = p + vec2(w * 100.0, w * 73.0);
+    float n1 = perlin2D(param);
+    vec2 param_1 = p + vec2((-w) * 89.0, w * 137.0);
+    float n2 = perlin2D(param_1);
+    float blend = fract(w);
+    blend = (blend * blend) * (3.0 - (2.0 * blend));
+    return mix(n1, n2, blend);
+}
+
+float fbm4D(vec2 p, float w)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 2; i++)
+    {
+        vec2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+    return value;
+}
+
+void main()
+{
+    vec2 uv = qt_TexCoord0;
+    uv.x *= (_232.resolution.x / _232.resolution.y);
+    float w = _232.time * _232.evolutionSpeed;
+    vec2 p = uv * _232.patternScale;
+    vec2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = fract(n * 35.0);
+    float line = step(contour_value, 0.02700000070035457611083984375) + step(0.972999989986419677734375, contour_value);
+    line = clamp(line, 0.0, 1.0);
+    vec3 bg = _232.dark.xyz;
+    vec3 fg = mix(_232.mid.xyz, _232.accent.xyz, vec3(0.60000002384185791015625));
+    vec3 color = mix(bg, fg, vec3(line));
+    fragColor = vec4(color, 1.0) * _232.qt_Opacity;
+}
+
+
+
+************************************
+
+Shader 4: GLSL 440 [Standard]
+Entry point: main
+Contents:
+#version 440
+
+struct buf
+{
+    mat4 qt_Matrix;
+    float qt_Opacity;
+    float time;
+    float patternScale;
+    float evolutionSpeed;
+    vec2 resolution;
+    vec4 accent;
+    vec4 dark;
+    vec4 mid;
+};
+
+uniform buf _232;
+
+layout(location = 0) in vec2 qt_TexCoord0;
+layout(location = 0) out vec4 fragColor;
+
+vec2 hash2(vec2 p)
+{
+    ivec2 q = ivec2(p);
+    q *= ivec2(1597334673, -482951495);
+    q = ivec2(q.x ^ q.y) * ivec2(1597334673, -482951495);
+    return ((vec2(q) * 2.3283064365386962890625e-10) * 2.0) - vec2(1.0);
+}
+
+float perlin2D(vec2 p)
+{
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = ((f * f) * f) * ((f * ((f * 6.0) - vec2(15.0))) + vec2(10.0));
+    vec2 param = i + vec2(0.0);
+    vec2 ga = hash2(param);
+    vec2 param_1 = i + vec2(1.0, 0.0);
+    vec2 gb = hash2(param_1);
+    vec2 param_2 = i + vec2(0.0, 1.0);
+    vec2 gc = hash2(param_2);
+    vec2 param_3 = i + vec2(1.0);
+    vec2 gd = hash2(param_3);
+    float va = dot(ga, f - vec2(0.0));
+    float vb = dot(gb, f - vec2(1.0, 0.0));
+    float vc = dot(gc, f - vec2(0.0, 1.0));
+    float vd = dot(gd, f - vec2(1.0));
+    return (mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y) * 0.5) + 0.5;
+}
+
+float perlin4D(vec2 p, float w)
+{
+    vec2 param = p + vec2(w * 100.0, w * 73.0);
+    float n1 = perlin2D(param);
+    vec2 param_1 = p + vec2((-w) * 89.0, w * 137.0);
+    float n2 = perlin2D(param_1);
+    float blend = fract(w);
+    blend = (blend * blend) * (3.0 - (2.0 * blend));
+    return mix(n1, n2, blend);
+}
+
+float fbm4D(vec2 p, float w)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 2; i++)
+    {
+        vec2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+    return value;
+}
+
+void main()
+{
+    vec2 uv = qt_TexCoord0;
+    uv.x *= (_232.resolution.x / _232.resolution.y);
+    float w = _232.time * _232.evolutionSpeed;
+    vec2 p = uv * _232.patternScale;
+    vec2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = fract(n * 35.0);
+    float line = step(contour_value, 0.02700000070035457611083984375) + step(0.972999989986419677734375, contour_value);
+    line = clamp(line, 0.0, 1.0);
+    vec3 bg = _232.dark.xyz;
+    vec3 fg = mix(_232.mid.xyz, _232.accent.xyz, vec3(0.60000002384185791015625));
+    vec3 color = mix(bg, fg, vec3(line));
+    fragColor = vec4(color, 1.0) * _232.qt_Opacity;
+}
+
+
+
+************************************
+
+Shader 5: HLSL 50 [Standard]
+Entry point: main
+Native resource binding map:
+0 -> [0, -1]
+Contents:
+cbuffer buf : register(b0)
+{
+    row_major float4x4 _232_qt_Matrix : packoffset(c0);
+    float _232_qt_Opacity : packoffset(c4);
+    float _232_time : packoffset(c4.y);
+    float _232_patternScale : packoffset(c4.z);
+    float _232_evolutionSpeed : packoffset(c4.w);
+    float2 _232_resolution : packoffset(c5);
+    float4 _232_accent : packoffset(c6);
+    float4 _232_dark : packoffset(c7);
+    float4 _232_mid : packoffset(c8);
+};
+
+
+static float2 qt_TexCoord0;
+static float4 fragColor;
+
+struct SPIRV_Cross_Input
+{
+    float2 qt_TexCoord0 : TEXCOORD0;
+};
+
+struct SPIRV_Cross_Output
+{
+    float4 fragColor : SV_Target0;
+};
+
+float2 hash2(float2 p)
+{
+    int2 q = int2(p);
+    q *= int2(1597334673, -482951495);
+    q = (q.x ^ q.y).xx * int2(1597334673, -482951495);
+    return ((float2(q) * 2.3283064365386962890625e-10f) * 2.0f) - 1.0f.xx;
+}
+
+float perlin2D(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    float2 u = ((f * f) * f) * ((f * ((f * 6.0f) - 15.0f.xx)) + 10.0f.xx);
+    float2 param = i + 0.0f.xx;
+    float2 ga = hash2(param);
+    float2 param_1 = i + float2(1.0f, 0.0f);
+    float2 gb = hash2(param_1);
+    float2 param_2 = i + float2(0.0f, 1.0f);
+    float2 gc = hash2(param_2);
+    float2 param_3 = i + 1.0f.xx;
+    float2 gd = hash2(param_3);
+    float va = dot(ga, f - 0.0f.xx);
+    float vb = dot(gb, f - float2(1.0f, 0.0f));
+    float vc = dot(gc, f - float2(0.0f, 1.0f));
+    float vd = dot(gd, f - 1.0f.xx);
+    return (lerp(lerp(va, vb, u.x), lerp(vc, vd, u.x), u.y) * 0.5f) + 0.5f;
+}
+
+float perlin4D(float2 p, float w)
+{
+    float2 param = p + float2(w * 100.0f, w * 73.0f);
+    float n1 = perlin2D(param);
+    float2 param_1 = p + float2((-w) * 89.0f, w * 137.0f);
+    float n2 = perlin2D(param_1);
+    float blend = frac(w);
+    blend = (blend * blend) * (3.0f - (2.0f * blend));
+    return lerp(n1, n2, blend);
+}
+
+float fbm4D(float2 p, float w)
+{
+    float value = 0.0f;
+    float amplitude = 0.5f;
+    float frequency = 1.0f;
+    for (int i = 0; i < 2; i++)
+    {
+        float2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0f;
+        amplitude *= 0.5f;
+    }
+    return value;
+}
+
+void frag_main()
+{
+    float2 uv = qt_TexCoord0;
+    uv.x *= (_232_resolution.x / _232_resolution.y);
+    float w = _232_time * _232_evolutionSpeed;
+    float2 p = uv * _232_patternScale;
+    float2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = frac(n * 35.0f);
+    float _line = step(contour_value, 0.02700000070035457611083984375f) + step(0.972999989986419677734375f, contour_value);
+    _line = clamp(_line, 0.0f, 1.0f);
+    float3 bg = _232_dark.xyz;
+    float3 fg = lerp(_232_mid.xyz, _232_accent.xyz, 0.60000002384185791015625f.xxx);
+    float3 color = lerp(bg, fg, _line.xxx);
+    fragColor = float4(color, 1.0f) * _232_qt_Opacity;
+}
+
+SPIRV_Cross_Output main(SPIRV_Cross_Input stage_input)
+{
+    qt_TexCoord0 = stage_input.qt_TexCoord0;
+    frag_main();
+    SPIRV_Cross_Output stage_output;
+    stage_output.fragColor = fragColor;
+    return stage_output;
+}
+
+
+************************************
+
+Shader 6: MSL 12 [Standard]
+Entry point: main0
+Native resource binding map:
+0 -> [0, -1]
+Contents:
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct buf
+{
+    float4x4 qt_Matrix;
+    float qt_Opacity;
+    float time;
+    float patternScale;
+    float evolutionSpeed;
+    float2 resolution;
+    float4 accent;
+    float4 dark;
+    float4 mid;
+};
+
+struct main0_out
+{
+    float4 fragColor [[color(0)]];
+};
+
+struct main0_in
+{
+    float2 qt_TexCoord0 [[user(locn0)]];
+};
+
+static inline __attribute__((always_inline))
+float2 hash2(thread const float2& p)
+{
+    int2 q = int2(p);
+    q *= int2(1597334673, -482951495);
+    q = int2(q.x ^ q.y) * int2(1597334673, -482951495);
+    return ((float2(q) * 2.3283064365386962890625e-10) * 2.0) - float2(1.0);
+}
+
+static inline __attribute__((always_inline))
+float perlin2D(thread const float2& p)
+{
+    float2 i = floor(p);
+    float2 f = fract(p);
+    float2 u = ((f * f) * f) * ((f * ((f * 6.0) - float2(15.0))) + float2(10.0));
+    float2 param = i + float2(0.0);
+    float2 ga = hash2(param);
+    float2 param_1 = i + float2(1.0, 0.0);
+    float2 gb = hash2(param_1);
+    float2 param_2 = i + float2(0.0, 1.0);
+    float2 gc = hash2(param_2);
+    float2 param_3 = i + float2(1.0);
+    float2 gd = hash2(param_3);
+    float va = dot(ga, f - float2(0.0));
+    float vb = dot(gb, f - float2(1.0, 0.0));
+    float vc = dot(gc, f - float2(0.0, 1.0));
+    float vd = dot(gd, f - float2(1.0));
+    return (mix(mix(va, vb, u.x), mix(vc, vd, u.x), u.y) * 0.5) + 0.5;
+}
+
+static inline __attribute__((always_inline))
+float perlin4D(thread const float2& p, thread const float& w)
+{
+    float2 param = p + float2(w * 100.0, w * 73.0);
+    float n1 = perlin2D(param);
+    float2 param_1 = p + float2((-w) * 89.0, w * 137.0);
+    float n2 = perlin2D(param_1);
+    float blend = fract(w);
+    blend = (blend * blend) * (3.0 - (2.0 * blend));
+    return mix(n1, n2, blend);
+}
+
+static inline __attribute__((always_inline))
+float fbm4D(thread const float2& p, thread const float& w)
+{
+    float value = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+    for (int i = 0; i < 2; i++)
+    {
+        float2 param = p * frequency;
+        float param_1 = w;
+        value += (amplitude * perlin4D(param, param_1));
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+    return value;
+}
+
+fragment main0_out main0(main0_in in [[stage_in]], constant buf& _232 [[buffer(0)]])
+{
+    main0_out out = {};
+    float2 uv = in.qt_TexCoord0;
+    uv.x *= (_232.resolution.x / _232.resolution.y);
+    float w = _232.time * _232.evolutionSpeed;
+    float2 p = uv * _232.patternScale;
+    float2 param = p;
+    float param_1 = w;
+    float n = fbm4D(param, param_1);
+    float contour_value = fract(n * 35.0);
+    float line = step(contour_value, 0.02700000070035457611083984375) + step(0.972999989986419677734375, contour_value);
+    line = fast::clamp(line, 0.0, 1.0);
+    float3 bg = _232.dark.xyz;
+    float3 fg = mix(_232.mid.xyz, _232.accent.xyz, float3(0.60000002384185791015625));
+    float3 color = mix(bg, fg, float3(line));
+    out.fragColor = float4(color, 1.0) * _232.qt_Opacity;
+    return out;
+}
+
+
+
+************************************
+
