@@ -1,5 +1,5 @@
 // --- Window & Basic Colors ---
-windowBg: {{colors.background.default.hex}};
+windowBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 windowFg: {{colors.on_background.default.hex}};
 windowBgOver: {{colors.surface_container_low.default.hex}};
 windowBgRipple: {{colors.surface_container_high.default.hex}};
@@ -12,11 +12,11 @@ windowBgActive: {{colors.primary.default.hex}};
 windowFgActive: {{colors.on_primary.default.hex}};
 windowActiveTextFg: {{colors.primary.default.hex}};
 windowShadowFg: #0000005c;
-windowShadowFgFallback: {{colors.background.default.hex}};
+windowShadowFgFallback: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 shadowFg: {{colors.on_background.default.hex}}33;
 slideFadeOutBg: #0000003c;
 slideFadeOutShadowFg: #0000005c;
-imageBg: {{colors.background.default.hex}};
+imageBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 imageBgTransparent: #ffffff;
 
 // --- Buttons ---
@@ -29,7 +29,7 @@ activeButtonSecondaryFg: {{colors.on_primary.default.hex}};
 activeButtonSecondaryFgOver: {{colors.on_primary.default.hex}};
 activeLineFg: {{colors.primary.default.hex}};
 activeLineFgError: {{colors.error.default.hex}};
-lightButtonBg: {{colors.background.default.hex}};
+lightButtonBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 lightButtonBgOver: {{colors.surface_container_low.default.hex}};
 lightButtonBgRipple: {{colors.surface_container_high.default.hex}};
 lightButtonFg: {{colors.primary.default.hex}};
@@ -38,7 +38,7 @@ attentionButtonFg: {{colors.error.default.hex}};
 attentionButtonFgOver: {{colors.on_error.default.hex}};
 attentionButtonBgOver: {{colors.error.default.hex}};
 attentionButtonBgRipple: {{colors.error.default.hex}};
-outlineButtonBg: {{colors.background.default.hex}};
+outlineButtonBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 outlineButtonBgOver: {{colors.surface_container_low.default.hex}};
 outlineButtonOutlineFg: {{colors.primary.default.hex}};
 outlineButtonBgRipple: {{colors.surface_container_high.default.hex}};
@@ -74,7 +74,7 @@ tooltipFg: {{colors.on_surface.default.hex}};
 tooltipBorderFg: {{colors.primary.default.hex}};
 
 // --- Title Bar & Trays ---
-titleBg: {{colors.background.default.hex}};
+titleBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 titleShadow: #00000003;
 titleButtonFg: {{colors.on_surface_variant.default.hex}};
 titleButtonBgOver: {{colors.surface_container_low.default.hex}};
@@ -84,7 +84,7 @@ titleButtonCloseFgOver: #ffffff;
 titleFgActive: {{colors.on_surface.default.hex}};
 titleFg: {{colors.on_surface_variant.default.hex}};
 trayCounterBg: {{colors.primary.default.hex}};
-trayCounterBgMute: {{colors.surface_container_high.default.hex}};
+trayCounterBgMute: {{colors.outline.default.hex}};
 trayCounterFg: {{colors.on_primary.default.hex}};
 trayCounterBgMacInvert: #ffffff;
 trayCounterFgMacInvert: #ffffff01;
@@ -93,7 +93,7 @@ trayCounterFgMacInvert: #ffffff01;
 layerBg: #0000007f;
 cancelIconFg: {{colors.on_surface_variant.default.hex}};
 cancelIconFgOver: {{colors.on_surface.default.hex}};
-boxBg: {{colors.background.default.hex}};
+boxBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 boxTextFg: {{colors.on_background.default.hex}};
 boxTextFgGood: {{colors.primary.default.hex}};
 boxTextFgError: {{colors.error.default.hex}};
@@ -107,7 +107,7 @@ boxTitleCloseFgOver: {{colors.on_surface.default.hex}};
 membersAboutLimitFg: {{colors.error.default.hex}};
 
 // --- Contacts & Intro ---
-contactsBg: {{colors.background.default.hex}};
+contactsBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 contactsBgOver: {{colors.surface_container_low.default.hex}};
 contactsNameFg: {{colors.on_background.default.hex}};
 contactsStatusFg: {{colors.on_surface_variant.default.hex}};
@@ -115,22 +115,22 @@ contactsStatusFgOver: {{colors.on_surface_variant.default.hex}};
 contactsStatusFgOnline: {{colors.primary.default.hex}};
 photoCropFadeBg: #0000007f;
 photoCropPointFg: #ffffff7f;
-introBg: {{colors.background.default.hex}};
+introBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 introTitleFg: {{colors.on_background.default.hex}};
 introDescriptionFg: {{colors.on_surface_variant.default.hex}};
 introErrorFg: {{colors.error.default.hex}};
 introCoverTopBg: {{colors.primary.default.hex}};
-introCoverBottomBg: {{colors.background.default.hex}};
+introCoverBottomBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 introCoverIconsFg: {{colors.primary.default.hex}};
 introCoverPlaneTrace: {{colors.primary.default.hex}}69;
 introCoverPlaneInner: {{colors.primary.default.hex}};
-introCoverPlaneOuter: {{colors.background.default.hex}};
+introCoverPlaneOuter: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 introCoverPlaneTop: #ffffff;
 
 // --- Dialogs (Chat list) ---
 dialogsMenuIconFg: {{colors.on_surface_variant.default.hex}};
 dialogsMenuIconFgOver: {{colors.primary.default.hex}};
-dialogsBg: {{colors.background.default.hex}};
+dialogsBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 dialogsNameFg: {{colors.on_background.default.hex}};
 dialogsChatIconFg: {{colors.on_background.default.hex}};
 dialogsDateFg: {{colors.on_surface_variant.default.hex}};
@@ -142,7 +142,7 @@ dialogsVerifiedIconFg: {{colors.on_primary.default.hex}};
 dialogsSendingIconFg: {{colors.on_surface_variant.default.hex}};
 dialogsSentIconFg: {{colors.primary.default.hex}};
 dialogsUnreadBg: {{colors.primary.default.hex}};
-dialogsUnreadBgMuted: {{colors.outline_variant.default.hex}};
+dialogsUnreadBgMuted: {{colors.outline.default.hex}};
 dialogsUnreadFg: {{colors.on_primary.default.hex}};
 dialogsBgOver: {{colors.surface_container_low.default.hex}};
 dialogsNameFgOver: {{colors.on_surface.default.hex}};
@@ -156,7 +156,7 @@ dialogsVerifiedIconFgOver: {{colors.on_primary.default.hex}};
 dialogsSendingIconFgOver: {{colors.on_surface.default.hex}};
 dialogsSentIconFgOver: {{colors.primary.default.hex}};
 dialogsUnreadBgOver: {{colors.primary.default.hex}};
-dialogsUnreadBgMutedOver: {{colors.surface_container_high.default.hex}};
+dialogsUnreadBgMutedOver: {{colors.outline.default.hex}};
 dialogsUnreadFgOver: {{colors.on_primary.default.hex}};
 dialogsBgActive: {{colors.surface_container_high.default.hex}};
 dialogsNameFgActive: {{colors.on_surface.default.hex}};
@@ -175,10 +175,10 @@ dialogsUnreadFgActive: {{colors.primary_container.default.hex}};
 dialogsForwardBg: {{colors.surface_container_low.default.hex}};
 dialogsForwardFg: {{colors.on_surface.default.hex}};
 searchedBarBg: {{colors.surface_container_low.default.hex}};
-searchedBarBorder: {{colors.background.default.hex}};
+searchedBarBorder: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 searchedBarFg: {{colors.on_surface_variant.default.hex}};
-topBarBg: {{colors.background.default.hex}};
-emojiPanBg: {{colors.background.default.hex}};
+topBarBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
+emojiPanBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 emojiPanCategories: {{colors.surface_container_low.default.hex}};
 emojiPanHeaderFg: {{colors.on_surface.default.hex}};
 emojiPanHeaderBg: {{colors.surface_container_low.default.hex}};
@@ -204,17 +204,19 @@ historyUnreadBarBorder: {{colors.surface_container_high.default.hex}};
 historyUnreadBarFg: {{colors.primary.default.hex}};
 
 // Peer Colors (Multi-color names in groups)
-historyPeer1NameFg: {{colors.error.default.hex}};
-historyPeer1UserpicBg: {{colors.error.default.hex}};
-historyPeer2NameFg: {{colors.primary.default.hex}};
-historyPeer2UserpicBg: {{colors.primary.default.hex}};
-historyPeer3NameFg: {{colors.tertiary.default.hex}};
-historyPeer3UserpicBg: {{colors.tertiary.default.hex}};
-historyPeer4NameFg: {{colors.secondary.default.hex}};
-historyPeer4UserpicBg: {{colors.secondary.default.hex}};
-historyPeer5NameFg: {{colors.inverse_primary.default.hex}};
-historyPeer5UserpicBg: {{colors.inverse_primary.default.hex}};
-historyPeerUserpicFg: {{colors.background.default.hex}};
+historyPeer1NameFg: dca3a3;
+historyPeer1UserpicBg: dca3a3;
+historyPeer2NameFg: b5cda3;
+historyPeer2UserpicBg: b5cda3;
+historyPeer3NameFg: e3c9a3;
+historyPeer3UserpicBg: e3c9a3;
+historyPeer4NameFg: 8cb3d9;
+historyPeer4UserpicBg: 8cb3d9;
+historyPeer5NameFg: d3b0d0;
+historyPeer5UserpicBg: d3b0d0;
+historyPeer6NameFg: 9fc5c4;
+historyPeer6UserpicBg: 9fc5c4;
+historyPeerUserpicFg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 
 // Messages
 msgInBg: {{colors.surface_container_high.default.hex}};
@@ -236,37 +238,40 @@ msgOutMonoFg: {{colors.on_primary.default.hex}};
 // Files & Media
 msgFileInBg: {{colors.primary.default.hex}};
 msgFileInBgOver: {{colors.primary_fixed_dim.default.hex}};
-msgFileOutBg: {{colors.background.default.hex}};
-historyFileInRadialFg: {{colors.primary.default.hex}};
-historyFileOutRadialFg: {{colors.background.default.hex}};
+msgFileOutBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
+historyFileInRadialFg: {{colors.on_primary.default.hex}};
+historyFileOutRadialFg: {{colors.primary.default.hex}};
 msgWaveformInActive: {{colors.primary.default.hex}};
 msgWaveformInInactive: {{colors.surface_container_highest.default.hex}};
 msgWaveformOutActive: {{colors.on_primary.default.hex}};
 msgWaveformOutInactive: {{colors.on_primary.default.hex}}80;
 
 // --- Compose Area ---
-historyComposeAreaBg: {{colors.background.default.hex}};
+historyComposeAreaBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 historyComposeAreaFg: {{colors.on_background.default.hex}};
 historyComposeIconFg: {{colors.on_surface_variant.default.hex}};
 historyComposeIconFgOver: {{colors.primary.default.hex}};
 historySendIconFg: {{colors.primary.default.hex}};
 historySendIconFgOver: {{colors.primary_fixed_dim.default.hex}};
-historyReplyBg: {{colors.background.default.hex}};
+historyReplyBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 historyReplyIconFg: {{colors.primary.default.hex}};
 historyReplyCancelFg: {{colors.on_surface_variant.default.hex}};
 
 // --- SideBar (Main Menu) ---
-sideBarBg: {{colors.background.default.hex}};
+sideBarBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 sideBarBgActive: {{colors.surface_container_high.default.hex}};
 sideBarBgRipple: {{colors.primary.default.hex}}33;
 sideBarTextFgActive: {{colors.primary.default.hex}};
 sideBarIconFgActive: {{colors.primary.default.hex}};
+sideBarBadgeBg: {{colors.primary.default.hex}};
+sideBarBadgeBgMuted: {{colors.outline.default.hex}};
+sideBarBadgeFg: {{colors.on_primary.default.hex}};
 sideBarTextFg: {{colors.on_surface_variant.default.hex}};
 sideBarIconFg: {{colors.on_surface_variant.default.hex}};
 
 // --- Media View ---
-mediaviewBg: {{colors.background.default.hex}}eb;
-mediaviewFileBg: {{colors.background.default.hex}};
+mediaviewBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }}eb;
+mediaviewFileBg: {{ colors.surface_container.default.hex | lighten:11 | set_saturation:7 }};
 mediaviewFileNameFg: {{colors.on_background.default.hex}};
 mediaviewMenuBg: {{colors.surface_container.default.hex}};
 mediaviewMenuFg: #ffffff;

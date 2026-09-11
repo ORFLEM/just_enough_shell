@@ -620,11 +620,11 @@
   <g
      id="menu-radio-normal"
      transform="translate(3.8851 30.877)"
-     fill="{{colors.on_surface.default.hex}}fff"
+     fill="{{colors.on_surface.default.hex}}"
      fill-opacity=".99482">
     <path
        d="m30.5 200c-4.4064 0-8 3.5936-8 8s3.5936 8 8 8 8-3.5936 8-8-3.5936-8-8-8zm0 2c3.3257 0 6 2.6743 6 6s-2.6743 6-6 6-6-2.6743-6-6 2.6743-6 6-6z"
-       fill="{{colors.on_surface.default.hex}}fff"
+       fill="{{colors.on_surface.default.hex}}"
        fill-opacity=".99482"
        opacity=".5"
        id="path34" />
@@ -1176,7 +1176,7 @@
      transform="translate(40.735 30.316)">
     <path
        d="m30.5 200c-4.4064 0-8 3.5936-8 8s3.5936 8 8 8 8-3.5936 8-8-3.5936-8-8-8zm0 2c3.3257 0 6 2.6743 6 6s-2.6743 6-6 6-6-2.6743-6-6 2.6743-6 6-6z"
-       fill="{{colors.on_surface.default.hex}}fff"
+       fill="{{colors.on_surface.default.hex}}"
        opacity=".5"
        id="path47" />
   </g>
@@ -1186,7 +1186,7 @@
     <path
        transform="translate(-38)"
        d="m68.5 200c-4.4064 0-8 3.5936-8 8s3.5936 8 8 8 8-3.5936 8-8-3.5936-8-8-8zm0 2c3.3257 0 6 2.6743 6 6s-2.6743 6-6 6-6-2.6743-6-6 2.6743-6 6-6z"
-       fill="{{colors.on_surface.default.hex}}fff"
+       fill="{{colors.on_surface.default.hex}}"
        opacity=".5"
        id="path48" />
   </g>
@@ -6709,17 +6709,17 @@
   <path
      id="checkbox-normal"
      d="m223.9 230.53a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 2a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6z"
-     fill="{{colors.on_surface.default.hex}}fff"
+     fill="{{colors.on_surface.default.hex}}"
      opacity=".5" />
   <path
      id="checkbox-focused"
      d="m260.94 229.88a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 2a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6z"
-     fill="{{colors.on_surface.default.hex}}fff"
+     fill="{{colors.on_surface.default.hex}}"
      opacity=".5" />
   <path
      id="menu-checkbox-normal"
      d="m193.42 230.26a8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8 8 8 0 0 0-8-8zm0 2a6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6 6 6 0 0 1 6-6z"
-     fill="{{colors.on_surface.default.hex}}fff"
+     fill="{{colors.on_surface.default.hex}}"
      opacity=".5" />
   <path
      id="checkbox-checked-focused"
