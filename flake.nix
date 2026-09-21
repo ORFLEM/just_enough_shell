@@ -157,6 +157,8 @@
             grim
             taplo
             python314
+            zip
+            unzip
 
             # gui & tui
             foot
