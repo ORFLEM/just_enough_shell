@@ -21,7 +21,7 @@ WlrLayershell {
                         { current: 2, icon: "", cmd: "systemctl reboot" },
                         { current: 3, icon: "󰗽", cmd: localPath(Qt.resolvedUrl("../scripts/exit.sh")) },
                         { current: 4, icon: "󰤄", cmd: "systemctl suspend" },
-                        { current: 5, icon: "", cmd: "hyprlock -c ~/.local/JES/hyprlock/hyprlock.conf" }]
+                        { current: 5, icon: "", cmd: "jes-cli lockScreen" }]
 
     function closePower() {
         root.togglePower()

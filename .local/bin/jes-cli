@@ -1,106 +1,365 @@
 #!/usr/bin/env bash
 
-# Базовый путь к сокету/конфигурации Quickshell
-QS_CMD="qs -c $HOME/.local/JES/quickshell ipc call root"
-# Путь к твоему скрипту яркости (измени путь, если он лежит в другом месте)
-BRIGHTNESS_SCRIPT="$HOME/.local/JES/quickshell/scripts/brightness.sh"
-MUSIC_SCRIPT="$HOME/.local/JES/quickshell/scripts/music"
-WALLS_SCRIPT="$HOME/.local/JES/quickshell/wallpaper/wallpaper-picker"
 
-# Функция для безопасного экранирования аргументов (если потребуется)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+QS_BASE=(qs -c "$SCRIPT_DIR/../JES/quickshell")
+QS_CMD=("${QS_BASE[@]}" ipc call root)
+BRIGHTNESS_SCRIPT="$SCRIPT_DIR/../JES/quickshell/scripts/brightness.sh"
+MUSIC_SCRIPT="$SCRIPT_DIR/../JES/quickshell/scripts/music"
+WALLS_SCRIPT="$SCRIPT_DIR/../JES/quickshell/wallpaper/wallpaper-picker"
+PLUGIN_LIST_SCRIPT="$SCRIPT_DIR/../JES/quickshell/scripts/plugin_list.sh"
+CRASH_WATCH="$SCRIPT_DIR/../JES/quickshell/scripts/jes-crash-watch.sh"
+
+BLACKLIST_FILE="$HOME/.cache/JES/blacklist"
+UI_TOKEN_FILE="$HOME/.cache/JES/aura_token"
+CORE_CONFIG="/etc/jes/coreaura.toml"
+
+JES_HOST_VERSION="${JES_HOST_VERSION:-0.2.0}"
+SHELL_PID_FILE="${XDG_RUNTIME_DIR:-/tmp}/jes-shell.pid"
+
+export QT_PLUGIN_PATH="/run/current-system/sw/lib/qt-6/plugins:$SCRIPT_DIR/../JES/quickshell/"
+export QML2_IMPORT_PATH="/run/current-system/sw/lib/qt-6/qml:$SCRIPT_DIR/../JES/quickshell/"
+
 quote() {
     printf '%s' "$1" | sed "s/'/'\\\\''/g; 1s/^/'/; \$s/\$/'/"
 }
 
-# Вызов метода без аргументов
-call_method() {
-    $QS_CMD "$1"
+call_method()     { "${QS_CMD[@]}" "$1"; }
+call_method_str() { local arg; arg=$(quote "$2"); "${QS_CMD[@]}" "$1" "$arg"; }
+call_method_int() { "${QS_CMD[@]}" "$1" "$2"; }
+
+wallShader()       { call_method_str "wallShader" "$1"; }
+toggleWallPicker() { call_method "toggleWallPicker"; }
+wallType()         { call_method_int "wallType" "$1"; }
+togglePlayer()     { call_method "togglePlayer"; }
+toggleCal()        { call_method "toggleCal"; }
+togglePower()      { call_method "togglePower"; }
+toggleLaunch()     { call_method "toggleLaunch"; }
+toggleJwindow()    { call_method "toggleJwindow"; }
+toggleMap()        { call_method "toggleMap"; }
+screenpicker()     { call_method "screenpicker"; }
+lockScreen()     { call_method "lockScreen"; }
+
+# ---------- helpers ----------
+
+# Является ли pid процессом самого qs (а не jes-cli / crash-watch / inotifywait,
+# чьи пути тоже содержат "quickshell")
+_is_qs_pid() {
+    local pid="$1" cmdline
+    [[ -r "/proc/$pid/cmdline" ]] || return 1
+    cmdline=$(tr '\0' ' ' < "/proc/$pid/cmdline")
+    [[ "$cmdline" == *quickshell* ]] || return 1
+    [[ "$cmdline" != *jes-cli* && "$cmdline" != *crash-watch* \
+        && "$cmdline" != *plugin_list* && "$cmdline" != *inotifywait* ]] || return 1
+    return 0
 }
 
-# Вызов метода с одним строковым аргументом
-call_method_str() {
-    local arg=$(quote "$2")
-    $QS_CMD "$1" "$arg"
+# Все PID процессов qs (pidof по имени + PID-файл + fallback pgrep)
+find_shell_pids() {
+    local -A seen=()
+    local pid
+
+    # 1. PID-файл (пишет start_daemon)
+    if [[ -f "$SHELL_PID_FILE" ]]; then
+        pid=$(cat "$SHELL_PID_FILE" 2>/dev/null)
+        [[ -n "$pid" ]] && _is_qs_pid "$pid" && seen[$pid]=1
+    fi
+
+    # 2. Процессы с именем qs
+    for pid in $(pidof qs 2>/dev/null); do
+        [[ -n "$pid" ]] && seen[$pid]=1
+    done
+
+    # 3. Fallback: поиск по cmdline (с фильтром от самоподстройки)
+    if [[ ${#seen[@]} -eq 0 ]]; then
+        for pid in $(pgrep -f "quickshell" 2>/dev/null); do
+            [[ "$pid" == "$$" ]] && continue
+            _is_qs_pid "$pid" && seen[$pid]=1
+        done
+    fi
+
+    for pid in "${!seen[@]}"; do
+        echo "$pid"
+    done
 }
 
-# Вызов метода с одним целочисленным аргументом
-call_method_int() {
-    $QS_CMD "$1" "$2"
+get_plugin_dir() {
+    # 1. Готовый JSON из shell.qml (taplo уже всё распарсил)
+    local cfg_json="$HOME/.cache/JES/JES_config.json"
+    local dir=""
+    if [[ -f "$cfg_json" ]]; then
+        dir=$(jq -r '.directory // empty' "$cfg_json" 2>/dev/null)
+    fi
+    # 2. Fallback: прямой разбор TOML
+    if [[ -z "$dir" ]]; then
+        dir=$(awk -F '=' '
+            /^[[:space:]]*directory[[:space:]]*=/ {
+                v = $2
+                sub(/^[[:space:]]*/, "", v); sub(/[[:space:]]*$/, "", v)
+                gsub(/^"|"$/, "", v)
+                print v; exit
+            }' "$HOME/.config/JES/config.toml" 2>/dev/null)
+    fi
+    [[ "$dir" == "~"* ]] && dir="${HOME}${dir:1}"
+    [[ -z "$dir" ]] && dir="$HOME/.config/JES/plugins"
+    echo "$dir"
 }
 
-# Обёртки для каждого метода
-wallShader() {
-    call_method_str "wallShader" "$1"
+coreaura_enabled() {
+    [[ ! -f "$CORE_CONFIG" ]] && return 1
+    local val
+    val=$(awk '
+        /^\[CoreAura\]/ { in_a = 1; next }
+        /^\[/ && !/^\[CoreAura\]/ { in_a = 0 }
+        in_a && /^[[:space:]]*enabled[[:space:]]*=/ { print }
+    ' "$CORE_CONFIG" | sed 's/.*=[[:space:]]*//' | tr -d '"'"'" | tr -d '[:space:]')
+    [[ "${val:-true}" == "true" ]]
 }
 
-toggleWallPicker() {
-    call_method "toggleWallPicker"
-}
-
-wallType() {
-    call_method_int "wallType" "$1"
-}
-
-togglePlayer() {
-    call_method "togglePlayer"
-}
-
-toggleCal() {
-    call_method "toggleCal"
-}
-
-togglePower() {
-    call_method "togglePower"
-}
-
-toggleLaunch() {
-    call_method "toggleLaunch"
-}
-
-toggleJwindow() {
-    call_method "toggleJwindow"
-}
-
-toggleMap() {
-    call_method "toggleMap"
-}
-
-screenpicker() {
-    call_method "screenpicker"
-}
+# ---------- plugin CLI ----------
 
 getPlugin() {
-    echo "It's reserved function, but it's not working, my bad..."
+    if [[ "${1:-}" == "--json" ]]; then
+        exec "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" list-json
+    else
+        exec "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" list
+    fi
 }
 
 getLog() {
-    qs -c $HOME/.local/JES/quickshell log
+    "${QS_BASE[@]}" log
 }
 
+# ---------- daemon control ----------
+
 start_daemon() {
-    if pgrep -f "qs -d -c $HOME/.local/JES/quickshell" > /dev/null; then
-        echo "JES daemon is already running."
-    else
-        echo "Starting Just Enough Shell daemon..."
-        qs -d -c "$HOME/.local/JES/quickshell"
+    local pids
+    pids=$(find_shell_pids)
+    if [[ -n "$pids" ]]; then
+        echo "JES daemon is already running (pid $pids)."
+        return 0
+    fi
+    echo "Starting Just Enough Shell daemon..."
+    setsid "$CRASH_WATCH" >/dev/null 2>&1 < /dev/null &
+    disown
+
+    sleep 1
+    pids=$(find_shell_pids)
+    if [[ -z "$pids" ]]; then
+        echo "UI didn't start" >&2
+        return 1
+    fi
+    echo "$pids" | head -1 > "$SHELL_PID_FILE"
+
+    if command -v coreaura >/dev/null 2>&1 && coreaura_enabled; then
+        local pid log_file token
+        pid=$(head -1 <<<"$pids")
+        log_file=$(ls -t "$HOME/.local/share/JES/log/"*.log 2>/dev/null | head -1)
+        # callMethod печатает строку без кавычек — tr больше не нужен
+        token=$(coreaura register "$pid" "$(id -u)" "$log_file" 2>/dev/null)
+        if [[ -n "$token" && "$token" != "null" ]]; then
+            echo "$token" > "$UI_TOKEN_FILE"
+            echo "CoreAura: registered UI (pid=$pid)"
+        else
+            echo "CoreAura: registration failed" >&2
+        fi
     fi
 }
 
 reload_daemon() {
     echo "Reloading Just Enough Shell..."
-    pkill -f JES 2>/dev/null
-    sleep 0.2
-    qs -d -c "$HOME/.local/JES/quickshell"
+    stop_daemon
+    sleep 0.3
+    start_daemon
 }
 
 stop_daemon() {
     echo "Stopping Just Enough Shell daemon..."
-    pkill -f JES 2>/dev/null
+
+    # 0. Флаг: crash-watch не должен считать смерть qs крашем/блэклистом
+    touch "$HOME/.cache/JES/.graceful_stop"
+
+    # 1. Снять регистрацию в CoreAura
+    if [[ -f "$UI_TOKEN_FILE" ]]; then
+        if command -v coreaura >/dev/null 2>&1; then
+            coreaura unregister "$(cat "$UI_TOKEN_FILE")" 2>/dev/null || true
+        fi
+        rm -f "$UI_TOKEN_FILE"
+    fi
+
+    # 2. Убить crash-watch ПЕРВЫМ — иначе он увидит смерть qs как краш
+    pkill -f "jes-crash-watch\.sh" 2>/dev/null
+    sleep 0.1
+
+    # 3. Корректно завершить qs через его же IPC
+    "${QS_BASE[@]}" kill 2>/dev/null || true
+
+    # 4. Ждём graceful shutdown (до ~3 сек), проверяя ВСЕ найденные PID
+    local pid tries
+    for tries in {1..15}; do
+        local alive=""
+        while read -r pid; do
+            kill -0 "$pid" 2>/dev/null && alive="$alive $pid"
+        done < <(find_shell_pids)
+        [[ -z "$alive" ]] && break
+        sleep 0.2
+    done
+
+    # 5. Оставшиеся — сначала SIGTERM, потом (если надо) SIGKILL
+    local pids
+    pids=$(find_shell_pids)
+    if [[ -n "$pids" ]]; then
+        echo "$pids" | xargs -r kill -TERM 2>/dev/null
+        sleep 0.5
+        pids=$(find_shell_pids)
+        if [[ -n "$pids" ]]; then
+            echo "[stop-daemon] force killing: $pids" >&2
+            echo "$pids" | xargs -r kill -9 2>/dev/null
+        fi
+    fi
+
+    # 6. Добить crash-watch, если остался
+    pkill -9 -f "jes-crash-watch\.sh" 2>/dev/null
+
+    # 7. Проверка результата — раньше молча «успешно» не отрабатывало
+    if find_shell_pids | grep -q .; then
+        echo "[stop-daemon] ERROR: failed to stop JES. Run for debug:" >&2
+        echo "  pgrep -af qs" >&2
+        echo "  cat $SHELL_PID_FILE" >&2
+        return 1
+    fi
+    echo "JES daemon stopped."
+
+    # 8. Снести маркеры, чтобы stale-данные не протекли
+    rm -f "$SHELL_PID_FILE" "$HOME/.cache/JES/.last_loaded_plugin"
 }
 
 edit_config() {
     micro ~/.config/JES/config.toml
 }
+
+# ---------- plugin build ----------
+
+init_plugin() {
+    local name="$1"
+    [[ -z "$name" ]] && { echo "Usage: jes-cli initPlugin <name>" >&2; return 1; }
+
+    local pdir
+    pdir="$(get_plugin_dir)/$name"
+    mkdir -p "$pdir"
+    cd "$pdir" || return 1
+
+    cat > manifest.json << EOF
+{
+     "api_version": "0.2.0",
+     "plugin_version": "1.0",
+     "name": "$name",
+     "api_request": [
+
+     ],
+     "main_source": "Main.qml",
+     "json_files": {
+
+     }
+}
+EOF
+
+    touch Main.qml
+    cd - >/dev/null
+}
+
+make_plugin() {
+    local name="$1"
+    local level="${2:-6}"
+
+    [ -z "$name" ] && { echo "Usage: jes-cli makePlugin <name> [0-9]" >&2; return 1; }
+
+    case "$level" in
+        [0-9]) ;;
+        *) echo "Compression level must be 0-9 (got: '$level')" >&2; return 1 ;;
+    esac
+
+    local plugins_dir
+    plugins_dir="$(get_plugin_dir)"
+    [ -d "$plugins_dir/$name" ] || { echo "Plugin '$name' not found in $plugins_dir" >&2; return 1; }
+
+    (
+        cd "$plugins_dir/$name" || exit 1
+        rm -f "../$name.jes.pb"
+        zip "-$level" -D -r -q "../$name.jes.pb" .
+    )
+    echo "Packed: $plugins_dir/$name.jes.pb (level $level)"
+}
+
+debuild_plugin() {
+    local name="$1"
+    [ -z "$name" ] && { echo "Usage: jes-cli debuildPlugin <name>" >&2; return 1; }
+    name="${name%.jes.pb}"
+
+    local plugins_dir
+    plugins_dir="$(get_plugin_dir)"
+    local archive="$plugins_dir/$name.jes.pb"
+    [ -f "$archive" ] || { echo "Archive '$archive' not found" >&2; return 1; }
+
+    local out_dir="$plugins_dir/$name"
+    [ -e "$out_dir" ] && out_dir="$plugins_dir/$name.unpacked.$(date +%s)" \
+                      && echo "Existing '$plugins_dir/$name' found, extracting to '$out_dir'" >&2
+
+    mkdir -p "$out_dir" || return 1
+    unzip -q "$archive" -d "$out_dir"
+    echo "Extracted to: $out_dir"
+}
+
+# ---------- blacklist ----------
+
+blacklist_add() {
+    local name="$1"
+    [[ -z "$name" ]] && { echo "Usage: jes-cli blacklistAdd <name>" >&2; return 1; }
+
+    mkdir -p "$(dirname "$BLACKLIST_FILE")"
+    touch "$BLACKLIST_FILE"
+
+    if grep -qxF "$name" "$BLACKLIST_FILE"; then
+        echo "Already blacklisted: $name"
+        return 0
+    fi
+
+    echo "$name" >> "$BLACKLIST_FILE"
+    echo "Blacklisted: $name"
+
+    "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" list-json >/dev/null 2>&1 &
+}
+
+blacklist_remove() {
+    local name="$1"
+    [[ -z "$name" ]] && { echo "Usage: jes-cli blacklistRemove <name>" >&2; return 1; }
+    [[ ! -f "$BLACKLIST_FILE" ]] && { echo "Blacklist is empty"; return 0; }
+
+    local tmp
+    tmp=$(mktemp)
+    grep -vxF "$name" "$BLACKLIST_FILE" > "$tmp" || true
+    mv "$tmp" "$BLACKLIST_FILE"
+    echo "Removed from blacklist: $name"
+
+    "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" list-json >/dev/null 2>&1 &
+}
+
+blacklist_list() {
+    if [[ ! -s "$BLACKLIST_FILE" ]]; then
+        echo "Blacklist is empty"
+        return 0
+    fi
+    echo "Blacklisted plugins:"
+    sed 's/^/  - /' "$BLACKLIST_FILE"
+}
+
+blacklist_clear() {
+    : > "$BLACKLIST_FILE"
+    echo "Blacklist cleared"
+    "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" list-json >/dev/null 2>&1 &
+}
+
+# ---------- help ----------
 
 show_help() {
     cat << 'EOF'
@@ -110,25 +369,24 @@ Available commands:
   start-daemon                 - Start the background Just Enough Shell daemon
   reload-daemon                - Restart the daemon (apply UI code changes)
   stop-daemon                  - Fully stop the shell execution
-  
+
   wallShader <name>            - Set the specified shader for live wallpapers
   toggleWallPicker             - Open/close the wallpaper picker menu
   wallType <number>            - Switch the wallpaper type (static, live, etc.)
   fixWalls                     - Fix wallpaper's format (static only)
-  
+
   togglePlayer                 - Toggle the rmpc media player widget visibility
   toggleCal                    - Toggle the calendar widget visibility
   togglePower                  - Toggle the power menu overlay visibility
   toggleLaunch                 - Toggle the application launcher menu visibility
   toggleMap                    - Toggle the mini-map overlay visibility
   toggleJwindow                - Toggle the adaptive for content JES window visibility
-  
+  LockScreen                   - Enable JES lockscreen
+
   screenpicker                 - Trigger the screenshot utility tool
-  
-  getPlugin                    - Request the status or list of active plugins (not worked)
-  
+
   getLog                       - Print the JES logs
-  
+
   editConf                     - Edit Config JES
 
   brightness-up [monitor]      - Increase brightness by 5% (default: all)
@@ -141,12 +399,24 @@ Available commands:
   prev                         - take prev music in current player
   next-player                  - take next player
   prev-player                  - take prev player
-  
+
+  getPlugin [--json]           - List plugins (name, status, warning). --json for machine output
+  initPlugin [name]            - Create base for plugin (uses directory from config.toml)
+  makePlugin <name> [0-9]      - Pack a plugin into .jes.pb (default compression: 6)
+  debuildPlugin <name>         - Unpack a .jes.pb back into a plugin directory
+  pluginBuild [--force]        - Rebuild plugin list JSON + refresh cache
+  pluginCache                  - Force rebuild plugin cache
+  pluginClearCache             - Wipe plugin cache
+
+  blacklistAdd <name>          - Add plugin to blacklist (status=broken)
+  blacklistRemove <name>       - Remove plugin from blacklist
+  blacklistList                - Show blacklisted plugins
+  blacklistClear               - Wipe the whole blacklist
+
   -h, --help                   - Show this help manual
 EOF
 }
 
-# Если скрипт вызван с аргументами, обрабатываем как команду
 if [ $# -gt 0 ]; then
     cmd="$1"
     shift
@@ -164,33 +434,19 @@ if [ $# -gt 0 ]; then
         toggleLaunch)     toggleLaunch ;;
         toggleJwindow)    toggleJwindow ;;
         toggleMap)        toggleMap ;;
+        lockScreen)       lockScreen ;;
         screenpicker)     screenpicker ;;
-        getPlugin)        getPlugin ;;
         getLog)           getLog ;;
         editConf)         edit_config ;;
-        play-pause)
-            exec "$MUSIC_SCRIPT" play-pause
-            ;;
-        next)
-            exec "$MUSIC_SCRIPT" next
-            ;;   
-        prev)
-            exec "$MUSIC_SCRIPT" previous
-            ;;   
-        next-player)
-            exec "$MUSIC_SCRIPT" next-player
-            ;;   
-        prev-player)
-            exec "$MUSIC_SCRIPT" prev-player
-            ;;   
-        
-        # --- Проксирование команд яркости во внешний утилитарный скрипт ---
-        brightness-up)
-            exec "$BRIGHTNESS_SCRIPT" brightness-up "${1:-}"
-            ;;
-        brightness-down)
-            exec "$BRIGHTNESS_SCRIPT" brightness-down "${1:-}"
-            ;;
+
+        play-pause)       exec "$MUSIC_SCRIPT" play-pause ;;
+        next)             exec "$MUSIC_SCRIPT" next ;;
+        prev)             exec "$MUSIC_SCRIPT" previous ;;
+        next-player)      exec "$MUSIC_SCRIPT" next-player ;;
+        prev-player)      exec "$MUSIC_SCRIPT" prev-player ;;
+
+        brightness-up)    exec "$BRIGHTNESS_SCRIPT" brightness-up "${1:-}" ;;
+        brightness-down)  exec "$BRIGHTNESS_SCRIPT" brightness-down "${1:-}" ;;
         brightness-set)
             if [[ -z "${1:-}" ]]; then
                 echo "Использование: jes-cli brightness-set <0-100> [monitor]" >&2
@@ -198,10 +454,22 @@ if [ $# -gt 0 ]; then
             fi
             exec "$BRIGHTNESS_SCRIPT" brightness-set "$1" "${2:-}"
             ;;
-        brightness-get)
-            exec "$BRIGHTNESS_SCRIPT" brightness-get "${1:-}"
-            ;;
-            
+        brightness-get)   exec "$BRIGHTNESS_SCRIPT" brightness-get "${1:-}" ;;
+
+        getPlugin)        getPlugin "$1" ;;
+        initPlugin)       init_plugin "$1" ;;
+        makePlugin)       make_plugin "$1" "$2" ;;
+        debuildPlugin)    debuild_plugin "$1" ;;
+
+        pluginBuild)      exec "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" build "${1:-}" ;;
+        pluginCache)      exec "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" cache ;;
+        pluginClearCache) exec "$PLUGIN_LIST_SCRIPT" "$JES_HOST_VERSION" clear ;;
+
+        blacklistAdd)     blacklist_add "$1" ;;
+        blacklistRemove)  blacklist_remove "$1" ;;
+        blacklistList)    blacklist_list ;;
+        blacklistClear)   blacklist_clear ;;
+
         "--help"|"-h")    show_help ;;
         *) echo "Unknown command: $cmd"; show_help; exit 1 ;;
     esac

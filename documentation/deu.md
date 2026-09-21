@@ -1,397 +1,234 @@
 <div align="center">
-  <img src="https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&logo=git&logoColor=D9E0EE&labelColor=1E202B&label=Letzter%20Commit" alt="Letzter Commit">
-  <img src="https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Projektgr%C3%B6%C3%9Fe&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Projektgröße">
-  <img src="https://img.shields.io/github/stars/ORFLEM/just_enough_shell?color=bbbbbb&label=Projektsterne&logo=andela&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Projektsterne">
+	<img src="https://img.shields.io/github/last-commit/ORFLEM/just_enough_shell?&style=for-the-badge&color=bbbbbb&label=Letzter%20Commit&logo=git&logoColor=D9E0EE&labelColor=1E202B" alt="GitHub last commit">
+    <img src="https://img.shields.io/github/repo-size/ORFLEM/just_enough_shell?color=bbbbbb&label=Projektgr%C3%B6%C3%9Fe&logo=protondrive&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
+    <img src="https://img.shields.io/github/stars/ORFLEM/just_enough_shell?color=bbbbbb&label=Projekt-Sterne&logo=andela&style=for-the-badge&logoColor=D9E0EE&labelColor=1E202B" alt="Repository size">
 	<img src="./images/preview.webp" width="900px">
 	<h1>> Just Enough Shell _</h1>
-	<p>Gemacht für den Alltag, nicht für Bilder.</p>
+	<p>Für den Alltag gebaut, nicht für Screenshots.</p>
 </div>
 
 ***
 
-<table align="right">
-	<tr>
-		<td colspan="2" align="center">Systemparameter</td>
-	</tr>
-	<tr>
-		<th>Komponente</th>
-		<th>Wert</th>
-	</tr>
-	<tr>
-		<td>OS</td>
-		<td>NixOS 26.05</td>
-	</tr>
-	<tr>
-		<td>WM</td>
-		<td>SwayFX / Hyprland / niri / DriftWM</td>
-	</tr>
-	<tr>
-		<td>Shell</td>
-		<td>bash</td>
-	</tr>
-	<tr>
-		<td>Terminal</td>
-		<td>Foot</td>
-	</tr>
-	<tr>
-		<td>Interface</td>
-		<td>QuickShell</td>
-	</tr>
-	<tr>
-		<td>Screen Locker</td>
-		<td>Hyprlock</td>
-	</tr>
-	<tr>
-		<td>Monitoring</td>
-		<td>Btop</td>
-	</tr>
-	<tr>
-		<td>Audio</td>
-		<td>PipeWire</td>
-	</tr>
-	<tr>
-		<td>Browser</td>
-		<td>ungoogled chromium</td>
-	</tr>
-	<tr>
-		<td>File Manager</td>
-		<td>ranger / yazi / dolphin</td>
-	</tr>
-	<tr>
-		<td>Editor</td>
-		<td>micro / helix</td>
-	</tr>
-	<tr>
-		<td>Theme</td>
-		<td>matugen</td>
-	</tr>
-	<tr>
-		<td>Icons</td>
-		<td>Tela Gray</td>
-	</tr>
-	<tr>
-		<td>Bootloader</td>
-		<td>Grub</td>
-	</tr>
-	<tr>
-		<td>Optimierung</td>
-		<td>Go-Binärdateien</td>
-	</tr>
-	<tr>
-		<td>Theme-Wechsler</td>
-		<td>matugen</td>
-	</tr>
-</table>
-
-<div align="left">
-	<h3>-- Über das Projekt -- :</h3>
+<div align="center">
+	<h3>-- Über -- :</h3>
 	<p>
-  <i>JES</i> verwendet <b>QuickShell</b> zur Darstellung der Oberfläche.<br>
+	<i>JES</i> - WM-agnostische Rolling-Release Desktop-Shell, die das native Anbinden beliebiger WM unterstützt, auch selbstgeschriebene.<br>
   <br>
-	<i>JES</i> unterstützt:
+	<i>JES</i> unterstützt out of the box:
 	<ul>
-  	<li>SwayFX</li>
-  	<li>Hyprland</li>
-  	<li>Niri</li>
-		<li>DriftWM</li>
-		<li>Jeden anderen WM über das Plugin-System</li>
+  	<li><a href="https://github.com/wlrfx/swayfx">SwayFX</a></li>
+  	<li><a href="https://hypr.land/">Hyprland</a></li>
+  	<li><a href="https://github.com/niri-wm/niri">Niri</a></li>
+		<li><a href="https://github.com/malbiruk/driftwm">DriftWM</a></li>
+		<li><a href="https://github.com/binarylinuxx/zwwm">ZWWM</a></li>
+		<li>Jeden anderen über das Plugin-System (siehe <a href="./plugin_repo.md">plugin_repo.md</a>)</li>
 	</ul>
 	<br>
-	Das Projekt ist optimiert, wurde aber nicht auf schwacher Hardware getestet.<br>
-	Go-Binärdateien werden für Skripte verwendet, bei denen eine schnelle Verarbeitung großer Datenmengen wichtig ist – dadurch liegt die CPU-Auslastung im Leerlauf bei <i>JES</i> bei 1–2&nbsp;% CPU und ~400 MB RAM statt bei 35–45&nbsp;%.<br>
-	Die Referenzkonfigurationen verbrauchen etwa 5–10&nbsp;% CPU bei einem Monitor und 7–13&nbsp;% bei mehreren Monitoren.<br>
+	Das Projekt ist optimiert, wurde aber nicht auf <b>sehr</b> schwachen PCs getestet.<br>
+	Go-Binaries werden für Skripte verwendet, bei denen schnelles Lesen großer Datenströme wichtig ist; dank dessen beträgt die CPU-Last im Leerlauf für <i>JES</i> 1–2 % und ~450 MB RAM, statt 35–45 %.<br>
   <br>
 	Das Projekt hat ein einfaches Plugin-System, das es erweiterbar macht.<br>
 	<br>
-	<i>JES</i> wurde für Desktop-PCs konzipiert, was es ermöglicht, es besser auf solch großartige Maschinen abzustimmen.<br>
-	Der Monitor des Autors ist UWQHD (3440×1440), getestete Auflösungen: FHD (1920×1080) und höher.<br>
-	Bei diesen hat die Leiste keine Probleme mit der Anordnung der Module.<br>
-	Das Projekt unterstützt mehrere Monitore nativ.<br>
+	<i>JES</i> wurde für Desktop-PCs entwickelt, weshalb es bei Laptops zu architektonischen Problemen kommen kann.<br>
+	Verifizierte Auflösungen: FHD (1920×1080) und höher.<br>
+	Bei diesen hat die Leiste keine Probleme mit der Platzierung der Module.<br>
+	Mehrere Monitore werden nativ unterstützt.<br>
 	<br>
-	Das Projekt verwendet bash mit angepasster Ausgabe und wird für SwayFX und DriftWM schneller aktualisiert, da es auf den Autor und seinen Alltagsgebrauch ausgerichtet ist.<br>
-	Genau das verleiht dem Projekt Beständigkeit, denn während der Autor seinen alltäglichen Aufgaben nachgeht, entwickelt sich das Projekt weiter und wird stetig verbessert.<br>
+	Das Projekt hat den Wechsel von eww zu qs überlebt und wird nicht aufgegeben, da es untrennbar mit dem Alltag des Autors und den Anfragen der Community verbunden ist; es wird sich weiterentwickeln und verbessern.<br>
 	<br>
-	Für eine schnellere Ladezeit hat der Autor entschieden, keine Videohintergründe von den Bildern hier einzubinden, sondern nur einen Link dazu bereitzustellen.<br>
-	<br>
-  <i>JES orientiert sich nicht an Trends, sondern an Praktikabilität im Alltag und Komfort.</i><br>
+  <i>JES orientiert sich nicht an Trends, sondern an Praktikabilität im Alltag und Bequemlichkeit.</i><br>
 	</p>
 	<h3>-- Danksagungen -- :</h3>
 	<p>
-	Danke an <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> und seinen Autor</b> für die Hilfe beim Erlernen von Quickshell und das Hosting der Website.<br>
+	Danke an <b><a href="https://github.com/binarylinuxx/dots">Blxshell</a> und seinen Autor</b> für die Hilfe beim Erlernen von Quickshell und die Domain für die Website.<br>
 	Danke an <b><a href="https://github.com/f026/">f026</a></b> für das <a href="https://github.com/f026/activate-linux-plugin">erste Plugin</a> für JES.<br>
-	Danke an <b><a href="https://github.com/malbiruk/driftwm">DriftWM</a></b> für die Hilfe bei DriftWM IPC, das Hinzufügen neuer Funktionen zum WM für JES und allgemein für die Unterstützung des Projekts.<br>
-    Danke an <b><a href="https://github.com/frosti-4">frosti-4</a></b> für das Skript für Arch Linux.<br>
-    Danke an <b><a href="https://github.com/Gegs8">Gegs8</a></b> für das Finden von Fehlern im Installationsprogramm.<br>
+	Danke an <b><a href="https://github.com/malbiruk/driftwm">DriftWM-Autor (malbiruk)</a></b> für die Hilfe mit DriftWM-IPC, das Hinzufügen neuer Funktionen zum WM für JES und im Allgemeinen die Loyalität zum Projekt.<br>
+  Danke an <b><a href="https://github.com/frosti-4">frosti-4</a></b> für das Arch-Linux-Skript.<br>
+  Danke an <b><a href="https://github.com/Gegs8">Gegs8</a></b> für das Finden von Installer-Bugs.<br>
 	</p>
-	<h3>-- Weiterer Fahrplan -- :</h3>
+	<h3>-- Zukünftige Richtung -- :</h3>
 	<p>
-	<b>[c]</b> Entwicklung der API für die Arbeit mit dem Launcher<br>
-  <b>[c]</b> Entwicklung der API für die Arbeit mit dem Plugin-Center<br>
+  <b>[c]</b> API-Entwicklung für die Arbeit mit dem Launcher<br>
+  <b>[c]</b> API-Entwicklung für die Arbeit mit dem Plugin-Center<br>
 	<b>[c]</b> Erstellung eines Wetter-Widgets<br>
-	<b>[c]</b> Erstellung einer vollwertigen API<br>
-	<b>[c]</b> Installation von JES über Flake<br>
-	<b>[c]</b> Überarbeitung der zugrundeliegenden Architektur<br>
-	<b>[c]</b> Fix für <b>Niri</b><br>
-	<b>[c]</b> Neue Art des Hinzufügens benutzerdefinierter WM<br>
-	<b>[i]</b> Umstellung von <b>Hyprland</b> auf lua-Konfigurationen<br>
-	<b>[i]</b> Neues Plugin-Format<br>
-  <b>[p]</b> Entwicklung der API für die Arbeit mit der Bar<br>
-	<b>[n]</b> Auswahl des Themes dunkel/hell<br>
-	c = completed; n = not completed; i = in progress; p = planned.<br>
+	<b>[c]</b> Erstellung einer vollständigen API<br>
+	<b>[c]</b> JES-Installation über Flake<br>
+	<b>[c]</b> Überarbeitung der Unterleiste<br>
+	<b>[c]</b> Neue Methode zum Anbinden benutzerdefinierter WM<br>
+	<b>[c]</b> Neues Plugin-Format<br>
+	<b>[i]</b> Entwicklung der Community und Infrastruktur<br>
+	<b>[i]</b> Systemmodul `CoreAura` zur PC-Zustandskontrolle (Kernel-Fehler, Service-Abstürze, Lastüberwachung)<br>
+  <b>[n]</b> API-Entwicklung für die Arbeit mit der Bar<br>
+	<b>[n]</b> Dunkel-/Hell-Themenauswahl<br>
+	c = abgeschlossen; n = nicht abgeschlossen; i = in Arbeit; p = geplant.<br>
 	</p>
 </div>
 
-Siehe alte abgeschlossene Aufgaben - [complited.md (nur englisch)](./complited.md)
+Vergangene abgeschlossene Aufgaben ansehen — [complited.md (nur englisch)](./complited.md)
 
-> **Für wen ist *JES*?** 
-> - Desktop-PCs mit FHD+-Auflösung (der Autor verwendet UWQHD)
-> - Nutzer von SwayFX / Hyprland / Niri / DriftWM oder Enthusiasten mit Zeit für die Ersteinrichtung (die Shell selbst läuft auf jedem WM, aber dann fehlen die Tastenkombinationen und Tiling-Einstellungen)
-> - Wer Performance und Architektur über Trends stellt
-> - Wer eine angenehme und für CPU/GPU leichtgewichtige Oberfläche braucht
-> 
-> Wenn Sie zu dieser Zielgruppe gehören — willkommen. 
-> Wenn nicht — dann ist das Projekt vielleicht nichts für Sie, und das ist völlig in Ordnung.
+> **Für wen ist *JES*?**
+> - Desktop-PCs mit FHD+-Auflösung (der Autor nutzt UWQHD — 3440×1440 und betrachtet dies als Benchmark für das Projekt)
+> - Nutzer von SwayFX / Hyprland / Niri / DriftWM / ZWWM oder Enthusiasten mit Zeit für die Ersteinrichtung (die Shell selbst funktioniert mit jedem WM, aber Tiling-Binds und -Einstellungen fehlen dann)
+> - Ein WM-Entwickler, der eine Basisumgebung für seinen WM braucht, ohne monatelang mit waybar, rofi und anderen Programmen zu arbeiten
+> - Diejenigen, die Performance und Architektur über Trends stellen
+> - Wer eine angenehme und leichtgewichtige CPU/RAM-Oberfläche braucht
+>
+> Wenn du zu dieser Zielgruppe gehörst — willkommen.
+> Wenn nicht — das Projekt ist vielleicht nichts für dich, und das ist okay.
 
 ## -- WICHTIG -- :
-- Nvidia-Grafikkarten funktionieren FURCHTBAR, **alles kann jederzeit grundlos einfrieren**, der Autor plant nicht, dieses Problem zu lösen, da es sich um **Probleme auf Treiberseite** handelt!
-- Der Autor hat keine Erfahrung mit Arch Linux, die Installation unter Arch kann daher fehlerhaft sein. Sollte das der Fall sein, beschreiben Sie das Problem bitte in einem Issue und schlagen Sie nach Möglichkeit einen Fix vor
-- Die Installationsanleitung befindet sich ganz unten
-- Der Autor ist offen für Vorschläge und hilft beim Einstieg in das Projekt; bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen
-- Der Autor wird sich bei Pull-Requests für neue Distributionen bedanken; er fügt sie hinzu und nennt den Namen des PR-Autors. Erwartet werden Void Linux, ALT Linux und Debian.
+- Alle Performance-Tests wurden auf r7 5700x und r5 3600 durchgeführt; auf beiden CPUs war der Prozentsatz gleich: 1–2 %, aber es ist besser, über KI oder Vergleichsseiten die Leistung der eigenen CPU zu prüfen, um die ungefähre Last zu verstehen.
+- Nvidia-Grafikkarten funktionieren SCHRECKLICH, **alles kann sofort ohne Grund einfrieren**, der Autor wird dieses Problem nicht lösen, da es sich um ein **Treiberproblem** handelt!
+- Der Autor hat keine Erfahrung mit Arch Linux; die Installation auf Arch kann fehlerhaft sein, falls ja, bitte das Problem in einem Issue beschreiben und falls möglich einen Fix vorschlagen.
+- Die Installationsanleitung befindet sich ganz unten.
+- Der Autor ist offen für Vorschläge und hilft beim Einstieg in das Projekt; bei Problemen bitte in [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) schreiben.
+- Der Autor wäre dankbar für Hilfe bei der Unterstützung anderer Distributionen und nimmt neue Pull Requests sofort an, wobei der Autor der Unterstützung genannt wird; gefragt sind unter anderem void linux, alt linux und debian.
 
-```
-Wer lebendige Videohintergründe möchte, kann zwischen Videohintergründen und Shadern wählen (Letzteres funktioniert möglicherweise nicht gut mit der automatischen Theme-Generierung von JES)
-```
-#### **Hintergründe aus den Screenshots**: [hier](https://moewalls.com/vehicle/nissan-silvia-s13-gloomy-rain-live-wallpaper/)
+## [JES-Struktur](./structure_de.md)
 
-## [Struktur von *JES*](./structure_deu.md)
-
-## -- Was sich in *JES* anpassen lässt -- :
-- `wm` —                      auto, aber für die Anbindung eines WM, das nicht in der Liste der verfügbaren steht, muss der Name großgeschrieben angegeben werden
-- `wm_type` —                 auto, aber für ein WM außerhalb der Liste stehen workspaces oder coordinates zur Auswahl
-- `mainRad` —                 Eckenradius, standardmäßig 10, funktioniert einwandfrei mit Werten von 0-25
-- `barOnTop` —                Steuerleiste oben sowie die zugehörigen Widgets, standardmäßig aktiviert
-- `minibar` —                 macht die Leiste 1920px breit, standardmäßig deaktiviert
-- `BarHeight` —               Höhe der Leiste, standardmäßig 30
-- `fontSize` —                Schriftgröße, standardmäßig 17
-- `fontFamily` —              Schriftart, standardmäßig Mononoki Nerd Font Propo
-- `custom_wallpaper_engine` — integrierte Hintergründe deaktivieren, standardmäßig false
-- `disableGenerate` —         Umschaltung des JES-matugen-Themas auf base16, standardmäßig false
-- `doNotDisturb` —            stiller Modus, standardmäßig false
-- `timezone` —                die Stadt für das Wetter-Widget; standardmäßig nicht vorhanden, der Wert wird aus der `user-config.toml`-Datei der NixOS-Konfiguration übernommen.
-- `animation` —               Animationsgeschwindigkeit, Gleitkommazahl, Standard 1.0
-- `wtw` —                     Abstand Widget zu Widget, Standard 6
-- `spacing` —                 Abstandsblöcke im Widget, Standard 3
-- `margins` —                 Ränder im Widget, Standard 3
-- `disableCorners` —          Rundungen der Monitore deaktivieren, Standard false
-- `openweather_key` —         OpenWeather API-Schlüssel, Standard leer
-- `do_not_sync_rad` -         die wm-Radien nicht mit dem jes-Radius synchronisieren, standardmäßig false
-- `changeShader` -            den Standard-Shader durch einen anderen ersetzen; standardmäßig leer, aber dort muss der Pfad zur **qsb**-Datei eingegeben werden
-- `nanoPlayer` -              kompakter Player-Modus in der Bar; standardmäßig false
-- `nanoPlrSize` -             Größe des kompakten Players; standardmäßig 200
-- `disableCava` -             Equalizer in der Bar deaktivieren; standardmäßig false
+## -- Was sich in *JES* ändert --:
+- `wm` — auto, aber für die Anbindung eines WM, der nicht in der Liste steht, muss der Name mit Großbuchstabe geschrieben werden
+- `wm_type` — auto, aber für WM, die nicht in der Liste stehen, wähle workspaces oder coordinates
+- `mainRad` — Eckenradius, Standard 10, funktioniert perfekt mit Werten 0–25
+- `barOnTop` — Steuerleiste oben sowie angrenzende Widgets, standardmäßig aktiviert
+- `minibar` — macht die Leiste 1920 px breit, standardmäßig deaktiviert
+- `BarHeight` — Leistenhöhe, Standard 30
+- `fontSize` — Schriftgröße, Standard 17
+- `fontFamily` — Schriftart, Standard Mononoki Nerd Font Propo
+- `custom_wallpaper_engine` — integrierte Hintergrundbilder deaktivieren, Standard false
+- `disableGenerate` — JES-matugen-Theme auf base16 umschalten, Standard false
+- `doNotDisturb` — Ruhemodus, Standard false
+- `timezone` — Stadt für das Wetter-Widget, standardmäßig nicht vorhanden, Daten werden aus der `user-config.toml`-Konfiguration von NixOS bezogen
+- `animation` — Animationsgeschwindigkeit, Fließkommazahl, Standard 1.0
+- `wtw` — Abstand von Widget zu Widget, Standard 6
+- `spacing` — Abstand zwischen Blöcken innerhalb eines Widgets, Standard 3
+- `margins` — Ränder in Widgets, Standard 3
+- `disableCorners` — Monitor-Eckenabrundung deaktivieren, standardmäßig deaktiviert
+- `openweather_key` — Schlüssel für die OpenWeather-API, keine Standarddaten
+- `do_not_sync_rad` — WM-Radien nicht mit JES-Radius synchronisieren, Standard false
+- `changeShader` — Standard-Shader durch einen anderen ersetzen, Standard leer, aber es muss der Pfad zu einer **qsb**-Datei eingegeben werden
+- `nanoPlayer` — Kompakter Player-Modus in der Bar, Standard false
+- `nanoPlrSize` — Größe des kompakten Players, Standard 200
+- `disableCava` — Equalizer in der Bar deaktivieren, Standard false
 
 ```
 Wichtig: config.toml liegt im JES-Ordner (~/.config/JES/)
-Sie können ihn auch mit folgendem Befehl ändern:
-    jes-cli editConf
-Im Alias wird micro verwendet; zum Beenden Strg+Q, zum Speichern Strg+S
+und kann auch durch Aufruf bearbeitet werden:
+	jes-cli editConf
+In jes-cli wird micro zur Bearbeitung der Config verwendet; zum Beenden Ctrl+Q, zum Speichern — Ctrl+S
 ```
 
-## [JES für DriftWM](./DriftWM_deu.md)
-
-## -- Tastenkombinationen für SwayFX, Hyprland und Niri (in den Referenzkonfigurationen) -- :
-| Kombination | Was es tut |
-| :--- | :---: |
-| `super + e` | Dateimanager |
-| `super + q` \| `super + enter` | Terminal |
-| `super + p` | Energie-Buttons |
-| `super + 1-0` oder `super + scrll up \| scrll dwn` | Wechsel zwischen Arbeitsflächen |
-| `super + shift + 1-0` oder `super + shift + Pfeiltasten` | Verschieben von Programmen zwischen Arbeitsflächen |
-| `super + RMT` | Fenstergröße ändern |
-| `super + shift + Pfeiltasten` oder `super + LMT` | Fenster verschieben |
-| `super + Pfeiltasten` | Wechsel zwischen Fenstern |
-| `super + alt + LMT` | Ändern des Fenstertyps: schwebend oder Tiling |
-| `super + w` | Neustart der Oberfläche |
-| `home` | Vollbildschirmfoto |
-| `shift + home` | Screenshot eines ausgewählten Bereichs |
-| `super + d` | App-Launcher öffnen |
-| `super + g` | Gruppe erstellen |
-| `super + ctrl + g` | Programme aus der Gruppe entfernen |
-| `super + tab` | letzte Arbeitsfläche |
-| `capslock` oder `shift + alt` | Sprache wechseln |
-| `shift + capslock` | Caps Lock ein- \| ausschalten |
-| `super + space` | Fenster über andere legen |
-| `ctrl + /` | Musik abspielen \| anhalten |
-| `ctrl + .` | nächster Titel |
-| `ctrl + ,` | vorheriger Titel |
-| `alt + pgup` | Helligkeit erhöhen |
-| `alt + pgdn` | Helligkeit verringern |
-| `alt + F9` | Ton stummschalten |
-| `alt + F10` | leiser |
-| `alt + F11` | lauter |
-| `alt + F12` | Player öffnen \| schließen |
-
-- Um das Plugin-Center zu öffnen, klicken Sie mit der rechten Maustaste auf den Netzschalter.
-- Um den Kalender zu öffnen, klicken Sie mit der rechten Maustaste auf die Uhrzeit; ein Linksklick tauscht Uhrzeit und Datum.
-
-### Die Wahl der Taste für Screenshots ist konfigurierbar, da nicht jedem `home` zusagt oder die Taste fehlen kann – wie beim Autor, dessen Tastatur keine print-screen-Taste hat.
-
-### [Tastenkombinationen für DriftWM](./DriftWM_deu.md)
-
-## -- So sieht *JES* aus -- :
-### Desktop (SwayFX-Screenshots)
+## -- Wie *JES* aussieht --:
+### Steuerleiste
 ![alt_image](./images/1.webp)
 ![alt_image](./images/2.webp)
 
-### Steuerleiste (die DriftWM-Version unterscheidet sich, siehe [`DriftWM_deu.md`](./DriftWM_deu.md))
+### Hintergrundbildauswahl
 ![alt_image](./images/3.webp)
 
-### Hintergrundauswahl
-![alt_image](./images/4.webp)
-
 ### Player
+![alt_image](./images/4.webp)
 ![alt_image](./images/5.webp)
+
+### Power-Tasten
 ![alt_image](./images/6.webp)
 
-### Energie-Buttons
+### Jwindow
 ![alt_image](./images/7.webp)
 
-### Jwindow
+### Popup für Lautstärke und Helligkeit
 ![alt_image](./images/8.webp)
 
-### Lautstärke- und Ton-Popup
+### Anwendungsstarter
 ![alt_image](./images/9.webp)
 
-### App-Launcher
+### Sperrbildschirm
 ![alt_image](./images/10.webp)
-
-### Bildschirmsperre
 ![alt_image](./images/11.webp)
-![alt_image](./images/12.webp)
 
-### bash-Zeile
-```
-1 [02:00 - orflem:~]$  cd gits/just_enough_shell/
-2 [02:00 - orflem:~/gits/just_enough_shell main]$  hi ^C
-3 [02:00 - orflem:~ {ec: 130}]$  
-```
-Befehlsnummer, Uhrzeit, Benutzer, Verzeichnis, Git-Status (beim Öffnen eines mit Git verknüpften Projekts), Exit-Code
+\* Screenshots aufgenommen auf den [Dotfiles des Autors](https://github.com/ORFLEM/dots)
 
-## -- Plugins -- :
+## -- Plugins --:
 ### Installation
 ```
-1. Öffnen Sie ~/.config/quickshell/
-2. Legen Sie den Plugin-Ordner dort ab
-3. Öffnen Sie config.toml
-4. Tragen Sie folgende Zeilen ein:
+1. ~/.config/JES/ öffnen
+2. Plugin-Ordner hineinkopieren
+3. config.toml öffnen
+4. diese Zeilen eintragen:
    [[plugin]]
-   name = "plugin name" # Daten aus der Eigenschaft name in manifest.json
+   name = "plugin name" # data in property name from manifest.json
    active = true
 ```
 
-### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_deu.md)
+### [Ausführliche Anleitung zur Plugin-Erstellung](./plugins_de.md)
 
 ### [Plugin-Repository](./plugin_repo.md)
-### Wichtig: Das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und es äußerst schwierig ist, alle kurzen Beschreibungen in verschiedene Sprachen zu übersetzen.
+### Wichtig: das Repository ist nur auf Englisch verfügbar, da dieser Teil stark von der Community des Projekts beeinflusst wird und die Übersetzung aller Kurzbeschreibungen in verschiedene Sprachen unerträglich aufwendig ist.
 
-## -- Installation von JES -- :
-### NixOS clear
-- Installieren Sie NixOS
-- Führen Sie das Installationsprogramm aus:
-```bash
-nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
-```
-- Wählen Sie die vollständige Installation
-- Starten Sie mit `reboot` neu
-
-### NixOS develop
-- Installieren Sie NixOS
-- Führen Sie das Installationsprogramm aus:
-```
-nix-shell -p git --run "git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install.sh"
-```
-- Wählen Sie die Installation nur von JES
-- Fügen Sie in imports `./JES.nix` und in der Konfiguration
+## -- JES-Installation --:
+### NixOS
+- In `flake` folgendes hinzufügen:
 ```nix
-services.jes = {
-  enable = true;
-  users = [ " your user" ];
-};
-```
-hinzu
-- Bauen Sie das System mit den gewünschten Parametern neu
-- Starten Sie mit `reboot` neu
-
-### NixOS flake
-- Geben Sie in `flake` Folgendes an:
-```nix
-{
-	inputs = {
+{{
+	inputs = {{
     jes.url = "github:ORFLEM/just_enough_shell";
-	}
-	outputs = { your inputs, jes, ... }@inputs:
+	}}
+	outputs = {{ your inputs, jes, ... }}@inputs:
   let
     system = "x86_64-linux";
     hostname = "nixos";
 
-    specialArgs = { inherit inputs system hostname; };
+    specialArgs = {{ inherit inputs system hostname; }};
 
-  in {
-    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
+  in {{
+    nixosConfigurations.${{hostname}} = nixpkgs.lib.nixosSystem {{
       inherit system specialArgs;
       modules = [
 				jes.nixosModules.default
 			];
-		};
-	};
-}
+		}};
+	}};
+}}
 ```
-- Bauen Sie den Flake neu
-- Geben Sie in `configuration.nix`
+- Flake neu bauen
+- In `configuration.nix` hinzufügen:
 ```nix
-services.jes = {
+services.jes = {{
   enable = true;
-  users = [ " your user" ];
-};
+  users = [ "your user" ];
+}};
 ```
-an
-- Bauen Sie NixOS neu
+- NixOS neu bauen
 
-### Arch Linux oder Arch-basiert (kann fehlerhaft sein; bei Problemen bitte ein [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) erstellen)
+### Arch Linux oder Arch-basiert (kann fehlerhaft sein; bei Problemen bitte in [Issue](https://github.com/ORFLEM/just_enough_shell/issues/new) schreiben)
+- Arch Linux installieren (zur Vereinfachung empfehle ich EndeavourOS)
+<!-- - Installer ausführen (nicht überarbeitet): -->
+<!-- ```bash -->
+<!-- git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh -->
+<!-- ``` -->
 
-- Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
-- Starten Sie das Installationsprogramm:
-```bash
-git clone https://github.com/ORFLEM/just_enough_shell.git && cd just_enough_shell && ./install_arch.sh
+<!-- - Bei Fehlern manuell installieren: -->
+- Installation ist nur manuell möglich, automatisch ist defekt:
 ```
-
-- Im Falle von Fehlern installieren Sie manuell:
-```
-1. Installieren Sie Arch Linux (der Einfachheit halber wird EndeavourOS empfohlen)
-2. Installieren Sie yay oder paru (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
-3. Installieren Sie die offizielle Software (sudo pacman -Syu && pacman -S $(cat ./installer/arch_official.txt))
-4. Installieren Sie Benutzer-Software (yay -S $(cat ./installer/arch_aur.txt))
-5. Installieren Sie das zenburn-Theme für qt und gtk
-6. Bei Bedarf können Sie die Systemthemes (GTK/Qt) auf zenburn anpassen und die Schriftart ter-v32n installieren
-7. Erstellen Sie ein Backup der Benutzerkonfigurationen (cp -r ~/.config/ ~/backups/ && cp ~/.bashrc ~/backups)
-8. Kopieren Sie die Dateien aus ".config/" nach "~/.config" und aus ".local/" nach "~/.local" (cp -r ./.local/* ~/.local/ && cp -r ./.config/* ~/.config/ && cp ./.bashrc ~/.bashrc)
-9. Geben Sie reboot ein
+1. Arch Linux installieren (zur Vereinfachung empfehle ich EndeavourOS)
+2. yay oder paru installieren (yay: git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si)
+3. Offizielle Software installieren (sudo pacman -Syu && pacman -S $(cat ./installer/arch_official.txt))
+4. Benutzer-Software installieren (yay -S $(cat ./installer/arch_aur.txt))
 ```
 
-## -- Lizenz -- :
-Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert, benachrichtigungen Lizenz **GNU GPL v3**
-Ein Blick darauf lohnt sich
+## -- Lizenz --:
+Die Benachrichtigungen wurden aus dem Projekt [blxshell](https://github.com/binarylinuxx/dots) übernommen und sowohl visuell als auch teilweise technisch modernisiert; Lizenz der Benachrichtigungen — **GNU GPL v3**
+Ich empfehle, es sich anzusehen.
 
-Diese Konfigurationen werden unter der Lizenz **BSD 3-Clause License** veröffentlicht.
+Diese Konfigurationen werden unter der **BSD 3-Clause License** verbreitet.
 
-Vereinfacht bedeutet das:
-- Sie dürfen diesen Code frei verwenden, untersuchen und verändern.
-- Wenn Sie Ihre Änderungen oder darauf basierenden Code mit anderen teilen (zum Beispiel einen Fork veröffentlichen), müssen Sie Ihren Quellcode **ebenfalls** offen und für alle zugänglich unter derselben Lizenz bereitstellen.
+In einfachen Worten bedeutet das:
+- Du kannst mit dem Code alles machen, aber der Autor behält die Urheberrechte am Projekt.
+- Du bist verpflichtet, das Originalprojekt und den Autor in einem Fork anzugeben, auch wenn er Closed-Source ist.
+- Du darfst die Person des Autors (Nickname, andere Erwähnungen) nicht ohne Erlaubnis zur Promotion deiner Version des Projekts verwenden.
 
-Das stellt sicher, dass alle Verbesserungen und abgeleiteten Werke genauso frei und offen bleiben wie das Original.
+Dies garantiert, dass der Name des Autors und des Projekts immer genannt werden und der Name des Autors nicht zum Werkzeug zur Promotion fremder Forks wird.
 
-Den vollständigen Lizenztext finden Sie in der Datei [LICENSE](./LICENSE).
+Vollständiger Lizenztext siehe in der Datei [LICENSE](./LICENSE).
 
-##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
-##### Translated by [DeepSeek](https://chat.deepseek.com/)
+##### Erstellt von [\_ORFLEM\_](https://github.com/ORFLEM)

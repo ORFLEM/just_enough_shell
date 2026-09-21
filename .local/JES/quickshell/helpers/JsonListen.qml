@@ -1,68 +1,46 @@
 import Quickshell
-import Quickshell.Io
 import QtQuick
 
+// API идентичен старому: command, data, debug.
+// Внутри — подписка на общий поток StreamManager (дедупликация по команде).
 QtObject {
     id: root
-    
+
     property string command: ""
     property var data: ({})
     property bool debug: false
-    
-    property Process _process: Process {
-        command: {
-            if (!root.command) return []
-            
-            // Раскрываем ~
-            let cmd = root.command.replace("~", Quickshell.env("HOME"))
-            
-            if (root.debug) {
-                console.log("[JsonListen] Starting command:", cmd)
-            }
-            
-            return ["bash", "-c", cmd]
+
+    property var _entry: null
+    property string _boundCommand: ""
+
+    function _resubscribe() {
+        if (_boundCommand !== "") {
+            StreamManager.release(_boundCommand)
+            _entry = null
+            _boundCommand = ""
         }
-        
-        running: root.command !== ""
-        
-        stdout: SplitParser {
-            onRead: rawData => {
-                if (root.debug) {
-                    console.log("[JsonListen] Raw data:", rawData)
-                }
-                
-                let trimmed = rawData.trim()
-                if (!trimmed) return
-                
-                // Пробуем парсить JSON
-                if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
-                    try {
-                        root.data = JSON.parse(trimmed)
-                        
-                        if (root.debug) {
-                            console.log("[JsonListen] Parsed JSON successfully")
-                        }
-                    } catch (e) {
-                        console.error("[JsonListen] Parse error:", e)
-                        root.data = trimmed
-                    }
-                } else {
-                    // Просто текст
-                    root.data = trimmed
-                }
-            }
+        if (command !== "") {
+            _entry = StreamManager.acquire(command)
+            _boundCommand = command
         }
-        
-        stderr: SplitParser {
-            onRead: errorData => {
-                console.error("[JsonListen] STDERR:", errorData)
-            }
-        }
-        
-        onExited: (code, status) => {
-            if (code !== 0) {
-                console.error("[JsonListen] Process died! Code:", code)
-            }
+    }
+
+    onCommandChanged: _resubscribe()
+    Component.onCompleted: _resubscribe()
+    Component.onDestruction: {
+        if (_boundCommand !== "")
+            StreamManager.release(_boundCommand)
+    }
+
+    // Через property — QtObject не принимает голых дочерних объектов
+    property Connections _conn: Connections {
+        target: root._entry
+        ignoreUnknownSignals: true
+
+        function onLine(value) {
+            root.data = value
+            if (root.debug)
+                console.log("[JsonListen]", root.command, "->", JSON.stringify(value))
         }
     }
 }

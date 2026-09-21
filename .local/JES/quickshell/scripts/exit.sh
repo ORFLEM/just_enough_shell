@@ -11,6 +11,8 @@ elif [ "$XDG_CURRENT_DESKTOP" == "niri" ]; then
     niri msg action quit
 elif [ "$XDG_CURRENT_DESKTOP" == "driftwm" ]; then
     pkill driftwm
+elif [ "$XDG_CURRENT_DESKTOP" == "zwwm" ]; then
+    pkill zwwm
 else
     echo "Неизвестный композитор или запущен из TTY"
 fi

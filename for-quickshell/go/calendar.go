@@ -20,7 +20,7 @@ const (
 
 var monthNames = []string{
 	"", "january", "february", "march", "april", "may", "june",
-	"july", "august", "septemder", "october", "november", "december",
+	"july", "august", "september", "october", "november", "december",
 }
 
 type State struct {

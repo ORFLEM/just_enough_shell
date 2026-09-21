@@ -571,15 +571,9 @@ func cmdSet(path string, double bool) {
 		width := 0
 		fmt.Sscanf(strings.TrimSpace(string(out)), "%d", &width)
 
-		if width > 3840 {
-			exec.Command("ffmpeg",
-				"-i", fixedPath, "-vf", "scale=3440:-1", "-q:v", "2",
-				staticCache, "-y").Run()
-		} else {
-			exec.Command("ffmpeg",
-				"-i", fixedPath, "-q:v", "2",
-				staticCache, "-y").Run()
-		}
+		exec.Command("ffmpeg",
+			"-i", fixedPath, "-q:v", "2",
+			staticCache, "-y").Run()
 
 		exec.Command("jes-cli", "wallType", "1").Run()
 		applyMatugen(staticCache, double)

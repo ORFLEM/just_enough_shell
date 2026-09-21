@@ -83,6 +83,16 @@
                 prev
                 next-player
                 prev-player
+                initPlugin
+                makePlugin
+                debuildPlugin
+                pluginBuild
+                pluginCache
+                pluginClearCache
+                blacklistAdd
+                blacklistRemove
+                blacklistList
+                blacklistClear
                 --help -h"
 
                 if [[ ''${COMP_CWORD} -eq 1 ]]; then
@@ -154,7 +164,6 @@
             kdePackages.kdeconnect-kde
             quickshell
             tela-icon-theme
-            hyprlock
             micro
 
             # logic
@@ -171,8 +180,6 @@
 
           environment.shellInit = ''
             export PATH="$HOME/.local/bin:$PATH"
-            export QML_IMPORT_PATH="$HOME/.local/JES/quickshell:/run/current-system/sw/lib/qt-6/qml:$QML_IMPORT_PATH"
-            export QML2_IMPORT_PATH = "/run/current-system/sw/lib/qt-6/qml:$HOME/.local/JES/quickshell/:$QML2_IMPORT_PATH";
           '';
 
           system.activationScripts.installJesFiles = {

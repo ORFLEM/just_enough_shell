@@ -32,6 +32,7 @@ Item {
 
         Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "OS:      " + osText }
         Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "Kernel:  " + kernelText }
+        Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "WM:      " + root.wm }
         Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "CPU:     " + cpuText }
         Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "GPU:     " + gpuText }
         Text { font.family: fontFamily; font.pixelSize: fontSize; color: col.font; text: "RAM:     " + ramText }

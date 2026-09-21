@@ -9,7 +9,7 @@
 
 ## -- Дерево рабочей части проекта и назначение модулей --:
 ```
-.
+./quickshell/
 ├── shell.qml                 # Точка входа Quickshell. Регистрирует и позиционирует модули.
 ├── bar/                      # Панель.
 │   ├── components/           # Попапы панели + кнопки воркспейсов.
@@ -21,6 +21,7 @@
 ├── power/                    # Меню сессии: выключение, перезагрузка, сон, выход, лок.
 ├── helpers/                  # QML-хелперы.
 ├── screenpicker/             # Скриншотилка.
+├── lockScreen/             # Блокировка экрана.
 └── scripts/                  # Ядро логики: скомпилированные Go-бинарники + bash-скрипты.
 ```
 
@@ -40,17 +41,17 @@
 | Backend | Go 1.21+ | Логика, обрабатывающая большие объёмы данных |
 | Shell | Bash 5.x / POSIX sh | Основная логика |
 | Theme | base16 + matugen | Статичная палитра + динамическая тема |
-| Lock | Hyprlock | Экран блокировки |
 | Audio | PipeWire + pavucontrol-qt | Микширование, MPRIS, Cava |
 
-**Метрики**: CPU idle ~5–10% (Go subscribe) против 35–45% (bash polling). Бинарники собраны статически, вес логики ~3.5-4.5 МБ.
+**Метрики**: CPU idle ~1–2% (Go subscribe) против 35–45% (bash polling). Бинарники собраны статически, вес логики ~3.5-4.5 МБ.
 
 ## -- Слой совместимости WM --:
 Абстракция от тайлинга реализована через три пары скриптов и один файл для подключения к shell.qml:
-- `active_window-{sway,hypr,niri}.sh`
-- `kb_layout-{sway,hypr,niri,driftwm}.sh`
-- `workspace-{sway,hypr,niri,driftwm}.sh`
-- `{Sway,Hypr,niri}Bar.qml` в папке quickshell подкаталоге bar/
+- `active_window-{sway,hypr,niri,driftwm,zwwm}.sh`
+- `kb_layout-{sway,hypr,niri,driftwm,zwwm}.sh`
+- `workspace-{sway,hypr,niri,zwwm}.sh`
+- `camera-{driftwm,zwwm}.sh`
+- `{Sway,Hypr,niri,driftwm,zwwm}Bar.qml` в папке quickshell подкаталоге bar/
 
 Quickshell определяет текущий WM через `$XDG_CURRENT_DESKTOP`, маршрутизируя вызовы к нужному скрипту. Для портирования на новый тайлинг достаточно реализовать вывод в том же JSON-формате и добавить маппинг.
 
@@ -61,15 +62,15 @@ Quickshell определяет текущий WM через `$XDG_CURRENT_DESKT
 4. **Оптимизация**: Заменить polling-скрипт на Go-бинарник с `subscribe` → обновить вызов в QML.
 
 ## -- Прочее --:
-- UI-слой (QML): GPL-3.0
-- Скрипты и бинарники: GPL-3.0
+- UI-слой (QML): **BSD 3-Clause Licence**
+- Скрипты и бинарники: **BSD 3-Clause Licence**
 - Предпочитается постоянный вывод от скриптов/бинарников для улучшения производительности
 - Ассеты (шейдеры, исходники go, пустые скрипты-болванки и qml файл-болванку для подключения другого тайлинга): см. `for-quickshell/`
 
 ## -- Плагины --:
 ### Установка
 ```
-1. откройте ~/.config/quickshell/
+1. откройте ~/.config/JES/
 2. закиньте папку с плагином
 3. откройте config.toml
 4. впишите данные строки:

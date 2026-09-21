@@ -1,0 +1,6 @@
+[CoreAura]
+enabled = true
+kernel_priority_max = 3
+services = ["coreaura-test.service"]
+log_tail_lines = 300
+resource_poll_interval_sec = 2

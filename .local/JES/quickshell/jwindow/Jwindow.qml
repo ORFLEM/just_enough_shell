@@ -70,7 +70,8 @@ WlrLayershell {
                 if (tab.name) {
                     pluginTabs.push({
                         name: tab.name,
-                        source: tab.source || ""
+                        source: tab.source || "",
+                        plugin_config: tab.plugin_config || ({})
                     })
                 }
             }
@@ -291,20 +292,26 @@ WlrLayershell {
                         anchors.centerIn: parent
 
                         source: Qt.resolvedUrl(tabs[currentTabIndex].source)
-                    
+
+                        onLoaded: {
+                            var cfg = tabs[currentTabIndex].plugin_config || ({})
+                            if (item && item.hasOwnProperty("requiredSettings")) {
+                                item.requiredSettings = cfg
+                                console.log("[Jwindow] applied to", tabs[currentTabIndex].source,
+                                            JSON.stringify(cfg))
+                            }
+                            rightPanel.implicitWidthChanged()
+                            rightPanel.implicitHeightChanged()
+                            contentRow.implicitWidthChanged()
+                            contentRow.implicitHeightChanged()
+                        }
+
                         onStatusChanged: {
                             if (status === Loader.Error) {
                                 console.warn("Ошибка загрузки плагина:", source, errorString())
                                 source = ""
                                 sourceComponent = aboutSystemComponent
                             }
-                        }
-                    
-                        onLoaded: {
-                            rightPanel.implicitWidthChanged()
-                            rightPanel.implicitHeightChanged()
-                            contentRow.implicitWidthChanged()
-                            contentRow.implicitHeightChanged()
                         }
                     }
                 }

@@ -2,3 +2,4 @@ module JES.Helpers
 JsonListen 1.0 JsonListen.qml
 JsonPoll 1.0 JsonPoll.qml
 MarqueeText 1.0 MarqueeText.qml
+singleton StreamManager 1.0 StreamManager.qml

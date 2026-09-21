@@ -18,12 +18,13 @@ import "screenpicker"
 import "minimap"
 import "jwindow"
 import "CoreAura"
+import "lockScreen"
 
 ShellRoot {
     id: root
 
     readonly property string projectId: "Just Enough Shell"
-    readonly property string apiVersion: "0.1.1"
+    readonly property string apiVersion: "0.2.0"
 
     // ── Colors ──────────────────────────────────────────────────────────────
     FileView {
@@ -83,16 +84,16 @@ ShellRoot {
         readonly property string accent2:        enable_base16 ? base.base05 : colorsJson.accent2
     }
 
-        // ── UI states ──
+    // ── UI states ──
     FileView {
         id: statesFileView
         path: Quickshell.env("HOME") + "/.cache/JES/states_cached.json"
-        
+
         onLoaded: {
             try {
                 var textData = text().trim();
                 if (textData === "") return;
-                
+
                 var states_c = JSON.parse(textData);
                 playerOpen =     states_c.playerOpen ?? false;
                 pluginOpen =     states_c.pluginOpen ?? false;
@@ -109,6 +110,11 @@ ShellRoot {
                 console.log("JES Error parsing states_cached.json at boot:", e);
             }
         }
+    }
+
+    FileView {
+        id: lastPluginMarker
+        path: Quickshell.env("HOME") + "/.cache/JES/.last_loaded_plugin"
     }
 
     property bool   playerOpen:     false
@@ -138,7 +144,7 @@ ShellRoot {
             "wallpaperType":  wallpaperType,
             "wallShaderName": wallShaderName
         };
-        statesFileView.setText(JSON.stringify(data, null, 2));
+        statesFileView.setText(JSON.stringify(data));
     }
 
     function toggleWeather() {
@@ -150,7 +156,7 @@ ShellRoot {
         launchOpen = !launchOpen;
         saveStatesToDisk();
     }
-        
+
     function togglejwindow() {
         jwindowOpen = !jwindowOpen;
         saveStatesToDisk();
@@ -203,6 +209,36 @@ ShellRoot {
         return str;
     }
 
+    // ── Plugin settings bridge ─────────────────────────────────────────
+    // Разрешает точечный доступ: "col.accent", "fontSize", "wm_type".
+    function resolveSetting(name) {
+        var parts = String(name).split(".")
+        var cur = root
+        for (var i = 0; i < parts.length; i++) {
+            if (cur === null || cur === undefined) return undefined
+            try {
+                cur = cur[parts[i]]
+            } catch (e) {
+                return undefined
+            }
+        }
+        return cur
+    }
+
+    function collectRequiredSettings(names) {
+        var out = ({})
+        if (!Array.isArray(names)) return out
+        for (var i = 0; i < names.length; i++) {
+            var v = resolveSetting(names[i])
+            if (v !== undefined) {
+                out[names[i]] = v
+            } else {
+                console.warn("[plugin] requested unknown setting:", names[i])
+            }
+        }
+        return out
+    }
+
     // ── Toml-config -> Json-config ───────────────────────────────────
     FileView {
         id: tomlWatcher
@@ -210,14 +246,14 @@ ShellRoot {
         watchChanges: true
         onFileChanged: {
             if (do_not_sync_rad !== true) {
-            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
+                Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
             }
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
         }
         Component.onCompleted: {
             if (do_not_sync_rad !== true) {
-            Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
+                Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/change-rad.sh"))])
             }
             Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("scripts/plugin_list.sh " + apiVersion))])
             Quickshell.execDetached(["sh", "-c", "taplo get -f ~/.config/JES/config.toml -o json > ~/.cache/JES/JES_config.json"])
@@ -243,8 +279,35 @@ ShellRoot {
         onFileChanged: reload()
         onLoaded: {
             let content = text()
-            console.log("[shell] configView loaded, text length:", content.length)
+            console.log("[shell] pluginView loaded, text length:", content.length)
             root._parseList(content)
+        }
+    }
+
+    Process {
+        id: pluginWatcher
+        command: ["bash", "-c",
+            "[ -d " + Quickshell.env("HOME") + "/.config/JES/plugins/ ] && " +
+            "inotifywait -m -r -e modify,create,delete,move " +
+            Quickshell.env("HOME") + "/.config/JES/plugins/ " +
+            "--format '%w%f' 2>/dev/null || sleep 5"]
+        running: true
+        stdout: SplitParser {
+            onRead: line => {
+                if (!line) return
+                pluginRebuildTimer.restart()
+            }
+        }
+        onExited: running = true
+    }
+
+    Timer {
+        id: pluginRebuildTimer
+        interval: 500
+        repeat: false
+        onTriggered: {
+            Quickshell.execDetached(["sh", "-c",
+                localPath(Qt.resolvedUrl("scripts/plugin_list.sh")) + " " + apiVersion + " build"])
         }
     }
 
@@ -259,7 +322,6 @@ ShellRoot {
             let parsed = JSON.parse(trimmed)
             console.log("[shell] JSON parsed OK, keys:", Object.keys(parsed).join(", "))
 
-            // settings
             let s = parsed.settings ?? {}
             root._cfg_wm              = s.wm                      ?? "auto"
             root._cfg_wm_type         = s.wm_type                 ?? "auto"
@@ -292,37 +354,47 @@ ShellRoot {
     }
 
     function _parseList(raw) {
-    let trimmed = (raw ?? "").trim()
-    if (!trimmed) {
-        console.error("[shell] list is empty!")
-        return
-    }
-    try {
-        let entries = JSON.parse(trimmed)
-        if (!Array.isArray(entries)) {
-            console.warn("[shell] plugin list is not an array")
+        let trimmed = (raw ?? "").trim()
+        if (!trimmed) {
+            console.error("[shell] list is empty!")
             return
         }
-        pluginListModel.clear()
-        for (var i = 0; i < entries.length; i++) {
-            var entry = entries[i]
-            // Проверяем, есть ли в api_request строка "wm_connect"
-            var hasWmConnect = entry.api_request && Array.isArray(entry.api_request) &&
-                               entry.api_request.indexOf("wm_connect") !== -1
-            pluginListModel.append({
-                name: entry.name,
-                source: entry.source,
-                main_source: entry.main_source,
-                active: entry.active,
-                wm_connect: hasWmConnect   // <-- новый флаг
-            })
-        }
-    } catch(e) {
-        console.error("[shell] Error parsing plugin list:", e)
-    }
-}
+        try {
+            let entries = JSON.parse(trimmed)
+            if (!Array.isArray(entries)) {
+                console.warn("[shell] plugin list is not an array")
+                return
+            }
+            pluginListModel.clear()
+            root.pluginRequiredSettings = ({})
+            root.pluginConfigs = ({})
 
-    // ia ne ebu chto eto    
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i]
+                var hasWmConnect = entry.api_request
+                && Array.isArray(entry.api_request)
+                && entry.api_request.indexOf("wm_connect") !== -1
+
+                // отдельные объекты — не зависят от ListModel-магии
+                root.pluginRequiredSettings[entry.name] = Array.isArray(entry.required_settings)
+                    ? entry.required_settings : []
+                root.pluginConfigs[entry.name] = entry.plugin_config ?? ({})
+
+                pluginListModel.append({
+                    name:         entry.name,
+                    source:       entry.source,
+                    main_source:  entry.main_source,
+                    active:       entry.active,
+                    wm_connect:   hasWmConnect
+                    // required_settings и plugin_config сюда НЕ кладём
+                })
+            }
+        } catch(e) {
+            console.error("[shell] Error parsing plugin list:", e)
+        }
+    }
+
+    // ia ne ebu chto eto
     Component {
         id: processComponent
         Process {
@@ -358,7 +430,7 @@ ShellRoot {
     property string _cfg_bg_type:         "mono"
     property string _cfg_pluginDir:       ""
     property string _cfg_API_key:         ""
-    property var    _pluginConfigList:    []   // penis { name, active } from config
+    property var    _pluginConfigList:    []
 
     // ── Public properties ─────────────────────────────────────────────────
     property int    mainRad:         _cfg_mainRad
@@ -396,25 +468,54 @@ ShellRoot {
         id: pluginListModel
     }
     property var pluginRegistry: ({})
+    property var pluginRequiredSettings: ({})   // name → [ключи]
+    property var pluginConfigs: ({})            // name → {ключ: значение}
 
     Repeater {
-    model: pluginListModel
-    delegate: Loader {
-        id: pluginLoader
-        active: model.active
-        source: model.active ? (model.main_source ? "file://" + model.source + "/" + model.main_source : "") : ""
-        onLoaded: {
-            root.pluginRegistry[model.name] = item
-            console.log("[plugin] Загружен:", model.name)
+        model: pluginListModel
+        delegate: Loader {
+            id: pluginLoader
+            active: model.active
+            source: model.active ? (model.main_source ? "file://" + model.source + "/" + model.main_source : "") : ""
 
-            // eto dla custom wm podkluchenia nahui
-            if (model.wm_connect && item) {
-                var bar = pluginLoader.item
-                root.wm_connect = bar
+            onLoaded: {
+                root.pluginRegistry[model.name] = item
+                console.log("[plugin] Загружен:", model.name)
+
+                var wanted = root.pluginRequiredSettings[model.name] || []
+                var provided = root.pluginConfigs[model.name] || ({})
+
+                if (wanted.length > 0 && item && item.hasOwnProperty("requiredSettings")) {
+                    var out = ({})
+                    for (var i = 0; i < wanted.length; i++) {
+                        var k = wanted[i]
+                        if (provided[k] !== undefined) {
+                            out[k] = provided[k]
+                        } else {
+                            console.warn("[plugin] " + model.name +
+                                ": missing setting '" + k + "'")
+                        }
+                    }
+                    item.requiredSettings = out
+                    console.log("[plugin] " + model.name +
+                        " → applied:", JSON.stringify(out))
+                }
+
+                if (model.wm_connect && item) {
+                    root.wm_connect = pluginLoader.item
+                }
+            }
+
+            onStatusChanged: {
+                if (status === Loader.Loading) {
+                    lastPluginMarker.setText(model.name)
+                } else if (status === Loader.Error) {
+                    console.error("[plugin] Ошибка загрузки:", model.name)
+                    Quickshell.execDetached(["jes-cli", "blacklistAdd", model.name])
+                }
             }
         }
     }
-}
 
     // ── Bar ────────────────────────────────────────────────────────────────
     Loader {
@@ -424,6 +525,7 @@ ShellRoot {
             else if (wm === "niri")     return Qt.resolvedUrl("bar/NiriBar.qml");
             else if (wm === "sway")     return Qt.resolvedUrl("bar/SwayBar.qml");
             else if (wm === "driftwm")  return Qt.resolvedUrl("bar/DriftBar.qml");
+            else if (wm === "zwwm")  return Qt.resolvedUrl("bar/ZWWMBar.qml");
             else return "";
         }
         onLoaded: {
@@ -435,7 +537,7 @@ ShellRoot {
     }
 
     property var wm_connect: ({})
-    
+
     // ── UI components ─────────────────────────────────────────────────────────
     LazyLoader {
         active: show_wallpaper
@@ -470,8 +572,9 @@ ShellRoot {
         PluginPopup {}
     }
 
-    // CoreAura {}
-    
+    LockScreen { id: lockScreen }
+
+    // CoreAura { useSessionBus:  true }
 
     Btime {}
 
@@ -485,7 +588,7 @@ ShellRoot {
         active: powerOpen
         Power {}
     }
-    
+
     LazyLoader {
         id: jwindowLoader
         active: jwindowOpen
@@ -535,8 +638,8 @@ ShellRoot {
         function screenpicker(): void {
             screenpicker.activate();
         }
-        function getPlugin() {
-            Quickshell.execDetached(["notify-send", pluginModel]);
+        function lockScreen() {
+            lockScreen.lock();
         }
     }
 

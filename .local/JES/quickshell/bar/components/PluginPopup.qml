@@ -67,7 +67,8 @@ WlrLayershell {
                         source: pluginSource,
                         qmlFile: file,
                         colSpan: item.colSpan || 1,
-                        rowSpan: item.rowSpan || 1
+                        rowSpan: item.rowSpan || 1,
+                        plugin_config: plugin.plugin_config || ({})
                     })
                 }
             }
@@ -124,7 +125,8 @@ WlrLayershell {
                             row: r,
                             col: c,
                             rowSpan: rowSpan,
-                            colSpan: colSpan
+                            colSpan: colSpan,
+                            plugin_config: item.plugin_config || ({})
                         });
                         placed = true;
                         break;
@@ -255,10 +257,17 @@ WlrLayershell {
                 
                                 Loader {
                                     anchors.fill: parent
-                                    source: Qt.resolvedUrl("file://" + modelData.source + "/" + modelData.qmlFile) 
+                                    source: Qt.resolvedUrl("file://" + modelData.source + "/" + modelData.qmlFile)
                                     asynchronous: true
-                                    
-                                    // Выведет ошибку в консоль, если QML-виджет не сможет загрузиться (например, из-за синтаксиса или импортов)
+
+                                    onLoaded: {
+                                        if (item && item.hasOwnProperty("requiredSettings")) {
+                                            item.requiredSettings = modelData.plugin_config || ({})
+                                            console.log("[plugin_center] applied to", modelData.qmlFile,
+                                                        JSON.stringify(item.requiredSettings))
+                                        }
+                                    }
+
                                     onStatusChanged: {
                                         if (status === Loader.Error) {
                                             console.warn("Ошибка загрузки плагина:", source, errorString())

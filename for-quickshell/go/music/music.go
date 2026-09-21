@@ -24,6 +24,11 @@ type Output struct {
 	Ver    int64  `json:"ver"`
 }
 
+type playerInfo struct {
+	name   string
+	status string
+}
+
 var (
 	cacheMutex     sync.Mutex
 	cachedFile     string
@@ -32,6 +37,12 @@ var (
 	defaultArt     string
 	customCacheDir string
 	lastArtVer     int64
+
+	// Последние непустые метаданные — против Chromium-гонки,
+	// когда при Playing прилетают пустые title/artist
+	lastMetaPlayer string
+	lastTitle      string
+	lastArtist     string
 )
 
 func init() {
@@ -82,14 +93,33 @@ func getMprisPlayers(conn *dbus.Conn) []string {
 	return players
 }
 
-func isPlaying(conn *dbus.Conn, player string) bool {
+// getPlaybackStatus возвращает статус плеера и факт его живости на шине
+func getPlaybackStatus(conn *dbus.Conn, player string) (string, bool) {
 	obj := conn.Object("org.mpris.MediaPlayer2."+player, "/org/mpris/MediaPlayer2")
 	statusVal, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.PlaybackStatus")
 	if err != nil {
-		return false
+		return "", false
 	}
 	status, ok := statusVal.Value().(string)
-	return ok && status == "Playing"
+	return status, ok
+}
+
+// getPlayerInfos возвращает только живых плееров, не находящихся
+// в Stopped: завершивший проигрывание Telegram снимает статус,
+// но НЕ снимает имя с шины — без фильтра он висит на баре вечно.
+func getPlayerInfos(conn *dbus.Conn) []playerInfo {
+	var infos []playerInfo
+	for _, p := range getMprisPlayers(conn) {
+		if status, ok := getPlaybackStatus(conn, p); ok && status != "Stopped" {
+			infos = append(infos, playerInfo{name: p, status: status})
+		}
+	}
+	return infos
+}
+
+func playerAlive(conn *dbus.Conn, player string) bool {
+	_, ok := getPlaybackStatus(conn, player)
+	return ok
 }
 
 func resolveFallbackArt() string {
@@ -179,27 +209,37 @@ func emit(out Output) {
 	fmt.Println(string(bytes))
 }
 
+func emitNoMedia() {
+	setCachedPlayer("")
+	fallback := resolveFallbackArt()
+	emit(Output{
+		Title:  "No media",
+		Art:    fallback,
+		Status: "󰐊",
+		Player: "",
+		Ver:    lastArtVer,
+	})
+}
+
 func fetchAndEmit(conn *dbus.Conn) {
-	players := getMprisPlayers(conn)
-	if len(players) == 0 {
-		setCachedPlayer("")
-		fallback := resolveFallbackArt()
-		emit(Output{
-			Title:  "No media",
-			Art:    fallback,
-			Status: "󰐊",
-			Player: "",
-			Ver:    lastArtVer,
-		})
+	// Отсекаем мёртвые и остановленные имена сразу: Chromium снимает
+	// имя с шины раньше, чем ListNames обновляется (гонка), а Telegram
+	// остаётся на шине в Stopped после конца трека. Такие плееры
+	// не должны попадать ни в выбор, ни в отображение.
+	infos := getPlayerInfos(conn)
+
+	if len(infos) == 0 {
+		emitNoMedia()
 		return
 	}
 
 	currP := getCachedPlayer()
 
+	// Приоритет: кто играет — тот и главный
 	var activePlaying string
-	for _, p := range players {
-		if isPlaying(conn, p) {
-			activePlaying = p
+	for _, info := range infos {
+		if info.status == "Playing" {
+			activePlaying = info.name
 			break
 		}
 	}
@@ -211,14 +251,14 @@ func fetchAndEmit(conn *dbus.Conn) {
 		}
 	} else {
 		found := false
-		for _, p := range players {
-			if p == currP {
+		for _, info := range infos {
+			if info.name == currP {
 				found = true
 				break
 			}
 		}
 		if !found {
-			currP = players[0]
+			currP = infos[0].name
 			setCachedPlayer(currP)
 		}
 	}
@@ -226,10 +266,12 @@ func fetchAndEmit(conn *dbus.Conn) {
 	busName := "org.mpris.MediaPlayer2." + currP
 	obj := conn.Object(busName, "/org/mpris/MediaPlayer2")
 
-	statusVal, err := obj.GetProperty("org.mpris.MediaPlayer2.Player.PlaybackStatus")
 	status := ""
-	if err == nil {
-		status, _ = statusVal.Value().(string)
+	for _, info := range infos {
+		if info.name == currP {
+			status = info.status
+			break
+		}
 	}
 
 	icon := "󰐊"
@@ -257,12 +299,30 @@ func fetchAndEmit(conn *dbus.Conn) {
 		}
 	}
 
+	// Chromium-гонка: при Playing иногда прилетают пустые метаданные
+	// поверх валидных. Плеер играет и трек не менялся — не затираем.
+	if status == "Playing" && currP == lastMetaPlayer {
+		if title == "" {
+			title = lastTitle
+		}
+		if artist == "" {
+			artist = lastArtist
+		}
+		if artURL == "" {
+			artURL = lastURL
+		}
+	}
+
 	artPath, artChanged := processArt(artURL)
 	if artChanged {
 		lastArtPath = artPath
 		lastURL = artURL
 		lastArtVer = time.Now().UnixMilli()
 	}
+
+	lastMetaPlayer = currP
+	lastTitle = title
+	lastArtist = artist
 
 	cleanPlayerName := currP
 	if idx := strings.Index(cleanPlayerName, "."); idx != -1 {
@@ -280,7 +340,12 @@ func fetchAndEmit(conn *dbus.Conn) {
 }
 
 func runCLI(conn *dbus.Conn, cmd string) {
-	players := getMprisPlayers(conn)
+	// Только живые и не остановленные — иначе можно переключиться
+	// на зависшего в Stopped Telegram
+	var players []string
+	for _, info := range getPlayerInfos(conn) {
+		players = append(players, info.name)
+	}
 	curr := getCachedPlayer()
 
 	switch cmd {
@@ -318,6 +383,19 @@ func runCLI(conn *dbus.Conn, cmd string) {
 		if curr == "" {
 			return
 		}
+		// Если кэш протух — команда уйдёт в никуда, попробуем поднять живого
+		if !playerAlive(conn, curr) {
+			for _, p := range players {
+				if p != curr && playerAlive(conn, p) {
+					curr = p
+					setCachedPlayer(curr)
+					break
+				}
+			}
+		}
+		if curr == "" || !playerAlive(conn, curr) {
+			return
+		}
 		busName := "org.mpris.MediaPlayer2." + curr
 		obj := conn.Object(busName, "/org/mpris/MediaPlayer2")
 
@@ -350,12 +428,17 @@ func runDaemon(conn *dbus.Conn) {
 	ruleSwitch := "type='signal',interface='org.jes.Music',member='PlayerSwitched'"
 	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, ruleSwitch)
 
+	// 3. Chromium (и др. динамические плееры) снимают/вешают MPRIS-имя
+	//    без PropertiesChanged — трекаем появление и исчезновение имён.
+	ruleNames := "type='signal',sender='org.freedesktop.DBus',interface='org.freedesktop.DBus',member='NameOwnerChanged',arg0namespace='org.mpris.MediaPlayer2.'"
+	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, ruleNames)
+
 	ch := make(chan *dbus.Signal, 10)
 	conn.Signal(ch)
 
 	fetchAndEmit(conn)
 
-	// 3. Debounce-механизм (не чаще одного раза в 50мс)
+	// 4. Debounce-механизм (не чаще одного раза в 50мс)
 	var timer *time.Timer
 	var mu sync.Mutex
 

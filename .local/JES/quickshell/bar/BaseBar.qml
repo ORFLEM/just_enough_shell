@@ -727,7 +727,7 @@ WlrLayershell {
                         onExited: playerItem.hovered = false
                         onClicked: function(mouse) {
                             if (mouse.button === Qt.LeftButton) {
-                                Quickshell.execDetached(["sh", "-c", "playerctl play-pause"])
+                                Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("../scripts/music play-pause"))])
                             }
                             if (mouse.button === Qt.RightButton) {
                                 root.togglePlayer()
@@ -735,9 +735,9 @@ WlrLayershell {
                         }
                         onWheel: function(wheel) {
                             if (wheel.angleDelta.y > 0) {
-                                Quickshell.execDetached(["sh", "-c", "playerctl next"])
+                                Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("../scripts/music next"))])
                             } else if (wheel.angleDelta.y < 0) {
-                                Quickshell.execDetached(["sh", "-c", "playerctl previous"])
+                                Quickshell.execDetached(["sh", "-c", localPath(Qt.resolvedUrl("../scripts/music previous"))])
                             }
                         }
                     }

@@ -21,6 +21,7 @@ while IFS= read -r plugin; do
     plugin_name=$(echo "$plugin" | jq -r '.name // empty')
     source_dir=$(echo "$plugin" | jq -r '.source // empty')
     jwindow_file=$(echo "$plugin" | jq -r '.json_files.Jwindow // empty')
+    plugin_config=$(echo "$plugin" | jq -c '.plugin_config // {}')
 
     echo "DEBUG: plugin=$plugin_name, has_jwindow=$has_jwindow, active=$active, source=$source_dir, jwindow_file=$jwindow_file" >&2
 
@@ -54,12 +55,23 @@ while IFS= read -r plugin; do
         end
     ' "$json_path")
 
+        plugin_config=$(echo "$plugin" | jq -c '.plugin_config // {}')
+
+    tabs=$(jq -c --arg source_dir "$source_dir" --argjson pcfg "$plugin_config" '
+        .[] |
+        if (.source | startswith("/") | not) then
+            .source = $source_dir + "/" + .source
+        else
+            .
+        end |
+        .plugin_config = $pcfg
+    ' "$json_path")
+
     while IFS= read -r tab; do
         tab_source=$(echo "$tab" | jq -r '.source // empty')
         tab_name=$(echo "$tab" | jq -r '.name // empty')
 
         if [[ -z "$tab_name" || -z "$tab_source" ]]; then
-            echo "Предупреждение: пропускаем вкладку без name/source" >&2
             continue
         fi
 
@@ -69,7 +81,7 @@ while IFS= read -r plugin; do
         fi
 
         result=$(echo "$result" | jq --argjson tab "$tab" '. + [$tab]')
-        echo "DEBUG: добавлена вкладка '$tab_name' → $tab_source" >&2
+        echo "DEBUG: добавлена вкладка '$tab_name' → $tab_source (cfg: $(echo "$tab" | jq -c '.plugin_config'))" >&2
     done <<< "$tabs"
 
 done < <(jq -c '.[]' "$PLUGIN_LIST")

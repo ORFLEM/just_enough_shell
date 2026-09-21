@@ -4,14 +4,47 @@
 - Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner.
 
 ## Regel Nr. 2
-- Ein Plugin darf **nicht** viele Geräteressourcen verbrauchen. Zur Optimierung ist jede Sprache erlaubt, empfohlen wird jedoch **Go** (Golang).
+- Ein Plugin **darf nicht** viele Ressourcen des Geräts verbrauchen; zur Optimierung ist jede Sprache erlaubt, aber **Go wird empfohlen**.
 
 ## Regel Nr. 3
-- Die Dateinamen im Plugin erklären kurz, wofür sie sind; die einzubindende Datei wird **in der Installationsanleitung des Plugins angegeben**.
-- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss dieses Fenster in einem `lazyLoader` eingebettet werden.
+- Dateinamen im Plugin erklären kurz, wozu sie dienen, und die einzubindende Datei **wird in der Installationsanleitung des Plugins angegeben**.
+- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss das Fenster in einem lazyLoader sein.
 
-## Visuelle Gestaltung
-- Für den Haupthintergrund eines Plugins verwenden Sie:
+## Regel Nr. 4
+- Im Plugin werden **ausschließlich relative Pfade** verwendet.
+
+## Erstellen, Bauen und Dekompilieren eines Plugins
+
+- In der Konsole folgenden Befehl eingeben:
+```bash
+jes-cli initPlugin <PluginName>
+```
+
+Dies erstellt eine Plugin-Vorlage.
+
+- Nachdem das Plugin zur Veröffentlichung bereit ist, eingeben:
+```bash
+jes-cli makePlugin <PluginName>
+```
+
+- Wenn die Quellen gelöscht wurden oder ein fremdes Plugin geändert werden soll, eingeben:
+```bash
+jes-cli debuildPlugin <PluginName>
+```
+
+- Plugin-Status kann mit folgendem Befehl abgefragt werden:
+```bash
+jes-cli getPlugin
+```
+
+- Wenn ein Plugin zur Laufzeit kaputt geht, landet es auf der Start-Blacklist; zum Prüfen der Details gibt es:
+  blacklistAdd <name>          - Plugin zur Blacklist hinzufügen (status=broken)
+  blacklistRemove <name>       - Plugin von der Blacklist entfernen
+  blacklistList                - Blacklist anzeigen
+  blacklistClear               - Gesamte Blacklist löschen
+
+## Visueller Teil
+- Für den Haupt-Hintergrund im Plugin verwendet man:
 ```qml
 Rectangle {
     opacity: 0.85
@@ -26,7 +59,7 @@ Rectangle {
     }
 }
 ```
-- Für den Hintergrund von Schaltflächen und ähnlichen Elementen:
+- Und für Schaltflächen-Hintergründe und ähnliches:
 ```qml
 Rectangle {
     opacity: 0.65
@@ -39,7 +72,7 @@ Rectangle {
     }
 }
 ```
-- Für Hover-Effekte verwenden Sie:
+- Für Hover-Effekte verwendet man:
 ```qml
 Item {
     id: button
@@ -59,11 +92,11 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 2 - root.margins // Summe aller Ränder
+        radius: mainRad - 2 - root.margins // alle margins zusammenzählen
         color: button.hovered ? col.accent : "transparent"
-        Behavior on color { ColorAnimation { duration: 200 } }
+        Behavior on color { ColorAnimation { duration: 200 * root.animations } }
     }
-    // Code
+    // code
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -77,33 +110,36 @@ Item {
 }
 ```
 
-#### Sie können auch einen anderen Hintergrund verwenden – im obigen Beispiel wurde der Schaltflächenhintergrund verwendet.
+> Der Hintergrund kann anders sein; im Beispiel wurde der Hintergrund für Schaltflächen verwendet.
 
-- Für Radien verwenden Sie `radius: mainRad`. Wenn Sie Ränder (margins) setzen, schreiben Sie im inneren Block `radius: mainRad - <Randwert>`.
-- Alle Farben müssen aus dem globalen Objekt `col` stammen (definiert in `colors.json` und über `shell.qml` verfügbar).
-- JES unterstützt außerdem base16‑Themen (`base.base<01-16>`).
-- Die Schriftart wird über **fontFamily** und **fontSize** festgelegt.
-- JES hat 2 Akzentfarben – dunkel und hell.
+- Für Radien verwendet man `radius: mainRad`; wenn man margins macht, schreibt man im nächsten Block `radius: mainRad - <margin_zahl>`.
+- Alle Farben werden aus dem globalen Objekt `col` genommen (definiert in `colors.json` und verfügbar über `shell.qml`).
+- JES unterstützt auch base16-Themen (`base.base<01-16>`).
+- Die Schriftart wird mit **fontFamily** und **fontSize** gesetzt.
+- JES hat 2 Akzentfarben — dunkel und hell.
+- Alle Animationen müssen mit `root.animations` multipliziert werden.
+- `root` ist in JES durch `shell.qml` reserviert; seine Verwendung ist strengstens untersagt.
 
-## Datenübergabe an die Oberfläche
-- Verwenden Sie `JsonListen` für einen kontinuierlichen Datenstrom (aus Leistungsgründen empfohlen) und `JsonPoll` für eine einmalige Abfrage in festgelegten Intervallen.
-- Die Daten werden im JSON‑Format übergeben. Bei rein visuellen Programmen ohne Logik (z. B. Cava in der Leiste) genügt ein einfacher String.
-- Fenstermanager‑Daten werden über den Parameter `wm_connect` übergeben. Wenn Sie Daten zu Koordinaten/Arbeitsflächen/aktivem Programm/Tastaturlayout benötigen, rufen Sie `wm_connect` auf. Eine Liste der verfügbaren Daten finden Sie in `BaseBar.qml`.
+## Datenübertragung an die UI
+- Für einen permanenten Stream (empfohlen für Performance) verwendet man `JsonListen`, für eine einmalige Anfrage in einem bestimmten Intervall `JsonPoll`.
+- Daten werden im JSON-Format übertragen; für visuelle Programme ohne Funktionen — einfach eine Zeichenkette (z. B. cava in der Bar).
+- WM-Daten werden über den Parameter `wm_connect` übertragen; wenn Koordinaten/Workspaces/aktives Programm/Layout benötigt werden — ruft man `wm_connect` auf, welche Daten daraus entnommen werden können, siehe `BaseBar.qml`.
 
-## JES‑Bibliotheken
-- Um die Plugin‑Erstellung zu vereinfachen, wurden die Bibliotheken `JES.Helpers` und `JES.Bar` geschaffen. Ersteres wird für die Verwendung von `JsonListen`, `JsonPoll` und `MarqueeText` benötigt, letzteres für die Integration mit `BaseBar.qml`, d. h. für die Erstellung von Plugins, die Fenstermanager an JES anbinden (siehe unten).
+## JES-Bibliotheken
+- Zur Vereinfachung der Plugin-Erstellung wurden die Bibliotheken `JES.Helpers` und `JES.Bar` erstellt — die erste wird für Aufrufe von `JsonListen`, `JsonPoll` und `MarqueeText` benötigt, die zweite — für Integration mit `BaseBar.qml`, d. h. zum Erstellen von Plugins zum Anbinden von WMs an JES (siehe unten).
 
-### Falls etwas unklar ist, schauen Sie in die Datei `BaseBar.qml` im Ordner `bar/` – sie ist die visuelle Referenz für die gesamte Benutzeroberfläche.
+### Wenn etwas unklar ist, schaue in die Datei `baseBar.qml` im Ordner bar; sie ist der visuelle Maßstab für die gesamte UI.
 
-## Anbindung des Plugins an JES
+## Anbindung eines Plugins an JES
 
-Um eine Verbindung zu JES herzustellen, muss das Plugin eine `manifest.json` besitzen. Nachfolgend die maximale Basisvariante für JES ohne Drittanbieter‑Erweiterungen:
+- Für die Anbindung an JES muss das Plugin eine `manifest.json` haben; unten ist die maximale Basisvariante für JES ohne Drittanbieter-Erweiterungen:
 ```json
 {
-  "api_version": "0.1.1",
+  "api_version": "0.2.0",
   "plugin_version": "1.0",
-  "name": "Pluginname",
+  "name": "plugin name",
   "api_request": [
+    "api_extending",
     "launcher",
     "plugin_center",
     "osd",
@@ -111,6 +147,7 @@ Um eine Verbindung zu JES herzustellen, muss das Plugin eine `manifest.json` bes
     "wm_connect"
   ],
   "main_source": "Main.qml",
+  "required_settings": [],
   "json_files": {
     "launcher": "launch_list.json",
     "plugin_center": "load_list.json",
@@ -120,57 +157,97 @@ Um eine Verbindung zu JES herzustellen, muss das Plugin eine `manifest.json` bes
 }
 ```
 
-Um das Plugin in der `config.toml` (unter `~/.config/JES/`) zu aktivieren, müssen Sie Folgendes angeben:
+- `api_version` ist die API, mit der das Plugin arbeitet; sie muss mit der aktuellen API nach semver übereinstimmen; beim Wechsel auf eine neue API sollte diese Datei überprüft werden.
+- **Die API ist derzeit instabil; jedes 5. Minor-Update ist ein Major-Update.**
+- *Semver bedeutet major.minor.patch, wobei major = breaking changes, minor = Ergänzungen, patch = Bugfixes.*
+
+- Zur Aktivierung des Plugins in `config.toml` in `~/.config/JES/` folgendes angeben:
 ```toml
 [[plugin]]
-name = "Pluginname" # entspricht dem name-Eintrag in der manifest.json
+name = "plugin name" # data in property name from manifest.json
 active = true
 ```
 
-## Anbindung an den JES‑Launcher
-- Für die Anbindung an den Launcher verwenden wir eine JSON‑Datei mit folgender Struktur:
+- Darüber hinaus können im selben toml-Block eigene Parameter angegeben werden, indem deren Namen in der JSON-Liste `required_settings` aufgeführt werden.
+- Zur Übernahme der Daten wird folgende QML-Verbindung verwendet:
+```qml
+Item {
+    id: confParameters
+
+    // Hier legt JES die Werte aus dem [[plugin]]-Block von config.toml ab
+    property var requiredSettings: ({})
+
+    readonly property int      numbers:      requiredSettings["numbers"]      ?? 3
+    readonly property bool     enabled:      requiredSettings["enabled"]      ?? false
+    readonly property real     float:        requiredSettings["float"]        ?? 1.0
+    readonly property string   text:         requiredSettings["text"]         ?? "hi"
+
+    // Debug
+    onRequiredSettingsChanged: {
+        console.log("[myplugin] settings:", JSON.stringify(requiredSettings))
+    }
+}
+```
+- Damit diese Schlüssel das Plugin erreichen, listet der Autor sie im Manifest auf:
+```json
+"required_settings": ["numbers", "enabled", "float", "text"]
+```
+
+- Und der Benutzer füllt sie im `[[plugin]]`-Block von `config.toml` aus:
+```toml
+[[plugin]]
+name = "myplugin"
+active = true
+numbers = 5
+enabled = true
+float = 3.14
+text = "hello"
+```
+
+## Anbindung an den JES-Launcher
+- Für die Anbindung an den Launcher verwenden wir eine JSON-Datei mit folgender Struktur:
 ```json
 {
-  "name": "Tab",
+  "name": "tab",
   "icon": "",
-  "placeholder": "In Tab suchen...",
+  "placeholder": "Search in tab...",
   "info": [
     {
       "id": "app_1",
-      "name": "App 1",
-      "exec": "Skript starten $id"
+      "name": "app 1",
+      "exec": "script launch $id"
     },
     {
       "id": "2",
-      "name": "Screenshot erstellen",
-      "exec": "grim ~/Screenshots"
+      "name": "take screenshot",
+      "exec": "grim ~/screenshots"
     }
   ]
 }
 ```
 
-- In `info` können wir eine beliebige Liste übergeben, die folgende Elemente enthalten kann: `{"id", "name", "icon", "exec"}` – das sind die JSON‑Parameternamen.
+- In `info` können wir eine beliebige Liste übergeben, die folgende Felder enthält: `{"id", "name", "icon", "exec"}` — das sind die Namen der JSON-Parameter.
 
-- In `id` übergeben wir den gewünschten Parameter für ein Skript oder eine fortlaufende Nummer (zwingend als Zeichenkette).
-- In `name` steht der Text, der im Block angezeigt wird.
-- In `icon` das Symbol, falls vorhanden.
-- In `exec` der auszuführende Befehl. Wenn eine `id` verwendet wird, kann diese im Befehl als `$id` aufgerufen werden, wobei der Wert aus der JSON‑Datei übernommen wird.
+- In `id` übergeben wir den benötigten Parameter für das Skript oder eine fortlaufende Nummer; zwingend als String.
+- In `name` den Text, der im Block angezeigt wird.
+- In `icon` das Icon, falls vorhanden.
+- In `exec` den Befehl, der ausgeführt wird; wenn `id` verwendet wird, kann er im Befehl als `$id` referenziert werden, der aus der in JSON angegebenen `id` entnommen wird.
 
-### `id` ist optional, wenn Sie vollständige Befehle für das Objekt angeben. Sie ist erforderlich, wenn Sie ein Skript erstellt haben, das verschiedene Objekte starten soll.
+### `id` ist nicht erforderlich, wenn du für das Objekt vollständige Befehle angibst. Es wird benötigt, wenn du ein Skript erstellt hast, das verschiedene Objekte starten soll.
 
-## Anbindung an das JES‑Plugin‑Center
-- Für die Anbindung an das Plugin‑Center verwenden wir eine JSON‑Datei mit folgender Struktur:
+## Anbindung an das JES-Plugin-Center
+- Für die Anbindung an das Plugin-Center verwenden wir eine JSON-Datei mit folgender Struktur:
 ```json
 [
     {"source": "Content.qml", "colSpan": 1, "rowSpan": 1}
 ]
 ```
 
-- Maximale Abmessungen: `colSpan: 3, rowSpan: 7`
-- In `source` kann ein beliebiges Modul angegeben werden.
+- Maximale Größen sind `colSpan: 3, rowSpan: 7`.
+- In `source` kann ein beliebiges Modul übergeben werden.
 
-## Anbindung an das JES‑OSD
-- Für die Anbindung an das OSD verwenden wir eine JSON‑Datei mit folgender Struktur:
+## Anbindung an JES OSD
+- Für die Anbindung an OSD verwenden wir eine JSON-Datei mit folgender Struktur:
 ```json
 [
   {
@@ -185,14 +262,14 @@ active = true
   }
 ]
 ```
-- `type` gibt das Anzeigeformat an: `text` – zeigt Textinformationen an, `percent` – zeigt einen Balken und Prozentwert an; Sie können ein Symbol voranstellen.
-- In `command` übergeben wir Skripte, die für `text` eine Textmeldung ausgeben:
+- `type` steuert das Anzeigeformat: `text` — Anzeige von Textinformationen, `percent` — Anzeige eines Balkens und Prozentwerts; am Anfang kann ein Icon platziert werden.
+- In `command` übergeben wir Skripte, die für `text` — eine Textnachricht ausgeben:
   ```json
   {
-      "text": "hallo"
+      "text": "hi"
   }
   ```
-  und für `percent`:
+  und für `percent` übergeben wir:
   ```json
   {
       "value": 55,
@@ -200,28 +277,29 @@ active = true
   }
   ```
 
-## Anbindung an das JES‑Jwindow
-- Für die Anbindung an Jwindow verwenden wir ebenfalls JSON mit folgender Information:
+## Anbindung an JES Jwindow
+- Für die Anbindung an Jwindow verwenden wir ebenfalls JSON mit folgenden Informationen:
 ```json
 [
  {
-      "name": "API-Test",
+      "name": "API Test",
       "source": "JwindowTabTester.qml"
   }
 ]
 ```
-- In `source` können Sie, wie im Plugin‑Center, ein beliebiges Modul angeben, aber die maximalen Abmessungen sind auf FHD begrenzt.
+- In `source`, wie im Plugin-Center, kann ein beliebiges Modul angegeben werden, aber maximale Größen sind auf FHD begrenzt.
 
-## Anbindung anderer Fenstermanager an JES
-- In der `manifest.json` geben Sie bei `api_request` den Eintrag `wm_connect` an, damit das System nicht nur das Plugin selbst, sondern auch die Daten aus der Leiste lädt, sodass auf Fenstermanager‑Daten zugegriffen werden kann.
-- Für die Anbindung von Fenstermanagern an JES habe ich im Ordner `for-documentation` ein Beispiel‑Plugin hinterlassen, das eine Vorlage für die Anbindung anderer WM bietet – Sie müssen lediglich ein paar Befehle in den Skripten ergänzen, und schon ist es erledigt.
+## Anbindung anderer WMs an JES
+- In `manifest.json` geben wir in `api_request` `wm_connect` an, damit das System nicht nur das Plugin selbst lädt, sondern auch die Panel-Daten, damit auf WM-Daten zugegriffen werden kann.
+- Für die Anbindung von WMs an JES habe ich in `for-documentation` ein Beispiel-Plugin hinterlassen, das eine Vorlage zum Anbinden anderer WMs liefert; es genügt, ein paar Befehle in die Skripte einzufügen, und das war's.
+- `wm_connect` erlaubt auch das Laden eigener modifizierter Bar-Versionen; es genügt, alle verfügbaren Properties aus `BaseBar.qml` zu wiederholen.
 
-## Erweiterung der JES‑API
-- Um die API zu erweitern, muss Ihr Plugin den Hauptcache des gesamten Pluginsystems abonnieren:
+## Erweiterung der JES-API
+- Um die API zu erweitern, muss dein Plugin auf den Haupt-Cache des gesamten Plugin-Systems subscriben:
 ```qml
 FileView {
     id: pluginView
-    path: Quickshell.env("HOME") + "/.cache/JES_plugin_list.json"
+    path: Quickshell.env("HOME") + "/.cache/JES/JES_plugin_list.json"
     watchChanges: true
     onFileChanged: reload()
     onLoaded: {
@@ -229,6 +307,6 @@ FileView {
     }
 }
 ```
-und dann definieren wir in der Funktion die erforderlichen Aufgaben für die Prüfung, einschließlich der Überprüfung des `api_request`-Flags auf die gewünschte Anfrage.
+- In `manifest.json` in `api_request` geben wir `api_extending` an.
 
-### Wenn Sie neue Funktionalität für die API integrieren, muss Ihr Plugin `notify-send` mit einer Warnung aufrufen oder eine Warnmeldung anzeigen, die darauf hinweist, dass die API um dieses bestimmte Plugin erweitert wurde.
+### Wenn du neue Funktionalität für die API integrierst, muss dein Plugin notify-send mit einer Warnung aufrufen oder ein Warnbanner anzeigen, dass die API durch das und das Plugin bei der ersten Verbindung erweitert wurde.

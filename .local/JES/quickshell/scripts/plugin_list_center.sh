@@ -19,14 +19,14 @@ while IFS= read -r plugin; do
     has_center=$(echo "$plugin" | jq -r '.api_request | type == "array" and any(. == "plugin_center")')
     active=$(echo "$plugin" | jq -r '.active // false')
     plugin_name=$(echo "$plugin" | jq -r '.name // empty')
-    plugin_icon=$(echo "$plugin" | jq -r '.icon // ""')
+    plugin_icon=$(echo "$plugin" | jq -r '.icon // "󰈔"')
     source_dir=$(echo "$plugin" | jq -r '.source // empty')
     center_file=$(echo "$plugin" | jq -r '.json_files.plugin_center // empty')
+    plugin_config=$(echo "$plugin" | jq -c '.plugin_config // {}')
 
     echo "DEBUG: plugin=$plugin_name, has_center=$has_center, active=$active, source=$source_dir, center_file=$center_file" >&2
 
     if [[ "$has_center" != "true" || "$active" != "true" || -z "$plugin_name" ]]; then
-        echo "DEBUG: Пропускаем из-за условий" >&2
         continue
     fi
 
@@ -42,16 +42,17 @@ while IFS= read -r plugin; do
         continue
     fi
 
-        if echo "$content" | jq -e 'type == "array"' >/dev/null 2>&1; then
-            info="$content"
-        else
-            info=$(echo "$content" | jq -c '[.]')
-        fi
+    if echo "$content" | jq -e 'type == "array"' >/dev/null 2>&1; then
+        info="$content"
+    else
+        info=$(echo "$content" | jq -c '[.]')
+    fi
 
-        tab=$(jq -n \
-            --arg source "$source_dir" \
-            --argjson info "$info" \
-            '{source: $source, info: $info}')
+    tab=$(jq -n \
+        --arg source "$source_dir" \
+        --argjson info "$info" \
+        --argjson plugin_config "$plugin_config" \
+        '{source: $source, info: $info, plugin_config: $plugin_config}')
 
     result=$(echo "$result" | jq --argjson tab "$tab" '. + [$tab]')
 done < <(jq -c '.[]' "$PLUGIN_LIST")
