@@ -9,7 +9,7 @@
 
 ***
 
-<div align="center">
+<div align="left">
 	<h3>-- О проекте -- :</h3>
 	<p>
 	<i>JES</i> - WM-agnostic rolling release desktop shell, поддерживающий подключение любого wm нативно, даже самописных.<br>
@@ -110,6 +110,8 @@
 - `nanoPlayer` -              компактный режим плеера в bar, изначально false
 - `nanoPlrSize` -             размер компактного плеера, изначально 200
 - `disableCava` -             отключить эквалайзер в bar, изначально false
+- `enableFolders` -           включить запуск плагинов в формате папки, изначально false
+- `changeShader` -            поменять шейдер в launcher на свой, изначально пуст
 
 ```
 Важно, config.toml лежит в папке JES (~/.config/JES/)

@@ -110,6 +110,8 @@ Vergangene abgeschlossene Aufgaben ansehen — [complited.md (nur englisch)](./c
 - `nanoPlayer` — Kompakter Player-Modus in der Bar, Standard false
 - `nanoPlrSize` — Größe des kompakten Players, Standard 200
 - `disableCava` — Equalizer in der Bar deaktivieren, Standard false
+- `enableFolders` - Plugins im Ordnerformat starten, Standard false
+- `changeShader` - den Shader im Launcher durch einen eigenen ersetzen, standardmäßig leer
 
 ```
 Wichtig: config.toml liegt im JES-Ordner (~/.config/JES/)
@@ -231,4 +233,6 @@ Dies garantiert, dass der Name des Autors und des Projekts immer genannt werden 
 
 Vollständiger Lizenztext siehe in der Datei [LICENSE](./LICENSE).
 
-##### Erstellt von [\_ORFLEM\_](https://github.com/ORFLEM)
+##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
+
+##### Translated by [Kimi K3](https://www.kimi.com/en?chat_enter_method=new_chat)

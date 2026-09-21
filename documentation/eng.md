@@ -9,7 +9,7 @@
 
 ***
 
-<div align="center">
+<div align="left">
 	<h3>-- About -- :</h3>
 	<p>
 	<i>JES</i> - WM-agnostic rolling release desktop shell that supports connecting any WM natively, even custom ones.<br>
@@ -110,6 +110,8 @@ View past completed tasks — [complited.md (eng only)](./complited.md)
 - `nanoPlayer` — compact player mode in bar, default false
 - `nanoPlrSize` — compact player size, default 200
 - `disableCava` — disable equalizer in bar, default false
+- `enableFolders` - enable launching plugins in folder format, default false
+- `changeShader` - replace the launcher shader with your own, empty by default
 
 ```
 Important: config.toml is located in the JES folder (~/.config/JES/)
@@ -232,3 +234,5 @@ This guarantees that the author's name and project will always be credited, and 
 Full license text see in the [LICENSE](./LICENSE) file.
 
 ##### Created by [\_ORFLEM\_](https://github.com/ORFLEM)
+
+##### Translated by [Kimi K3](https://www.kimi.com/en?chat_enter_method=new_chat)

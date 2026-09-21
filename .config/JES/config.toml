@@ -35,8 +35,8 @@ openweather_key = ""
 
 # plugins
 directory = "~/.config/JES/plugins/"
+enableFolders = false
 
 # [[plugin]]
 # name = "example plugin"
 # active = false
-
