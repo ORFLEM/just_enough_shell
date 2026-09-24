@@ -111,7 +111,6 @@ View past completed tasks — [complited.md (eng only)](./complited.md)
 - `nanoPlrSize` — compact player size, default 200
 - `disableCava` — disable equalizer in bar, default false
 - `enableFolders` - enable launching plugins in folder format, default false
-- `changeShader` - replace the launcher shader with your own, empty by default
 
 ```
 Important: config.toml is located in the JES folder (~/.config/JES/)
