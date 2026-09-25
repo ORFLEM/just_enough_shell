@@ -133,6 +133,7 @@ Scope {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.verticalCenterOffset: -40
+                        renderType: Text.NativeRendering
                         width: parent.width / 3        // clock occupies 1/3 of the screen
                         fontSizeMode: Text.Fit         // font scales to fill that width
                         minimumPixelSize: 24

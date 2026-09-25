@@ -5,38 +5,11 @@ if ! command -v zwwmctl &>/dev/null || ! command -v jq &>/dev/null; then
     exit 1
 fi
 
-focused_title() {
-    zwwmctl clients -j 2>/dev/null | jq -r '
-        if .ok then
-            [.clients[]? | select((.state / 2 | floor) % 2 == 1) | .title] | .[0] // ""
-        else empty end'
-}
-
 stream_window() {
-    local last_name="" line title now
-
-    emit_once() {
-        title=$(focused_title)
-        if [[ -n "$title" && "$title" != "$last_name" ]]; then
-            echo "$title"
-            last_name="$title"
-        fi
-    }
-
-    emit_once
-
-    while true; do
-        if IFS= read -r -t 0.5 line; then
-            now=$(date +%s%3N)
-            if (( now - last_q >= 300 )); then
-                last_q=$now
-                emit_once
-            fi
-        else
-            last_q=$(date +%s%3N)
-            emit_once
-        fi
-    done < <(stdbuf -oL zwwmctl events tag window -j 2>/dev/null)
+    # state bit0 = focused
+    zwwmctl listen | jq -r --unbuffered '
+        [.clients[] | select(.state % 2 == 1) | .title][0] // empty' \
+    | awk '$0 != "" && $0 != prev { print; prev = $0 }'
 }
 
 case "$1" in

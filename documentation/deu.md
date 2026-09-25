@@ -170,34 +170,34 @@ In jes-cli wird micro zur Bearbeitung der Config verwendet; zum Beenden Ctrl+Q, 
 ### NixOS
 - In `flake` folgendes hinzufügen:
 ```nix
-{{
-	inputs = {{
+{
+	inputs = {
     jes.url = "github:ORFLEM/just_enough_shell";
-	}}
-	outputs = {{ your inputs, jes, ... }}@inputs:
+	}
+	outputs = { your inputs, jes, ... }@inputs:
   let
     system = "x86_64-linux";
     hostname = "nixos";
 
     specialArgs = {{ inherit inputs system hostname; }};
 
-  in {{
+  in {
     nixosConfigurations.${{hostname}} = nixpkgs.lib.nixosSystem {{
       inherit system specialArgs;
       modules = [
 				jes.nixosModules.default
 			];
-		}};
-	}};
-}}
+		};
+	};
+}
 ```
 - Flake neu bauen
 - In `configuration.nix` hinzufügen:
 ```nix
-services.jes = {{
+services.jes = {
   enable = true;
   users = [ "your user" ];
-}};
+};
 ```
 - NixOS neu bauen
 

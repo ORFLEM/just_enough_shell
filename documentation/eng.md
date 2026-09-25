@@ -170,34 +170,34 @@ In jes-cli, micro is used for config editing; to exit use Ctrl+Q, and to save â€
 ### NixOS
 - In `flake` add:
 ```nix
-{{
-	inputs = {{
+{
+	inputs = {
     jes.url = "github:ORFLEM/just_enough_shell";
-	}}
-	outputs = {{ your inputs, jes, ... }}@inputs:
+	}
+	outputs = { your inputs, jes, ... }@inputs:
   let
     system = "x86_64-linux";
     hostname = "nixos";
 
-    specialArgs = {{ inherit inputs system hostname; }};
+    specialArgs = { inherit inputs system hostname; };
 
-  in {{
-    nixosConfigurations.${{hostname}} = nixpkgs.lib.nixosSystem {{
+  in {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
       inherit system specialArgs;
       modules = [
 				jes.nixosModules.default
 			];
-		}};
-	}};
-}}
+		};
+	};
+}
 ```
 - rebuild the flake
 - In `configuration.nix` add:
 ```nix
-services.jes = {{
+services.jes = {
   enable = true;
   users = [ "your user" ];
-}};
+};
 ```
 - rebuild NixOS
 

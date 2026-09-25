@@ -698,7 +698,7 @@ WlrLayershell {
             // ---------- windows  (aaaaaaaaaaaaa, shindows, proshu, tolko ne micromagkie, ia ne widerju, esli oni tronut linux...) ----------
             JsonListen {
                 id: minimapJson
-                command: localPath(Qt.resolvedUrl("../scripts/minimap-driftwm.sh stream-json"))
+                command: root.wm == "driftwm" ? localPath(Qt.resolvedUrl("../scripts/minimap-driftwm.sh stream-json")) : localPath(Qt.resolvedUrl("../scripts/minimap-zwwm.sh stream-json"))
                 onDataChanged: {
                     if (typeof data === 'object' && data !== null) {
                         windowModel.clear()
