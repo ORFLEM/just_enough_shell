@@ -11,26 +11,43 @@
       lib = nixpkgs.lib;
       forAllSystems = lib.genAttrs [ "x86_64-linux" "aarch64-linux" ];
 
+      # ── Сборка всех Go-бинарников JES из for-quickshell/go ──────────────
+      # Тулчейн из pkgs-unstable: go.mod модулей требуют go >= 1.25.x
+      # (тот же источник, что и `go` в environment.systemPackages).
+      #
+      # Зависимости ВЕНДОРЯТСЯ в репо (go mod vendor, каталог vendor/ в
+      # каждом модуле) и vendorHash = null. Это значит:
+      #   - сборка полностью герметична, НИКАКОЙ сети в sandbox не нужно
+      #     (иначе go-modules-фетчер лезет на proxy.golang.org и падает
+      #     по DNS, если в sandbox недоступен резолвер хоста);
+      #   - не нужно вычислять/поддерживать vendorHash при апдейтах
+      #     зависимостей — достаточно перегенерить vendor/.
+      # Порядок при изменении зависимостей:
+      #   go mod tidy && go mod vendor && git add vendor go.mod go.sum
       mkJesPackages = pkgsU:
         let
+          # Корневой модуль. Стандартная раскладка cmd/<имя>/main.go:
+          #   cmd/cal            ← бывший calendar.go        → бинарник cal
+          #   cmd/cava-internal  ← бывший cava-processor.go  → Cava-internal
+          #   cmd/launch         ← бывший launch.go          → launch
+          #   cmd/screenpicker   ← бывший screenpicker.go    → screenpicker
+          #   cmd/music          ← бывший music/music.go     → music
           jes-go-tools = pkgsU.buildGoModule {
             pname = "jes-go-tools";
             version = "1.0.0";
-            src = builtins.path {
-              path = ./for-quickshell/go;
-              name = "jes-go-src";
-            };
+            src = ./for-quickshell/go;
 
-            # ЗАМЕНИТЬ на реальный hash после первой сборки (см. ниже)
-            vendorHash = "sha256-Ywzq31YfEldD13ChpX3qcqKVKt4mmnvZK8W5U1Xvyz0=";
+            vendorHash = null; # vendor/ лежит в репо
 
+            # GOFLAGS (-mod=vendor -trimpath) и GOCACHE/GOPATH buildGoModule
+            # выставляет сам
             buildPhase = ''
               runHook preBuild
-              go build -trimpath -o cal calendar.go
-              go build -trimpath -o Cava-internal cava-processor.go
-              go build -trimpath -o launch launch.go
-              go build -trimpath -o screenpicker screenpicker.go
-              go build -trimpath -o music ./music
+              go build -o cal ./cmd/cal
+              go build -o Cava-internal ./cmd/cava-internal
+              go build -o launch ./cmd/launch
+              go build -o screenpicker ./cmd/screenpicker
+              go build -o music ./cmd/music
               runHook postBuild
             '';
 
@@ -42,17 +59,22 @@
             '';
           };
 
+          # Отдельный модуль wallpaper-picker (cmd-раскладка не нужна —
+          # один main-пакет в корне). vendor/ тоже в репо.
           jes-wallpaper-picker = pkgsU.buildGoModule {
             pname = "wallpaper-picker";
             version = "1.0.0";
-            src = builtins.path {
-              path = ./for-quickshell/go/wallpaper;
-              name = "jes-wallpaper-src";
-            };
+            src = ./for-quickshell/go/wallpaper;
 
-            vendorHash = "sha256-pbA/AlBz3cQYRTMnQ/qBPcinYOKokrBLNhkbRTq54gE=";
+            vendorHash = null; # vendor/ лежит в репо
+            # один main-пакет в корне модуля — стандартная сборка,
+            # бинарник получит имя модуля: wallpaper-picker
           };
 
+          # coreaura НЕ собираем: в рантайме JES не используется
+          # (import "CoreAura" в shell.qml закомментирован, собранного
+          # бинарника в репо нет). Если понадобится — аналогично:
+          # go mod vendor в for-quickshell/go/coreaura + buildGoModule.
         in
         {
           inherit jes-go-tools jes-wallpaper-picker;
@@ -60,6 +82,8 @@
         };
     in
     {
+      # Удобная точка входа для проверки сборки бинарников без пересборки
+      # всей системы:  nix build .#jes-go-tools .#jes-wallpaper-picker
       packages = forAllSystems (system:
         mkJesPackages (import nixpkgs-unstable {
           inherit system;
