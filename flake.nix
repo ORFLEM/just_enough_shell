@@ -16,10 +16,13 @@
           jes-go-tools = pkgsU.buildGoModule {
             pname = "jes-go-tools";
             version = "1.0.0";
-            src = ./for-quickshell/go;
+            src = builtins.path {
+              path = ./for-quickshell/go;
+              name = "jes-go-src";
+            };
 
             # ЗАМЕНИТЬ на реальный hash после первой сборки (см. ниже)
-            vendorHash = lib.fakeHash;
+            vendorHash = "sha256-Ywzq31YfEldD13ChpX3qcqKVKt4mmnvZK8W5U1Xvyz0=";
 
             buildPhase = ''
               runHook preBuild
@@ -42,10 +45,12 @@
           jes-wallpaper-picker = pkgsU.buildGoModule {
             pname = "wallpaper-picker";
             version = "1.0.0";
-            src = ./for-quickshell/go/wallpaper;
+            src = builtins.path {
+              path = ./for-quickshell/go/wallpaper;
+              name = "jes-wallpaper-src";
+            };
 
-            # ЗАМЕНИТЬ на реальный hash после первой сборки (см. ниже)
-            vendorHash = lib.fakeHash;
+            vendorHash = "sha256-pbA/AlBz3cQYRTMnQ/qBPcinYOKokrBLNhkbRTq54gE=";
           };
 
         in
