@@ -202,6 +202,9 @@ EOF
 %{_prefix}/lib/tmpfiles.d/jes.conf
 %{_datadir}/fonts/TTF/FauxHanamin.ttf
 
+%{_datadir}/bash-completion/completions/jes-cli
+%{_datadir}/zsh/site-functions/_jes-cli
+%{_datadir}/fish/vendor_completions.d/jes-cli.fish
 %changelog
 * Fri Oct 02 2026 _ORFLEM_ <zenkinzahar@gmail.com> - 0.4.0-1
 - Add audio/network/bluetooth Go tools.
