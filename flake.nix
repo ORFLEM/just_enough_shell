@@ -161,6 +161,10 @@
         in
         rec {
           jes = mkJes pkgsU;
+          tomlFmt =
+            if builtins.typeOf pkgs.formats.toml == "set"
+            then pkgs.formats.toml
+            else pkgs.formats.toml { };
           default = jes;
         });
 
@@ -196,7 +200,7 @@
               };
 
               settings = lib.mkOption {
-                type = pkgs.formats.toml { }.type;
+                type = tomlFmt.type;;
                 default = {
                   CoreAura = {
                     enabled = true;
@@ -269,7 +273,7 @@
             # ── CoreAura daemon ────────────────────────────────────────
 
             environment.etc."jes/coreaura.toml" = lib.mkIf cfg.coreAura.enable {
-              source = (pkgs.formats.toml { }).generate "coreaura.toml" cfg.coreAura.settings;
+              source = tomlFmt.generate "coreaura.toml" cfg.coreAura.settings;
             };
 
             services.dbus.packages = lib.mkIf cfg.coreAura.enable [
