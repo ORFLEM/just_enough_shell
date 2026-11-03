@@ -1,17 +1,17 @@
 # Anleitung zur Plugin-Erstellung
 
 ## Regel Nr. 1
-- Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner.
+- Ein Plugin befindet sich **immer** in einem eigenen, separaten Ordner
 
 ## Regel Nr. 2
-- Ein Plugin **darf nicht** viele Ressourcen des Geräts verbrauchen; zur Optimierung ist jede Sprache erlaubt, aber **Go wird empfohlen**.
+- Ein Plugin **darf nicht** viele Ressourcen des Geräts verbrauchen; zur Optimierung ist jede Sprache erlaubt, aber **Go wird empfohlen**
 
 ## Regel Nr. 3
-- Dateinamen im Plugin erklären kurz, wozu sie dienen, und die einzubindende Datei **wird in der Installationsanleitung des Plugins angegeben**.
-- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss das Fenster in einem lazyLoader sein.
+- Dateinamen im Plugin erklären kurz, wozu sie dienen, und die einzubindende Datei **wird in der Installationsanleitung des Plugins angegeben**
+- Wenn das Plugin komplexe Funktionalität in einem separaten Fenster hat, muss das Fenster in einem lazyLoader sein
 
 ## Regel Nr. 4
-- Im Plugin werden **ausschließlich relative Pfade** verwendet.
+- Im Plugin werden **ausschließlich relative Pfade** verwendet
 
 ## Erstellen, Bauen und Dekompilieren eines Plugins
 
@@ -32,7 +32,7 @@ jes-cli makePlugin <PluginName>
 jes-cli debuildPlugin <PluginName>
 ```
 
-- Plugin-Status kann mit folgendem Befehl abgefragt werden:
+- Der Plugin-Status kann mit folgendem Befehl abgefragt werden:
 ```bash
 jes-cli getPlugin
 ```
@@ -44,9 +44,14 @@ jes-cli getPlugin
   blacklistClear               - Gesamte Blacklist löschen
 
 ## Visueller Teil
+
+### WICHTIG: In der nächsten JES-API-Version (0.3.0) erscheint ein Theme-System, und dieser Block bleibt zu Referenzzwecken unverändert.
+
 - Für den Haupt-Hintergrund im Plugin verwendet man:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.85
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -59,9 +64,11 @@ Rectangle {
     }
 }
 ```
-- Und für Schaltflächen-Hintergründe und ähnliches:
+- Und für Schaltflächen-Hintergründe und Ähnliches:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.65
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -74,12 +81,14 @@ Rectangle {
 ```
 - Für Hover-Effekte verwendet man:
 ```qml
-Item {
+Rectangle {
     id: button
     property bool hovered: false
+    color: "transparent"
+    radius: parent.radius // or mainRad or mainRad - root.margins
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - root.margins
+        radius: parent.radius
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -92,11 +101,13 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 2 - root.margins // alle margins zusammenzählen
+        radius: parent.radius - 2
         color: button.hovered ? col.accent : "transparent"
         Behavior on color { ColorAnimation { duration: 200 * root.animations } }
     }
-    // code
+    // ...
+    // your code
+    // ...
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -110,25 +121,44 @@ Item {
 }
 ```
 
-> Der Hintergrund kann anders sein; im Beispiel wurde der Hintergrund für Schaltflächen verwendet.
+> Der Hintergrund kann anders sein; im Beispiel wurde der Schaltflächen-Hintergrund verwendet
 
-- Für Radien verwendet man `radius: mainRad`; wenn man margins macht, schreibt man im nächsten Block `radius: mainRad - <margin_zahl>`.
+- Für Radien verwendet man `radius: mainRad`; wenn man margins macht, schreibt man im nächsten Block `radius: parent.radius - root.margins`
 - Alle Farben werden aus dem globalen Objekt `col` genommen (definiert in `colors.json` und verfügbar über `shell.qml`).
-- JES unterstützt auch base16-Themen (`base.base<01-16>`).
-- Die Schriftart wird mit **fontFamily** und **fontSize** gesetzt.
-- JES hat 2 Akzentfarben — dunkel und hell.
-- Alle Animationen müssen mit `root.animations` multipliziert werden.
-- `root` ist in JES durch `shell.qml` reserviert; seine Verwendung ist strengstens untersagt.
+- JES unterstützt auch base16-Themen (`base.base<01-16>`)
+- Die Schriftart wird mit **fontFamily** und **fontSize** gesetzt
+- JES hat 2 Akzentfarben — dunkel und hell
+- Alle Animationen müssen mit `root.animations` multipliziert werden
+- `root` ist in JES durch `shell.qml` reserviert; seine Deklaration im Plugin ist strengstens untersagt
 
 ## Datenübertragung an die UI
-- Für einen permanenten Stream (empfohlen für Performance) verwendet man `JsonListen`, für eine einmalige Anfrage in einem bestimmten Intervall `JsonPoll`.
-- Daten werden im JSON-Format übertragen; für visuelle Programme ohne Funktionen — einfach eine Zeichenkette (z. B. cava in der Bar).
-- WM-Daten werden über den Parameter `wm_connect` übertragen; wenn Koordinaten/Workspaces/aktives Programm/Layout benötigt werden — ruft man `wm_connect` auf, welche Daten daraus entnommen werden können, siehe `BaseBar.qml`.
+- Für einen permanenten Stream (empfohlen für Performance) verwendet man `JsonListen`, für eine einmalige Anfrage in einem bestimmten Intervall `JsonPoll`
+- Daten werden im JSON-Format übertragen; für visuelle Programme ohne Funktionen — einfach eine Zeichenkette (zum Beispiel cava in der Bar)
+- WM-Daten werden über den Parameter `wm_connect` übertragen; wenn Koordinaten/Workspaces/aktives Programm/Layout benötigt werden — ruft man `wm_connect` auf; welche Daten daraus entnommen werden können, siehe `BaseBar.qml`.
 
-## JES-Bibliotheken
-- Zur Vereinfachung der Plugin-Erstellung wurden die Bibliotheken `JES.Helpers` und `JES.Bar` erstellt — die erste wird für Aufrufe von `JsonListen`, `JsonPoll` und `MarqueeText` benötigt, die zweite — für Integration mit `BaseBar.qml`, d. h. zum Erstellen von Plugins zum Anbinden von WMs an JES (siehe unten).
+## JES-Bibliotheken und verfügbare Parameter
+- Zur Vereinfachung der Plugin-Erstellung wurden die Bibliotheken `JES.Helpers` und `JES.Bar` erstellt — die erste wird für Aufrufe von `JsonListen`, `JsonPoll` und `MarqueeText` benötigt, die zweite — für die Integration mit `BaseBar.qml`, d. h. zum Erstellen von Plugins zum Anbinden von WMs an JES (siehe unten)
 
-### Wenn etwas unklar ist, schaue in die Datei `baseBar.qml` im Ordner bar; sie ist der visuelle Maßstab für die gesamte UI.
+- Im Projekt können folgende Parameter verwendet werden:
+- `col` - Haupt-Theme
+- `base` - zusätzliches base16-Theme
+- `mainRad` - Haupt-Eckenradius
+- `barOnTop` - Position der Bar (true - oben, false - unten)
+- `fontSize` - Schriftgröße
+- `barHeight` - Größe der Bar
+- `fontFamily` - Schriftart
+- `show_wallpaper` - Aktivität der Hintergrundbilder
+- `doNotDisturb` - Ruhemodus
+- `wtw` - Abstand von Widget zu Widget
+- `animations` - Animationsgeschwindigkeit (von 1.0 bis 0.0)
+- `spacing` - Abstand zwischen Blöcken im Widget (wird in Row und Column angegeben)
+- `margins` - Ränder
+- `date_format` - Datumsformat
+- `pluginRegistry` - verbundene Plugins
+- `apiVersion` - welche API derzeit verwendet wird
+- `projectId` - welches Projekt dieses Plugin geladen hat (der Parameter existiert, weil der Autor ein vollständiges Kopieren der API nicht verwehrt — Plugins könnten Projekte unterscheiden müssen)
+
+### Wenn etwas unklar ist, schaue in die Datei `baseBar.qml` im Ordner bar; sie ist der visuelle Maßstab für die gesamte UI
 
 ## Anbindung eines Plugins an JES
 
@@ -158,11 +188,10 @@ Item {
 }
 ```
 
-- `api_version` ist die API, mit der das Plugin arbeitet; sie muss mit der aktuellen API nach semver übereinstimmen; beim Wechsel auf eine neue API sollte diese Datei überprüft werden.
-- **Die API ist derzeit instabil; jedes 5. Minor-Update ist ein Major-Update.**
-- *Semver bedeutet major.minor.patch, wobei major = breaking changes, minor = Ergänzungen, patch = Bugfixes.*
+- `api_version` ist die API, mit der das Plugin arbeitet; sie muss nach semver mit der aktuellen API übereinstimmen; beim Wechsel auf eine neue API sollte diese Datei überprüft werden.
+- *Semver bedeutet major.minor.patch, wobei major = inkompatible Änderungen, minor = Ergänzungen und patch = Bugfixes oder sehr kleine Updates*
 
-- Zur Aktivierung des Plugins in `config.toml` in `~/.config/JES/` folgendes angeben:
+- Zur Aktivierung des Plugins in `config.toml` in `~/.config/JES/` Folgendes angeben:
 ```toml
 [[plugin]]
 name = "plugin name" # data in property name from manifest.json, also `jes-cli getPlugin` show it
@@ -187,6 +216,7 @@ FileView {
     }
 }
 ```
+- settings.json wird bei jedem Update der JES-Konfiguration generiert und liegt im Plugin-Cache; der relative Pfad ist `./`, da diese Datei in demselben Ordner erstellt wird, in den das Plugin entpackt wurde (das ist der Cache)
 - Damit diese Schlüssel das Plugin erreichen, listet der Autor sie im Manifest auf:
 ```json
 "required_settings": ["numbers", "enabled", "float", "text"]
@@ -228,10 +258,10 @@ text = "hello"
 
 - In `info` können wir eine beliebige Liste übergeben, die folgende Felder enthält: `{"id", "name", "icon", "exec"}` — das sind die Namen der JSON-Parameter.
 
-- In `id` übergeben wir den benötigten Parameter für das Skript oder eine fortlaufende Nummer; zwingend als String.
-- In `name` den Text, der im Block angezeigt wird.
-- In `icon` das Icon, falls vorhanden.
-- In `exec` den Befehl, der ausgeführt wird; wenn `id` verwendet wird, kann er im Befehl als `$id` referenziert werden, der aus der in JSON angegebenen `id` entnommen wird.
+- In `id` übergeben wir den benötigten Parameter für das Skript oder eine fortlaufende Nummer; zwingend als String
+- In `name` den Text, der im Block angezeigt wird
+- In `icon` das Icon, falls vorhanden
+- In `exec` den Befehl, der ausgeführt wird; wenn `id` verwendet wird, kann sie im Befehl als `$id` referenziert werden, die aus der in JSON angegebenen `id` entnommen wird
 
 ### `id` ist nicht erforderlich, wenn du für das Objekt vollständige Befehle angibst. Es wird benötigt, wenn du ein Skript erstellt hast, das verschiedene Objekte starten soll.
 
@@ -243,8 +273,8 @@ text = "hello"
 ]
 ```
 
-- Maximale Größen sind `colSpan: 3, rowSpan: 7`.
-- In `source` kann ein beliebiges Modul übergeben werden.
+- Maximale Größen sind `colSpan: 3, rowSpan: 7`
+- In `source` kann ein beliebiges Modul übergeben werden
 
 ## Anbindung an JES OSD
 - Für die Anbindung an OSD verwenden wir eine JSON-Datei mit folgender Struktur:
@@ -262,7 +292,7 @@ text = "hello"
   }
 ]
 ```
-- `type` steuert das Anzeigeformat: `text` — Anzeige von Textinformationen, `percent` — Anzeige eines Balkens und Prozentwerts; am Anfang kann ein Icon platziert werden.
+- `type` steuert das Anzeigeformat: `text` — Anzeige von Textinformationen, `percent` — Anzeige eines Balkens und Prozentwerts; am Anfang kann ein Icon platziert werden
 - In `command` übergeben wir Skripte, die für `text` — eine Textnachricht ausgeben:
   ```json
   {
@@ -287,12 +317,12 @@ text = "hello"
   }
 ]
 ```
-- In `source`, wie im Plugin-Center, kann ein beliebiges Modul angegeben werden, aber maximale Größen sind auf FHD begrenzt.
+- In `source`, wie im Plugin-Center, kann ein beliebiges Modul angegeben werden, aber maximale Größen sind auf FHD begrenzt
 
 ## Anbindung anderer WMs an JES
 - In `manifest.json` geben wir in `api_request` `wm_connect` an, damit das System nicht nur das Plugin selbst lädt, sondern auch die Panel-Daten, damit auf WM-Daten zugegriffen werden kann.
-- Für die Anbindung von WMs an JES habe ich in `for-documentation` ein Beispiel-Plugin hinterlassen, das eine Vorlage zum Anbinden anderer WMs liefert; es genügt, ein paar Befehle in die Skripte einzufügen, und das war's.
-- `wm_connect` erlaubt auch das Laden eigener modifizierter Bar-Versionen; es genügt, alle verfügbaren Properties aus `BaseBar.qml` zu wiederholen.
+- Für die Anbindung von WMs an JES hat der Autor in `for-quickshell` eine Plugin-Vorlage namens `CustomBar` hinterlassen, die eine Vorlage zum Anbinden anderer WMs enthält; es genügt, ein paar Befehle in die Skripte einzufügen, und das war's.
+- `wm_connect` erlaubt auch das Laden eigener modifizierter Bar-Versionen; es genügt, alle verfügbaren Properties aus `BaseBar.qml` zu wiederholen
 
 ## Erweiterung der JES-API
 - Um die API zu erweitern, muss dein Plugin auf den Haupt-Cache des gesamten Plugin-Systems subscriben:
@@ -307,6 +337,6 @@ FileView {
     }
 }
 ```
-- In `manifest.json` in `api_request` geben wir `api_extending` an.
+- In `manifest.json` geben wir in `api_request` `api_extending` an
 
-### Wenn du neue Funktionalität für die API integrierst, muss dein Plugin notify-send mit einer Warnung aufrufen oder ein Warnbanner anzeigen, dass die API durch das und das Plugin bei der ersten Verbindung erweitert wurde.
+### Wenn du neue Funktionalität für die API integrierst, muss dein Plugin notify-send mit einer Warnung aufrufen oder ein Warnbanner anzeigen, dass die API durch das und das Plugin bei der ersten Verbindung erweitert wurde

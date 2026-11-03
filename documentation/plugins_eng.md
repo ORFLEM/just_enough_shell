@@ -1,17 +1,17 @@
 # Plugin creation guide
 
 ## Rule No. 1
-- A plugin **must always** reside in its own separate folder.
+- A plugin **must always** reside in its own separate folder
 
 ## Rule No. 2
-- A plugin **must not** consume a lot of device resources; for optimization any language is allowed, but **Go is recommended**.
+- A plugin **must not** consume a lot of device resources; for optimization any language is allowed, but **Go is recommended**
 
 ## Rule No. 3
-- File names in the plugin briefly explain what they are for, and the file to be connected **is specified in the plugin installation instructions**.
-- If the plugin has complex functionality in a separate window, the window must be in a lazyLoader.
+- File names in the plugin briefly explain what they are for, and the file to be connected **is specified in the plugin installation instructions**
+- If the plugin has complex functionality in a separate window, the window must be in a lazyLoader
 
 ## Rule No. 4
-- **Only relative paths** are used inside the plugin.
+- **Only relative paths** are used inside the plugin
 
 ## Creating, building and decompiling a plugin
 
@@ -37,16 +37,21 @@ jes-cli debuildPlugin <PluginName>
 jes-cli getPlugin
 ```
 
-- If a plugin breaks at runtime, it is added to the launch blacklist; to inspect details use:
+- If a plugin breaks at runtime, it is added to the launch blacklist; to inspect the details use:
   blacklistAdd <name>          - Add plugin to blacklist (status=broken)
   blacklistRemove <name>       - Remove plugin from blacklist
   blacklistList                - Show blacklisted plugins
   blacklistClear               - Wipe the whole blacklist
 
 ## Visual part
+
+### IMPORTANT: in the next JES API version (0.3.0) a theming system will appear, and this block is left unchanged for reference.
+
 - For the main background in a plugin use:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.85
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -62,6 +67,8 @@ Rectangle {
 - And for button backgrounds and similar:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.65
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -74,12 +81,14 @@ Rectangle {
 ```
 - For hover effects use:
 ```qml
-Item {
+Rectangle {
     id: button
     property bool hovered: false
+    color: "transparent"
+    radius: parent.radius // or mainRad or mainRad - root.margins
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - root.margins
+        radius: parent.radius
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -92,11 +101,13 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 2 - root.margins // sum all margins
+        radius: parent.radius - 2
         color: button.hovered ? col.accent : "transparent"
         Behavior on color { ColorAnimation { duration: 200 * root.animations } }
     }
-    // code
+    // ...
+    // your code
+    // ...
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -110,25 +121,44 @@ Item {
 }
 ```
 
-> You may use a different background; the example above uses the button background.
+> You may use a different background; the example above uses the button background
 
-- For radii use `radius: mainRad`; if you add margins, write `radius: mainRad - <margin_number>` in the next block.
+- For radii use `radius: mainRad`; if you add margins, write `radius: parent.radius - root.margins` in the next block
 - All colors are taken from the global object `col` (defined in `colors.json` and available via `shell.qml`).
-- JES also supports base16 themes (`base.base<01-16>`).
-- Font is set using **fontFamily** and **fontSize**.
-- JES has 2 accent colors — dark and light.
-- All animations must be multiplied by `root.animations`.
-- `root` is reserved by `shell.qml` in JES; using it is strictly prohibited.
+- JES also supports base16 themes (`base.base<01-16>`)
+- Font is set using **fontFamily** and **fontSize**
+- JES has 2 accent colors — dark and light
+- All animations must be multiplied by `root.animations`
+- `root` is reserved by `shell.qml` in JES; declaring it in a plugin is strictly prohibited
 
 ## Data delivery to the UI
-- For a permanent stream (recommended for performance) use `JsonListen`; for a one-off request at a set interval use `JsonPoll`.
-- Data is passed in JSON format; for visual programs without functions — just a plain string (for example, cava in the bar).
+- For a permanent stream (recommended for performance) use `JsonListen`; for a one-off request at a set interval use `JsonPoll`
+- Data is passed in JSON format; for visual programs without functions — just a plain string (for example, cava in the bar)
 - WM data is passed via the `wm_connect` parameter; if you need coordinates/workspaces/active program/layout data — call `wm_connect`, and what data can be extracted from it — see `BaseBar.qml`.
 
-## JES libraries
-- To simplify plugin creation, the libraries `JES.Helpers` and `JES.Bar` were created — the first is required for calling `JsonListen`, `JsonPoll` and `MarqueeText`, and the second — for integration with `BaseBar.qml`, i.e. for creating plugins that connect WMs to JES (see below).
+## JES libraries and available parameters
+- To simplify plugin creation, the libraries `JES.Helpers` and `JES.Bar` were created — the first is required for calling `JsonListen`, `JsonPoll` and `MarqueeText`, and the second — for integration with `BaseBar.qml`, i.e. for creating plugins that connect WMs to JES (see below)
 
-### If something is unclear, look at the `baseBar.qml` file in the bar folder; it is the visual standard for the entire UI.
+- The following parameters can be used in a project:
+- `col` - main theme
+- `base` - additional base16 theme
+- `mainRad` - main corner radius
+- `barOnTop` - panel position (true - top, false - bottom)
+- `fontSize` - font size
+- `barHeight` - panel height
+- `fontFamily` - font
+- `show_wallpaper` - wallpaper activity
+- `doNotDisturb` - quiet mode
+- `wtw` - distance from widget to widget
+- `animations` - animation speed (from 1.0 to 0.0)
+- `spacing` - distance between blocks in a widget (specified in Row and Column)
+- `margins` - margins
+- `date_format` - date format
+- `pluginRegistry` - connected plugins
+- `apiVersion` - which API is currently used
+- `projectId` - which project loaded this plugin (the parameter exists because the author does not mind full copying of the API — plugins may need to distinguish projects)
+
+### If something is unclear, look at the `baseBar.qml` file in the bar folder; it is the visual standard for the entire UI
 
 ## Connecting a plugin to JES
 
@@ -159,8 +189,7 @@ Item {
 ```
 
 - `api_version` is the API the plugin works with; it must match the current API according to semver; when upgrading to a new API this file should be reviewed.
-- **The API is currently unstable; every 5th minor is a major update.**
-- *Semver implies major.minor.patch, where major = breaking changes, minor = additions, patch = bug fixes.*
+- *Semver implies major.minor.patch, where major = breaking changes, minor = additions, and patch = bug fixes or very small updates*
 
 - To activate a plugin in `config.toml` in `~/.config/JES/` add the following:
 ```toml
@@ -187,6 +216,7 @@ FileView {
     }
 }
 ```
+- settings.json is generated on every JES configuration update and will be located in the plugin cache; the relative path is `./`, because this file is created in the same folder where the plugin was unpacked (that is the cache)
 - For these keys to reach the plugin, the author lists them in the manifest:
 ```json
 "required_settings": ["numbers", "enabled", "float", "text"]
@@ -228,10 +258,10 @@ text = "hello"
 
 - In `info` we can pass any list containing the following fields: `{"id", "name", "icon", "exec"}` — these are the JSON parameter names.
 
-- In `id` we pass the needed parameter for the script or a serial number; it must be a string.
-- In `name` the text that will be shown in the block.
-- In `icon` the icon if present.
-- In `exec` the command that will be executed; if `id` is used, it can be referenced in the command as `$id`, which is taken from the `id` specified in the JSON.
+- In `id` we pass the needed parameter for the script or a serial number; it must be a string
+- In `name` the text that will be shown in the block
+- In `icon` the icon if present
+- In `exec` the command that will be executed; if `id` is used, it can be referenced in the command as `$id`, which is taken from the `id` specified in the JSON
 
 ### `id` is not required if you specify full commands for the object. It is needed if you created a script that should launch different objects.
 
@@ -243,8 +273,8 @@ text = "hello"
 ]
 ```
 
-- Maximum sizes are `colSpan: 3, rowSpan: 7`.
-- Any module can be passed in `source`.
+- Maximum sizes are `colSpan: 3, rowSpan: 7`
+- Any module can be passed in `source`
 
 ## Connecting to JES OSD
 - To connect to OSD we use a JSON file with the following structure:
@@ -262,7 +292,7 @@ text = "hello"
   }
 ]
 ```
-- `type` controls the display format: `text` — text information display, `percent` — bar and percentage display; an icon can be placed at the beginning.
+- `type` controls the display format: `text` — text information display, `percent` — bar and percentage display; an icon can be placed at the beginning
 - In `command` we pass scripts that output for `text` — a text message:
   ```json
   {
@@ -287,12 +317,12 @@ text = "hello"
   }
 ]
 ```
-- In `source`, as in the plugin center, any module can be specified, but maximum sizes are limited to FHD.
+- In `source`, as in the plugin center, any module can be specified, but maximum sizes are limited to FHD
 
 ## Connecting other WMs to JES
-- In `manifest.json` specify `wm_connect` in `api_request` so that the system loads not only the plugin itself but also the panel data so that WM data can be accessed.
-- For connecting WMs to JES I left an example plugin in `for-documentation` that provides a template for connecting other WMs; it is enough to add a couple of commands to the scripts and that's it.
-- `wm_connect` also allows loading your own modified versions of Bar; it is enough to repeat all available properties from `BaseBar.qml`.
+- In `manifest.json` specify `wm_connect` in `api_request` so that the system loads not only the plugin itself but also the panel data, so that WM data can be accessed.
+- For connecting WMs to JES the author left a plugin stub called `CustomBar` in `for-quickshell`, which contains a template for connecting other WMs; it is enough to add a couple of commands to the scripts and that's it.
+- `wm_connect` also allows loading your own modified versions of Bar; it is enough to repeat all available properties from `BaseBar.qml`
 
 ## Extending the JES API
 - To extend the API, your plugin must subscribe to the main cache of the entire plugin system:
@@ -307,6 +337,6 @@ FileView {
     }
 }
 ```
-- In `manifest.json` in `api_request` specify `api_extending`.
+- In `manifest.json` in `api_request` specify `api_extending`
 
-### If you are integrating new functionality for the API, your plugin must call notify-send with a warning or show a warning banner that the API was extended by such-and-such plugin on first connection.
+### If you integrate new functionality for the API, your plugin must call notify-send with a warning or show a warning banner that the API was extended by such-and-such plugin on first connection

@@ -11,7 +11,7 @@
   	<strong>Developed on :</strong> <code>NixOS 26.05 (stable)</code>
 	</h4>
 	<h4>
-  	<strong>Packages :</strong> NixOS &nbsp;·&nbsp; Arch (AUR) &nbsp;·&nbsp; Fedora &nbsp;·&nbsp; ALT &nbsp;·&nbsp; Debian / Ubuntu
+  	<strong>Packages :</strong> NixOS &nbsp;·&nbsp; Arch &nbsp;·&nbsp; Fedora &nbsp;·&nbsp; ALT &nbsp;·&nbsp; Debian / Ubuntu
 	</h4>
 </div>
 

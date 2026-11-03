@@ -29,6 +29,8 @@ jobs:
           go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$GITHUB_WORKSPACE/dist/wallpaper-picker" .
           cd ../coreaura
           go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$GITHUB_WORKSPACE/dist/CoreAura" .
+          cd ../notifyd
+          go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$GITHUB_WORKSPACE/dist/jes-notifyd" .
 
       - name: Assemble .deb
         run: |
@@ -50,8 +52,13 @@ jobs:
 
           install -Dm755 dist/CoreAura "$ROOT/usr/share/jes/quickshell/CoreAura/CoreAura"
 
-          mkdir -p "$ROOT/etc/jes"
-          cat > "$ROOT/etc/jes/coreaura.toml" <<EOF
+          install -Dm755 dist/jes-notifyd "$ROOT/usr/share/jes/quickshell/notifications/jes-notifyd"
+
+          mkdir -p "$ROOT/usr/share/jes/config" "$ROOT/usr/share/jes/matugen"
+          cp -r .config/JES/* "$ROOT/usr/share/jes/config/"
+          cp -r .local/JES/matugen/* "$ROOT/usr/share/jes/matugen/"
+
+          install -Dm644 /dev/stdin "$ROOT/usr/share/jes/config/coreaura.toml" <<EOF
           [CoreAura]
           enabled = true
           kernel_priority_max = 3
@@ -62,59 +69,6 @@ jobs:
           gpu_threshold_percent = 85
           dedup_window_sec = 30
           EOF
-
-          mkdir -p "$ROOT/usr/lib/systemd/system"
-          cat > "$ROOT/usr/lib/systemd/system/coreaura.service" <<EOF
-          [Unit]
-          Description=CoreAura — JES monitoring daemon
-          Wants=dbus.service
-          After=dbus.service systemd-journald.service
-
-          [Service]
-          Type=simple
-          ExecStart=/usr/share/jes/quickshell/CoreAura/CoreAura -config /etc/jes/coreaura.toml
-          Restart=on-failure
-          RestartSec=2
-
-          User=root
-          Group=root
-
-          NoNewPrivileges=true
-          ProtectSystem=full
-          ProtectHome=false
-          ProtectKernelTunables=true
-          ProtectKernelModules=true
-          ProtectControlGroups=true
-          ProtectClock=true
-          ProtectHostname=true
-          PrivateTmp=true
-          RestrictSUIDSGID=true
-
-          [Install]
-          WantedBy=multi-user.target
-          EOF
-
-          install -Dm644 /dev/stdin "$ROOT/usr/share/dbus-1/system.d/org.jes.CoreAura.conf" <<EOF
-          <!DOCTYPE busconfig PUBLIC
-            "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
-            "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-          <busconfig>
-            <policy user="root">
-              <allow own="org.jes.CoreAura"/>
-              <allow send_destination="org.jes.CoreAura"/>
-              <allow receive_sender="org.jes.CoreAura"/>
-            </policy>
-
-            <policy context="default">
-              <allow send_destination="org.jes.CoreAura"/>
-              <allow receive_sender="org.jes.CoreAura"/>
-            </policy>
-          </busconfig>
-          EOF
-
-          mkdir -p "$ROOT/usr/share/jes/config" "$ROOT/usr/share/jes/matugen"
-          cp -r .config/JES/* "$ROOT/usr/share/jes/config/"
-          cp -r .local/JES/matugen/* "$ROOT/usr/share/jes/matugen/"
 
           install -Dm755 .local/bin/jes-cli "$ROOT/usr/bin/jes-cli"
 
@@ -178,7 +132,7 @@ jobs:
           tar czf "rpmbuild-alt/SOURCES/jes-shell-$V.tar.gz" \
             --exclude=.git --exclude=rpmbuild-alt --exclude=rpmbuild-fc \
             --exclude=.local/JES/quickshell/JES \
-            --transform "s,^\.,jes-shell-$V," .
+            --transform "s,^\\.,jes-shell-$V," .
           docker run --rm -v "$PWD:/src" -w /src alt:sisyphus bash -c '
             OWNER=$(stat -c %u:%g /src)
             apt-get update &&
@@ -205,7 +159,7 @@ jobs:
           tar czf "rpmbuild-fc/SOURCES/jes-shell-$V.tar.gz" \
             --exclude=.git --exclude=rpmbuild-alt --exclude=rpmbuild-fc \
             --exclude=.local/JES/quickshell/JES \
-            --transform "s,^\.,jes-shell-$V," .
+            --transform "s,^\\.,jes-shell-$V," .
           docker run --rm -v "$PWD:/src" -w /src fedora:latest bash -c '
             dnf install -y rpm-build golang systemd-rpm-macros &&
             rpmbuild --define "_topdir /src/rpmbuild-fc" -ba rpmbuild-fc/SPECS/jes.spec &&

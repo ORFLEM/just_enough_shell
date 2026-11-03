@@ -5,7 +5,7 @@
 - **Purpose-based modularity**: Each UI component (bar, launcher, notifications, etc.) is isolated in its own folder with minimal cross-dependencies.
 - **Event-driven model (subscribe)**: Instead of polling in bash loops, long-lived connections are used via Go binaries that subscribe to WM/MPD/system events.
 - **Stable shell layer**: Scripts are written in POSIX sh/bash. No dependency on fish/zsh runtime, plugins or interactive features.
-- **Dynamic theme**: `base16.json` uses the zenburn palette. `colors.json` handles gradient backgrounds, text and accent colors; everything is extracted from the wallpaper thanks to `matugen`.
+- **Dynamic theme**: `base16.json` uses the zenburn palette. `colors.json` is responsible for gradient backgrounds, text and accent colors; everything is extracted from the wallpaper thanks to `matugen`.
 
 ## -- Project working tree and module purposes --:
 ```
@@ -21,7 +21,8 @@
 ├── power/                    # Session menu: shutdown, reboot, sleep, logout, lock.
 ├── helpers/                  # QML helpers.
 ├── screenpicker/             # Screenshot tool.
-├── lockScreen/             # Lock screen.
+├── lockScreen/               # Lock screen.
+├── CoreAura/                 # Peripheral notification system for the user about system errors or its state.
 └── scripts/                  # Logic core: compiled Go binaries + bash scripts.
 ```
 
@@ -36,22 +37,22 @@
 ## -- Stack and optimization --:
 | Layer | Technology | Role |
 |------|------------|------|
-| WM | swayfx (primary), DriftWM (primary), Hyprland, Niri (WIP) | Tiling, effects, IPC |
+| WM | swayfx, DriftWM, Hyprland, Niri | Tiling, effects, IPC |
 | UI | Quickshell (Qt Quick / QML) | Rendering, animations, input |
 | Backend | Go 1.21+ | Logic processing large data volumes |
 | Shell | Bash 5.x / POSIX sh | Main logic |
 | Theme | base16 + matugen | Static palette + dynamic theme |
-| Audio | PipeWire + pavucontrol-qt | Mixing, MPRIS, Cava |
+| Audio | PipeWire (pamixer & pactl) + JES music service | volume display, audio settings backend, MPRIS |
 
-**Metrics**: CPU idle ~1–2% (Go subscribe) vs 35–45% (bash polling). Binaries are statically linked, logic size ~3.5–4.5 MB.
+**Metrics**: CPU idle ~1-2% & ~450 MB RAM. Binaries are statically linked, logic size ~3.5-4.5 MB.
 
 ## -- WM compatibility layer --:
-Tiling abstraction is implemented via three pairs of scripts and one file for connecting to shell.qml:
+The tiling abstraction is implemented via three pairs of scripts and one file for connecting to shell.qml:
 - `active_window-{sway,hypr,niri,driftwm,zwwm}.sh`
 - `kb_layout-{sway,hypr,niri,driftwm,zwwm}.sh`
 - `workspace-{sway,hypr,niri,zwwm}.sh`
 - `camera-{driftwm,zwwm}.sh`
-- `{Sway,Hypr,niri,driftwm,zwwm}Bar.qml` in the quickshell/bar/ subdirectory
+- `{Sway,Hypr,niri,Drift,ZWWM}Bar.qml` in the quickshell/bar/ subdirectory
 
 Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to the required script. Porting to a new tiling WM only requires implementing output in the same JSON format and adding a mapping.
 
@@ -76,7 +77,9 @@ Quickshell detects the current WM via `$XDG_CURRENT_DESKTOP`, routing calls to t
 4. add these lines:
    [[plugin]]
    name = "plugin name" # data in property name from manifest.json
+   uuid = "uuidv4" # data in property uuid from manifest.json
    active = true
 ```
 
 ### [Detailed plugin creation guide](./plugins_eng.md)
+### [WM adapter creation guide](./wm_eng.md)

@@ -49,17 +49,23 @@
             src = ./for-quickshell/go/coreaura;
             vendorHash = null;
             postInstall = ''
-              mv $out/bin/coreaura $out/bin/CoreAura
+              for f in $out/bin/*; do
+                mv "$f" "$out/bin/CoreAura"
+              done
             '';
           };
+          notifyd = pkgsU.buildGoModule {
+            pname = "jes-notifyd";
+            version = "1.0.0";
+            src = ./for-quickshell/go/notifyd;
+            vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          };
         in
-        { inherit tools wallpaper-picker coreaura; };
+        { inherit tools wallpaper-picker coreaura notifyd; };
 
       mkJes = pkgsU:
         let
           go = mkJesGoTools pkgsU;
-          quickshell = pkgsU.quickshell;
-          storeShell = "$out/JES/quickshell";
         in
         pkgsU.stdenvNoCC.mkDerivation {
           pname = "jes";
@@ -77,7 +83,6 @@
                      $out/share/jes/config \
                      $out/share/jes/matugen \
                      $out/share/fonts/truetype \
-                     $out/lib/systemd/user \
                      $out/share/bash-completion/completions
 
             cp -r .local/JES/quickshell/* $out/share/jes/quickshell/
@@ -91,12 +96,12 @@
               $out/share/jes/quickshell/launcher/launch
             install -Dm755 ${go.tools}/bin/screenpicker \
               $out/share/jes/quickshell/screenpicker/screenpicker
-            for b in wallpaper-picker; do
-              install -Dm755 ${go.wallpaper-picker}/bin/$b \
-                $out/share/jes/quickshell/wallpaper/$b
-            done
+            install -Dm755 ${go.wallpaper-picker}/bin/wallpaper-picker \
+              $out/share/jes/quickshell/wallpaper/wallpaper-picker
             install -Dm755 ${go.coreaura}/bin/CoreAura \
               $out/share/jes/quickshell/CoreAura/CoreAura
+            install -Dm755 ${go.notifyd}/bin/jes-notifyd \
+              $out/share/jes/quickshell/notifications/jes-notifyd
 
             install -Dm755 .local/bin/jes-cli $out/bin/jes-cli
 
@@ -106,22 +111,6 @@
             cp -r .local/JES/matugen/* $out/share/jes/matugen/
             cp .local/share/fonts/ttf/FauxHanamin.ttf \
                $out/share/fonts/truetype/
-
-            cat > $out/lib/systemd/user/jes.service <<EOF
-            [Unit]
-            Description=Just Enough Shell
-            PartOf=graphical-session.target
-            After=graphical-session.target
-            Requisite=graphical-session.target
-
-            [Service]
-            ExecStart=${quickshell}/bin/qs -c ${storeShell}
-            Restart=on-failure
-            RestartSec=2
-
-            [Install]
-            WantedBy=graphical-session.target
-            EOF
 
             mkdir -p $out/share/zsh/site-functions $out/share/fish/vendor_completions.d
             if [ -d ./completions ]; then
@@ -135,7 +124,7 @@
                   local cur opts
                   COMPREPLY=()
                   cur="''${COMP_WORDS[COMP_CWORD]}"
-                  opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap toggleJwindow screenpicker getPlugin getLog editConf brightness-up brightness-down brightness-set brightness-get play-pause next prev next-player prev-player initPlugin makePlugin debuildPlugin pluginBuild pluginCache pluginClearCache blacklistAdd blacklistRemove blacklistList blacklistClear ping --help -h --version -v"
+                  opts="start-daemon reload-daemon stop-daemon wallShader toggleWallPicker wallType togglePlayer toggleCal togglePower toggleLaunch toggleMap toggleJwindow screenpicker getPlugin getLog editConf brightness-up brightness-down brightness-set brightness-get play-pause next prev next-player prev-player initPlugin makePlugin debuildPlugin pluginBuild pluginCache pluginClearCache blacklistAdd blacklistRemove blacklistList blacklistClear ping coreaura-start coreaura-stop coreaura-status --help -h --version -v"
                   if [[ ''${COMP_CWORD} -eq 1 ]]; then
                       COMPREPLY=( $(compgen -W "''${opts}" -- "''${cur}") )
                       return 0
@@ -161,10 +150,6 @@
         in
         rec {
           jes = mkJes pkgsU;
-          tomlFmt =
-            if builtins.typeOf pkgs.formats.toml == "set"
-            then pkgs.formats.toml
-            else pkgs.formats.toml { };
           default = jes;
         });
 
@@ -188,37 +173,6 @@
               type = lib.types.bool;
               default = false;
             };
-
-            coreAura = {
-              enable = lib.mkEnableOption "CoreAura system monitoring daemon";
-
-              package = lib.mkOption {
-                type = lib.types.package;
-                default = cfg.package;
-                defaultText = lib.literalExpression "config.programs.jes.package";
-                description = "Package providing the CoreAura binary.";
-              };
-
-              settings = lib.mkOption {
-                type = tomlFmt.type;;
-                default = {
-                  CoreAura = {
-                    enabled = true;
-                    kernel_priority_max = 3;
-                    services = [ ];
-                    log_tail_lines = 300;
-                    resource_poll_interval_sec = 5;
-                    cpu_threshold_percent = 85;
-                    gpu_threshold_percent = 85;
-                    dedup_window_sec = 30;
-                  };
-                };
-                description = ''
-                  CoreAura TOML config. Written to /etc/jes/coreaura.toml.
-                  Matches the structure expected by main.go (top-level [CoreAura] table).
-                '';
-              };
-            };
           };
 
           config = lib.mkIf cfg.enable {
@@ -235,9 +189,34 @@
               "d %h/.cache/JES/wall_prevs         0755 - - -"
               "d %h/.cache/JES/jes_music_art      0755 - - -"
               "d %h/.local/state                  0755 - - -"
-
-              "C %h/.config/JES                   0755 - - - ${cfg.package}/share/jes/config"
+              "d %h/.config/JES                   0755 - - -"
             ];
+
+            systemd.user.services.jes-config-init = {
+              description = "Initialize JES user config (first run only)";
+              wantedBy = [ "graphical-session.target" ];
+              before = [ "jes.service" ];
+              serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+              };
+              script = ''
+                set -eu
+                src="${cfg.package}/share/jes/config"
+                dst="$HOME/.config/JES"
+                mkdir -p "$dst"
+
+                # Копируем только то, чего ещё нет — не трогаем правки пользователя.
+                # install -m явно ставит режим и не тащит read-only из store.
+                find "$src" -type f | while read -r f; do
+                  rel="''${f#$src/}"
+                  out="$dst/$rel"
+                  [ -e "$out" ] && continue
+                  mkdir -p "$(dirname "$out")"
+                  install -m 0644 "$f" "$out"
+                done
+              '';
+            };
 
             fonts.packages = with pkgs; [
               nerd-fonts.mononoki
@@ -245,7 +224,7 @@
             ];
 
             environment.systemPackages = [ cfg.package ] ++ (with pkgs; [
-              jq ddcutil brightnessctl pamixer i2c-tools cava
+              jq ddcutil brightnessctl pamixer i2c-tools cava inotify-tools
               libnotify dbus pciutils ffmpeg cliphist
               wl-clipboard grim taplo python314 zip unzip
               kdePackages.kdeconnect-kde micro qt6.qtbase
@@ -254,9 +233,9 @@
               qt6.qtimageformats
             ]) ++ (with pkgsU; [ matugen quickshell ]);
 
-            systemd.user.services.jes = lib.mkIf cfg.autoStart {
+            systemd.user.services.jes = {
               description = "Just Enough Shell";
-              wantedBy = [ "graphical-session.target" ];
+              wantedBy = lib.mkIf cfg.autoStart [ "graphical-session.target" ];
               partOf = [ "graphical-session.target" ];
               after = [
                 "graphical-session.target"
@@ -267,62 +246,6 @@
                 ExecStart = "${pkgsU.quickshell}/bin/qs -c ${cfg.package}/JES/quickshell";
                 Restart = "on-failure";
                 RestartSec = 2;
-              };
-            };
-
-            # ── CoreAura daemon ────────────────────────────────────────
-
-            environment.etc."jes/coreaura.toml" = lib.mkIf cfg.coreAura.enable {
-              source = tomlFmt.generate "coreaura.toml" cfg.coreAura.settings;
-            };
-
-            services.dbus.packages = lib.mkIf cfg.coreAura.enable [
-              (pkgs.writeTextDir "share/dbus-1/system.d/org.jes.CoreAura.conf" ''
-                <!DOCTYPE busconfig PUBLIC
-                  "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
-                  "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-                <busconfig>
-                  <policy user="root">
-                    <allow own="org.jes.CoreAura"/>
-                    <allow send_destination="org.jes.CoreAura"/>
-                    <allow receive_sender="org.jes.CoreAura"/>
-                  </policy>
-
-                  <policy context="default">
-                    <allow send_destination="org.jes.CoreAura"/>
-                    <allow receive_sender="org.jes.CoreAura"/>
-                  </policy>
-                </busconfig>
-              '')
-            ];
-
-            systemd.services.coreaura = lib.mkIf cfg.coreAura.enable {
-              description = "CoreAura — JES monitoring daemon";
-              wantedBy = [ "multi-user.target" ];
-              wants = [ "dbus.service" ];
-              after = [ "dbus.service" "systemd-journald.service" ];
-
-              path = with pkgs; [ systemd coreutils ];
-
-              serviceConfig = {
-                Type = "simple";
-                ExecStart = "${cfg.coreAura.package}/share/jes/quickshell/CoreAura/CoreAura -config /etc/jes/coreaura.toml";
-                Restart = "on-failure";
-                RestartSec = 2;
-
-                User = "root";
-                Group = "root";
-
-                NoNewPrivileges = true;
-                ProtectSystem = "full";
-                ProtectHome = false;
-                ProtectKernelTunables = true;
-                ProtectKernelModules = true;
-                ProtectControlGroups = true;
-                ProtectClock = true;
-                ProtectHostname = true;
-                PrivateTmp = true;
-                RestrictSUIDSGID = true;
               };
             };
           };

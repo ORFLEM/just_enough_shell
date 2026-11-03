@@ -7,22 +7,14 @@ import JES.Helpers
 Scope {
     id: coreAura
 
-    // Для отладки: true → coreaura --session ...
-    property bool useSessionBus: false
-
-    // Ручные оверрайды
     property bool errors:  false
     property bool cpu_gpu: false
 
-    // Внутреннее состояние
     property string cpuState:   "normal"
     property string gpuState:   "normal"
     property int    flashCount: 3
     property bool   _initialFetched: false
 
-    // ══════════════════════════════════════════════════════
-    //  Окно 1: ошибки на Overlay
-    // ══════════════════════════════════════════════════════
     PanelWindow {
         id: overlayWin
         WlrLayershell.layer: WlrLayer.Overlay
@@ -35,7 +27,7 @@ Scope {
         }
         mask: Region {}
         color: "transparent"
-        visible: true   // оверлей всегда существует, видимость слоя ниже
+        visible: true
 
         Item {
             id: errorLayer
@@ -66,9 +58,6 @@ Scope {
         }
     }
 
-    // ══════════════════════════════════════════════════════
-    //  Окно 2: ресурсы на Top (автоматически под fullscreen)
-    // ══════════════════════════════════════════════════════
     PanelWindow {
         id: barsWin
         WlrLayershell.layer: WlrLayer.Top
@@ -95,7 +84,7 @@ Scope {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 color: base.base10
-                opacity: (coreAura.cpu_gpu || coreAura.cpuState === "overload") ? 1 : 0
+                opacity: (coreAura.cpu_gpu || coreAura.cpuState === "overload" || coreAura.gpuState == "overload") ? 1 : 0
                 Behavior on opacity {
                     NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
                 }
@@ -109,7 +98,7 @@ Scope {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 color: base.base10
-                opacity: (coreAura.cpu_gpu || coreAura.cpuState === "overload") ? 1 : 0
+                opacity: (coreAura.cpu_gpu || coreAura.cpuState === "overload" || coreAura.gpuState == "overload") ? 1 : 0
                 Behavior on opacity {
                     NumberAnimation { duration: 200; easing.type: Easing.InOutQuad }
                 }
@@ -117,9 +106,6 @@ Scope {
         }
     }
 
-    // ══════════════════════════════════════════════════════
-    //  Анимации мигания (targets теперь через id окна)
-    // ══════════════════════════════════════════════════════
     SequentialAnimation {
         id: flashOuterAnim
         loops: coreAura.flashCount
@@ -132,7 +118,7 @@ Scope {
             from: 1; to: 0; duration: 150; easing.type: Easing.InQuad
         }
     }
-    
+
     SequentialAnimation {
         id: flashInnerAnim
         PauseAnimation { duration: 250 }
@@ -148,7 +134,7 @@ Scope {
             }
         }
     }
-    
+
     function triggerFlash(count) {
         if (coreAura.errors) return
         flashOuterAnim.stop()
@@ -159,7 +145,7 @@ Scope {
         flashOuterAnim.start()
         flashInnerAnim.start()
     }
-    
+
     onErrorsChanged: {
         if (errors) {
             flashOuterAnim.stop()
@@ -171,15 +157,10 @@ Scope {
             innerBorder.opacity = 0
         }
     }
-        
-    // ══════════════════════════════════════════════════════
-    //  Подписка на CoreAura через JsonListen
-    // ══════════════════════════════════════════════════════
+
     JsonListen {
         id: auraSub
-        command: coreAura.useSessionBus
-            ? localPath(Qt.resolvedUrl("./CoreAura -session subscribe"))
-            : localPath(Qt.resolvedUrl("./CoreAura subscribe"))
+        command: localPath(Qt.resolvedUrl("./CoreAura subscribe"))
         debug: false
 
         onDataChanged: {
@@ -190,9 +171,7 @@ Scope {
 
     JsonListen {
         id: auraInitial
-        command: coreAura.useSessionBus
-            ? localPath(Qt.resolvedUrl("./CoreAura -session subscribe"))
-            : localPath(Qt.resolvedUrl("./CoreAura subscribe"))
+        command: localPath(Qt.resolvedUrl("./CoreAura resources"))
         debug: false
 
         onDataChanged: {
@@ -221,9 +200,6 @@ Scope {
         case "ServiceStateChanged":
             if (body && body[1] === "failed")
                 triggerFlash(2)
-            break
-        case "UICrashed":
-            triggerFlash(2)
             break
         case "ResourceStatusChanged":
             var r = body[0]

@@ -45,9 +45,14 @@ jes-cli getPlugin
   blacklistClear               - Wipe the whole blacklist
 
 ## Визуальная составляющая
+
+### ВАЖНО: в следующей версии JES api (0.3.0) появится система темизации, и данный блок не изменён в ознакомительных целях.
+
 - В плагине для главного фона испульзуется:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.85
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -63,6 +68,8 @@ Rectangle {
 - А для фона кнопки и прочего:
 ```qml
 Rectangle {
+    anchors.fill: parent
+    radius: parent.radius
     opacity: 0.65
     gradient: Gradient {
         orientation: Gradient.Horizontal
@@ -75,12 +82,14 @@ Rectangle {
 ```
 - Для hover эффектов используется:
 ```qml
-Item {
+Rectangle {
     id: button
     property bool hovered: false
+    color: "transparent"
+    radius: parent.radius // or mainRad or mainRad - root.margins
     Rectangle {
         anchors.fill: parent
-        radius: mainRad - root.margins
+        radius: parent.radius
         opacity: 0.65
         gradient: Gradient {
             orientation: Gradient.Horizontal
@@ -93,11 +102,13 @@ Item {
     Rectangle {
         anchors.fill: parent
         anchors.margins: 2
-        radius: mainRad - 2 - root.margins // складываем все margins
+        radius: parent.radius - 2
         color: button.hovered ? col.accent : "transparent" 
         Behavior on color { ColorAnimation { duration: 200 * root.animations } }
     }
-    // код
+    // ...
+    // your code
+    // ...
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -113,21 +124,40 @@ Item {
 
 > фон можно использовать другой, в данном примере использовался фон для кнопок
 
-- Для радиусов используется `radius: mainRad`, если делаете margins, то пишете в следующем блоке `radius: mainRad - <число_в_margin>`
+- Для радиусов используется `radius: mainRad`, если делаете margins, то пишете в следующем блоке `radius: parent.radius - root.margins`
 - Все цвета берите из глобального объекта `col` (определён в `colors.json` и доступен через `shell.qml`).
 - Также JES поддерживает base16 темы (`base.base<01-16>`)
 - шрифт устанавливается с помощью **fontFamily** и **fontSize**
 - у JES есть 2 accent цвета - тёмный и светлый
 - все анимации должны умножаться на `root.animations`
-- `root` зарезервирован `shell.qml` в JES, его использовать строго запрещено
+- `root` зарезервирован `shell.qml` в JES, его объявлять в плагине строго запрещено
 
 ## Передача данных в интерфейс
 - Использовать для постоянного потока (рекомендуется для производительности этот метод) `JsonListen`, а для разового запроса раз в опр. время `JsonPoll`
 - Данные передаются в json виде, для визуальных программ без функций - просто строка (например, cava в баре)
-- Данные о WM передаются через параметр `wm_connect`, если вам нужны данные о координатах/воркспейсах/активной программе/раскладке - вызываем `wm_connect`, а какие данные можно из него взять - см. `BaseBar.qml`.
+- Данные из WM передаются через параметр `wm_connect`, если вам нужны данные о координатах/воркспейсах/активной программе/раскладке - вызываем `wm_connect`, а какие данные можно из него взять - см. `BaseBar.qml`.
 
-## Библиотеки JES
+## Библиотеки и доступные параметры JES
 - для упрощения создания плагинов, были созданы библиотеки `JES.Helpers` и `JES.Bar` - первый требуется для вызовов `JsonListen`, `JsonPoll` и `MarqueeText`, а второй - для интеграции с `BaseBar.qml`, т.е. для создания плагинов по подключению WMs к JES (см. ниже)
+
+- в проекте можно использовать параметры:
+- `col` - основная тема
+- `base` - дополнительная base16 тема
+- `mainRad` - главный радиус закруглений
+- `barOnTop` - положение бара (true - вверху, false - внизу)
+- `fontSize` - размер шрифта
+- `barHeight` - размер бара
+- `fontFamily` - шрифт
+- `show_wallpaper` - активность обоев
+- `doNotDisturb` - режим покоя
+- `wtw` - расстояние от виджета до виджета
+- `animations` - скорость анимации (от 1.0 до 0.0)
+- `spacing` - расстояние между блоками в виджете (указывается в Row и Column)
+- `margins` - отступы
+- `date_format` - формат даты
+- `pluginRegistry` - подключённые плагины
+- `apiVersion` - какой api сейчас используется
+- `projectId` - какой проект загрузил данный плагин (параметр введён, поскольку автор не против полного копирования API — плагинам может понадобиться различать проекты)
 
 ### Если что-то непонятно, то смотрите файл `baseBar.qml` в папке bar, это визуальный эталон для всего ui
 
@@ -160,8 +190,7 @@ Item {
 ```
 
 - `api_version` - это api, с которым работает плагин, и он должен совпадать с новым api по стандарту semver, при переходе на новый api стоит пересмотреть этот файл.
-- **API сейчас нестабильный, каждый 5-й minor является major обновлением**
-- *semver под собой подразумевает major.minor.patch, где major - ломающие обонвления, minor - добавляющие, а patch - багфиксы*
+- *semver под собой подразумевает major.minor.patch, где major - ломающие обонвления, minor - добавляющие, а patch - багфиксы или очень маленькие обновления*
 
 - Для активации плагина в `config.toml` в `~/.config/JES/` надо указать следующие моменты:
 ```toml
@@ -188,6 +217,7 @@ FileView {
     }
 }
 ```
+- settings.json генерируется при каждом обновлении конфигурации JES и будет лежать в кэше плагина, относительный путь указан, как `./`, ведь данный файл создаётся в той же папке, куда разархивировался плагин (это и есть кэш)
 - Чтобы эти ключи дошли до плагина, автор указывает их в манифесте:
 ```json
 "required_settings": ["numbers", "enabled", "float", "text"]
@@ -205,7 +235,7 @@ float = 3.14
 text = "hello"
 ```
 
-## Подключение к лаунчеру JES
+## Подключение плагина к лаунчеру JES
 - Для подключения к лаунчеру мы используем json файл с такой структурой:
 ```json
 {
@@ -292,7 +322,7 @@ text = "hello"
 
 ## Подключение других WMs в JES
 - В `manifest.json` мы указаваем в `api_request` - `wm_connect`, чтобы система подняла не только сам плагин, но и данные из панели, чтобы можно было обращаться к WM данным.
-- Для подключения WMs в JES я в `for-documentation` оставил example плагин, где даётся шаблон для подключения других wm, достаточно дописать пару команд в скрипты и всё.
+- Для подключения WMs в JES автор в `for-quickshell` оставил плагин-заготовку под названием `CustomBar`, в котором находится шаблон для подключения других wm, достаточно дописать пару команд в скрипты и всё.
 - `wm_connect` также позволяет загружать свои модифицированные версии Bar, достаточно повторить все доступные property из `BaseBar.qml`
 
 ## Расширение API JES

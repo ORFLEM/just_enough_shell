@@ -8,34 +8,32 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/ORFLEM/just_enough_shell"
 license=('BSD-3-Clause')
 
-# жёсткие зависимости — сверено с systemPackages в flake.nix
 depends=(
     'quickshell'
     'pipewire'
     'wireplumber'
     'upower'
-    'kdeconnect'           # скрипт интеграции падает без него
-    'ddcutil'              # яркость через DDC/CI
+    'kdeconnect'
+    'ddcutil'
     'i2c-tools'
     'brightnessctl'
     'pamixer'
     'wl-clipboard'
     'cliphist'
-    'grim'                 # скриншоты
-    'cava'                 # Cava-internal — обёртка над ним
+    'grim'
+    'cava'
     'libnotify'
     'dbus'
     'pciutils'
     'ffmpeg'
     'python3'
-    'zip'                  # makePlugin/debuildPlugin пакуют плагины
+    'zip'
     'unzip'
-    'matugen'              # темизация из обоев
-    'taplo-cli'            # правка config.toml из GUI
+    'matugen'
+    'taplo-cli'
     'jq'
-    'inotify-tools'        # live-перезагрузка конфига
-    'micro'                # редактор для jes-cli editConf
-    # базовый шрифт (в AUR!)
+    'inotify-tools'
+    'micro'
     'ttf-mononoki-nerd'
 )
 makedepends=('git' 'go')
@@ -46,13 +44,13 @@ optdepends=(
 
 provides=('jes-shell')
 conflicts=('jes-shell')
-backup=('etc/jes/coreaura.toml')
 source=("git+https://github.com/ORFLEM/just_enough_shell.git")
 sha256sums=('SKIP')
 
 pkgver() {
     cd "$srcdir/just_enough_shell"
-    git describe --long --tags | sed 's/^v//; s/-\([^-]*\)-g/.r\1.g/'
+    git describe --long --tags --always 2>/dev/null | sed 's/^v//; s/-\([^-]*\)-g/.r\1.g/' ||
+    printf '0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
@@ -63,7 +61,6 @@ build() {
     local out="$srcdir/dist"
     mkdir -p "$out"
 
-    # vendor/ закоммичен — сборка офлайн, никаких go mod download
     go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$out/launch"         ./cmd/launch
     go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$out/music"          ./cmd/music
     go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$out/cal"            ./cmd/cal
@@ -78,16 +75,17 @@ build() {
 
     cd ../coreaura
     go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$out/CoreAura" .
+
+    cd ../notifyd
+    go build -trimpath -mod=vendor -ldflags="$ldflags" -o "$out/jes-notifyd" .
 }
 
 package() {
     cd "$srcdir/just_enough_shell"
 
-    # --- шелл: QML + скрипты + ассеты ---
     install -d "$pkgdir/usr/share/jes"
     cp -r .local/JES/quickshell/* "$pkgdir/usr/share/jes/quickshell/"
 
-    # свежесобранные бинарники поверх исходников (как в твоём flake)
     install -Dm755 "$srcdir/dist/launch"           "$pkgdir/usr/share/jes/quickshell/launcher/launch"
     install -Dm755 "$srcdir/dist/wallpaper-picker" "$pkgdir/usr/share/jes/quickshell/wallpaper/wallpaper-picker"
     install -Dm755 "$srcdir/dist/music"            "$pkgdir/usr/share/jes/quickshell/scripts/music"
@@ -98,10 +96,13 @@ package() {
     install -Dm755 "$srcdir/dist/network"          "$pkgdir/usr/share/jes/quickshell/scripts/network"
     install -Dm755 "$srcdir/dist/bluetooth"        "$pkgdir/usr/share/jes/quickshell/scripts/bluetooth"
 
-    # --- CoreAura: системный демон мониторинга ---
     install -Dm755 "$srcdir/dist/CoreAura" "$pkgdir/usr/share/jes/quickshell/CoreAura/CoreAura"
+    install -Dm755 "$srcdir/dist/jes-notifyd" "$pkgdir/usr/share/jes/quickshell/notifications/jes-notifyd"
 
-    install -Dm644 /dev/stdin "$pkgdir/etc/jes/coreaura.toml" <<EOF
+    install -d "$pkgdir/usr/share/jes/config"
+    cp -r .config/JES/* "$pkgdir/usr/share/jes/config/"
+
+    install -Dm644 /dev/stdin "$pkgdir/usr/share/jes/config/coreaura.toml" <<EOF
 [CoreAura]
 enabled = true
 kernel_priority_max = 3
@@ -113,75 +114,17 @@ gpu_threshold_percent = 85
 dedup_window_sec = 30
 EOF
 
-    install -d "$pkgdir/usr/lib/systemd/system"
-    cat > "$pkgdir/usr/lib/systemd/system/coreaura.service" <<EOF
-[Unit]
-Description=CoreAura — JES monitoring daemon
-Wants=dbus.service
-After=dbus.service systemd-journald.service
-
-[Service]
-Type=simple
-ExecStart=/usr/share/jes/quickshell/CoreAura/CoreAura -config /etc/jes/coreaura.toml
-Restart=on-failure
-RestartSec=2
-
-User=root
-Group=root
-
-NoNewPrivileges=true
-ProtectSystem=full
-ProtectHome=false
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-ProtectClock=true
-ProtectHostname=true
-PrivateTmp=true
-RestrictSUIDSGID=true
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-    install -Dm644 /dev/stdin "$pkgdir/usr/share/dbus-1/system.d/org.jes.CoreAura.conf" <<EOF
-<!DOCTYPE busconfig PUBLIC
-  "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
-  "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-<busconfig>
-  <policy user="root">
-    <allow own="org.jes.CoreAura"/>
-    <allow send_destination="org.jes.CoreAura"/>
-    <allow receive_sender="org.jes.CoreAura"/>
-  </policy>
-
-  <policy context="default">
-    <allow send_destination="org.jes.CoreAura"/>
-    <allow receive_sender="org.jes.CoreAura"/>
-  </policy>
-</busconfig>
-EOF
-
-    # --- конфиг-приманка (копируется в ~/.config/JES через tmpfiles, см. ниже) ---
-    install -d "$pkgdir/usr/share/jes/config"
-    cp -r .config/JES/* "$pkgdir/usr/share/jes/config/"
-
-    # --- matugen-темы ---
     install -d "$pkgdir/usr/share/jes/matugen"
     cp -r .local/JES/matugen/* "$pkgdir/usr/share/jes/matugen/"
 
-    # --- CLI ---
     install -Dm755 .local/bin/jes-cli "$pkgdir/usr/bin/jes-cli"
 
-    # --- автодополнения ---
     install -Dm644 completions/jes-cli.bash "$pkgdir/usr/share/bash-completion/completions/jes-cli"
     install -Dm644 completions/_jes-cli     "$pkgdir/usr/share/zsh/site-functions/_jes-cli"
     install -Dm644 completions/jes-cli.fish "$pkgdir/usr/share/fish/vendor_completions.d/jes-cli.fish"
 
-    # --- шрифты и обои (FauxHanamin — CJK-глифы, штатно) ---
     install -Dm644 .local/share/fonts/ttf/FauxHanamin.ttf "$pkgdir/usr/share/fonts/TTF/FauxHanamin.ttf"
 
-    # --- systemd user unit (1:1 с flake.nix) ---
     install -d "$pkgdir/usr/lib/systemd/user"
     cat > "$pkgdir/usr/lib/systemd/user/jes.service" <<EOF
 [Unit]
@@ -199,12 +142,10 @@ RestartSec=2
 WantedBy=graphical-session.target
 EOF
 
-    # --- udev: i2c-доступ юзеру (1:1 с flake.nix) ---
     install -Dm644 /dev/stdin "$pkgdir/usr/lib/udev/rules.d/99-jes-i2c.rules" <<EOF
 SUBSYSTEM=="i2c", KERNEL=="i2c-[0-9]*", TAG+="uaccess"
 EOF
 
-    # --- tmpfiles: кэши + посев конфига в ~/.config/JES (1:1 с flake.nix) ---
     install -Dm644 /dev/stdin "$pkgdir/usr/lib/tmpfiles.d/jes.conf" <<EOF
 d %h/.cache/JES             0755 - - -
 d %h/.cache/JES/walls       0755 - - -

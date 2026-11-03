@@ -21,7 +21,8 @@
 ├── power/                    # Меню сессии: выключение, перезагрузка, сон, выход, лок.
 ├── helpers/                  # QML-хелперы.
 ├── screenpicker/             # Скриншотилка.
-├── lockScreen/             # Блокировка экрана.
+├── lockScreen/               # Блокировка экрана.
+├── CoreAura/                 # Система переферийного оповещения юзера об ошибках в системе или её состоянии.
 └── scripts/                  # Ядро логики: скомпилированные Go-бинарники + bash-скрипты.
 ```
 
@@ -36,14 +37,14 @@
 ## -- Стек и оптимизация --:
 | Слой | Технология | Роль |
 |------|------------|------|
-| WM | swayfx (primary), DriftWM (primary), Hyprland, Niri (WIP) | Тайлинг, эффекты, IPC |
+| WM | swayfx, DriftWM, Hyprland, Niri | Тайлинг, эффекты, IPC |
 | UI | Quickshell (Qt Quick / QML) | Рендеринг, анимации, ввод |
 | Backend | Go 1.21+ | Логика, обрабатывающая большие объёмы данных |
 | Shell | Bash 5.x / POSIX sh | Основная логика |
 | Theme | base16 + matugen | Статичная палитра + динамическая тема |
-| Audio | PipeWire + pavucontrol-qt | Микширование, MPRIS, Cava |
+| Audio | PipeWire(pamixer & pactl) + JES music service | отображение громкости, бекенд аудио настроек, MPRIS |
 
-**Метрики**: CPU idle ~1–2% (Go subscribe) против 35–45% (bash polling). Бинарники собраны статически, вес логики ~3.5-4.5 МБ.
+**Метрики**: CPU idle \~1–2% & \~450MB of RAM. Бинарники собраны статически, вес логики ~3.5-4.5 МБ.
 
 ## -- Слой совместимости WM --:
 Абстракция от тайлинга реализована через три пары скриптов и один файл для подключения к shell.qml:
@@ -51,7 +52,7 @@
 - `kb_layout-{sway,hypr,niri,driftwm,zwwm}.sh`
 - `workspace-{sway,hypr,niri,zwwm}.sh`
 - `camera-{driftwm,zwwm}.sh`
-- `{Sway,Hypr,niri,driftwm,zwwm}Bar.qml` в папке quickshell подкаталоге bar/
+- `{Sway,Hypr,niri,Drift,ZWWM}Bar.qml` в папке quickshell подкаталоге bar/
 
 Quickshell определяет текущий WM через `$XDG_CURRENT_DESKTOP`, маршрутизируя вызовы к нужному скрипту. Для портирования на новый тайлинг достаточно реализовать вывод в том же JSON-формате и добавить маппинг.
 
@@ -76,7 +77,9 @@ Quickshell определяет текущий WM через `$XDG_CURRENT_DESKT
 4. впишите данные строки:
    [[plugin]]
    name = "plugin name" # data in property name from manifest.json
+   uuid = "uuidv4" # data in property uuid from manifest.json
    active = true
 ```
 
 ### [Подробная инструкция создания плагинов](./plugins_rus.md)
+### [Инструкция создания адаптеров wm](./wm_rus.md)

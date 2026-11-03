@@ -13,7 +13,6 @@ Source0:        %{name}-%{version}.tar.gz
 BuildRequires:  golang
 BuildRequires:  systemd-rpm-macros
 
-# runtime (сверено с systemPackages в flake.nix)
 Requires:       quickshell
 Requires:       matugen
 Requires:       jq ddcutil i2c-tools brightnessctl pamixer
@@ -22,14 +21,12 @@ Requires:       wl-clipboard grim taplo python3
 Requires:       zip unzip
 Requires:       kdeconnectd
 Requires:       micro
+Requires:       inotify-tools
 Requires:       pipewire wireplumber upower
 Recommends:     bluez
 
-# Qt-модули, которые qs сам не подтягивает (media!)
 Requires:       qt6-qtbase qt6-qtdeclarative qt6-qtmultimedia
 Requires:       qt6-qtshadertools qt6-qtwayland qt6-qtimageformats qt6-qtsvg
-
-# шрифт: FauxHanamin едет в пакете; мононоки ищи как google-nerd-fonts-mononoki
 
 %description
 WM-agnostic desktop shell built on Quickshell. Ships compiled Go tools
@@ -56,12 +53,13 @@ cd wallpaper
 go build -buildvcs=false -trimpath -ldflags="$ldflags" -o wallpaper-picker .
 cd ../coreaura
 go build -buildvcs=false -trimpath -ldflags="$ldflags" -o CoreAura .
+cd ../notifyd
+go build -buildvcs=false -trimpath -ldflags="$ldflags" -o jes-notifyd .
 
 %install
 install -d %{buildroot}%{_datadir}/jes/quickshell
 cp -r .local/JES/quickshell/* %{buildroot}%{_datadir}/jes/quickshell/
 
-# внутренние симлинки QML (в тарболе их нет — transform ломал таргеты)
 install -d %{buildroot}%{_datadir}/jes/quickshell/JES
 ln -s ../bar     %{buildroot}%{_datadir}/jes/quickshell/JES/Bar
 ln -s ../helpers %{buildroot}%{_datadir}/jes/quickshell/JES/Helpers
@@ -77,10 +75,11 @@ install -Dm755 for-quickshell/go/network          %{buildroot}%{_datadir}/jes/qu
 install -Dm755 for-quickshell/go/bluetooth        %{buildroot}%{_datadir}/jes/quickshell/scripts/bluetooth
 
 install -Dm755 for-quickshell/go/coreaura/CoreAura %{buildroot}%{_datadir}/jes/quickshell/CoreAura/CoreAura
+install -Dm755 for-quickshell/go/notifyd/jes-notifyd %{buildroot}%{_datadir}/jes/quickshell/notifications/jes-notifyd
 
-# CoreAura: дефолтный конфиг + system unit + dbus policy
-install -d %{buildroot}%{_sysconfdir}/jes
-cat > %{buildroot}%{_sysconfdir}/jes/coreaura.toml <<EOF
+install -d %{buildroot}%{_datadir}/jes/config
+cp -r .config/JES/* %{buildroot}%{_datadir}/jes/config/
+cat > %{buildroot}%{_datadir}/jes/config/coreaura.toml <<EOF
 [CoreAura]
 enabled = true
 kernel_priority_max = 3
@@ -92,57 +91,6 @@ gpu_threshold_percent = 85
 dedup_window_sec = 30
 EOF
 
-install -d %{buildroot}%{_unitdir}
-cat > %{buildroot}%{_unitdir}/coreaura.service <<EOF
-[Unit]
-Description=CoreAura — JES monitoring daemon
-Wants=dbus.service
-After=dbus.service systemd-journald.service
-
-[Service]
-Type=simple
-ExecStart=%{_datadir}/jes/quickshell/CoreAura/CoreAura -config %{_sysconfdir}/jes/coreaura.toml
-Restart=on-failure
-RestartSec=2
-
-User=root
-Group=root
-
-NoNewPrivileges=true
-ProtectSystem=full
-ProtectHome=false
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-ProtectClock=true
-ProtectHostname=true
-PrivateTmp=true
-RestrictSUIDSGID=true
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-install -Dm644 /dev/stdin %{buildroot}%{_datadir}/dbus-1/system.d/org.jes.CoreAura.conf <<EOF
-<!DOCTYPE busconfig PUBLIC
-  "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
-  "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-<busconfig>
-  <policy user="root">
-    <allow own="org.jes.CoreAura"/>
-    <allow send_destination="org.jes.CoreAura"/>
-    <allow receive_sender="org.jes.CoreAura"/>
-  </policy>
-
-  <policy context="default">
-    <allow send_destination="org.jes.CoreAura"/>
-    <allow receive_sender="org.jes.CoreAura"/>
-  </policy>
-</busconfig>
-EOF
-
-install -d %{buildroot}%{_datadir}/jes/config
-cp -r .config/JES/* %{buildroot}%{_datadir}/jes/config/
 install -d %{buildroot}%{_datadir}/jes/matugen
 cp -r .local/JES/matugen/* %{buildroot}%{_datadir}/jes/matugen/
 install -Dm755 .local/bin/jes-cli %{buildroot}%{_bindir}/jes-cli
@@ -182,22 +130,10 @@ d %%h/.local/state             0755 - - -
 C %%h/.config/JES              0755 - - - %{_datadir}/jes/config
 EOF
 
-%post
-%systemd_post coreaura.service
-
-%preun
-%systemd_preun coreaura.service
-
-%postun
-%systemd_postun_with_restart coreaura.service
-
 %files
 %{_bindir}/jes-cli
 %{_datadir}/jes
 %{_userunitdir}/jes.service
-%{_unitdir}/coreaura.service
-%{_sysconfdir}/jes/coreaura.toml
-%{_datadir}/dbus-1/system.d/org.jes.CoreAura.conf
 %{_udevrulesdir}/99-jes-i2c.rules
 %{_prefix}/lib/tmpfiles.d/jes.conf
 %{_datadir}/fonts/TTF/FauxHanamin.ttf
@@ -208,7 +144,7 @@ EOF
 %changelog
 * Fri Oct 02 2026 _ORFLEM_ <zenkinzahar@gmail.com> - 0.4.0-1
 - Add audio/network/bluetooth Go tools.
-- Add CoreAura monitoring daemon (system unit, dbus policy, /etc config).
+- Add CoreAura monitoring daemon.
 
 * Tue Sep 29 2026 _ORFLEM_ <zenkinzahar@gmail.com> - 0.3.0-1
 - Initial package.

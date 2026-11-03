@@ -601,7 +601,7 @@ ShellRoot {
 
     LockScreen { id: lockScreen }
 
-    CoreAura { useSessionBus: false }
+    CoreAura {}
 
     Btime {}
 
